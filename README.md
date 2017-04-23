@@ -1,1 +1,1 @@
-# simmy
+# simmy.js
