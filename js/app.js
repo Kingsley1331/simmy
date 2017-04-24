@@ -1,7 +1,8 @@
 console.log('hello simmy!');
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
-var mousePos;
+var mousePos = {};
+var id = 0;
 
 bufferCanvas = document.createElement('canvas');
 bufferCtx = bufferCanvas.getContext("2d");
@@ -14,7 +15,7 @@ var Scene = {
 };
 
 function Shape(centre, vertices){
-  this.id = [];
+  this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
   this.linewidth = 1;
@@ -30,13 +31,16 @@ function Shape(centre, vertices){
     torque: 0,
     centroid: {x: 0, y: 0}
   };
-  this.onObject = false;
+  this.onShape = false;
 	this.dragging = false;
 	this.selected = false;
+  this.touchPoint = [];
 }
 
 function createShape(centre, vertices){
+  id++;
   var shape = new Shape(centre, vertices);
+  shape.id = id;
   Scene.shapes.push(shape);
 }
 
@@ -83,25 +87,31 @@ createShape({x: 425, y:200},
 function draw(){
   bufferCtx.fillStyle = Scene.backgroundColour;
   bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
-  var shapes = Scene.shapes;
-  var length = shapes.length;
-  for(var i = 0; i < length; i++){
-    bufferCtx.fillStyle = shapes[i].fillColour;
-    var centre = shapes[i].centre;
-    var num = shapes[i].vertices.length;
-    var x0 = shapes[i].vertices[0].x + centre.x;
-    var y0 = shapes[i].vertices[0].y + centre.y;
-    bufferCtx.beginPath();
-    bufferCtx.moveTo(x0, y0);
-    for(var j = 0; j < num; j++){
-      var x = shapes[i].vertices[j].x + centre.x;
-      var y = shapes[i].vertices[j].y + centre.y;
-      bufferCtx.lineTo(x, y);
-    }
-    bufferCtx.closePath();
-    bufferCtx.stroke();
-    bufferCtx.fill();
-  }
+  forEachShape(function(shape){
+      bufferCtx.save();
+      bufferCtx.fillStyle = shape.fillColour;
+      var centre = shape.centre;
+      var num = shape.vertices.length;
+      var x0 = shape.vertices[0].x + centre.x;
+      var y0 = shape.vertices[0].y + centre.y;
+      bufferCtx.beginPath();
+      bufferCtx.moveTo(x0, y0);
+      for(var j = 1; j < num; j++){
+        var x = shape.vertices[j].x + centre.x;
+        var y = shape.vertices[j].y + centre.y;
+        bufferCtx.lineTo(x, y);
+      }
+      if(shape.onShape){
+        bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
+        bufferCtx.shadowOffsetX = 10;
+        bufferCtx.shadowOffsetY = 10;
+        bufferCtx.shadowBlur = 10;
+      }
+      bufferCtx.closePath();
+      bufferCtx.stroke();
+      bufferCtx.fill();
+      bufferCtx.restore();
+  });
 
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
 }
@@ -144,27 +154,108 @@ function getMousePos(evt, canvas) {
 
   function mouseMove(){
   	canvas.addEventListener('mousemove', function(evt){
-  	   mousePos = getMousePos(evt, canvas);
-      //console.log('mousePos', mousePos);
+  	  mousePos = getMousePos(evt, canvas);
+      forEachShape(function(shape){
+          detectShape(shape);
+          checkOnbject(shape);
+      });
     });
   }
 
-  function mouseDown(){
-    canvas.addEventListener('mousedown', function(evt){
-      console.log('mouse down!', mousePos);
-    }, false);
-  }
+function mouseDown(){
+  canvas.addEventListener('mousedown', function(evt){
+    console.log('mouse down!', mousePos);
+    forEachShape(function(shape){
+      prepareToMoveShape(shape);
+    });
+  }, false);
+}
 
-function selectShape(){
-  
+function mouseUp(){
+  canvas.addEventListener('mouseup', function(evt){
+    console.log('mouse up!', mousePos);
+    forEachShape(function(shape){
+      releaseShape(shape);
+    });
+  }, false);
+}
+
+function detectShape(shape){
+  shape.onShape = false;
+  var x0 = shape.centre.x + shape.vertices[0].x;
+  var y0 = shape.centre.y + shape.vertices[0].y;
+
+  bufferCtx.beginPath();
+  bufferCtx.moveTo(x0, y0);
+  for(var m = 1; m < shape.vertices.length; m++){ // check the shape
+    var x = shape.centre.x + shape.vertices[m].x;
+    var y = shape.centre.y + shape.vertices[m].y;
+    bufferCtx.lineTo(x, y);
+  }
+  if(bufferCtx.isPointInPath(mousePos.x, mousePos.y)){
+    console.log('onShape');
+    setOnShape(shape);
+  }
+  if(shape.dragging){
+    moveShape(shape);
+  }
+}
+
+function prepareToMoveShape(shape){
+  if(shape.onShape){console.log('test');
+    shape.dragging = true;
+    var distanceX = mousePos.x - shape.centre.x;
+    var distanceY = mousePos.y - shape.centre.y;
+    shape.touchPoint = {x: distanceX, y: distanceY};
+    console.log('shape.onShape', shape.onShape);
+    console.log('shape.dragging', shape.dragging);
+  }
+}
+
+function releaseShape(shape){
+    shape.dragging = false;
+    shape.selected = false;
+    onShape = false;
+}
+
+function setOnShape(shape){
+    shape.onShape = true;
+}
+
+function moveShape(shape){
+  shape.centre.x = mousePos.x - shape.touchPoint.x;
+  shape.centre.y = mousePos.y - shape.touchPoint.y;
+}
+
+function init(){
+  flicker();
+  animate();
+  mouseDown();
+  mouseUp();
+  mouseMove();
+}
+
+init();
+
+function forEachShape(callback){
+  var shapes = Scene.shapes;
+  var length = shapes.length;
+  for(var i = 0; i < length; i++){
+    var shape = shapes[i];
+    callback(shape);
+  }
+}
+
+function checkOnbject(shape){
+  forEachShape(function(shape){
+      if(shape.onShape){
+        console.log('================================================================nested check');
+      }
+  });
 }
 
 
-  function init(){
-    flicker();
-    animate();
-    mouseDown();
-    mouseMove();
-  }
 
-  init();
+function distance(x,y){
+	return Math.sqrt(x*x + y*y);
+}
