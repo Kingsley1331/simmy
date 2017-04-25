@@ -1,10 +1,27 @@
 console.log('hello simmy!');
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
+var square = document.getElementById("square");
+var triangle = document.getElementById("triangle");
+var none = document.getElementById("none");
 var mousePos = {};
 var id = 0;
 var onShape = false;
-var hoveringOnShape = false;
+var hoveringOnShape = 0;
+var selectedShape = 'square';
+var shapeSelection = {
+  square: [
+      {x: -25, y: -25},
+      {x: 25, y: -25},
+      {x: 25, y: 25},
+      {x: -25, y: 25}
+    ],
+  triangle: [
+      {x: -60/2, y: Math.sqrt(3)/6 * 60},
+      {x: 60/2, y: Math.sqrt(3)/6 * 60},
+      {x: 0, y: -2 * Math.sqrt(3)/6 * 60}
+    ]
+};
 
 bufferCanvas = document.createElement('canvas');
 bufferCtx = bufferCanvas.getContext("2d");
@@ -46,49 +63,26 @@ function createShape(centre, vertices){
   Scene.shapes.push(shape);
 }
 
-createShape({x: 25, y:200},
-   [
-    {x: -25, y: -25},
-    {x: 25, y: -25},
-    {x: 25, y: 25},
-    {x: -25, y: 25}
-  ]);
+square.addEventListener('click', function(){
+  selectedShape = 'square';
+  console.log('selectedShape', selectedShape);
+}, false);
 
-//createShape({x: 125, y:200},
-createShape({x: 25, y:200},
-   [
-    {x: -25, y: -25},
-    {x: 25, y: -25},
-    {x: 25, y: 25},
-    {x: -25, y: 25}
-  ]);
+triangle.addEventListener('click', function(){
+  selectedShape = 'triangle';
+  console.log('selectedShape', selectedShape);
+}, false);
 
-//createShape({x: 225, y:200},
-createShape({x: 25, y:200},
-   [
-    {x: -25, y: -25},
-    {x: 25, y: -25},
-    {x: 25, y: 25},
-    {x: -25, y: 25}
-  ]);
+none.addEventListener('click', function(){
+  selectedShape = false;
+  console.log('selectedShape', selectedShape);
+}, false);
 
-//createShape({x: 325, y:200},
-createShape({x: 25, y:200},
-   [
-    {x: -25, y: -25},
-    {x: 25, y: -25},
-    {x: 25, y: 25},
-    {x: -25, y: 25}
-  ]);
 
-//createShape({x: 425, y:200},
-createShape({x: 25, y:200},
-   [
-    {x: -25, y: -25},
-    {x: 25, y: -25},
-    {x: 25, y: 25},
-    {x: -25, y: 25}
-  ]);
+function shapeSelector(shape){
+  console.log('shapeSelector', shapeSelection[shape]);
+  return shapeSelection[shape];
+}
 
 function draw(){
   bufferCtx.fillStyle = Scene.backgroundColour;
@@ -166,7 +160,6 @@ function getMousePos(evt, canvas) {
       forEachShape(function(shape){
           detectShape(shape);
       }, true);
-      console.log('hoveringOnShape', hoveringOnShape);
       if(hoveringOnShape > 0){
         onShape = false;
       }
@@ -175,16 +168,17 @@ function getMousePos(evt, canvas) {
 
 function mouseDown(){
   canvas.addEventListener('mousedown', function(evt){
-    console.log('mouse down!', mousePos);
     forEachShape(function(shape){
       prepareToMoveShape(shape);
     });
+    if(selectedShape){
+      createShape(mousePos, shapeSelection[selectedShape]);
+    }
   }, false);
 }
 
 function mouseUp(){
   canvas.addEventListener('mouseup', function(evt){
-    console.log('mouse up!', mousePos);
     forEachShape(function(shape){
       releaseShape(shape);
     });
@@ -207,7 +201,6 @@ function detectShape(shape){
     hoveringOnShape++;
     if(!onShape){
       shape.onShape = true;
-      console.log('shape.onShape ON', shape.id);
       onShape = true;
     }
     if(shape.onShape){
@@ -225,13 +218,11 @@ function detectShape(shape){
 }
 
 function prepareToMoveShape(shape){
-  if(shape.onShape){console.log('test');
+  if(shape.onShape){
     shape.dragging = true;
     var distanceX = mousePos.x - shape.centre.x;
     var distanceY = mousePos.y - shape.centre.y;
     shape.touchPoint = {x: distanceX, y: distanceY};
-    console.log('shape.onShape', shape.onShape);
-    console.log('shape.dragging', shape.dragging);
   }
 }
 
