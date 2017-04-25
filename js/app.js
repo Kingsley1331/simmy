@@ -3,6 +3,8 @@ var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var mousePos = {};
 var id = 0;
+var onShape = false;
+var hoveringOnShape = false;
 
 bufferCanvas = document.createElement('canvas');
 bufferCtx = bufferCanvas.getContext("2d");
@@ -52,7 +54,8 @@ createShape({x: 25, y:200},
     {x: -25, y: 25}
   ]);
 
-createShape({x: 125, y:200},
+//createShape({x: 125, y:200},
+createShape({x: 25, y:200},
    [
     {x: -25, y: -25},
     {x: 25, y: -25},
@@ -60,7 +63,8 @@ createShape({x: 125, y:200},
     {x: -25, y: 25}
   ]);
 
-createShape({x: 225, y:200},
+//createShape({x: 225, y:200},
+createShape({x: 25, y:200},
    [
     {x: -25, y: -25},
     {x: 25, y: -25},
@@ -68,7 +72,8 @@ createShape({x: 225, y:200},
     {x: -25, y: 25}
   ]);
 
-createShape({x: 325, y:200},
+//createShape({x: 325, y:200},
+createShape({x: 25, y:200},
    [
     {x: -25, y: -25},
     {x: 25, y: -25},
@@ -76,7 +81,8 @@ createShape({x: 325, y:200},
     {x: -25, y: 25}
   ]);
 
-createShape({x: 425, y:200},
+//createShape({x: 425, y:200},
+createShape({x: 25, y:200},
    [
     {x: -25, y: -25},
     {x: 25, y: -25},
@@ -155,10 +161,15 @@ function getMousePos(evt, canvas) {
   function mouseMove(){
   	canvas.addEventListener('mousemove', function(evt){
   	  mousePos = getMousePos(evt, canvas);
+      onObject = false;
+      hoveringOnShape = 0;
       forEachShape(function(shape){
           detectShape(shape);
-          checkOnbject(shape);
-      });
+      }, true);
+      console.log('hoveringOnShape', hoveringOnShape);
+      if(hoveringOnShape > 0){
+        onShape = false;
+      }
     });
   }
 
@@ -193,9 +204,21 @@ function detectShape(shape){
     bufferCtx.lineTo(x, y);
   }
   if(bufferCtx.isPointInPath(mousePos.x, mousePos.y)){
-    console.log('onShape');
-    setOnShape(shape);
+    hoveringOnShape++;
+    if(!onShape){
+      shape.onShape = true;
+      console.log('shape.onShape ON', shape.id);
+      onShape = true;
+    }
+    if(shape.onShape){
+      shape.onShape = true;
+    } else {
+      shape.onShape = false;
+    }
+  } else {
+    shape.onShape = false;
   }
+
   if(shape.dragging){
     moveShape(shape);
   }
@@ -215,12 +238,8 @@ function prepareToMoveShape(shape){
 function releaseShape(shape){
     shape.dragging = false;
     shape.selected = false;
-    onShape = false;
 }
 
-function setOnShape(shape){
-    shape.onShape = true;
-}
 
 function moveShape(shape){
   shape.centre.x = mousePos.x - shape.touchPoint.x;
@@ -237,24 +256,21 @@ function init(){
 
 init();
 
-function forEachShape(callback){
+function forEachShape(callback, bool){
   var shapes = Scene.shapes;
   var length = shapes.length;
-  for(var i = 0; i < length; i++){
-    var shape = shapes[i];
-    callback(shape);
+  if(!bool){
+    for(var i = 0; i < length; i++){
+      var shape = shapes[i];
+      callback(shape);
+    }
+  } else if(bool) {
+    for(var i = length-1; i >= 0; i--){
+      var shape = shapes[i];
+      callback(shape);
+    }
   }
 }
-
-function checkOnbject(shape){
-  forEachShape(function(shape){
-      if(shape.onShape){
-        console.log('================================================================nested check');
-      }
-  });
-}
-
-
 
 function distance(x,y){
 	return Math.sqrt(x*x + y*y);
