@@ -10,10 +10,51 @@ canvas{
 
 #triangle {
   position: absolute;
-  top: 150px;
+  top: 145px;
   left: 1020px;
 }
 
+#pentagon {
+  position: absolute;
+  top: 183px;
+  left: 1020px;
+}
+
+#hexagon {
+  position: absolute;
+  top: 217px;
+  left: 1018px;
+}
+
+#circle {
+  position: absolute;
+  top: 255px;
+  left: 1018px;
+}
+
+#plus {
+  position: absolute;
+  top: 295px;
+  left: 1018px
+}
+
+#arrow {
+  position: absolute;
+  top: 330px;
+  left: 1018px;
+}
+
+#star {
+  position: absolute;
+  top: 360px;
+  left: 1018px;
+}
+
+#tShape {
+  position: absolute;
+  top: 405px;
+  left: 1018px;
+}
 #none {
   position: absolute;
   top: 35px;

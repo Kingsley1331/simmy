@@ -1,25 +1,94 @@
 console.log('hello simmy!');
+var none = document.getElementById("none");
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var square = document.getElementById("square");
 var triangle = document.getElementById("triangle");
-var none = document.getElementById("none");
+
+var pentagon = document.getElementById("pentagon");
+var hexagon = document.getElementById("hexagon");
+var circle = document.getElementById("circle");
+var plus = document.getElementById("plus");
+var arrow = document.getElementById("arrow");
+var star = document.getElementById("star");
+var tShape = document.getElementById("tShape");
+
 var mousePos = {};
 var id = 0;
 var onShape = false;
 var hoveringOnShape = 0;
-var selectedShape = 'square';
+var selectedShape = false;
 var shapeSelection = {
   square: [
-      {x: -25, y: -25},
-      {x: 25, y: -25},
-      {x: 25, y: 25},
-      {x: -25, y: 25}
+      {x: -18, y: -18},
+      {x: 18, y: -18},
+      {x: 18, y: 18},
+      {x: -18, y: 18}
     ],
   triangle: [
-      {x: -60/2, y: Math.sqrt(3)/6 * 60},
-      {x: 60/2, y: Math.sqrt(3)/6 * 60},
-      {x: 0, y: -2 * Math.sqrt(3)/6 * 60}
+      {x: -40/2, y: Math.sqrt(3)/6 * 40},
+      {x: 40/2, y: Math.sqrt(3)/6 * 40},
+      {x: 0, y: -2 * Math.sqrt(3)/6 * 40}
+    ],
+  star: [
+      {x: 0, y: -50},
+      {x: 19.0983*Math.sin(2*Math.PI*(36/360)), y: -19.0983*Math.cos(2*Math.PI*(36/360))},
+      {x: 50*Math.cos(2*Math.PI*(18/360)), y: -50*Math.sin(2*Math.PI*(18/360))},
+      {x: 19.0983*Math.cos(2*Math.PI*(18/360)), y: 19.0983*Math.sin(2*Math.PI*(18/360))},
+      {x: 50*Math.sin(2*Math.PI*(36/360)), y: 50*Math.cos(2*Math.PI*(36/360))},
+      {x: 0, y: 19.0983},
+      {x: -50*Math.sin(2*Math.PI*(36/360)), y: 50*Math.cos(2*Math.PI*(36/360))},
+      {x: -19.0983*Math.cos(2*Math.PI*(18/360)), y: 19.0983*Math.sin(2*Math.PI*(18/360))},
+      {x: -50*Math.cos(2*Math.PI*(18/360)), y: -50*Math.sin(2*Math.PI*(18/360))},
+      {x: -19.0983*Math.sin(2*Math.PI*(36/360)), y: -19.0983*Math.cos(2*Math.PI*(36/360))}
+    ],
+    plus: [
+      {x: -6, y: -6},
+      {x: -6, y: -30},
+      {x: 6, y: -30},
+      {x: 6, y: -6},
+      {x: 30, y: -6},
+      {x: 30, y: 6},
+      {x: 6, y: 6},
+      {x: 6, y: 30},
+      {x: -6, y: 30},
+      {x: -6, y: 6},
+      {x: -30, y: 6},
+      {x: -30, y: -6},
+    ],
+    tShape: [
+      {x: 30, y: -6},
+      {x: 30, y: 6},
+      {x: 6, y: 6},
+      {x: 6, y: 54},
+      {x: -6, y: 54},
+      {x: -6, y: 6},
+      {x: -30, y: 6},
+      {x: -30, y: -6},
+    ],
+    arrow: [
+      {x: 30, y: -6},
+      {x: 30, y: -18},
+      {x: 55, y: 0},
+      {x: 30, y: 18},
+      {x: 30, y: 6},
+      {x: -20, y: 6},
+      {x: -20, y: -6},
+    ],
+    pentagon: [
+      {x: 0, y: -22},
+      {x: 22*Math.cos(2*Math.PI*(18/360)), y: -22*Math.sin(2*Math.PI*(18/360))},
+      {x: 22*Math.sin(2*Math.PI*(36/360)), y: 22*Math.cos(2*Math.PI*(36/360))},
+      {x: -22*Math.sin(2*Math.PI*(36/360)), y: 22*Math.cos(2*Math.PI*(36/360))},
+      {x: -22*Math.cos(2*Math.PI*(18/360)), y: -22*Math.sin(2*Math.PI*(18/360))}
+    ],
+    hexagon: [
+      {x: 22*Math.sin(2*Math.PI*(30/360)), y: -22*Math.cos(2*Math.PI*(30/360))},
+      {x: 22, y: 0},
+      {x: 22*Math.sin(2*Math.PI*(30/360)), y: 22*Math.cos(2*Math.PI*(30/360))},
+      {x: -22*Math.sin(2*Math.PI*(30/360)), y: 22*Math.cos(2*Math.PI*(30/360))},
+      {x: -22, y: 0},
+      {x: -22*Math.sin(2*Math.PI*(30/360)), y: -22*Math.cos(2*Math.PI*(30/360))}
     ]
 };
 
@@ -78,6 +147,56 @@ none.addEventListener('click', function(){
   console.log('selectedShape', selectedShape);
 }, false);
 
+pentagon.addEventListener('click', function(){
+  selectedShape = 'pentagon';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+hexagon.addEventListener('click', function(){
+  selectedShape = 'hexagon';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+circle.addEventListener('click', function(){
+  selectedShape = 'circle';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+plus.addEventListener('click', function(){
+  selectedShape = 'plus';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+arrow.addEventListener('click', function(){
+  selectedShape = 'arrow';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+star.addEventListener('click', function(){
+  selectedShape = 'star';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+tShape.addEventListener('click', function(){
+  selectedShape = 'tShape';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+
+function circleMaker(radius, n) {
+  var circle = [];
+  var angle = 2*Math.PI/n;
+  for(var i = 0; i < n; i++){
+    var point = {};
+    point.x = radius*Math.sin(i*angle);
+    point.y = radius*Math.cos(i*angle);
+    circle.push(point);
+  }
+  return circle;
+}
+
+var circle = circleMaker(20, 30);
+shapeSelection.circle = circle;
 
 function shapeSelector(shape){
   console.log('shapeSelector', shapeSelection[shape]);
