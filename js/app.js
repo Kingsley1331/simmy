@@ -235,7 +235,7 @@ box.addEventListener('click', function(){
 }, false);
 
 _delete.addEventListener('click', function(){
-  selectedShape = false;
+  selectedShape = 'delete';
   console.log('selectedShape', selectedShape);
 }, false);
 
@@ -350,7 +350,7 @@ function mouseDown(){
     forEachShape(function(shape, i){
       deleteShape(shape, i);
     });
-    if(selectedShape){
+    if(selectedShape && selectedShape !== 'delete'){
       createShape(mousePos, shapeSelection[selectedShape]);
     }
   }, false);
@@ -411,7 +411,7 @@ function releaseShape(shape){
 }
 
 function deleteShape(shape, index){
-  if(shape){
+  if(shape && selectedShape === 'delete'){
     if(shape.onShape){
       Scene.shapes.splice(index, 1);
     }
