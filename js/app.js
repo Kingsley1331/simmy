@@ -100,18 +100,18 @@ var shapeSelection = {
       {x: -22*Math.sin(2*Math.PI*(30/360)), y: -22*Math.cos(2*Math.PI*(30/360))}
     ],
     concave: [
-      {x: -18, y: 36},
-      {x: -18, y: 72},
-      {x: -90, y: 72},
-      {x: -90, y: -72},
-      {x: 90, y: -72},
-      {x: 90, y: 72},
-      {x: 18, y: 72},
-      {x: 18, y: 36},
-      {x: 54, y: 36},
-      {x: 54, y: -36},
-      {x: -54, y: -36},
-      {x: -54, y: 36}
+      {x: -18, y: 54},
+      {x: -18, y: 90},
+      {x: -90, y: 90},
+      {x: -90, y: -90},
+      {x: 90, y: -90},
+      {x: 90, y: 90},
+      {x: 18, y: 90},
+      {x: 18, y: 54},
+      {x: 54, y: 54},
+      {x: 54, y: -54},
+      {x: -54, y: -54},
+      {x: -54, y: 54}
     ],
     box: [
       {x: 0, y: 54},//
@@ -306,7 +306,6 @@ window.requestAnimFrame = (function(callback) {
 })();
 
 function animate(){
-  //Scene.shapes[1].centre.x += Scene.shapes[1].physics.velocity.x;
 	draw();
 	requestAnimFrame(function() {
 			animate();
@@ -344,11 +343,11 @@ function getMousePos(evt, canvas) {
 
 function mouseDown(){
   canvas.addEventListener('mousedown', function(evt){
-    forEachShape(function(shape){
-      prepareToMoveShape(shape);
-    });
     forEachShape(function(shape, i){
-      deleteShape(shape, i);
+      prepareToMoveShape(shape);
+      if(selectedShape === 'delete'){
+        deleteShape(shape, i);
+      }
     });
     if(selectedShape && selectedShape !== 'delete'){
       createShape(mousePos, shapeSelection[selectedShape]);
@@ -411,7 +410,7 @@ function releaseShape(shape){
 }
 
 function deleteShape(shape, index){
-  if(shape && selectedShape === 'delete'){
+  if(selectedShape === 'delete'){
     if(shape.onShape){
       Scene.shapes.splice(index, 1);
     }
@@ -439,12 +438,16 @@ function forEachShape(callback, bool){
   if(!bool){
     for(var i = 0; i < length; i++){
       var shape = shapes[i];
-      callback(shape, i);
+      if(shape){
+        callback(shape, i);
+      }
     }
   } else if(bool) {
     for(var i = length-1; i >= 0; i--){
       var shape = shapes[i];
-      callback(shape, i);
+      if(shape){
+        callback(shape, i);
+      }
     }
   }
 }
