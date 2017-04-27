@@ -4,7 +4,6 @@ var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var square = document.getElementById("square");
 var triangle = document.getElementById("triangle");
-
 var pentagon = document.getElementById("pentagon");
 var hexagon = document.getElementById("hexagon");
 var circle = document.getElementById("circle");
@@ -12,6 +11,10 @@ var plus = document.getElementById("plus");
 var arrow = document.getElementById("arrow");
 var star = document.getElementById("star");
 var tShape = document.getElementById("tShape");
+var bar = document.getElementById("bar");
+var concave = document.getElementById("concave");
+var box = document.getElementById("box");
+var _delete = document.getElementById("delete");
 
 var mousePos = {};
 var id = 0;
@@ -24,6 +27,12 @@ var shapeSelection = {
       {x: 18, y: -18},
       {x: 18, y: 18},
       {x: -18, y: 18}
+    ],
+  bar: [
+      {x: -18, y: -126},
+      {x: 18, y: -126},
+      {x: 18, y: 126},
+      {x: -18, y: 126}
     ],
   triangle: [
       {x: -40/2, y: Math.sqrt(3)/6 * 40},
@@ -89,6 +98,34 @@ var shapeSelection = {
       {x: -22*Math.sin(2*Math.PI*(30/360)), y: 22*Math.cos(2*Math.PI*(30/360))},
       {x: -22, y: 0},
       {x: -22*Math.sin(2*Math.PI*(30/360)), y: -22*Math.cos(2*Math.PI*(30/360))}
+    ],
+    concave: [
+      {x: -18, y: 36},
+      {x: -18, y: 72},
+      {x: -90, y: 72},
+      {x: -90, y: -72},
+      {x: 90, y: -72},
+      {x: 90, y: 72},
+      {x: 18, y: 72},
+      {x: 18, y: 36},
+      {x: 54, y: 36},
+      {x: 54, y: -36},
+      {x: -54, y: -36},
+      {x: -54, y: 36}
+    ],
+    box: [
+      {x: 0, y: 54},//
+      {x: 0, y: 90},//
+      {x: -90, y: 90},
+      {x: -90, y: -90},
+      {x: 90, y: -90},
+      {x: 90, y: 90},
+      {x: 0, y: 90},//
+      {x: 0, y: 54},//
+      {x: 54, y: 54},
+      {x: 54, y: -54},
+      {x: -54, y: -54},
+      {x: -54, y: 54}
     ]
 };
 
@@ -179,6 +216,26 @@ star.addEventListener('click', function(){
 
 tShape.addEventListener('click', function(){
   selectedShape = 'tShape';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+bar.addEventListener('click', function(){
+  selectedShape = 'bar';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+concave.addEventListener('click', function(){
+  selectedShape = 'concave';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+box.addEventListener('click', function(){
+  selectedShape = 'box';
+  console.log('selectedShape', selectedShape);
+}, false);
+
+_delete.addEventListener('click', function(){
+  selectedShape = false;
   console.log('selectedShape', selectedShape);
 }, false);
 
@@ -290,6 +347,9 @@ function mouseDown(){
     forEachShape(function(shape){
       prepareToMoveShape(shape);
     });
+    forEachShape(function(shape, i){
+      deleteShape(shape, i);
+    });
     if(selectedShape){
       createShape(mousePos, shapeSelection[selectedShape]);
     }
@@ -350,6 +410,13 @@ function releaseShape(shape){
     shape.selected = false;
 }
 
+function deleteShape(shape, index){
+  if(shape){
+    if(shape.onShape){
+      Scene.shapes.splice(index, 1);
+    }
+  }
+}
 
 function moveShape(shape){
   shape.centre.x = mousePos.x - shape.touchPoint.x;
@@ -372,12 +439,12 @@ function forEachShape(callback, bool){
   if(!bool){
     for(var i = 0; i < length; i++){
       var shape = shapes[i];
-      callback(shape);
+      callback(shape, i);
     }
   } else if(bool) {
     for(var i = length-1; i >= 0; i--){
       var shape = shapes[i];
-      callback(shape);
+      callback(shape, i);
     }
   }
 }
