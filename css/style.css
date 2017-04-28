@@ -75,7 +75,7 @@ canvas{
   color: blue;
 }
 
-#delete {
+#_delete {
   position: absolute;
   top: 535px;
   left: 1020px;
@@ -87,4 +87,8 @@ canvas{
   top: 460px;
   left: 1023px;
   color: blue;
+}
+
+.selected{
+  border: 2px solid black
 }
