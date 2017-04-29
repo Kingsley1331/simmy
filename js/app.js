@@ -40,39 +40,30 @@ function createShape(centre, vertices){
   Scene.shapes.push(shape);
 }
 
-function circleMaker(radius, n) {
-  var circle = [];
-  var angle = 2*Math.PI/n;
-  for(var i = 0; i < n; i++){
-    var point = {};
-    point.x = radius*Math.sin(i*angle);
-    point.y = radius*Math.cos(i*angle);
-    circle.push(point);
-  }
-  return circle;
-}
-
-var circle = circleMaker(20, 30);
-shapeSelection.circle = circle;
-
 function draw(){
   bufferCtx.fillStyle = Scene.backgroundColour;
   bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
-  forEachShape(function(shape){
+  forEachShape(function(i){
       bufferCtx.save();
-      bufferCtx.fillStyle = shape.fillColour;
-      var centre = shape.centre;
-      var num = shape.vertices.length;
-      var x0 = shape.vertices[0].x + centre.x;
-      var y0 = shape.vertices[0].y + centre.y;
+      bufferCtx.fillStyle = ShapesController.getProperty(i, 'fillColour');
+
+      var centre = ShapesController.getCentre(i);
+      var num = ShapesController.getShapeSize(i);
+
+      var vertices = ShapesController.getVertices(i);
+      var x0 = vertices[0].x + centre.x;
+      var y0 = vertices[0].y + centre.y;
+
       bufferCtx.beginPath();
       bufferCtx.moveTo(x0, y0);
       for(var j = 1; j < num; j++){
-        var x = shape.vertices[j].x + centre.x;
-        var y = shape.vertices[j].y + centre.y;
+        var x = vertices[j].x + centre.x;
+        var y = vertices[j].y + centre.y;
         bufferCtx.lineTo(x, y);
       }
-      if(shape.onShape){
+
+      var onShape = ShapesController.getProperty(i, 'onShape');
+      if(onShape){
         bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
         bufferCtx.shadowOffsetX = 10;
         bufferCtx.shadowOffsetY = 10;
@@ -112,8 +103,8 @@ function animate(){
   	  mousePos = getMousePos(evt, canvas);
       onObject = false;
       hoveringOnShape = 0;
-      forEachShape(function(shape){
-          detectShape(shape);
+      forEachShape(function(i){
+          detectShape(i);
       }, true);
       if(hoveringOnShape > 0){
         onShape = false;
@@ -123,10 +114,10 @@ function animate(){
 
 function mouseDown(){
   canvas.addEventListener('mousedown', function(evt){
-    forEachShape(function(shape, i){
-      prepareToMoveShape(shape);
+    forEachShape(function(i){
+      prepareToMoveShape(i);
       if(selectedShape === '_delete'){
-        deleteShape(shape, i);
+        deleteShape(i);
       }
     });
     if(selectedShape && selectedShape !== '_delete'){
@@ -137,69 +128,76 @@ function mouseDown(){
 
 function mouseUp(){
   canvas.addEventListener('mouseup', function(evt){
-    forEachShape(function(shape){
-      releaseShape(shape);
+    forEachShape(function(i){
+      releaseShape(i);
     });
   }, false);
 }
 
-function detectShape(shape){
-  shape.onShape = false;
-  var x0 = shape.centre.x + shape.vertices[0].x;
-  var y0 = shape.centre.y + shape.vertices[0].y;
+function detectShape(i){
+  ShapesController.setProperty(i, 'onShape', false);
+  var centre = ShapesController.getCentre(i);
+  var vertices = ShapesController.getVertices(i);
+
+  var x0 = centre.x + vertices[0].x;
+  var y0 = centre.y + vertices[0].y;
 
   bufferCtx.beginPath();
   bufferCtx.moveTo(x0, y0);
-  for(var m = 1; m < shape.vertices.length; m++){
-    var x = shape.centre.x + shape.vertices[m].x;
-    var y = shape.centre.y + shape.vertices[m].y;
+  for(var m = 1; m < vertices.length; m++){
+    var x = centre.x + vertices[m].x;
+    var y = centre.y + vertices[m].y;
     bufferCtx.lineTo(x, y);
   }
   if(bufferCtx.isPointInPath(mousePos.x, mousePos.y)){
     hoveringOnShape++;
     if(!onShape){
-      shape.onShape = true;
+      ShapesController.setProperty(i, 'onShape', true);
       onShape = true;
     }
-    if(shape.onShape){
-      shape.onShape = true;
+    if(ShapesController.getProperty(i, 'onShape')){
+      ShapesController.setProperty(i, 'onShape', true);
     } else {
-      shape.onShape = false;
+      ShapesController.setProperty(i, 'onShape', false);
     }
   } else {
-    shape.onShape = false;
+    ShapesController.setProperty(i, 'onShape', false);
   }
 
-  if(shape.dragging){
-    moveShape(shape);
-  }
-}
-
-function prepareToMoveShape(shape){
-  if(shape.onShape){
-    shape.dragging = true;
-    var distanceX = mousePos.x - shape.centre.x;
-    var distanceY = mousePos.y - shape.centre.y;
-    shape.touchPoint = {x: distanceX, y: distanceY};
+  if(ShapesController.getProperty(i, 'dragging')){
+    moveShape(i);
   }
 }
 
-function releaseShape(shape){
-    shape.dragging = false;
-    shape.selected = false;
+function prepareToMoveShape(i){
+  if(ShapesController.getProperty(i, 'onShape')){
+    var centre = ShapesController.getCentre(i);
+    ShapesController.setProperty(i, 'dragging', true);
+    var distanceX = mousePos.x - centre.x;
+    var distanceY = mousePos.y - centre.y;
+    ShapesController.setProperty(i, 'touchPoint', {x: distanceX, y: distanceY});
+  }
 }
 
-function deleteShape(shape, index){
+function releaseShape(i){
+    ShapesController.setProperty(i, 'dragging', false);
+    ShapesController.setProperty(i, 'selected', false);
+}
+
+function deleteShape(i){
   if(selectedShape === '_delete'){
-    if(shape.onShape){
-      Scene.shapes.splice(index, 1);
+    if(ShapesController.getProperty(i, 'onShape')){
+      ShapesController.deleteShape(i);
     }
   }
 }
 
-function moveShape(shape){
-  shape.centre.x = mousePos.x - shape.touchPoint.x;
-  shape.centre.y = mousePos.y - shape.touchPoint.y;
+function moveShape(i){
+  var touchPoint = ShapesController.getTouchPoint(i);
+  ShapesController.setProperty(i, 'centre', {
+    x: mousePos.x - touchPoint.x,
+    y: mousePos.y - touchPoint.y
+   });
 }
 
 function init(){
@@ -219,15 +217,77 @@ function forEachShape(callback, bool){
     for(var i = 0; i < length; i++){
       var shape = shapes[i];
       if(shape){
-        callback(shape, i);
+        callback(i);
       }
     }
   } else if(bool) {
     for(var i = length-1; i >= 0; i--){
       var shape = shapes[i];
       if(shape){
-        callback(shape, i);
+        callback(i);
       }
     }
   }
 }
+
+var ShapesController = (function(){
+  var shapes = Scene.shapes;
+
+  function getCentre(shapeIndex){
+    var centre = shapes[shapeIndex].centre;
+    return {
+        x: centre.x,
+        y: centre.y
+     };
+  }
+
+
+  function getTouchPoint(shapeIndex){
+    var touchPoint = shapes[shapeIndex].touchPoint;
+    return {
+        x: touchPoint.x,
+        y: touchPoint.y
+     };
+  }
+
+  function getShapeSize(shapeIndex){
+    var shape = shapes[shapeIndex];
+    var size = shape.vertices.length;
+    return size;
+  }
+
+  function getVertices(shapeIndex){
+    var vertices = [];
+    var shape = shapes[shapeIndex];
+    var size = shape.vertices.length;
+    for(var i = 0; i < size; i++){
+      var point = {x: shape.vertices[i].x, y: shape.vertices[i].y};
+      vertices.push(point);
+    }
+    return vertices;
+  }
+
+  function getProperty(shapeIndex, property){
+    var shape = shapes[shapeIndex];
+    var property = shape[property];
+    return property;
+  }
+
+  function setProperty(shapeIndex, property, value){
+      Scene.shapes[shapeIndex][property] = value;
+  }
+
+  function deleteShape(shapeIndex){
+    Scene.shapes.splice(shapeIndex, 1);
+  }
+
+  return {
+    getCentre: getCentre,
+    getTouchPoint: getTouchPoint,
+    getShapeSize: getShapeSize,
+    getVertices: getVertices,
+    getProperty: getProperty,
+    setProperty: setProperty,
+    deleteShape: deleteShape
+  };
+})();

@@ -105,3 +105,18 @@ var shapeSelection = {
       {x: -54, y: 54}
     ]
 };
+
+function circleMaker(radius, n) {
+  var circle = [];
+  var angle = 2*Math.PI/n;
+  for(var i = 0; i < n; i++){
+    var point = {};
+    point.x = radius*Math.sin(i*angle);
+    point.y = radius*Math.cos(i*angle);
+    circle.push(point);
+  }
+  return circle;
+}
+
+var circle = circleMaker(20, 30);
+shapeSelection.circle = circle;
