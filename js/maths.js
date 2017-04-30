@@ -2,23 +2,10 @@ function distance(x,y){
 	return Math.sqrt(x*x + y*y);
 }
 
-// function Vector(vector){
-// 	this.vector = vector;
-// 	this.returnVector = function(vect){
-// 		var newVector = new Vector(vect);
-// 		return newVector;
-// 	}
-// }
-//
-// var vector = new Vector([1, 2]);
-// console.log('vector', vector.vector);
-//
-// var newVector = vector.returnVector([25, 100]);
-//
-// console.log('newVector', newVector.vector);
-
  function Vector(vector){
-	 this.vector = vector;
+	 this.x = vector.x;
+	 this.y = vector.y;
+	 this.z = vector.z;
 
 	 this.add = function(vector2){
 		 var sum = {x: vector.x + vector2.x, y: vector.y + vector2.y, z: vector.z + vector2.z};
@@ -43,14 +30,15 @@ function distance(x,y){
 			var product = new Vector({x: x, y: y, z: z});
 			return product;
 	 }
-	// return vector;
  }
 
 var v1 = new Vector({x:1, y:2, z:0});
 var v2 = new Vector({x:2, y:4, z:0});
 
-var v3 = v1.add(v2.vector);
+var v3 = v1.add(v2);
+var v4 = v1.crossProd(v2);
 
-console.log('v1', v1.vector);
-console.log('v2', v2.vector);
-console.log('v3', v3.vector);
+console.log('v1', v1);
+console.log('v2', v2);
+console.log('v3', v3);
+console.log('v4', v4);
