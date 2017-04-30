@@ -6,30 +6,30 @@ function distance(x,y){
 	 this.x = vector.x;
 	 this.y = vector.y;
 	 this.z = vector.z;
+ }
 
-	 this.add = function(vector2){
-		 var sum = {x: vector.x + vector2.x, y: vector.y + vector2.y, z: vector.z + vector2.z};
-		 result = new Vector(sum);
-		 return result;
-	 };
+ Vector.prototype.add = function(vector2){
+	 var sum = {x: this.x + vector2.x, y: this.y + vector2.y, z: this.z + vector2.z};
+	 result = new Vector(sum);
+	 return result;
+ };
 
-	 this.scalProd = function(scale){
-		 var product = {x: vector.x * scale, y: vector.y * scale, z: vector.z * scale};
-		 return product;
-	 };
+ Vector.prototype.scalProd = function(scale){
+	 var product = {x: this.x * scale, y: this.y * scale, z: this.z * scale};
+	 return product;
+ };
 
-	 this.dotProd = function(vector2){
-		 var product = vector.x + vector2.x + vector.y + vector2.y  + vector.z + vector2.z;
-		 return product;
-	 };
+ Vector.prototype.dotProd = function(vector2){
+	 var product = this.x + vector2.x + this.y + vector2.y  + this.z + vector2.z;
+	 return product;
+ };
 
-	 this.crossProd = function(vector2){
-		 	var x = vector.y * vector2.z - vector.z * vector2.y;
-			var y = vector.z * vector2.x - vector.x - vector2.z;
-	 		var z = vector.x * vector2.y - vector.y * vector2.x;
-			var product = new Vector({x: x, y: y, z: z});
-			return product;
-	 }
+ Vector.prototype.crossProd = function(vector2){
+		var x = this.y * vector2.z - this.z * vector2.y;
+		var y = this.z * vector2.x - this.x - vector2.z;
+		var z = this.x * vector2.y - this.y * vector2.x;
+		var product = new Vector({x: x, y: y, z: z});
+		return product;
  }
 
 var v1 = new Vector({x:1, y:2, z:0});
