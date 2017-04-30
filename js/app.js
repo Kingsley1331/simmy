@@ -33,11 +33,13 @@ function Shape(centre, vertices){
   this.touchPoint = [];
 }
 
-function createShape(centre, vertices){
-  id++;
-  var shape = new Shape(centre, vertices);
-  shape.id = id;
-  Scene.shapes.push(shape);
+function createShape(centre, vertices){console.log('onShape', onShape);
+  if(hoveringOnShape <= 0){ // if hovering on shape
+    id++;
+    var shape = new Shape(centre, vertices);
+    shape.id = id;
+    Scene.shapes.push(shape);
+  }
 }
 
 function draw(){
@@ -101,7 +103,6 @@ function animate(){
   function mouseMove(){
   	canvas.addEventListener('mousemove', function(evt){
   	  mousePos = getMousePos(evt, canvas);
-      onObject = false;
       hoveringOnShape = 0;
       forEachShape(function(i){
           detectShape(i);
