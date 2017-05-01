@@ -5,7 +5,7 @@ function distance(x,y){
  function Vector(vector){
 	 this.x = vector.x;
 	 this.y = vector.y;
-	 this.z = vector.z;
+	 this.z = vector.z ? vector.z: 0;
  }
 
  Vector.prototype.add = function(vector2){
@@ -32,8 +32,11 @@ function distance(x,y){
 		return product;
  }
 
-var v1 = new Vector({x:1, y:3, z:0});
-var v2 = new Vector({x:2, y:4, z:0});
+// var v1 = new Vector({x:1, y:3, z:0});
+// var v2 = new Vector({x:2, y:4, z:0});
+
+var v1 = new Vector({x:1, y:3, z:12});
+var v2 = new Vector({x:2, y:4, z:10});
 
 var v3 = v1.add(v2);
 var v4 = v1.crossProd(v2);
