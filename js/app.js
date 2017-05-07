@@ -4,7 +4,7 @@ var id = 0;
 var onShape = false;
 var hoveringOnShape = 0;
 var selectedShape = false;
-
+var throwArray = [];
 var Scene = {
   backgroundColour: '#E0E0E0',
   shapes: []
@@ -18,9 +18,10 @@ function Shape(centre, vertices){
   this.centre = centre;
   this.vertices = vertices;
   this.physics = {
+    density: 1,
     mass: 1,
   	momentOfInertia: 1,
-    velocity: {x:1, y:0},
+    velocity: {x:0, y:0},
   	angularVelocity: 0,
     acceleration: {x:0, y:0},
     forces: [],
@@ -33,7 +34,7 @@ function Shape(centre, vertices){
   this.touchPoint = [];
 }
 
-function createShape(centre, vertices){console.log('onShape', onShape);
+function createShape(centre, vertices){
   if(hoveringOnShape <= 0){ // if hovering on shape
     id++;
     var shape = new Shape(centre, vertices);
@@ -42,7 +43,8 @@ function createShape(centre, vertices){console.log('onShape', onShape);
   }
 }
 
-function draw(){
+//function draw(){
+let draw = () => {
   bufferCtx.fillStyle = Scene.backgroundColour;
   bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
   forEachShape(function(i){
@@ -94,6 +96,9 @@ window.requestAnimFrame = (function(callback) {
 })();
 
 function animate(){
+  forEachShape(function(i){
+    applyPhysics(i);
+  });
 	draw();
 	requestAnimFrame(function() {
 			animate();
@@ -104,6 +109,7 @@ function animate(){
   	canvas.addEventListener('mousemove', function(evt){
   	  mousePos = getMousePos(evt, canvas);
       hoveringOnShape = 0;
+      makeThrowArray();
       forEachShape(function(i){
           detectShape(i);
       }, true);
@@ -115,6 +121,7 @@ function animate(){
 
 function mouseDown(){
   canvas.addEventListener('mousedown', function(evt){
+    throwArray = [];
     forEachShape(function(i){
       prepareToMoveShape(i);
       if(selectedShape === '_delete'){
@@ -132,6 +139,7 @@ function mouseUp(){
     forEachShape(function(i){
       releaseShape(i);
     });
+    throwArray = [];
   }, false);
 }
 
@@ -166,12 +174,13 @@ function detectShape(i){
   }
 
   if(ShapesController.getProperty(i, 'dragging')){
-    moveShape(i);
+    dragShape(i);
   }
 }
 
 function prepareToMoveShape(i){
   if(ShapesController.getProperty(i, 'onShape')){
+    ShapesController.setProperty(i, 'velocity', {x: 0, y: 0}, true);
     var centre = ShapesController.getCentre(i);
     ShapesController.setProperty(i, 'dragging', true);
     var distanceX = mousePos.x - centre.x;
@@ -181,6 +190,10 @@ function prepareToMoveShape(i){
 }
 
 function releaseShape(i){
+    var velocity = throwVelocity();
+    if(throwArray.length > 0 && ShapesController.getProperty(i, 'dragging')){
+      ShapesController.setProperty(i, 'velocity', {x: velocity.x, y: velocity.y}, true);
+    }
     ShapesController.setProperty(i, 'dragging', false);
     ShapesController.setProperty(i, 'selected', false);
 }
@@ -193,7 +206,7 @@ function deleteShape(i){
   }
 }
 
-function moveShape(i){
+function dragShape(i){
   var touchPoint = ShapesController.getTouchPoint(i);
   ShapesController.setProperty(i, 'centre', {
     x: mousePos.x - touchPoint.x,
@@ -229,6 +242,42 @@ function forEachShape(callback, bool){
       }
     }
   }
+}
+
+function makeThrowArray(){
+  var length = throwArray.length;
+  var arraySize = 5
+  if(length >= arraySize){
+    throwArray = throwArray.splice(length - arraySize);
+  }
+  throwArray.push({x: mousePos.x, y: mousePos.y});
+}
+
+function throwVelocity(){
+  var velocityArray = [];
+  var velocity = {x: 0, y: 0};
+  var length = throwArray.length;
+  for(var i = 1; i < length; i++){
+    velocityArray.push({x: throwArray[i].x - throwArray[i-1].x, y: throwArray[i].y - throwArray[i-1].y});
+  }
+  var length2 = velocityArray.length;
+  for(var j = 0; j < length2; j++){
+    velocity.x += velocityArray[j].x;
+    velocity.y += velocityArray[j].y;
+  }
+  if(length2 > 0){
+    velocity.x /= length2;
+    velocity.y /= length2;
+  }
+  return {x: velocity.x, y: velocity.y};
+}
+
+function applyPhysics(i){
+    var velocity = ShapesController.getProperty(i, 'velocity', true);
+    var centre = ShapesController.getCentre(i);
+    centre.x += velocity.x;
+    centre.y += velocity.y;
+    ShapesController.setProperty(i, 'centre', {x: centre.x, y: centre.y});
 }
 
 var ShapesController = (function(){
@@ -268,14 +317,22 @@ var ShapesController = (function(){
     return vertices;
   }
 
-  function getProperty(shapeIndex, property){
+  function getProperty(shapeIndex, property, bool){
     var shape = shapes[shapeIndex];
-    var property = shape[property];
+    if (!bool) {
+      var property = shape[property];
+    } else {
+      var property = shape['physics'][property];
+    }
     return property;
   }
 
-  function setProperty(shapeIndex, property, value){
+  function setProperty(shapeIndex, property, value, bool){
+    if (!bool) {
       Scene.shapes[shapeIndex][property] = value;
+    } else if(bool === true) { //physics property
+      Scene.shapes[shapeIndex]['physics'][property] = value;
+    }
   }
 
   function deleteShape(shapeIndex){
