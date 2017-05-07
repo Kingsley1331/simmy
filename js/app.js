@@ -1,5 +1,6 @@
 console.log('hello simmy!');
-
+var velFactor = 0.1;
+var time = 0;
 var id = 0;
 var onShape = false;
 var hoveringOnShape = 0;
@@ -96,20 +97,26 @@ window.requestAnimFrame = (function(callback) {
 })();
 
 function animate(){
+  var date = new Date()
+  var currentTime = date.getTime();
+  var tDelta = (currentTime - time);
   forEachShape(function(i){
-    applyPhysics(i);
+    applyPhysics(i, tDelta);
   });
 	draw();
 	requestAnimFrame(function() {
 			animate();
 	});
+  time = currentTime;
 }
 
   function mouseMove(){
   	canvas.addEventListener('mousemove', function(evt){
   	  mousePos = getMousePos(evt, canvas);
       hoveringOnShape = 0;
-      makeThrowArray();
+      if(selectedShape === 'play'){
+        makeThrowArray();
+      }
       forEachShape(function(i){
           detectShape(i);
       }, true);
@@ -128,7 +135,7 @@ function mouseDown(){
         deleteShape(i);
       }
     });
-    if(selectedShape && selectedShape !== '_delete'){
+    if(selectedShape && selectedShape !== '_delete' && selectedShape !== 'play'){
       createShape(mousePos, shapeSelection[selectedShape]);
     }
   }, false);
@@ -180,7 +187,9 @@ function detectShape(i){
 
 function prepareToMoveShape(i){
   if(ShapesController.getProperty(i, 'onShape')){
-    ShapesController.setProperty(i, 'velocity', {x: 0, y: 0}, true);
+    if(selectedShape === 'play'){
+      ShapesController.setProperty(i, 'velocity', {x: 0, y: 0}, true);
+    }
     var centre = ShapesController.getCentre(i);
     ShapesController.setProperty(i, 'dragging', true);
     var distanceX = mousePos.x - centre.x;
@@ -272,12 +281,14 @@ function throwVelocity(){
   return {x: velocity.x, y: velocity.y};
 }
 
-function applyPhysics(i){
+function applyPhysics(i, tDelta){
+  if(selectedShape === 'play'){
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     var centre = ShapesController.getCentre(i);
-    centre.x += velocity.x;
-    centre.y += velocity.y;
+    centre.x += velocity.x * tDelta * velFactor;
+    centre.y += velocity.y * tDelta * velFactor;
     ShapesController.setProperty(i, 'centre', {x: centre.x, y: centre.y});
+  }
 }
 
 var ShapesController = (function(){

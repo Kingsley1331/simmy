@@ -1,6 +1,7 @@
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 
+var play = document.getElementById("play");
 var none = document.getElementById("none");
 var square = document.getElementById("square");
 var triangle = document.getElementById("triangle");
@@ -17,6 +18,7 @@ var box = document.getElementById("box");
 var _delete = document.getElementById("_delete");
 
 var ui = {
+  play: play,
   none: none,
   square: square,
   triangle: triangle,
@@ -33,7 +35,7 @@ var ui = {
   _delete: _delete
 };
 
-var uiArray = ['none', 'square', 'triangle', 'pentagon', 'hexagon', 'circle', 'plus', 'arrow', 'star', 'tShape', 'bar', 'concave', 'box', '_delete'];
+var uiArray = ['play','none', 'square', 'triangle', 'pentagon', 'hexagon', 'circle', 'plus', 'arrow', 'star', 'tShape', 'bar', 'concave', 'box', '_delete'];
 
 bufferCanvas = document.createElement('canvas');
 bufferCtx = bufferCanvas.getContext("2d");
