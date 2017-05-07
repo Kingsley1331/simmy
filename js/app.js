@@ -44,6 +44,8 @@ function createShape(centre, vertices){
   }
 }
 
+
+
 //function draw(){
 let draw = () => {
   bufferCtx.fillStyle = Scene.backgroundColour;
@@ -195,6 +197,10 @@ function prepareToMoveShape(i){
     var distanceX = mousePos.x - centre.x;
     var distanceY = mousePos.y - centre.y;
     ShapesController.setProperty(i, 'touchPoint', {x: distanceX, y: distanceY});
+    var x = document.getElementsByClassName("dg");
+    //x.parentNode.removeChild(x);
+    //x={};
+    addGui(i);
   }
 }
 
@@ -360,3 +366,5 @@ var ShapesController = (function(){
     deleteShape: deleteShape
   };
 })();
+
+createShape({x: 500, y: 250}, shapeSelection.square);
