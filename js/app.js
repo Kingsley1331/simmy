@@ -15,7 +15,7 @@ function Shape(centre, vertices){
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
-  this.linewidth = 1;
+  this.linewidth = 0.7;
   this.centre = centre;
   this.vertices = vertices;
   this.physics = {
@@ -36,7 +36,7 @@ function Shape(centre, vertices){
 }
 
 function createShape(centre, vertices){
-  if(hoveringOnShape <= 0){ // if hovering on shape
+  if(hoveringOnShape <= 0){ // if not hovering on shape
     id++;
     var shape = new Shape(centre, vertices);
     shape.id = id;
@@ -53,21 +53,13 @@ let draw = () => {
   forEachShape(function(i){
       bufferCtx.save();
       bufferCtx.fillStyle = ShapesController.getProperty(i, 'fillColour');
-
+      bufferCtx.lineWidth = ShapesController.getProperty(i, 'linewidth');
       var centre = ShapesController.getCentre(i);
       var num = ShapesController.getShapeSize(i);
 
       var vertices = ShapesController.getVertices(i);
-      var x0 = vertices[0].x + centre.x;
-      var y0 = vertices[0].y + centre.y;
 
-      bufferCtx.beginPath();
-      bufferCtx.moveTo(x0, y0);
-      for(var j = 1; j < num; j++){
-        var x = vertices[j].x + centre.x;
-        var y = vertices[j].y + centre.y;
-        bufferCtx.lineTo(x, y);
-      }
+      drawShape(vertices, centre);
 
       var onShape = ShapesController.getProperty(i, 'onShape');
       if(onShape){
@@ -76,13 +68,43 @@ let draw = () => {
         bufferCtx.shadowOffsetY = 10;
         bufferCtx.shadowBlur = 10;
       }
-      bufferCtx.closePath();
-      bufferCtx.stroke();
-      bufferCtx.fill();
-      bufferCtx.restore();
+       bufferCtx.closePath();
+       bufferCtx.stroke();
+       bufferCtx.fill();
+       bufferCtx.restore();
   });
-
+  if(shapeSelection[selectedShape] && hoveringOnShape <= 0){ // (hoveringOnShape <= 0) means not hovering on shape
+    bufferCtx.save();
+    drawShape(shapeSelection[selectedShape], mousePos, 0.15, false, true);
+    bufferCtx.restore();
+  }
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
+}
+
+function drawShape(vertices, centre, alpha, num, bool){
+  var alpha = alpha ? alpha: 1;
+  var num = num ? num: vertices.length;
+
+  var x0 = vertices[0].x + centre.x;
+  var y0 = vertices[0].y + centre.y;
+
+  bufferCtx.beginPath();
+  bufferCtx.moveTo(x0, y0);
+  for(var j = 1; j < num; j++){
+    var x = vertices[j].x + centre.x;
+    var y = vertices[j].y + centre.y;
+    bufferCtx.lineTo(x, y);
+  }
+    bufferCtx.save();
+    bufferCtx.lineWidth = 10;
+    bufferCtx.fillStyle = 'red';
+    bufferCtx.globalAlpha = alpha;
+    bufferCtx.closePath();
+    if(!bool){
+      bufferCtx.stroke();
+    }
+    bufferCtx.fill();
+    bufferCtx.restore();
 }
 
 function flicker(){
@@ -198,8 +220,9 @@ function prepareToMoveShape(i){
     var distanceY = mousePos.y - centre.y;
     ShapesController.setProperty(i, 'touchPoint', {x: distanceX, y: distanceY});
     var x = document.getElementsByClassName("dg");
-    //x.parentNode.removeChild(x);
-    //x={};
+    if(gui){
+      gui.destroy();
+    }
     addGui(i);
   }
 }
@@ -367,4 +390,4 @@ var ShapesController = (function(){
   };
 })();
 
-createShape({x: 500, y: 250}, shapeSelection.square);
+//createShape({x: 500, y: 250}, shapeSelection.square);
