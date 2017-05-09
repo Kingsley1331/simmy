@@ -44,47 +44,47 @@ function createShape(centre, vertices){
   }
 }
 
-
-
 //function draw(){
 let draw = () => {
   bufferCtx.fillStyle = Scene.backgroundColour;
   bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
   forEachShape(function(i){
+      var onShape = ShapesController.getProperty(i, 'onShape');
       bufferCtx.save();
-      bufferCtx.fillStyle = ShapesController.getProperty(i, 'fillColour');
-      bufferCtx.lineWidth = ShapesController.getProperty(i, 'linewidth');
+      if(onShape){
+        var shadowColor = shadowColor = 'rgba( 9, 9, 9, 0.3)';
+        var shadowOffsetX = shadowOffsetX = 10;
+        var shadowOffsetY = shadowOffsetY = 10;
+        var shadowBlur = shadowBlur = 10;
+      }
+
+      var fillColour = ShapesController.getProperty(i, 'fillColour');
+      var lineWidth = ShapesController.getProperty(i, 'linewidth');
       var centre = ShapesController.getCentre(i);
-      var num = ShapesController.getShapeSize(i);
 
       var vertices = ShapesController.getVertices(i);
-
-      drawShape(vertices, centre);
-
-      var onShape = ShapesController.getProperty(i, 'onShape');
-      if(onShape){
-        bufferCtx.shadowColor = 'rgba( 9, 9, 9, 0.3)';
-        bufferCtx.shadowOffsetX = 10;
-        bufferCtx.shadowOffsetY = 10;
-        bufferCtx.shadowBlur = 10;
-      }
-       bufferCtx.closePath();
-       bufferCtx.stroke();
-       bufferCtx.fill();
-       bufferCtx.restore();
+      var config = {
+        shadowColor: shadowColor,
+        shadowOffsetX: shadowOffsetX,
+        shadowOffsetY: shadowOffsetY,
+        shadowBlur: shadowBlur,
+        fillStyle: fillColour,
+        lineWidth: lineWidth
+      };
+      drawShape(vertices, centre, config);
   });
   if(shapeSelection[selectedShape] && hoveringOnShape <= 0){ // (hoveringOnShape <= 0) means not hovering on shape
-    bufferCtx.save();
-    drawShape(shapeSelection[selectedShape], mousePos, 0.15, false, true);
-    bufferCtx.restore();
+    drawShape(shapeSelection[selectedShape], mousePos, {
+      globalAlpha: 0.15,
+      fillStyle: 'blue',
+      lineWidth: 0.000001
+    });
   }
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
 }
 
-function drawShape(vertices, centre, alpha, num, bool){
-  var alpha = alpha ? alpha: 1;
-  var num = num ? num: vertices.length;
-
+function drawShape(vertices, centre, config){
+  var num = vertices.length;
   var x0 = vertices[0].x + centre.x;
   var y0 = vertices[0].y + centre.y;
 
@@ -96,13 +96,11 @@ function drawShape(vertices, centre, alpha, num, bool){
     bufferCtx.lineTo(x, y);
   }
     bufferCtx.save();
-    bufferCtx.lineWidth = 10;
-    bufferCtx.fillStyle = 'red';
-    bufferCtx.globalAlpha = alpha;
-    bufferCtx.closePath();
-    if(!bool){
-      bufferCtx.stroke();
+    for(var prop in config){
+      bufferCtx[prop] = config[prop];
     }
+    bufferCtx.closePath();
+    bufferCtx.stroke();
     bufferCtx.fill();
     bufferCtx.restore();
 }
@@ -340,11 +338,11 @@ var ShapesController = (function(){
      };
   }
 
-  function getShapeSize(shapeIndex){
-    var shape = shapes[shapeIndex];
-    var size = shape.vertices.length;
-    return size;
-  }
+  // function getShapeSize(shapeIndex){
+  //   var shape = shapes[shapeIndex];
+  //   var size = shape.vertices.length;
+  //   return size;
+  // }
 
   function getVertices(shapeIndex){
     var vertices = [];
@@ -382,7 +380,7 @@ var ShapesController = (function(){
   return {
     getCentre: getCentre,
     getTouchPoint: getTouchPoint,
-    getShapeSize: getShapeSize,
+    //getShapeSize: getShapeSize,
     getVertices: getVertices,
     getProperty: getProperty,
     setProperty: setProperty,
