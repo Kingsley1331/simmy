@@ -33,6 +33,7 @@ function Shape(centre, vertices){
 	this.dragging = false;
 	this.selected = false;
   this.touchPoint = [];
+  this.display = [];
 }
 
 function createShape(centre, vertices){
@@ -310,12 +311,19 @@ function throwVelocity(){
 
 function applyPhysics(i, tDelta){
   if(selectedShape === 'play'){
+    var acceleration = ShapesController.getProperty(i, 'acceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
+    velocity.x += acceleration.x;
+    velocity.y += acceleration.y;
     var centre = ShapesController.getCentre(i);
     centre.x += velocity.x * tDelta * velFactor;
     centre.y += velocity.y * tDelta * velFactor;
     ShapesController.setProperty(i, 'centre', {x: centre.x, y: centre.y});
   }
+}
+
+function applyForces(i){
+
 }
 
 var ShapesController = (function(){
