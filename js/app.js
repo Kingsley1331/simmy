@@ -12,6 +12,7 @@ var Scene = {
 };
 
 function Shape(centre, vertices){
+  var boundingRect = findBoundingRect(vertices)
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
@@ -34,7 +35,45 @@ function Shape(centre, vertices){
 	this.selected = false;
   this.touchPoint = [];
   this.display = [];
+  this.boundingRect = {
+      minX: boundingRect.minX,
+      maxX: boundingRect.maxX,
+      minY: boundingRect.minY,
+      maxY: boundingRect.maxY
+    };
 }
+
+function findBoundingRect(vertices){
+  var boundingRect = {};
+  var maxX = vertices[0].x;
+  var minX = vertices[0].x;
+  var maxY = vertices[0].y;
+  var minY = vertices[0].y;
+  var length = vertices.length;
+  for(var i = 0; i < length; i++){
+    if(maxX < vertices[i].x){
+      maxX = vertices[i].x
+    }
+    if(minX > vertices[i].x){
+      minX = vertices[i].x
+    }
+    if(maxY < vertices[i].y){
+      maxY = vertices[i].y
+    }
+    if(minY > vertices[i].y){
+      minY = vertices[i].y
+    }
+  }
+  boundingRect = {
+    minX: minX,
+    maxX: maxX,
+    minY: minY,
+    maxY: maxY
+  };
+  console.log('boundingRect', boundingRect);
+  return boundingRect;
+};
+
 
 function createShape(centre, vertices){
   if(hoveringOnShape <= 0){ // if not hovering on shape
@@ -81,7 +120,17 @@ let draw = () => {
       lineWidth: 0.000001
     });
   }
+  screenWriter('x:' + Math.round(mousePos.x) + ',  ' + 'y:' + Math.round(mousePos.y), {x:10, y:20});
+
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
+}
+
+function screenWriter(text, position){
+  bufferCtx.save();
+  bufferCtx.fillStyle = 'black';
+  bufferCtx.font = "15px Arial";
+  bufferCtx.fillText(text,position.x, position.y);
+  bufferCtx.restore();
 }
 
 function drawShape(vertices, centre, config){
