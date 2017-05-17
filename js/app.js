@@ -76,7 +76,6 @@ function findBoundingRect(vertices){
     minY: minY,
     maxY: maxY
   };
-  //console.log('boundingRect', boundingRect);
   return boundingRect;
 };
 
@@ -85,7 +84,6 @@ function createShape(centre, vertices){
   if(hoveringOnShape <= 0){ // if not hovering on shape
     id++;
     var shape = new Shape(centre, vertices);
-    console.log('boundingRect', shape.boundingRect);
     shape.id = id;
     Scene.shapes.push(shape);
   }
@@ -250,18 +248,8 @@ function detectShape(i){
   ShapesController.setProperty(i, 'onShape', false);
   var centre = ShapesController.getCentre(i);
   var vertices = ShapesController.getVertices(i);
-
-  var x0 = centre.x + vertices[0].x;
-  var y0 = centre.y + vertices[0].y;
-
-  bufferCtx.beginPath();
-  bufferCtx.moveTo(x0, y0);
-  for(var m = 1; m < vertices.length; m++){
-    var x = centre.x + vertices[m].x;
-    var y = centre.y + vertices[m].y;
-    bufferCtx.lineTo(x, y);
-  }
-  if(bufferCtx.isPointInPath(mousePos.x, mousePos.y)){
+  var pointInShape = isPointInShape(centre, vertices, mousePos);
+  if(pointInShape){
     hoveringOnShape++;
     if(!onShape){
       ShapesController.setProperty(i, 'onShape', true);
@@ -278,6 +266,25 @@ function detectShape(i){
 
   if(ShapesController.getProperty(i, 'dragging')){
     dragShape(i);
+  }
+}
+
+function isPointInShape(centre, vertices, point){
+  var x0 = centre.x + vertices[0].x;
+  var y0 = centre.y + vertices[0].y;
+
+  bufferCtx.beginPath();
+  bufferCtx.moveTo(x0, y0);
+  for(var m = 1; m < vertices.length; m++){
+    var x = centre.x + vertices[m].x;
+    var y = centre.y + vertices[m].y;
+    bufferCtx.lineTo(x, y);
+  }
+
+  if(bufferCtx.isPointInPath(point.x, point.y)){
+      return true;
+  } else {
+      return false;
   }
 }
 
