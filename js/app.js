@@ -19,6 +19,7 @@ function Shape(centre, vertices){
   this.linewidth = 0.7;
   this.centre = centre;
   this.vertices = vertices;
+  this.colliding = false;
   this.physics = {
     density: 1,
     mass: 1,
@@ -197,6 +198,7 @@ function animate(){
   forEachShape(function(i){
     applyPhysics(i, tDelta);
   });
+  collisionDetector();
 	draw();
 	requestAnimFrame(function() {
 			animate();
@@ -402,8 +404,35 @@ function applyPhysics(i, tDelta){
   }
 }
 
-function applyForces(i){
+// function applyForces(i){
+//
+// }
 
+function collisionDetector(){
+  var shapes = Scene.shapes;
+  var numShapes = shapes.length;
+  forEachShape(function(i){
+    var vertices = ShapesController.getVertices(i);
+    var centre = ShapesController.getCentre(i);
+    var length = vertices.length;
+    for(var j = 0; j < length; j++){
+        var checkPoint = {};
+        checkPoint.x = vertices[j].x + centre.x;
+        checkPoint.y = vertices[j].y + centre.y;
+        for(var k = 0; k < numShapes; k++){
+          if(i!== k){
+          var shape = shapes[k];
+          var shapeVertices = shape.vertices;
+          var shapeCentre = shape.centre;
+          var pointInShape = isPointInShape(shapeCentre, shapeVertices, checkPoint);
+          if(pointInShape){
+            shape.colliding = true;
+            console.log('colliding');
+          }
+        }
+      }
+    }
+  });
 }
 
 var ShapesController = (function(){
