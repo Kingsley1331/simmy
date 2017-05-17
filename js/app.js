@@ -39,7 +39,13 @@ function Shape(centre, vertices){
       minX: boundingRect.minX,
       maxX: boundingRect.maxX,
       minY: boundingRect.minY,
-      maxY: boundingRect.maxY
+      maxY: boundingRect.maxY,
+      vertices:[
+        {x: boundingRect.minX, y: boundingRect.minY},
+        {x: boundingRect.maxX, y: boundingRect.minY},
+        {x: boundingRect.maxX, y: boundingRect.maxY},
+        {x: boundingRect.minX, y: boundingRect.maxY}
+      ]
     };
 }
 
@@ -70,7 +76,7 @@ function findBoundingRect(vertices){
     minY: minY,
     maxY: maxY
   };
-  console.log('boundingRect', boundingRect);
+  //console.log('boundingRect', boundingRect);
   return boundingRect;
 };
 
@@ -79,6 +85,7 @@ function createShape(centre, vertices){
   if(hoveringOnShape <= 0){ // if not hovering on shape
     id++;
     var shape = new Shape(centre, vertices);
+    console.log('boundingRect', shape.boundingRect);
     shape.id = id;
     Scene.shapes.push(shape);
   }
@@ -90,7 +97,7 @@ let draw = () => {
   bufferCtx.fillRect(0, 0, canvas.width, canvas.height);
   forEachShape(function(i){
       var onShape = ShapesController.getProperty(i, 'onShape');
-      bufferCtx.save();
+      //bufferCtx.save();
       if(onShape){
         var shadowColor = shadowColor = 'rgba( 9, 9, 9, 0.3)';
         var shadowOffsetX = shadowOffsetX = 10;
@@ -111,7 +118,13 @@ let draw = () => {
         fillStyle: fillColour,
         lineWidth: lineWidth
       };
+      var boundingRect = ShapesController.getProperty(i, 'boundingRect');
+      var rectVertices = boundingRect.vertices;
+      drawShape(rectVertices, centre, {lineWidth: 0.5, fillStyle: 'transparent'});
       drawShape(vertices, centre, config);
+      drawDot(3, centre, 'black');
+
+
   });
   if(shapeSelection[selectedShape] && hoveringOnShape <= 0){ // (hoveringOnShape <= 0) means not hovering on shape
     drawShape(shapeSelection[selectedShape], mousePos, {
@@ -154,6 +167,17 @@ function drawShape(vertices, centre, config){
     bufferCtx.fill();
     bufferCtx.restore();
 }
+
+function drawDot(radius, centre, colour){
+  bufferCtx.save();
+  bufferCtx.fillStyle = colour;
+  bufferCtx.beginPath();
+  bufferCtx.arc(centre.x, centre.y, radius, 0, 2*Math.PI);
+  bufferCtx.fill();
+  //bufferCtx.stroke();
+  bufferCtx.restore();
+}
+
 
 function flicker(){
   setInterval(draw, 17);
