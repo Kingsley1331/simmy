@@ -82,6 +82,9 @@ function findBoundingRect(vertices){
 
 
 function createShape(centre, vertices){
+  forEachShape(function(i){
+      detectShape(i);
+  }, true);
   if(hoveringOnShape <= 0){ // if not hovering on shape
     id++;
     var shape = new Shape(centre, vertices);
@@ -117,12 +120,16 @@ let draw = () => {
         fillStyle: fillColour,
         lineWidth: lineWidth
       };
+      if(ShapesController.getProperty(i, 'colliding')){
+        config.lineWidth = 10;
+      }
       var boundingRect = ShapesController.getProperty(i, 'boundingRect');
       var rectVertices = boundingRect.vertices;
+      var idPos = {x: centre.x - 4, y: centre.y - 5};
       drawShape(rectVertices, centre, {lineWidth: 0.5, fillStyle: 'transparent'});
       drawShape(vertices, centre, config);
       drawDot(3, centre, 'black');
-
+      screenWriter(ShapesController.getProperty(i, 'id'), idPos)
 
   });
   if(shapeSelection[selectedShape] && hoveringOnShape <= 0){ // (hoveringOnShape <= 0) means not hovering on shape
@@ -412,6 +419,9 @@ function collisionDetector(){
   var shapes = Scene.shapes;
   var numShapes = shapes.length;
   forEachShape(function(i){
+      ShapesController.setProperty(i, 'colliding', false);
+  });
+  forEachShape(function(i){
     var vertices = ShapesController.getVertices(i);
     var centre = ShapesController.getCentre(i);
     var length = vertices.length;
@@ -422,12 +432,12 @@ function collisionDetector(){
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
           var shape = shapes[k];
-          var shapeVertices = shape.vertices;
-          var shapeCentre = shape.centre;
+          var shapeVertices = ShapesController.getProperty(k, 'vertices');
+          var shapeCentre = ShapesController.getProperty(k, 'centre');
           var pointInShape = isPointInShape(shapeCentre, shapeVertices, checkPoint);
           if(pointInShape){
-            shape.colliding = true;
-            console.log('colliding');
+            ShapesController.setProperty(i, 'colliding', true);
+            ShapesController.setProperty(k, 'colliding', true);
           }
         }
       }
