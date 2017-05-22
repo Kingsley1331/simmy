@@ -12,7 +12,7 @@ var Scene = {
 };
 
 function Shape(centre, vertices){
-  var boundingRect = findBoundingRect(vertices)
+  var boundingRect = findBoundingRect(vertices);
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
@@ -41,13 +41,20 @@ function Shape(centre, vertices){
       maxX: boundingRect.maxX,
       minY: boundingRect.minY,
       maxY: boundingRect.maxY,
-      vertices:[
+      centre: {
+        x: (boundingRect.minX + boundingRect.maxX)/2,
+        y: (boundingRect.minY + boundingRect.maxY)/2
+      },
+      vertices: [
         {x: boundingRect.minX, y: boundingRect.minY},
         {x: boundingRect.maxX, y: boundingRect.minY},
         {x: boundingRect.maxX, y: boundingRect.maxY},
         {x: boundingRect.minX, y: boundingRect.maxY}
       ]
     };
+    var boundingRectCentre = {x: this.boundingRect.centre.x, y: this.boundingRect.centre.y};
+    var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
+    this.boundingRect.radius = radius;
 }
 
 function findBoundingRect(vertices){
@@ -89,6 +96,7 @@ function createShape(centre, vertices){
     id++;
     var shape = new Shape(centre, vertices);
     shape.id = id;
+    console.log('boundingRect.radius', shape.boundingRect.radius);
     Scene.shapes.push(shape);
   }
 }
@@ -124,13 +132,21 @@ let draw = () => {
         config.lineWidth = 10;
       }
       var boundingRect = ShapesController.getProperty(i, 'boundingRect');
+      var boundingRectCentre = {x: boundingRect.centre.x + centre.x, y: boundingRect.centre.y + centre.y};
       var rectVertices = boundingRect.vertices;
+
+      var radius = boundingRect.radius;
       var idPos = {x: centre.x - 4, y: centre.y - 5};
       drawShape(rectVertices, centre, {lineWidth: 0.5, fillStyle: 'transparent'});
       drawShape(vertices, centre, config);
       drawDot(3, centre, 'black');
-      screenWriter(ShapesController.getProperty(i, 'id'), idPos)
-
+      drawDot(3, boundingRectCentre, 'red');
+      screenWriter(ShapesController.getProperty(i, 'id'), idPos);
+      bufferCtx.save();
+      bufferCtx.beginPath();
+      bufferCtx.arc(boundingRectCentre.x, boundingRectCentre.y, radius, 0, 2*Math.PI);
+      bufferCtx.stroke();
+      bufferCtx.restore();
   });
   if(shapeSelection[selectedShape] && hoveringOnShape <= 0){ // (hoveringOnShape <= 0) means not hovering on shape
     drawShape(shapeSelection[selectedShape], mousePos, {

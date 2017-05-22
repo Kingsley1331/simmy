@@ -1,12 +1,15 @@
-function distance(x, y){
+function magnitude(vector){
+	var x = vector.x;
+	var y = vector.y;
 	return Math.sqrt(x*x + y*y);
 }
 
  function Vector(vector){
+	 var mag = magnitude(vector);
 	 this.x = vector.x;
 	 this.y = vector.y;
 	 this.z = vector.z ? vector.z: 0;
-	 this.magnitude =  Math.sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+	 this.magnitude = mag;
  }
 
  Vector.prototype.add = function(vector2){
