@@ -13,6 +13,12 @@ var Scene = {
 
 function Shape(centre, vertices){
   var boundingRect = findBoundingRect(vertices);
+  var mass = findMass(centre, vertices, boundingRect);
+  var centreOfMass = mass.centreOfMass;
+  console.log('mass:', mass);
+  console.log('centreOfMass', centreOfMass);
+  findMomentOfInertiaCM(centreOfMass, vertices, boundingRect);
+
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
@@ -22,7 +28,7 @@ function Shape(centre, vertices){
   this.colliding = false;
   this.physics = {
     density: 1,
-    mass: 1,
+    mass: mass.mass,
   	momentOfInertia: 1,
     velocity: {x:0, y:0},
   	angularVelocity: 0,
@@ -36,57 +42,133 @@ function Shape(centre, vertices){
 	this.selected = false;
   this.touchPoint = [];
   this.display = [];
-  this.boundingRect = {
-      minX: boundingRect.minX,
-      maxX: boundingRect.maxX,
-      minY: boundingRect.minY,
-      maxY: boundingRect.maxY,
-      centre: {
-        x: (boundingRect.minX + boundingRect.maxX)/2,
-        y: (boundingRect.minY + boundingRect.maxY)/2
-      },
-      vertices: [
-        {x: boundingRect.minX, y: boundingRect.minY},
-        {x: boundingRect.maxX, y: boundingRect.minY},
-        {x: boundingRect.maxX, y: boundingRect.maxY},
-        {x: boundingRect.minX, y: boundingRect.maxY}
-      ]
-    };
+  this.boundingRect = boundingRect;
     var boundingRectCentre = {x: this.boundingRect.centre.x, y: this.boundingRect.centre.y};
     var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
     this.boundingRect.radius = radius;
 }
 
-function findBoundingRect(vertices){
-  var boundingRect = {};
-  var maxX = vertices[0].x;
-  var minX = vertices[0].x;
-  var maxY = vertices[0].y;
-  var minY = vertices[0].y;
-  var length = vertices.length;
-  for(var i = 0; i < length; i++){
-    if(maxX < vertices[i].x){
-      maxX = vertices[i].x
-    }
-    if(minX > vertices[i].x){
-      minX = vertices[i].x
-    }
-    if(maxY < vertices[i].y){
-      maxY = vertices[i].y
-    }
-    if(minY > vertices[i].y){
-      minY = vertices[i].y
-    }
-  }
-  boundingRect = {
-    minX: minX,
-    maxX: maxX,
-    minY: minY,
-    maxY: maxY
-  };
-  return boundingRect;
-};
+// function findBoundingRect(vertices){
+//   var boundingRect = {};
+//   var maxX = vertices[0].x;
+//   var minX = vertices[0].x;
+//   var maxY = vertices[0].y;
+//   var minY = vertices[0].y;
+//   var length = vertices.length;
+//   for(var i = 0; i < length; i++){
+//     if(maxX < vertices[i].x){
+//       maxX = vertices[i].x
+//     }
+//     if(minX > vertices[i].x){
+//       minX = vertices[i].x
+//     }
+//     if(maxY < vertices[i].y){
+//       maxY = vertices[i].y
+//     }
+//     if(minY > vertices[i].y){
+//       minY = vertices[i].y
+//     }
+//   }
+//   boundingRect = {
+//     minX: minX,
+//     maxX: maxX,
+//     minY: minY,
+//     maxY: maxY,
+//     centre: {
+//       x: (minX + maxX)/2,
+//       y: (minY + maxY)/2
+//     },
+//     vertices: [
+//       {x: minX, y: minY},
+//       {x: maxX, y: minY},
+//       {x: maxX, y: maxY},
+//       {x: minX, y: maxY}
+//     ]
+//   };
+//   return boundingRect;
+// };
 
+// function findMass(centre, vertices, boundingRect){
+//   var resolution = {x: 1, y: 1};
+//   var mass = 0;
+//   var count = 0;
+//   var centreOfMass = {x: 0, y: 0};
+//   var massDistances = {x: 0, y: 0};
+//   var momentOfInertia = 0;
+//   var width = boundingRect.maxX - boundingRect.minX;
+//   var height = boundingRect.maxY - boundingRect.minY;
+//   var startPoint = {x: boundingRect.minX, y: boundingRect.minY};
+//   var checkPoint = {};
+//   for(var i = 0; i < width; i += resolution.x){
+//     for(var j = 0; j < height; j += resolution.y){
+//       checkPoint.x = startPoint.x + resolution.x * i;
+//       checkPoint.y = startPoint.y + resolution.y * j;
+//       var pointInShape = isPointInShape({x: 0, y: 0}, vertices, checkPoint);
+//       if(pointInShape){
+//         mass += resolution.x * resolution.y;
+//         count += 1;
+//         //momentOfInertia = (resolution.x * resolution.y) * Math.pow(magnitude(checkPoint), 2);
+//         massDistances.x += checkPoint.x;
+//         massDistances.y += checkPoint.y;
+//       }
+//     }
+//   }
+//   centreOfMass.x = (massDistances.x / count) + centre.x;
+//   centreOfMass.y = (massDistances.y / count) + centre.y;
+//   console.log('width:', width);
+//   console.log('height:', height);
+//   console.log('mass:', mass);
+//   console.log('startPoint', startPoint);
+//   console.log('centre', centre);
+//   console.log('centreOfMass', {x: centreOfMass.x, y:centreOfMass.y});
+//   return {mass: mass, centreOfMass: centreOfMass};
+// }
+//
+// function updateVertices(vertices, center, centreOfMass){
+//   var length = vertices.length;
+//   var diff = {x: centreOfMass.x - center.x, y: centreOfMass.y - center.y};
+//   for(var i = 0; i < length; i++){
+//     vertices[i].x -= diff.x;
+//     vertices[i].y -= diff.y;
+//   }
+//   return vertices;
+// }
+//
+// function findMomentOfInertia(centreOfMass, vertices, boundingRect){
+//   var resolution = {x: 1, y: 1};
+//   //var mass = 0;
+//   //var count = 0;
+//   //var centreOfMass = {x: 0, y: 0};
+//   //var massDistances = {x: 0, y: 0};
+//   var momentOfInertia = 0;
+//   var width = boundingRect.maxX - boundingRect.minX;
+//   var height = boundingRect.maxY - boundingRect.minY;
+//   var startPoint = {x: boundingRect.minX, y: boundingRect.minY};
+//   var checkPoint = {};
+//   for(var i = 0; i < width; i += resolution.x){
+//     for(var j = 0; j < height; j += resolution.y){
+//       checkPoint.x = startPoint.x + resolution.x * i;
+//       checkPoint.y = startPoint.y + resolution.y * j;
+//       var pointInShape = isPointInShape({x: 0, y: 0}, vertices, checkPoint);
+//       if(pointInShape){
+//         // mass += resolution.x * resolution.y;
+//         // count += 1;
+//         momentOfInertia += (resolution.x * resolution.y) * Math.pow(magnitude(checkPoint), 2);
+//         // massDistances.x += checkPoint.x;
+//         // massDistances.y += checkPoint.y;
+//       }
+//     }
+//   }
+//   // centreOfMass.x = massDistances.x / count;
+//   // centreOfMass.y = massDistances.y / count;
+//   // console.log('width:', width);
+//   // console.log('height:', height);
+//   // console.log('mass:', mass);
+//   // console.log('startPoint', startPoint);
+//   // console.log('centre', centre);
+//   // console.log('centreOfMass', {x:centreOfMass.x + centre.x, y:centreOfMass.y + centre.y});
+//   console.log('momentOfInertia', momentOfInertia);
+// }
 
 function createShape(centre, vertices){
   forEachShape(function(i){
@@ -294,24 +376,24 @@ function detectShape(i){
   }
 }
 
-function isPointInShape(centre, vertices, point){
-  var x0 = centre.x + vertices[0].x;
-  var y0 = centre.y + vertices[0].y;
-
-  bufferCtx.beginPath();
-  bufferCtx.moveTo(x0, y0);
-  for(var m = 1; m < vertices.length; m++){
-    var x = centre.x + vertices[m].x;
-    var y = centre.y + vertices[m].y;
-    bufferCtx.lineTo(x, y);
-  }
-
-  if(bufferCtx.isPointInPath(point.x, point.y)){
-      return true;
-  } else {
-      return false;
-  }
-}
+// function isPointInShape(centre, vertices, point){
+//   var x0 = centre.x + vertices[0].x;
+//   var y0 = centre.y + vertices[0].y;
+//
+//   bufferCtx.beginPath();
+//   bufferCtx.moveTo(x0, y0);
+//   for(var m = 1; m < vertices.length; m++){
+//     var x = centre.x + vertices[m].x;
+//     var y = centre.y + vertices[m].y;
+//     bufferCtx.lineTo(x, y);
+//   }
+//
+//   if(bufferCtx.isPointInPath(point.x, point.y)){
+//       return true;
+//   } else {
+//       return false;
+//   }
+// }
 
 function prepareToMoveShape(i){
   if(ShapesController.getProperty(i, 'onShape')){
