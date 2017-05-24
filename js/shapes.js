@@ -163,6 +163,7 @@ function findBoundingRect(vertices){
 };
 
 function findMass(centre, vertices, boundingRect){
+  var accuracy = 100;
   var resolution = {x: 1, y: 1};
   var mass = 0;
   var count = 0;
@@ -171,15 +172,18 @@ function findMass(centre, vertices, boundingRect){
   var momentOfInertia = 0;
   var width = boundingRect.maxX - boundingRect.minX;
   var height = boundingRect.maxY - boundingRect.minY;
+  // resolution.x = width < accuracy ? 1 : Math.round(width / accuracy);
+  // resolution.y = height < accuracy ? 1 : Math.round(height / accuracy);
   var startPoint = {x: boundingRect.minX, y: boundingRect.minY};
   var checkPoint = {};
   for(var i = 0; i < width; i += resolution.x){
     for(var j = 0; j < height; j += resolution.y){
-      checkPoint.x = startPoint.x + resolution.x * i;
-      checkPoint.y = startPoint.y + resolution.y * j;
+      checkPoint.x = startPoint.x + i;
+      checkPoint.y = startPoint.y + j;
       var pointInShape = isPointInShape({x: 0, y: 0}, vertices, checkPoint);
       if(pointInShape){
         mass += resolution.x * resolution.y;
+        //mass += 1;
         count += 1;
         //momentOfInertia = (resolution.x * resolution.y) * Math.pow(magnitude(checkPoint), 2);
         massDistances.x += checkPoint.x;
@@ -189,18 +193,12 @@ function findMass(centre, vertices, boundingRect){
   }
   centreOfMass.x = (massDistances.x / count) + centre.x;
   centreOfMass.y = (massDistances.y / count) + centre.y;
-  // console.log('width:', width);
-  // console.log('height:', height);
-  // console.log('mass:', mass);
-  // console.log('startPoint', startPoint);
-  // console.log('centre', centre);
-  // console.log('centreOfMass', {x: centreOfMass.x, y:centreOfMass.y});
   return {mass: mass, centreOfMass: centreOfMass};
 }
 
-function updateVertices(vertices, center, centreOfMass){
+function updateVertices(vertices, centre, centreOfMass){
   var length = vertices.length;
-  var diff = {x: centreOfMass.x - center.x, y: centreOfMass.y - center.y};
+  var diff = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
   for(var i = 0; i < length; i++){
     vertices[i].x -= diff.x;
     vertices[i].y -= diff.y;
@@ -209,44 +207,32 @@ function updateVertices(vertices, center, centreOfMass){
 }
 
 function findMomentOfInertiaCM(centreOfMass, vertices, boundingRect){
+  var accuracy = 100;
   var resolution = {x: 1, y: 1};
-  //var mass = 0;
-  //var count = 0;
-  //var centreOfMass = {x: 0, y: 0};
-  //var massDistances = {x: 0, y: 0};
   var momentOfInertia = 0;
   var width = boundingRect.maxX - boundingRect.minX;
   var height = boundingRect.maxY - boundingRect.minY;
+  // resolution.x = width < accuracy ? 1 : Math.round(width / accuracy);
+  // resolution.y = height < accuracy ? 1 : Math.round(height / accuracy);
   var startPoint = {x: boundingRect.minX, y: boundingRect.minY};
   var checkPoint = {};
   for(var i = 0; i < width; i += resolution.x){
     for(var j = 0; j < height; j += resolution.y){
-      checkPoint.x = startPoint.x + resolution.x * i;
-      checkPoint.y = startPoint.y + resolution.y * j;
+      checkPoint.x = startPoint.x + i;
+      checkPoint.y = startPoint.y + j;
       var pointInShape = isPointInShape({x: 0, y: 0}, vertices, checkPoint);
       if(pointInShape){
-        // mass += resolution.x * resolution.y;
-        // count += 1;
         momentOfInertia += (resolution.x * resolution.y) * Math.pow(magnitude(checkPoint), 2);
-        // massDistances.x += checkPoint.x;
-        // massDistances.y += checkPoint.y;
       }
     }
   }
-  // centreOfMass.x = massDistances.x / count;
-  // centreOfMass.y = massDistances.y / count;
-  // console.log('width:', width);
-  // console.log('height:', height);
-  // console.log('mass:', mass);
-  // console.log('startPoint', startPoint);
-  // console.log('centre', centre);
-  // console.log('centreOfMass', {x:centreOfMass.x + centre.x, y:centreOfMass.y + centre.y});
   console.log('momentOfInertia', momentOfInertia);
+  return momentOfInertia;
 }
 
-function findMomentOfInertia(centreOfMass, pointInShape, momentOfInertiaCM, mass){
-  var diff = {x: center.x - centreOfMass.x, y: center.y - centreOfMass.y};
-  var momentOfInertia = momentOfInertiaCM + mass * Math.pow(magnitude(diff), 2);
+function findMomentOfInertia(pointInShape, momentOfInertiaCM, mass){
+  var momentOfInertia = momentOfInertiaCM + mass * Math.pow(magnitude(pointInShape), 2);
+  //console.log('PAT momentOfInertia', momentOfInertia);
   return momentOfInertia;
 }
 

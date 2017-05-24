@@ -24,6 +24,7 @@ function addGui(index){
   acceleration.add(shape.physics.acceleration, 'y');
   physics.add(shape.physics, 'density');
   physics.add(shape.physics, 'mass');
+  physics.add(shape.physics, 'momentOfInertia');
   physics.add(shape.physics, 'angularVelocity');
   physics.add(shape.physics, 'torque');
 }
