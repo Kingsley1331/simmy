@@ -13,20 +13,20 @@ var Scene = {
 
 function Shape(centre, vertices){
   var boundingRect = findBoundingRect(vertices);
-  var mass = findMass(centre, vertices, boundingRect);
-  var centreOfMass = mass.centreOfMass;
+  var massData = findMass(centre, vertices, boundingRect);
+  var centreOfMass = massData.centreOfMass;
   var momentOfInertiaCM = findMomentOfInertiaCM(centreOfMass, vertices, boundingRect);
   //var momentOfInertia = findMomentOfInertia({x: 0, y: 0}, momentOfInertiaCM, mass.mass);
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
   this.linewidth = 0.7;
-  this.centre = centre;
+  this.centreOfMass = centreOfMass;
   this.vertices = vertices;
   this.colliding = false;
   this.physics = {
     density: 1,
-    mass: mass.mass,
+    mass: massData.mass,
   	momentOfInertia: momentOfInertiaCM,
     velocity: {x:0, y:0},
   	angularVelocity: 0,
@@ -47,13 +47,13 @@ function Shape(centre, vertices){
 }
 
 
-function createShape(centre, vertices){
+function createShape(centreOfMass, vertices){
   forEachShape(function(i){
       detectShape(i);
   }, true);
   if(hoveringOnShape <= 0){ // if not hovering on shape
     id++;
-    var shape = new Shape(centre, vertices);
+    var shape = new Shape(centreOfMass, vertices);
     shape.id = id;
     console.log('boundingRect.radius', shape.boundingRect.radius);
     Scene.shapes.push(shape);
@@ -76,7 +76,7 @@ let draw = () => {
 
       var fillColour = ShapesController.getProperty(i, 'fillColour');
       var lineWidth = ShapesController.getProperty(i, 'linewidth');
-      var centre = ShapesController.getCentre(i);
+      var centreOfMass = ShapesController.getCentreOfMass(i);
 
       var vertices = ShapesController.getVertices(i);
       var config = {
@@ -91,14 +91,14 @@ let draw = () => {
         config.lineWidth = 10;
       }
       var boundingRect = ShapesController.getProperty(i, 'boundingRect');
-      var boundingRectCentre = {x: boundingRect.centre.x + centre.x, y: boundingRect.centre.y + centre.y};
+      var boundingRectCentre = {x: boundingRect.centre.x + centreOfMass.x, y: boundingRect.centre.y + centreOfMass.y};
       var rectVertices = boundingRect.vertices;
 
       var radius = boundingRect.radius;
-      var idPos = {x: centre.x - 4, y: centre.y - 5};
-      drawShape(rectVertices, centre, {lineWidth: 0.5, fillStyle: 'transparent'});
-      drawShape(vertices, centre, config);
-      drawDot(3, centre, 'black');
+      var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
+      drawShape(rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
+      drawShape(vertices, centreOfMass, config);
+      drawDot(3, centreOfMass, 'black');
       drawDot(3, boundingRectCentre, 'red');
       screenWriter(ShapesController.getProperty(i, 'id'), idPos);
       bufferCtx.save();
@@ -127,16 +127,16 @@ function screenWriter(text, position){
   bufferCtx.restore();
 }
 
-function drawShape(vertices, centre, config){
+function drawShape(vertices, centreOfMass, config){
   var num = vertices.length;
-  var x0 = vertices[0].x + centre.x;
-  var y0 = vertices[0].y + centre.y;
+  var x0 = vertices[0].x + centreOfMass.x;
+  var y0 = vertices[0].y + centreOfMass.y;
 
   bufferCtx.beginPath();
   bufferCtx.moveTo(x0, y0);
   for(var j = 1; j < num; j++){
-    var x = vertices[j].x + centre.x;
-    var y = vertices[j].y + centre.y;
+    var x = vertices[j].x + centreOfMass.x;
+    var y = vertices[j].y + centreOfMass.y;
     bufferCtx.lineTo(x, y);
   }
     bufferCtx.save();
@@ -230,9 +230,9 @@ function mouseUp(){
 
 function detectShape(i){
   ShapesController.setProperty(i, 'onShape', false);
-  var centre = ShapesController.getCentre(i);
+  var centreOfMass = ShapesController.getCentreOfMass(i);
   var vertices = ShapesController.getVertices(i);
-  var pointInShape = isPointInShape(centre, vertices, mousePos);
+  var pointInShape = isPointInShape(centreOfMass, vertices, mousePos);
   if(pointInShape){
     hoveringOnShape++;
     if(!onShape){
@@ -258,10 +258,10 @@ function prepareToMoveShape(i){
     if(selectedShape === 'play'){
       ShapesController.setProperty(i, 'velocity', {x: 0, y: 0}, true);
     }
-    var centre = ShapesController.getCentre(i);
+    var centreOfMass = ShapesController.getCentreOfMass(i);
     ShapesController.setProperty(i, 'dragging', true);
-    var distanceX = mousePos.x - centre.x;
-    var distanceY = mousePos.y - centre.y;
+    var distanceX = mousePos.x - centreOfMass.x;
+    var distanceY = mousePos.y - centreOfMass.y;
     ShapesController.setProperty(i, 'touchPoint', {x: distanceX, y: distanceY});
     var x = document.getElementsByClassName("dg");
     if(gui){
@@ -290,7 +290,7 @@ function deleteShape(i){
 
 function dragShape(i){
   var touchPoint = ShapesController.getTouchPoint(i);
-  ShapesController.setProperty(i, 'centre', {
+  ShapesController.setProperty(i, 'centreOfMass', {
     x: mousePos.x - touchPoint.x,
     y: mousePos.y - touchPoint.y
    });
@@ -360,10 +360,10 @@ function applyPhysics(i, tDelta){
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
-    var centre = ShapesController.getCentre(i);
-    centre.x += velocity.x * tDelta * velFactor;
-    centre.y += velocity.y * tDelta * velFactor;
-    ShapesController.setProperty(i, 'centre', {x: centre.x, y: centre.y});
+    var centreOfMass = ShapesController.getCentreOfMass(i);
+    centreOfMass.x += velocity.x * tDelta * velFactor;
+    centreOfMass.y += velocity.y * tDelta * velFactor;
+    ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
   }
 }
 
@@ -379,17 +379,17 @@ function collisionDetector(){
   });
   forEachShape(function(i){
     var vertices = ShapesController.getVertices(i);
-    var centre = ShapesController.getCentre(i);
+    var centreOfMass = ShapesController.getCentreOfMass(i);
     var length = vertices.length;
     for(var j = 0; j < length; j++){
         var checkPoint = {};
-        checkPoint.x = vertices[j].x + centre.x;
-        checkPoint.y = vertices[j].y + centre.y;
+        checkPoint.x = vertices[j].x + centreOfMass.x;
+        checkPoint.y = vertices[j].y + centreOfMass.y;
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
           var shape = shapes[k];
           var shapeVertices = ShapesController.getProperty(k, 'vertices');
-          var shapeCentre = ShapesController.getProperty(k, 'centre');
+          var shapeCentre = ShapesController.getProperty(k, 'centreOfMass');
           var pointInShape = isPointInShape(shapeCentre, shapeVertices, checkPoint);
           if(pointInShape){
             ShapesController.setProperty(i, 'colliding', true);
@@ -404,11 +404,11 @@ function collisionDetector(){
 var ShapesController = (function(){
   var shapes = Scene.shapes;
 
-  function getCentre(shapeIndex){
-    var centre = shapes[shapeIndex].centre;
+  function getCentreOfMass(shapeIndex){
+    var centreOfMass = shapes[shapeIndex].centreOfMass;
     return {
-        x: centre.x,
-        y: centre.y
+        x: centreOfMass.x,
+        y: centreOfMass.y
      };
   }
 
@@ -455,7 +455,7 @@ var ShapesController = (function(){
   }
 
   return {
-    getCentre: getCentre,
+    getCentreOfMass: getCentreOfMass,
     getTouchPoint: getTouchPoint,
     getVertices: getVertices,
     getProperty: getProperty,

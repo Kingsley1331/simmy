@@ -193,6 +193,7 @@ function findMass(centre, vertices, boundingRect){
   }
   centreOfMass.x = (massDistances.x / count) + centre.x;
   centreOfMass.y = (massDistances.y / count) + centre.y;
+  //console.log({mass: mass, centreOfMass: centreOfMass});
   return {mass: mass, centreOfMass: centreOfMass};
 }
 
@@ -232,7 +233,7 @@ function findMomentOfInertiaCM(centreOfMass, vertices, boundingRect){
 
 function findMomentOfInertia(pointInShape, momentOfInertiaCM, mass){
   var momentOfInertia = momentOfInertiaCM + mass * Math.pow(magnitude(pointInShape), 2);
-  //console.log('PAT momentOfInertia', momentOfInertia);
+  console.log('PAT momentOfInertia', momentOfInertia);
   return momentOfInertia;
 }
 
@@ -248,15 +249,15 @@ function reCentre(shapes){
   }
 }
 
-function isPointInShape(centre, vertices, point){
-  var x0 = centre.x + vertices[0].x;
-  var y0 = centre.y + vertices[0].y;
+function isPointInShape(centreOfMass, vertices, point){
+  var x0 = centreOfMass.x + vertices[0].x;
+  var y0 = centreOfMass.y + vertices[0].y;
 
   bufferCtx.beginPath();
   bufferCtx.moveTo(x0, y0);
   for(var m = 1; m < vertices.length; m++){
-    var x = centre.x + vertices[m].x;
-    var y = centre.y + vertices[m].y;
+    var x = centreOfMass.x + vertices[m].x;
+    var y = centreOfMass.y + vertices[m].y;
     bufferCtx.lineTo(x, y);
   }
 

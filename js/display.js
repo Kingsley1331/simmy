@@ -7,9 +7,9 @@ function addGui(index){
   gui.add(shape, 'lineColour');
   gui.add(shape, 'linewidth');
 
-  var centre = gui.addFolder('centre');
-  centre.add(shape.centre, 'x');
-  centre.add(shape.centre, 'y');
+  var centreOfMass = gui.addFolder('centreOfMass');
+  centreOfMass.add(shape.centreOfMass, 'x');
+  centreOfMass.add(shape.centreOfMass, 'y');
   gui.add(shape, 'onShape');
   // var boundingRect = gui.addFolder('boundingRect');
   // boundingRect.add(shape.boundingRect.minX, 'minX');
