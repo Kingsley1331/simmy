@@ -191,7 +191,7 @@ function findMass(centre, vertices, boundingRect){
   }
   centreOfMass.x = (massDistances.x / count) + centre.x;
   centreOfMass.y = (massDistances.y / count) + centre.y;
-  console.log({mass: mass, centreOfMass: centreOfMass});
+  //console.log({mass: mass, centreOfMass: centreOfMass});
   //console.log('count', count);
   return {mass: mass, centreOfMass: centreOfMass};
 }
