@@ -63,7 +63,7 @@ Matrix.prototype.mMult = function(matrix2){
 	return matrix;
 };
 
-Matrix.prototype.vMult = function(vector) {
+Matrix.prototype.vMult = function(vector){
 	vector.z = vector.z ? vector.z: 0;
 	var x = this.r1[0] * vector.x + this.r1[1] * vector.y + this.r1[2] * vector.z;
 	var y = this.r2[0] * vector.x + this.r2[1] * vector.y + this.r2[2] * vector.z;
@@ -71,6 +71,34 @@ Matrix.prototype.vMult = function(vector) {
 	var product = new Vector({x: x, y: y, z: z});
 	return product;
 }
+
+function rotateVector(theta, vector){
+	var vector = new Vector(vector);
+	var rotationMatrix = new Matrix({
+		r1: [Math.cos(theta), -Math.sin(theta), 0],
+		r2: [Math.sin(theta), Math.cos(theta), 0],
+		r3: [0, 0, 1]
+	});
+	var rotatedVector = rotationMatrix.vMult(vector);
+	//console.log('rotatedVector', rotatedVector);
+	return rotatedVector;
+}
+
+function rotateShape(theta, index){
+	if(Scene.shapes[0]){
+		var vertices = ShapesController.getProperty(index,'vertices');
+		var rotatedVertices = [];
+		var length = vertices.length;
+		for(var i = 0; i < length; i++){
+			var rotatedVertex = rotateVector(theta, vertices[i]);
+			rotatedVertices.push(rotatedVertex);
+		}
+		//console.log('rotatedVertices', rotatedVertices);
+		ShapesController.setProperty(index, 'vertices', rotatedVertices);
+	}
+}
+
+rotateVector(Math.PI/2, {x: 1, y: 0, z: 0});
 
 // var v1 = new Vector({x:1, y:3, z:0});
 // var v2 = new Vector({x:2, y:4, z:0});

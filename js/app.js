@@ -32,8 +32,7 @@ function Shape(centre, vertices){
   	angularVelocity: 0,
     acceleration: {x:0, y:0},
     forces: [],
-    torque: 0,
-    centroid: {x: 0, y: 0}
+    torque: 0
   };
   this.onShape = false;
 	this.dragging = false;
@@ -216,6 +215,10 @@ function mouseDown(){
     if(selectedShape && selectedShape !== '_delete' && selectedShape !== 'play'){
       createShape(mousePos, shapeSelection[selectedShape]);
     }
+    // if(Scene.shapes[0]){
+    //   console.log('Scene.shapes[0]', Scene.shapes[0]);
+    //   rotateShape(Math.PI/8, 0);
+    // }
   }, false);
 }
 
@@ -358,12 +361,14 @@ function applyPhysics(i, tDelta){
   if(selectedShape === 'play'){
     var acceleration = ShapesController.getProperty(i, 'acceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
+    var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
     var centreOfMass = ShapesController.getCentreOfMass(i);
     centreOfMass.x += velocity.x * tDelta * velFactor;
     centreOfMass.y += velocity.y * tDelta * velFactor;
     ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
+    rotateShape(angularVelocity, i);
   }
 }
 
