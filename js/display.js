@@ -13,6 +13,9 @@ function addGui(index){
   gui.add(shape, 'onShape');
   // var boundingRect = gui.addFolder('boundingRect');
   // boundingRect.add(shape.boundingRect.minX, 'minX');
+  var centreOfRotation = gui.addFolder('centreOfRotation');
+  centreOfRotation.add(shape.centreOfRotation, 'x');
+  centreOfRotation.add(shape.centreOfRotation, 'y');
 
 
   var physics = gui.addFolder('physics');

@@ -22,6 +22,7 @@ function Shape(centre, vertices){
   this.lineColour = 'black';
   this.linewidth = 0.7;
   this.centreOfMass = centreOfMass;
+  this.centreOfRotation = {x: 500, y: 300};;
   this.vertices = vertices;
   this.colliding = false;
   this.physics = {
@@ -29,7 +30,7 @@ function Shape(centre, vertices){
     mass: massData.mass,
   	momentOfInertia: momentOfInertiaCM,
     velocity: {x:0, y:0},
-  	angularVelocity: 0,
+  	angularVelocity: 0.01,
     acceleration: {x:0, y:0},
     forces: [],
     torque: 0
@@ -92,6 +93,7 @@ let draw = () => {
       var boundingRect = ShapesController.getProperty(i, 'boundingRect');
       var boundingRectCentre = {x: boundingRect.centre.x + centreOfMass.x, y: boundingRect.centre.y + centreOfMass.y};
       var rectVertices = boundingRect.vertices;
+      var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
 
       var radius = boundingRect.radius;
       var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
@@ -99,6 +101,7 @@ let draw = () => {
       drawShape(vertices, centreOfMass, config);
       drawDot(3, centreOfMass, 'black');
       drawDot(3, boundingRectCentre, 'red');
+      drawDot(3, centreOfRotation, 'green');
       screenWriter(ShapesController.getProperty(i, 'id'), idPos);
       bufferCtx.save();
       bufferCtx.beginPath();
@@ -362,13 +365,15 @@ function applyPhysics(i, tDelta){
     var acceleration = ShapesController.getProperty(i, 'acceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
+    var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
     var centreOfMass = ShapesController.getCentreOfMass(i);
     centreOfMass.x += velocity.x * tDelta * velFactor;
     centreOfMass.y += velocity.y * tDelta * velFactor;
     ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
-    rotateShape(angularVelocity, i);
+
+    rotateShape(centreOfRotation, angularVelocity, i);
   }
 }
 

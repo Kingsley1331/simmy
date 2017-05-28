@@ -84,21 +84,25 @@ function rotateVector(theta, vector){
 	return rotatedVector;
 }
 
-function rotateShape(theta, index){
+
+function rotateShape(centre, theta, index){
 	if(Scene.shapes[0]){
-		var vertices = ShapesController.getProperty(index,'vertices');
+		var centreOfMass = ShapesController.getProperty(index, 'centreOfMass');
+		var vertices = ShapesController.getProperty(index, 'vertices');
 		var rotatedVertices = [];
 		var length = vertices.length;
+		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
 		for(var i = 0; i < length; i++){
-			var rotatedVertex = rotateVector(theta, vertices[i]);
+			var rotatedVertex = rotateVector(theta, {x: vertices[i].x, y: vertices[i].y});
 			rotatedVertices.push(rotatedVertex);
 		}
-		//console.log('rotatedVertices', rotatedVertices);
+		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
+		var rotateCOM = rotateVector(theta, {x: centreOR.x, y: centreOR.y});
+		var newCentreOfMass = {x: centre.x + rotateCOM.x, y: centre.y + rotateCOM.y};
+		ShapesController.setProperty(index, 'centreOfMass', newCentreOfMass);
 		ShapesController.setProperty(index, 'vertices', rotatedVertices);
 	}
 }
-
-rotateVector(Math.PI/2, {x: 1, y: 0, z: 0});
 
 // var v1 = new Vector({x:1, y:3, z:0});
 // var v2 = new Vector({x:2, y:4, z:0});
@@ -117,10 +121,10 @@ var v6 = v1.dotProd(v2);
 var m3 = m1.mMult(m2);
 var v7 = m1.vMult(v1);
 
-console.log('m1', m1);
-console.log('m2', m2);
-console.log('m3', m3);
-console.log('v7', v7);
+// console.log('m1', m1);
+// console.log('m2', m2);
+// console.log('m3', m3);
+// console.log('v7', v7);
 
 
 // console.log('v1', v1);
