@@ -169,7 +169,6 @@ function findMass(centre, vertices, boundingRect){
   var mass = 0;
   var centreOfMass = {x: 0, y: 0};
   var massDistances = {x: 0, y: 0};
-  var momentOfInertia = 0;
   var width = boundingRect.maxX - boundingRect.minX;
   var height = boundingRect.maxY - boundingRect.minY;
   resolution.x = width < accuracy ? 1 : Math.round(width / accuracy);
@@ -196,11 +195,11 @@ function findMass(centre, vertices, boundingRect){
   return {mass: mass, centreOfMass: centreOfMass};
 }
 
-function findMomentOfInertiaCM(centreOfMass, vertices, boundingRect){
+function findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect){
   var count = 0;
   var accuracy = 100;
   var resolution = {x: 10, y: 10};
-  var momentOfInertia = 0;
+  var momentOfInertiaCOM = 0;
   var width = boundingRect.maxX - boundingRect.minX;
   var height = boundingRect.maxY - boundingRect.minY;
   resolution.x = width < accuracy ? 1 : Math.round(width / accuracy);
@@ -214,14 +213,14 @@ function findMomentOfInertiaCM(centreOfMass, vertices, boundingRect){
       checkPoint.y = startPoint.y + j;
       var pointInShape = isPointInShape({x: 0, y: 0}, vertices, checkPoint);
       if(pointInShape){
-        momentOfInertia += (resolution.x * resolution.y) * Math.pow(magnitude(checkPoint), 2);
+        momentOfInertiaCOM += (resolution.x * resolution.y) * Math.pow(magnitude(checkPoint), 2);
         count += 1;
       }
     }
   }
-  console.log('momentOfInertia', momentOfInertia);
+  console.log('momentOfInertiaCOM', momentOfInertiaCOM);
   //console.log('count', count);
-  return momentOfInertia;
+  return momentOfInertiaCOM;
 }
 
 function updateVertices(vertices, centre, centreOfMass){
@@ -234,8 +233,8 @@ function updateVertices(vertices, centre, centreOfMass){
   return vertices;
 }
 
-function findMomentOfInertia(pointInShape, momentOfInertiaCM, mass){
-  var momentOfInertia = momentOfInertiaCM + mass * Math.pow(magnitude(pointInShape), 2);
+function findMomentOfInertia(pointInShape, momentOfInertiaCOM, mass){
+  var momentOfInertia = momentOfInertiaCOM + mass * Math.pow(magnitude(pointInShape), 2);
   console.log('PAT momentOfInertia', momentOfInertia);
   return momentOfInertia;
 }

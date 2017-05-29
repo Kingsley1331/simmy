@@ -15,24 +15,25 @@ function Shape(centre, vertices){
   var boundingRect = findBoundingRect(vertices);
   var massData = findMass(centre, vertices, boundingRect);
   var centreOfMass = massData.centreOfMass;
-  var momentOfInertiaCM = findMomentOfInertiaCM(centreOfMass, vertices, boundingRect);
-  //var momentOfInertia = findMomentOfInertia({x: 0, y: 0}, momentOfInertiaCM, mass.mass);
+  var momentOfInertiaCOM = findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect);
+  //var momentOfInertia = findMomentOfInertia({x: 0, y:126}, momentOfInertiaCOM, massData.mass);
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
   this.linewidth = 0.7;
   this.centreOfMass = centreOfMass;
-  this.centreOfRotation = {x: 500, y: 300};;
+  this.centreOfRotation = {x: 500, y: 300};
   this.vertices = vertices;
   this.colliding = false;
   this.physics = {
     density: 1,
     mass: massData.mass,
-  	momentOfInertia: momentOfInertiaCM,
+    momentOfInertiaCOM: momentOfInertiaCOM,
     velocity: {x:0, y:0},
-  	angularVelocity: 0.01,
     acceleration: {x:0, y:0},
-    forces: [],
+    angularVelocity: 0,
+    angularAcceleration: 0,
+    forcesCOM: [{x:0, y:0}],
     torque: 0
   };
   this.onShape = false;
@@ -181,6 +182,7 @@ function animate(){
   var tDelta = (currentTime - time);
   forEachShape(function(i){
     applyPhysics(i, tDelta);
+    applyForces(i);
   });
   collisionDetector();
 	draw();
@@ -363,23 +365,40 @@ function throwVelocity(){
 function applyPhysics(i, tDelta){
   if(selectedShape === 'play'){
     var acceleration = ShapesController.getProperty(i, 'acceleration', true);
+    var angularAcceleration = ShapesController.getProperty(i, 'angularAcceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
     var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
+    var centreOfMass = ShapesController.getProperty(i, 'centreOfMass');
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
+    angularVelocity += angularAcceleration;
+    console.log('angularVelocity', angularVelocity);
     var centreOfMass = ShapesController.getCentreOfMass(i);
     centreOfMass.x += velocity.x * tDelta * velFactor;
     centreOfMass.y += velocity.y * tDelta * velFactor;
+    ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
     ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
-
-    rotateShape(centreOfRotation, angularVelocity, i);
+    //rotateShape(centreOfRotation, angularVelocity, i);
+    rotateShape(centreOfMass, angularVelocity, i);
   }
 }
 
-// function applyForces(i){
-//
-// }
+function applyForces(i){
+  var acceleration = {};
+  var angularAcceleration;
+  // simplified implementation which assumes there is only one force at the centre of mass, torque is assumed to be also around the centre of mass
+  var forcesCOM = ShapesController.getProperty(i, 'forcesCOM', true);
+  var mass = ShapesController.getProperty(i, 'mass', true);
+  var torque = ShapesController.getProperty(i, 'torque', true);
+  var momentOfInertiaCOM = ShapesController.getProperty(i, 'momentOfInertiaCOM', true);
+  acceleration.x = forcesCOM[0].x / mass;
+  acceleration.y = forcesCOM[0].y / mass;
+  angularAcceleration = torque / momentOfInertiaCOM;
+  //console.log('angularAcceleration', angularAcceleration);
+  ShapesController.setProperty(i, 'acceleration', acceleration, true);
+  ShapesController.setProperty(i, 'angularAcceleration', angularAcceleration, true);
+}
 
 function collisionDetector(){
   var shapes = Scene.shapes;

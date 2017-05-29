@@ -104,8 +104,6 @@ function rotateShape(centre, theta, index){
 	}
 }
 
-// var v1 = new Vector({x:1, y:3, z:0});
-// var v2 = new Vector({x:2, y:4, z:0});
 
 var v1 = new Vector({x:5, y:-4, z:-15});
 var v2 = new Vector({x:4, y:6, z:-8});
