@@ -22,7 +22,7 @@ function Shape(centre, vertices){
   this.lineColour = 'black';
   this.linewidth = 0.7;
   this.centreOfMass = centreOfMass;
-  this.centreOfRotation = {x: 500, y: 300};
+  this.centreOfRotation = centreOfMass;
   this.vertices = vertices;
   this.colliding = false;
   this.physics = {
@@ -368,8 +368,8 @@ function applyPhysics(i, tDelta){
     var angularAcceleration = ShapesController.getProperty(i, 'angularAcceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
-    var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     var centreOfMass = ShapesController.getProperty(i, 'centreOfMass');
+    var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
     angularVelocity += angularAcceleration;
@@ -379,7 +379,7 @@ function applyPhysics(i, tDelta){
     centreOfMass.y += velocity.y * tDelta * velFactor;
     ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
     ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
-    //rotateShape(centreOfRotation, angularVelocity, i);
+    rotateShape(centreOfRotation, angularVelocity, i);
     rotateShape(centreOfMass, angularVelocity, i);
   }
 }
@@ -428,6 +428,40 @@ function collisionDetector(){
       }
     }
   });
+}
+
+function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices){
+
+  var velocityA = ShapesController.getProperty(shapeAIndex, 'velocity', true);
+  var velocityB = ShapesController.getProperty(shapeBIndex, 'velocity', true);
+
+  var angularVelocityA = ShapesController.getProperty(shapeAIndex, 'angularVelocity', true);
+  var angularVelocityB = ShapesController.getProperty(shapeBIndex, 'angularVelocity', true);
+
+  var massA = ShapesController.getProperty(shapeAIndex, 'mass', true);
+  var massB = ShapesController.getProperty(shapeBIndex, 'mass', true);
+
+  var centreA = ShapesController.getProperty(shapeAIndex, 'centreOfMass');
+  var centreB = ShapesController.getProperty(shapeBIndex, 'centreOfMass');
+
+  var collisionPointA = {x: collisionPoint.x - centreA.x, y: collisionPoint.y - centreA.y};
+  var collisionPointB = {x: collisionPoint.x - centreB.x, y: collisionPoint.y - centreB.y};
+
+  var collisionPointDistanceA = magnitude(collisionPointA);
+  var collisionPointDistanceB = magnitude(collisionPointB);
+
+  var collisionPointVelocityA = velocityA + collisionPointDistanceA * angularVelocityA;
+  var collisionPointVelocityB = velocityB + collisionPointDistanceB * angularVelocityB;
+
+  //var collidingSide = findCollidingSide(shapeBVertices);
+
+}
+
+function findCollidingSide(shapeBIndex){
+  var length = shapeBIndex.length;
+  for(var i = 0; i < length; i++){
+
+  }
 }
 
 var ShapesController = (function(){
