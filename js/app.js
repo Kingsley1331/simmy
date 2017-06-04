@@ -425,8 +425,8 @@ function collisionDetector(){
             ShapesController.setProperty(k, 'colliding', true);
             var velocityA = ShapesController.getProperty(i, 'velocity', true);
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
-            ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y});
-            ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y});
+            ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
+            ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
             //collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices);
             //collisionData
           }
