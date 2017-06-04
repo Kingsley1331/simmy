@@ -407,7 +407,7 @@ function collisionDetector(){
       ShapesController.setProperty(i, 'colliding', false);
   });
   forEachShape(function(i){
-    var vertices = ShapesController.getVertices(i);
+    var vertices = ShapesController.getVertices(i); //ShapeA
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var length = vertices.length;
     for(var j = 0; j < length; j++){
@@ -416,13 +416,19 @@ function collisionDetector(){
         checkPoint.y = vertices[j].y + centreOfMass.y;
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
-          var shape = shapes[k];
+          var shape = shapes[k]; //shapeB
           var shapeVertices = ShapesController.getProperty(k, 'vertices');
           var shapeCentre = ShapesController.getProperty(k, 'centreOfMass');
           var pointInShape = isPointInShape(shapeCentre, shapeVertices, checkPoint);
           if(pointInShape){
             ShapesController.setProperty(i, 'colliding', true);
             ShapesController.setProperty(k, 'colliding', true);
+            var velocityA = ShapesController.getProperty(i, 'velocity', true);
+            var velocityB = ShapesController.getProperty(k, 'velocity', true);
+            ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y});
+            ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y});
+            //collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices);
+            //collisionData
           }
         }
       }
@@ -450,15 +456,22 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var collisionPointDistanceA = magnitude(collisionPointA);
   var collisionPointDistanceB = magnitude(collisionPointB);
 
-  var collisionPointVelocityA = velocityA + collisionPointDistanceA * angularVelocityA;
-  var collisionPointVelocityB = velocityB + collisionPointDistanceB * angularVelocityB;
+  var tangentialVelocityMagnitudeA = Math.abs(collisionPointDistanceA * angularVelocityA);
+  var tangentialVelocityMagnitudeB = Math.abs(collisionPointDistanceB * angularVelocityB);
 
-  //var collidingSide = findCollidingSide(shapeBVertices);
+  var tangentialVelocityA = {x: tangentialVelocityMagnitudeA * Math.sin(angularVelocityA), y: tangentialVelocityMagnitudeA * Math.cos(angularVelocityA)};
+  var tangentialVelocityB = {x: tangentialVelocityMagnitudeB * Math.sin(angularVelocityB), y: tangentialVelocityMagnitudeB * Math.cos(angularVelocityB)};
+
+  var collisionPointVelocityA = {x: velocityA.x + tangentialVelocityA.x, y: velocityA.y + tangentialVelocityA.y};
+  var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};;
+
+  findCollidingSide(shapeBVertices, collisionPointVelocityA);
+
 
 }
 
-function findCollidingSide(shapeBIndex){
-  var length = shapeBIndex.length;
+function findCollidingSide(shapeBVertices, collisionPointVelocityA){
+  var length = shapeBVertices.length;
   for(var i = 0; i < length; i++){
 
   }
