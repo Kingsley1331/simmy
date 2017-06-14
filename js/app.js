@@ -220,10 +220,6 @@ function mouseDown(){
     if(selectedShape && selectedShape !== '_delete' && selectedShape !== 'play'){
       createShape(mousePos, shapeSelection[selectedShape]);
     }
-    // if(Scene.shapes[0]){
-    //   console.log('Scene.shapes[0]', Scene.shapes[0]);
-    //   rotateShape(Math.PI/8, 0);
-    // }
   }, false);
 }
 
@@ -380,7 +376,7 @@ function applyPhysics(i, tDelta){
     ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
     ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
     rotateShape(centreOfRotation, angularVelocity, i);
-    rotateShape(centreOfMass, angularVelocity, i);
+    //rotateShape(centreOfMass, angularVelocity, i);
   }
 }
 
@@ -463,7 +459,7 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var tangentialVelocityB = {x: tangentialVelocityMagnitudeB * Math.sin(angularVelocityB), y: tangentialVelocityMagnitudeB * Math.cos(angularVelocityB)};
 
   var collisionPointVelocityA = {x: velocityA.x + tangentialVelocityA.x, y: velocityA.y + tangentialVelocityA.y};
-  var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};;
+  var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};
 
   findCollidingSide(shapeBVertices, collisionPointVelocityA);
 
