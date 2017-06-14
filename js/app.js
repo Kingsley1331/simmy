@@ -412,7 +412,7 @@ function collisionDetector(){
         checkPoint.y = vertices[j].y + centreOfMass.y;
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
-          var shape = shapes[k]; //shapeB
+          var shape = shapes[k].vertices; //shapeB
           var shapeVertices = ShapesController.getProperty(k, 'vertices');
           var shapeCentre = ShapesController.getProperty(k, 'centreOfMass');
           var pointInShape = isPointInShape(shapeCentre, shapeVertices, checkPoint);
@@ -423,7 +423,7 @@ function collisionDetector(){
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
             ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
             ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
-            //collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices);
+            collisionData(i, k, checkPoint, shape);
             //collisionData
           }
         }
@@ -458,20 +458,64 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var tangentialVelocityA = {x: tangentialVelocityMagnitudeA * Math.sin(angularVelocityA), y: tangentialVelocityMagnitudeA * Math.cos(angularVelocityA)};
   var tangentialVelocityB = {x: tangentialVelocityMagnitudeB * Math.sin(angularVelocityB), y: tangentialVelocityMagnitudeB * Math.cos(angularVelocityB)};
 
+  // below are the coordinates of the collisionpoint after being rotated by the angularVelocity angle
+  var collisionPointRotationA = rotateVector(angularVelocityA, {x: collisionPointA.x, y: collisionPointA.y});
+  var collisionPointRotationB = rotateVector(angularVelocityB, {x: collisionPointB.x, y: collisionPointB.y});
+
+  var tangentialVelocityA = {x: collisionPointRotationA.x - collisionPointA.x, y: collisionPointRotationA.y - collisionPointA.y};
+  var tangentialVelocityB = {x: collisionPointRotationB.x - collisionPointB.x, y: collisionPointRotationB.y - collisionPointB.y};
+
   var collisionPointVelocityA = {x: velocityA.x + tangentialVelocityA.x, y: velocityA.y + tangentialVelocityA.y};
   var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};
 
-  findCollidingSide(shapeBVertices, collisionPointVelocityA);
+  findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, centreB);
 
 
 }
 
-function findCollidingSide(shapeBVertices, collisionPointVelocityA){
+function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, centreB){
   var length = shapeBVertices.length;
-  for(var i = 0; i < length; i++){
+  var intersections = [];
+    for(var i = 0; i < length; i++){
+      var side = [];
+      if(i !== length - 1){
+        side = [{x:shapeBVertices[i].x + centreB.x, y:shapeBVertices[i].y + centreB.y}, {x:shapeBVertices[i+1].x + centreB.x, y:shapeBVertices[i+1].y + centreB.y}];
+      } else {
+        side = [{x:shapeBVertices[i].x + centreB.x, y:shapeBVertices[i].y + centreB.y}, {x:shapeBVertices[0].x + centreB.x, y:shapeBVertices[0].y + centreB.y}];
+      }
+      var sideFormula = lineFormula(side);
+      var sideGradient = sideFormula.gradient;
+      var sideIntercept = sideFormula.intercept;
 
-  }
+      var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + collisionPointVelocityA.x, y: collisionPoint.y + collisionPointVelocityA.y}]);
+      var velocityGradient = sideFormula.gradient;
+      var velocityIntercept = sideFormula.intercept;
+
+      var intersectionX = (sideIntercept - velocityIntercept) / (velocityGradient - sideGradient);
+      var intersectionY = sideGradient * intersectionX + sideIntercept;
+
+      // check if intersection point lies on the side being checked
+      var sideMinX = Math.min(side[0].x, side[1].x);
+      var sideMaxX = Math.max(side[0].x, side[1].x);
+
+      var sideMinY = Math.min(side[0].y, side[1].y);
+      var sideMaxY = Math.max(side[0].y, side[1].y);
+
+      if(intersectionX >= sideMinX && intersectionX <= sideMaxX && intersectionY >= sideMinY && intersectionY <= sideMaxY){
+        intersections.push({x: intersectionX, y: intersectionY, side: side});
+      }
+    }
+    console.log('intersections', intersections);
+    //intersections
 }
+
+// finds the equation of a line segment 'side' in the form of y = mx + c
+function lineFormula(side){ console.log('side', side);
+  var gradient = (side[1].y - side[0].y) / (side[1].x - side[0].x);
+  var intercept = side[0].y - gradient * side[0].x;
+  return {gradient: gradient, intercept: intercept};
+}
+
 
 var ShapesController = (function(){
   var shapes = Scene.shapes;
