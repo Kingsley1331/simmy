@@ -487,6 +487,8 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       var sideGradient = sideFormula.gradient;
       var sideIntercept = sideFormula.intercept;
 
+      //console.log('sideGradient', sideGradient);
+
       var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + collisionPointVelocityA.x, y: collisionPoint.y + collisionPointVelocityA.y}]);
       var velocityGradient = velocityFormula.gradient;
       var velocityIntercept = velocityFormula.intercept;
@@ -495,9 +497,11 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       var intersectionY = sideGradient * intersectionX + sideIntercept;
 
       // if gradients are vertical
-      if(Math.abs(sideGradient) > 10000){
+      if(Math.abs(sideGradient) > 10000){ //console.log('%cside vertical', 'font-size: 25px; color: blue;');
         intersectionX = side[0].x;
         intersectionY = velocityGradient * intersectionX + velocityIntercept;
+        console.log('side intersectionX', intersectionX);
+        console.log('side intersectionY', intersectionY);
       }
 
       if(Math.abs(velocityGradient) > 10000){
@@ -514,8 +518,29 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       if(Math.abs(velocityGradient) < 0.0001){
         intersectionY = collisionPoint.y;
         intersectionX = (intersectionY - sideIntercept) / sideGradient;
+        console.log('velocity intersectionX', intersectionX);
+        console.log('velocity intersectionY', intersectionY);
       }
 
+      // if(Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) > 10000
+      //   || Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) < 0.0001
+      //   || Math.abs(velocityGradient) > 10000 && Math.abs(sideGradient) < 0.0001
+      //   || Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) < 0.0001
+      // ){
+      //   console.log('%cperpendicular', 'font-size: 25px; color: blue;');
+      //   intersectionX = side[0].x;
+      //   intersectionY = side[0].y;
+      // }
+
+      if(Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) > 10000){
+        intersectionX = side[0].x;
+        intersectionY = collisionPoint.y;
+      }
+
+      if(Math.abs(velocityGradient) > 10000 && Math.abs(sideGradient) < 0.0001){
+        intersectionX = collisionPoint.x;
+        intersectionY = side[0].y;
+      }
 
       // check if intersection point lies on the side being checked
       var sideMinX = Math.min(side[0].x, side[1].x);
@@ -530,18 +555,28 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
     }
     if(intersections.length > 0){
     var closestPoint = intersections.reduce(function(sum, e, index){
+      var closest = {};
       var distance = magnitude({x: e.x - collisionPoint.x, y: e.y - collisionPoint.y});
       if(!sum.min){
-        sum = {min: distance, index: index};
+        closest = {min: distance, index: index};
       } else if(sum.min > distance){
-        sum = {min: distance, index: index};
-      } else {
-        sum = {min: sum.min, index: index};
+        console.log('min', sum.min);
+        console.log('distance', distance);
+        console.log('index', index);
+        closest = {min: distance, index: index};
+      } else if(sum.min <= distance){
+        console.log('min2', sum.min);
+        console.log('distance2', distance);
+        console.log('index2', index);
+        closest = {min: sum.min, index: sum.index};
       }
-      return sum;
-    });
-  }
+      console.log('closest', closest);
+      return closest;
+    }, {min:100000000000, index:0});
     console.log('closestPoint', intersections[closestPoint.index]);
+    console.log('closestPoint2', closestPoint);
+  }
+
     console.log('intersections', intersections);
     //intersections
 }
