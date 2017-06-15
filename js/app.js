@@ -42,9 +42,10 @@ function Shape(centre, vertices){
   this.touchPoint = [];
   this.display = [];
   this.boundingRect = boundingRect;
-    var boundingRectCentre = {x: this.boundingRect.centre.x, y: this.boundingRect.centre.y};
-    var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
-    this.boundingRect.radius = radius;
+  var boundingRectCentre = {x: this.boundingRect.centre.x, y: this.boundingRect.centre.y};
+  var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
+  this.boundingRect.radius = radius;
+  this.collisionData = {};
 }
 
 
@@ -95,6 +96,8 @@ let draw = () => {
       var boundingRectCentre = {x: boundingRect.centre.x + centreOfMass.x, y: boundingRect.centre.y + centreOfMass.y};
       var rectVertices = boundingRect.vertices;
       var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
+      var collisionData = ShapesController.getProperty(i, 'collisionData');
+
 
       var radius = boundingRect.radius;
       var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
@@ -103,6 +106,17 @@ let draw = () => {
       drawDot(3, centreOfMass, 'black');
       drawDot(3, boundingRectCentre, 'red');
       drawDot(3, centreOfRotation, 'green');
+      if(collisionData.collisionPoint){
+        drawDot(4, {x: collisionData.collisionPoint.x, y:collisionData.collisionPoint.y}, 'red');
+        bufferCtx.save();
+        bufferCtx.strokeStyle = 'red';
+        bufferCtx.lineWidth = 2;
+        bufferCtx.beginPath();
+        bufferCtx.moveTo(collisionData.side[0].x, collisionData.side[0].y);
+        bufferCtx.lineTo(collisionData.side[1].x, collisionData.side[1].y);
+        bufferCtx.stroke();
+        bufferCtx.restore();
+      }
       screenWriter(ShapesController.getProperty(i, 'id'), idPos);
       bufferCtx.save();
       bufferCtx.beginPath();
@@ -423,8 +437,10 @@ function collisionDetector(){
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
             ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
             ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
-            collisionData(i, k, checkPoint, shape);
-            //collisionData
+            var data = collisionData(i, k, checkPoint, shape);
+            ShapesController.setProperty(k,'collisionData', data);
+            shape = Scene.shapes[k]
+            console.log('=============shape', shape);
           }
         }
       }
@@ -468,8 +484,14 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var collisionPointVelocityA = {x: velocityA.x + tangentialVelocityA.x, y: velocityA.y + tangentialVelocityA.y};
   var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};
 
-  findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, centreB);
+  var collidingSide = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, centreB);
 
+  var data = {
+    collisionPoint: {x:collidingSide.x, y:collidingSide.y},
+    side: collidingSide.side
+  };
+
+  return data;
 
 }
 
@@ -522,16 +544,6 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
         console.log('velocity intersectionY', intersectionY);
       }
 
-      // if(Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) > 10000
-      //   || Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) < 0.0001
-      //   || Math.abs(velocityGradient) > 10000 && Math.abs(sideGradient) < 0.0001
-      //   || Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) < 0.0001
-      // ){
-      //   console.log('%cperpendicular', 'font-size: 25px; color: blue;');
-      //   intersectionX = side[0].x;
-      //   intersectionY = side[0].y;
-      // }
-
       if(Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) > 10000){
         intersectionX = side[0].x;
         intersectionY = collisionPoint.y;
@@ -574,11 +586,11 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       return closest;
     }, {min:100000000000, index:0});
     console.log('closestPoint', intersections[closestPoint.index]);
-    console.log('closestPoint2', closestPoint);
   }
 
     console.log('intersections', intersections);
     //intersections
+    return intersections[closestPoint.index];
 }
 
 // finds the equation of a line segment 'side' in the form of y = mx + c
