@@ -484,7 +484,7 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var collisionPointVelocityA = {x: velocityA.x + tangentialVelocityA.x, y: velocityA.y + tangentialVelocityA.y};
   var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};
 
-  var collidingSide = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, centreB);
+  var collidingSide = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB);
 
   var data = {
     collisionPoint: {x:collidingSide.x, y:collidingSide.y},
@@ -495,7 +495,7 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
 
 }
 
-function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, centreB){
+function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB){
   var length = shapeBVertices.length;
   var intersections = [];
     for(var i = 0; i < length; i++){
@@ -509,9 +509,9 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       var sideGradient = sideFormula.gradient;
       var sideIntercept = sideFormula.intercept;
 
-      //console.log('sideGradient', sideGradient);
+      var relativeCollisionPointVel = {x: collisionPointVelocityB.x -  collisionPointVelocityA.x, y: collisionPointVelocityB.y -  collisionPointVelocityA.y};
 
-      var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + collisionPointVelocityA.x, y: collisionPoint.y + collisionPointVelocityA.y}]);
+      var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + relativeCollisionPointVel.x, y: collisionPoint.y + relativeCollisionPointVel.y}]);
       var velocityGradient = velocityFormula.gradient;
       var velocityIntercept = velocityFormula.intercept;
 
@@ -572,14 +572,8 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       if(!sum.min){
         closest = {min: distance, index: index};
       } else if(sum.min > distance){
-        console.log('min', sum.min);
-        console.log('distance', distance);
-        console.log('index', index);
         closest = {min: distance, index: index};
       } else if(sum.min <= distance){
-        console.log('min2', sum.min);
-        console.log('distance2', distance);
-        console.log('index2', index);
         closest = {min: sum.min, index: sum.index};
       }
       console.log('closest', closest);
