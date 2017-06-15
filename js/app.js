@@ -488,11 +488,34 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       var sideIntercept = sideFormula.intercept;
 
       var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + collisionPointVelocityA.x, y: collisionPoint.y + collisionPointVelocityA.y}]);
-      var velocityGradient = sideFormula.gradient;
-      var velocityIntercept = sideFormula.intercept;
+      var velocityGradient = velocityFormula.gradient;
+      var velocityIntercept = velocityFormula.intercept;
 
       var intersectionX = (sideIntercept - velocityIntercept) / (velocityGradient - sideGradient);
       var intersectionY = sideGradient * intersectionX + sideIntercept;
+
+      // if gradients are vertical
+      if(Math.abs(sideGradient) > 10000){
+        intersectionX = side[0].x;
+        intersectionY = velocityGradient * intersectionX + velocityIntercept;
+      }
+
+      if(Math.abs(velocityGradient) > 10000){
+        intersectionX = collisionPoint.x;
+        intersectionY = sideGradient * intersectionX + velocityIntercept;
+      }
+
+      // if gradients are horizontal
+      if(Math.abs(sideGradient) < 0.0001){
+        intersectionY = side[0].y;
+        intersectionX = (intersectionY - velocityIntercept) / velocityGradient;
+      }
+
+      if(Math.abs(velocityGradient) < 0.0001){
+        intersectionY = collisionPoint.y;
+        intersectionX = (intersectionY - sideIntercept) / sideGradient;
+      }
+
 
       // check if intersection point lies on the side being checked
       var sideMinX = Math.min(side[0].x, side[1].x);
@@ -505,6 +528,20 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
         intersections.push({x: intersectionX, y: intersectionY, side: side});
       }
     }
+    if(intersections.length > 0){
+    var closestPoint = intersections.reduce(function(sum, e, index){
+      var distance = magnitude({x: e.x - collisionPoint.x, y: e.y - collisionPoint.y});
+      if(!sum.min){
+        sum = {min: distance, index: index};
+      } else if(sum.min > distance){
+        sum = {min: distance, index: index};
+      } else {
+        sum = {min: sum.min, index: index};
+      }
+      return sum;
+    });
+  }
+    console.log('closestPoint', intersections[closestPoint.index]);
     console.log('intersections', intersections);
     //intersections
 }
