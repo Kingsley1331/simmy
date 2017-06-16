@@ -108,14 +108,7 @@ let draw = () => {
       drawDot(3, centreOfRotation, 'green');
       if(collisionData.collisionPoint){
         drawDot(4, {x: collisionData.collisionPoint.x, y:collisionData.collisionPoint.y}, 'red');
-        bufferCtx.save();
-        bufferCtx.strokeStyle = 'red';
-        bufferCtx.lineWidth = 2;
-        bufferCtx.beginPath();
-        bufferCtx.moveTo(collisionData.side[0].x, collisionData.side[0].y);
-        bufferCtx.lineTo(collisionData.side[1].x, collisionData.side[1].y);
-        bufferCtx.stroke();
-        bufferCtx.restore();
+        drawLine(collisionData.side[0], collisionData.side[1]);
       }
       screenWriter(ShapesController.getProperty(i, 'id'), idPos);
       bufferCtx.save();
@@ -134,6 +127,17 @@ let draw = () => {
   screenWriter('x:' + Math.round(mousePos.x) + ',  ' + 'y:' + Math.round(mousePos.y), {x:10, y:20});
 
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
+}
+
+function drawLine(start, end){
+  bufferCtx.save();
+  bufferCtx.strokeStyle = 'red';
+  bufferCtx.lineWidth = 2;
+  bufferCtx.beginPath();
+  bufferCtx.moveTo(start.x, start.y);
+  bufferCtx.lineTo(end.x, end.y);
+  bufferCtx.stroke();
+  bufferCtx.restore();
 }
 
 function screenWriter(text, position){
@@ -383,7 +387,6 @@ function applyPhysics(i, tDelta){
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
     angularVelocity += angularAcceleration;
-    console.log('angularVelocity', angularVelocity);
     var centreOfMass = ShapesController.getCentreOfMass(i);
     centreOfMass.x += velocity.x * tDelta * velFactor;
     centreOfMass.y += velocity.y * tDelta * velFactor;
@@ -509,7 +512,7 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       var sideGradient = sideFormula.gradient;
       var sideIntercept = sideFormula.intercept;
 
-      var relativeCollisionPointVel = {x: collisionPointVelocityB.x -  collisionPointVelocityA.x, y: collisionPointVelocityB.y -  collisionPointVelocityA.y};
+      var relativeCollisionPointVel = {x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y};
 
       var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + relativeCollisionPointVel.x, y: collisionPoint.y + relativeCollisionPointVel.y}]);
       var velocityGradient = velocityFormula.gradient;
@@ -518,37 +521,41 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       var intersectionX = (sideIntercept - velocityIntercept) / (velocityGradient - sideGradient);
       var intersectionY = sideGradient * intersectionX + sideIntercept;
 
-      // if gradients are vertical
-      if(Math.abs(sideGradient) > 10000){ //console.log('%cside vertical', 'font-size: 25px; color: blue;');
+      // if the side gradient is vertical and velocity gradient is not horizontal
+      if(Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) >= 0.0001){ //console.log('%cside vertical', 'font-size: 25px; color: blue;');
         intersectionX = side[0].x;
         intersectionY = velocityGradient * intersectionX + velocityIntercept;
         console.log('side intersectionX', intersectionX);
         console.log('side intersectionY', intersectionY);
       }
 
-      if(Math.abs(velocityGradient) > 10000){
+      // if the velocity gradient is vertical and side gradient is not horizontal
+      if(Math.abs(velocityGradient) > 10000 && Math.abs(sideGradient) >= 0.0001){
         intersectionX = collisionPoint.x;
         intersectionY = sideGradient * intersectionX + velocityIntercept;
       }
 
-      // if gradients are horizontal
-      if(Math.abs(sideGradient) < 0.0001){
+      // if the side gradient is horizontal and velocity gradient is not vertical
+      if(Math.abs(sideGradient) < 0.0001 && Math.abs(velocityGradient) <= 10000){
         intersectionY = side[0].y;
         intersectionX = (intersectionY - velocityIntercept) / velocityGradient;
       }
 
-      if(Math.abs(velocityGradient) < 0.0001){
+      // if the velocity gradient is horizontal and side gradient is not vertical
+      if(Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) <= 10000){
         intersectionY = collisionPoint.y;
         intersectionX = (intersectionY - sideIntercept) / sideGradient;
         console.log('velocity intersectionX', intersectionX);
         console.log('velocity intersectionY', intersectionY);
       }
 
+      // if velocity gradient is horizontal and the side gradient is vertical
       if(Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) > 10000){
         intersectionX = side[0].x;
         intersectionY = collisionPoint.y;
       }
 
+      // if velocity gradient is vertical and the side gradient is horizontal
       if(Math.abs(velocityGradient) > 10000 && Math.abs(sideGradient) < 0.0001){
         intersectionX = collisionPoint.x;
         intersectionY = side[0].y;
