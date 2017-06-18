@@ -36,6 +36,56 @@ function magnitude(vector){
 		return product;
  }
 
+Vector.prototype.findAngle = function(vector2){
+	var vector1 = {x: this.x, y: this.y};
+	var dotProd = this.dotProd(vector2);
+	var mag = this.magnitude;
+	var mag2 = vector2.magnitude;
+	var angle = Math.acos(dotProd / (mag * mag2));
+	var direction = checkDirection(vector1, vector2, angle);
+	angle = direction === 'clockwise' ? angle * -1 : angle;
+	console.log('calculated angle', angle);
+	console.log('direction', direction);
+	return angle;
+}
+
+Vector.prototype.isParallel = function(vector2){
+	var product = this.crossProd(vector2);
+	// console.log('product', product);
+	// console.log('isParallel vector', vector2);
+	// console.log('this vector', {x:this.x, y:this.y});
+
+	product.x = Math.abs(product.x) <= 0.0000001 ? 0: product.x;
+	product.y = Math.abs(product.y) <= 0.0000001 ? 0: product.y;
+	product.z = Math.abs(product.z) <= 0.0000001 ? 0: product.z;
+
+	//console.log('isParallel', product.x === 0 && product.y === 0 && product.z === 0);
+
+	if(product.x === 0 && product.y === 0 && product.z === 0){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function checkDirection(vector1, vector2, angle){
+	var rotatedVector = rotateVector(angle, vector1);
+	// console.log('rotatedVector', rotatedVector);
+	// console.log('vector2', vector2);
+	var dotProd = vector2.dotProd(rotatedVector);
+	var isParallel = rotatedVector.isParallel(vector2);
+	//dotProd > 0 means that the vectors are facing the same direction
+	if(isParallel === true && dotProd > 0){ console.log('parallel');
+		return 'anti-clockwise';
+	} else {
+		if(isParallel === false || isParallel === true && dotProd <= 0){ console.log('not parallel');
+			return 'clockwise';
+		}
+	}
+}
+
+
+
 // 3 x 3 Matrix
 function Matrix(matrix){
 	this.r1 = matrix.r1;
@@ -79,6 +129,8 @@ function rotateVector(theta, vector){
 		r2: [Math.sin(theta), Math.cos(theta), 0],
 		r3: [0, 0, 1]
 	});
+	// console.log('vector', vector);
+	// console.log('rotationMatrix', rotationMatrix);
 	var rotatedVector = rotationMatrix.vMult(vector);
 	//console.log('rotatedVector', rotatedVector);
 	return rotatedVector;
@@ -134,3 +186,28 @@ var v7 = m1.vMult(v1);
 //
 // var v10 = new Vector({x:3, y:4, z:8});
 // console.log('v10.magnitude', v10.magnitude);
+
+
+
+var vector1 = new Vector({x:0, y:1});
+var vector1a = new Vector({x:0, y:2})
+var vector2 = new Vector({x:1, y:1});
+var vector3 = new Vector({x:1, y:0});
+var vector4 = new Vector({x:1, y:-1});
+var vector5 = new Vector({x:0, y:-1});
+var vector6 = new Vector({x:-1, y:-1});
+var vector7 = new Vector({x:-1, y:0});
+var vector8 = new Vector({x:-1, y:1});
+
+vector1.findAngle(vector1);
+vector1.findAngle(vector2);
+vector1.findAngle(vector3);
+vector1.findAngle(vector4);
+vector1.findAngle(vector5);
+vector1.findAngle(vector6);
+vector1.findAngle(vector7);
+vector1.findAngle(vector8);
+
+//vector1.findAngle(vector2);
+//vector1.isParallel(vector5);
+//console.log('crossProd', vector1.crossProd(vector2));
