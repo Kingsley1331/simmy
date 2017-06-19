@@ -16,7 +16,7 @@ function Shape(centre, vertices){
   var massData = findMass(centre, vertices, boundingRect);
   var centreOfMass = massData.centreOfMass;
   var momentOfInertiaCOM = findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect);
-  //var momentOfInertia = findMomentOfInertia({x: 0, y:126}, momentOfInertiaCOM, massData.mass);
+  var normalVector = referenceNormalVector(centre, vertices)
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
@@ -46,8 +46,34 @@ function Shape(centre, vertices){
   var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
   this.boundingRect.radius = radius;
   this.collisionData = {};
+  this.referenceNormalVector = normalVector;
 }
 
+function referenceNormalVector(centre, vertices){
+  var firstPoint = {x: vertices[0].x, y: vertices[0].y};
+  var secondPoint = {x: vertices[1].x, y: vertices[1].y};
+  //turn the first side into a vector pointing away from the first point
+  var firstSideVector = new Vector({x: secondPoint.x - firstPoint.x, y: secondPoint.y - firstPoint.y});
+  var sideLength = firstSideVector.magnitude;
+  var angle = Math.PI / 4;
+  var normalVector = rotateVector(angle, firstSideVector);
+  var unitNormal = {x: normalVector.x / sideLength, y: normalVector.y / sideLength};
+  var location = {x: centre.x + firstSideVector.x/2, y: centre.y + firstSideVector.y/2};
+  var point = {x: location.x + unitNormal.x, y: location.y + unitNormal.y};
+  var pointInShape = isPointInShape(centre, vertices, point);
+  if(pointInShape){
+    unitNormal = {x: -unitNormal.x, y: -unitNormal.y};
+  }
+  return {location: location, sideVector: firstSideVector, unitNormal: unitNormal};
+}
+
+function findSideUnitNormal(sideVector, referenceVector){
+  sideVector = new Vector(sideVector);
+  referenceVector = new Vector(referenceVector);
+  var angle = sideVector.findAngle(referenceVector);
+  var unitNormal = rotateVector(angle, referenceVector);
+  return unitNormal;
+}
 
 function createShape(centreOfMass, vertices){
   forEachShape(function(i){

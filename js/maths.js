@@ -74,12 +74,21 @@ function checkDirection(vector1, vector2, angle){
 	// console.log('vector2', vector2);
 	var dotProd = vector2.dotProd(rotatedVector);
 	var isParallel = rotatedVector.isParallel(vector2);
-	//dotProd > 0 means that the vectors are facing the same direction
-	if(isParallel === true && dotProd > 0){ console.log('parallel');
+
+
+	var rotatedVector2 = rotateVector(angle * -1, vector1)
+	var dotProd2 = vector2.dotProd(rotatedVector2);
+	var isParallel2 = rotatedVector2.isParallel(vector2);
+	// dotProd > 0 means that the vectors are facing the same direction
+	if(isParallel === true && dotProd > 0){ //console.log('parallel');
 		return 'anti-clockwise';
 	} else {
+		// if the vectors are not parallel or they are parallel but pointing in different direction
 		if(isParallel === false || isParallel === true && dotProd <= 0){ console.log('not parallel');
-			return 'clockwise';
+		//temporary condition just for testing
+			if(isParallel2 === true && dotProd2 >= 0){
+				return 'clockwise';
+			}
 		}
 	}
 }
