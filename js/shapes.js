@@ -103,7 +103,12 @@ var shapeSelection = {
       {x: 54, y: -54},
       {x: -54, y: -54},
       {x: -54, y: 54}
-    ]
+    ],
+    arrowHead: [
+        {x: -5, y: 0},
+        {x: 5, y: 0},
+        {x: 0, y: 10}
+      ],
 };
 
 function circleMaker(radius, n) {

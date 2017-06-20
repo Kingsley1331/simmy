@@ -84,7 +84,7 @@ function checkDirection(vector1, vector2, angle){
 		return 'anti-clockwise';
 	} else {
 		// if the vectors are not parallel or they are parallel but pointing in different direction
-		if(isParallel === false || isParallel === true && dotProd <= 0){ console.log('not parallel');
+		if(isParallel === false || isParallel === true && dotProd <= 0){ //console.log('not parallel');
 		//temporary condition just for testing
 			if(isParallel2 === true && dotProd2 >= 0){
 				return 'clockwise';
@@ -148,8 +148,11 @@ function rotateVector(theta, vector){
 
 function rotateShape(centre, theta, index){
 	if(Scene.shapes[0]){
-		var centreOfMass = ShapesController.getProperty(index, 'centreOfMass');
-		var vertices = ShapesController.getProperty(index, 'vertices');
+
+		//var centreOfMass = ShapesController.getProperty(index, 'centreOfMass');
+		//var vertices = ShapesController.getProperty(index, 'vertices');
+		var centreOfMass = typeof index === 'number' ? ShapesController.getProperty(index, 'centreOfMass') : centre;
+		var vertices = typeof index === 'number' ? ShapesController.getProperty(index, 'vertices') : index;
 		var rotatedVertices = [];
 		var length = vertices.length;
 		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
@@ -160,8 +163,11 @@ function rotateShape(centre, theta, index){
 		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
 		var rotateCOM = rotateVector(theta, {x: centreOR.x, y: centreOR.y});
 		var newCentreOfMass = {x: centre.x + rotateCOM.x, y: centre.y + rotateCOM.y};
-		ShapesController.setProperty(index, 'centreOfMass', newCentreOfMass);
-		ShapesController.setProperty(index, 'vertices', rotatedVertices);
+		if(typeof index === 'number'){
+			ShapesController.setProperty(index, 'centreOfMass', newCentreOfMass);
+			ShapesController.setProperty(index, 'vertices', rotatedVertices);
+		}
+		return rotatedVertices;
 	}
 }
 
