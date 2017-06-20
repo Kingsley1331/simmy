@@ -122,8 +122,10 @@ let draw = () => {
       var boundingRectCentre = {x: boundingRect.centre.x + centreOfMass.x, y: boundingRect.centre.y + centreOfMass.y};
       var rectVertices = boundingRect.vertices;
       var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
-      var collisionData = ShapesController.getProperty(i, 'collisionData');
-
+      var collisionDataB = ShapesController.getProperty(i, 'collisionData');
+      var unitNormal = collisionDataB.unitNormal;
+      var collisionPoint = collisionDataB.collisionPoint;
+      console.log('****collisionDataB*****', collisionDataB);
 
       var radius = boundingRect.radius;
       var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
@@ -132,21 +134,26 @@ let draw = () => {
       drawDot(3, centreOfMass, 'black');
       drawDot(3, boundingRectCentre, 'red');
       drawDot(3, centreOfRotation, 'green');
-      if(collisionData.collisionPoint){
-        drawDot(4, {x: collisionData.collisionPoint.x, y:collisionData.collisionPoint.y}, 'red');
-        drawLine(collisionData.side[0], collisionData.side[1], {strokeStyle: 'red', lineWidth: 2});
+      if(collisionDataB.collisionPoint){
+        drawDot(4, {x: collisionDataB.collisionPoint.x, y:collisionDataB.collisionPoint.y}, 'red');
+        drawLine(collisionDataB.side[0], collisionDataB.side[1], {strokeStyle: 'red', lineWidth: 2});
       }
 
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 0, y: 100}], {fillStyle: 'purple'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: 100}], {fillStyle: 'black'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: 0}], {fillStyle: 'black'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 0, y: -100}], {fillStyle: 'red', strokeStyle: 'red'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: -100}], {fillStyle: 'red'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: 0}], {fillStyle: 'red'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: 100}], {fillStyle: 'green',  strokeStyle: 'green'});
-      drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: -100}], {fillStyle: 'blue', strokeStyle: 'blue'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 0, y: 100}], {fillStyle: 'purple'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: 100}], {fillStyle: 'black'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: 0}], {fillStyle: 'black'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 0, y: -100}], {fillStyle: 'red', strokeStyle: 'red'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: -100}], {fillStyle: 'red'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: 0}], {fillStyle: 'red'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: 100}], {fillStyle: 'green',  strokeStyle: 'green'});
+      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: -100}], {fillStyle: 'blue', strokeStyle: 'blue'});
 
+      //drawArrow(shapeSelection.arrowHead, [collisionPoint, unitNormal], {fillStyle: 'red'});
 
+      if(unitNormal){
+        unitNormal = unitNormal.scalProd(50);
+        drawArrow(shapeSelection.arrowHead, [collisionPoint, unitNormal], {fillStyle: 'red', strokeStyle: 'red'});
+      }
       screenWriter(ShapesController.getProperty(i, 'id'), idPos);
       bufferCtx.save();
       bufferCtx.beginPath();
