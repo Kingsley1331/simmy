@@ -20,6 +20,7 @@ function magnitude(vector){
 
  Vector.prototype.scalProd = function(scale){
 	 var product = {x: this.x * scale, y: this.y * scale, z: this.z * scale};
+	 product = new Vector(product);
 	 return product;
  };
 
@@ -44,8 +45,8 @@ Vector.prototype.findAngle = function(vector2){
 	var angle = Math.acos(dotProd / (mag * mag2));
 	var direction = checkDirection(vector1, vector2, angle);
 	angle = direction === 'clockwise' ? angle * -1 : angle;
-	console.log('calculated angle', angle);
-	console.log('direction', direction);
+	//console.log('calculated angle', angle);
+	//console.log('direction', direction);
 	return angle;
 }
 
