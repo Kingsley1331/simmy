@@ -161,12 +161,30 @@ function rotateShape(centre, theta, index){
 			var rotatedVertex = rotateVector(theta, {x: vertices[i].x, y: vertices[i].y});
 			rotatedVertices.push(rotatedVertex);
 		}
+
+		if(typeof index === 'number'){
+			var referenceVectors = ShapesController.getProperty(index, 'referenceVectors');
+			var location = referenceVectors.location; // need to find way of updating "sub-objects" individually
+			var sideVector = referenceVectors.sideVector;
+			var unitNormal = referenceVectors.unitNormal;
+			if(location){
+				var rotatedLocation = rotateVector(theta, {x: location.x, y: location.y});
+			}
+			if(sideVector){
+				var rotatedSideVector = rotateVector(theta, {x: sideVector.x, y: sideVector.y});
+			}
+			if(unitNormal){
+				var rotatedUnitNormal = rotateVector(theta, {x: unitNormal.x, y: unitNormal.y});
+			}
+			referenceVectors = {location: rotatedLocation, sideVector: rotatedSideVector, unitNormal: rotatedUnitNormal};
+		}
 		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
 		var rotateCOM = rotateVector(theta, {x: centreOR.x, y: centreOR.y});
 		var newCentreOfMass = {x: centre.x + rotateCOM.x, y: centre.y + rotateCOM.y};
 		if(typeof index === 'number'){
 			ShapesController.setProperty(index, 'centreOfMass', newCentreOfMass);
 			ShapesController.setProperty(index, 'vertices', rotatedVertices);
+			ShapesController.setProperty(index, 'referenceVectors', referenceVectors);
 		}
 		return rotatedVertices;
 	}

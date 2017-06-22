@@ -58,8 +58,10 @@ function referenceVectors(centre, vertices){
   var angle = Math.PI / 2;
   var normalVector = rotateVector(angle, firstSideVector);
   var unitNormal = {x: normalVector.x / sideLength, y: normalVector.y / sideLength};
-  var location = {x: centre.x + firstPoint.x + firstSideVector.x/2, y: centre.y + firstPoint.y + firstSideVector.y/2};
-  var point = {x: location.x + unitNormal.x, y: location.y + unitNormal.y};
+  //var location = {x: centre.x + firstPoint.x + firstSideVector.x/2, y: centre.y + firstPoint.y + firstSideVector.y/2};
+  var location = {x: firstPoint.x + firstSideVector.x/2, y: firstPoint.y + firstSideVector.y/2};
+  //var point = {x: location.x + unitNormal.x, y: location.y + unitNormal.y};
+  var point = {x:centre.x + location.x + unitNormal.x, y: centre.y + location.y + unitNormal.y}
   var pointInShape = isPointInShape(centre, vertices, point);
   if(pointInShape){
     unitNormal = {x: -unitNormal.x, y: -unitNormal.y};
@@ -123,15 +125,19 @@ let draw = () => {
       var rectVertices = boundingRect.vertices;
       var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
       var collisionDataB = ShapesController.getProperty(i, 'collisionData');
+      var velocityA = collisionDataB.velocityA;
+      var velocityB = collisionDataB.velocityB;
       var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
       // Reference Vectors
       var referenceUnitNormal = referenceVectors.unitNormal;
       var referenceSideVector = referenceVectors.sideVector;
-      var referenceLocation = referenceVectors.location;
+      //var referenceLocation = referenceVectors.location;
+      var referenceLocation = {x:referenceVectors.location.x + centreOfMass.x, y:referenceVectors.location.y + centreOfMass.y};
 
       var unitNormal = collisionDataB.unitNormal;
       var sideVector = collisionDataB.sideVector;
       var collisionPoint = collisionDataB.collisionPoint;
+      var arrowHead = shapeSelection.arrowHead;
       //console.log('****collisionDataB*****', collisionDataB);
 
       var radius = boundingRect.radius;
@@ -146,23 +152,14 @@ let draw = () => {
         drawLine(collisionDataB.side[0], collisionDataB.side[1], {strokeStyle: 'red', lineWidth: 2});
       }
 
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 0, y: 100}], {fillStyle: 'purple'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: 100}], {fillStyle: 'black'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: 0}], {fillStyle: 'black'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 0, y: -100}], {fillStyle: 'red', strokeStyle: 'red'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: -100}], {fillStyle: 'red'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: 0}], {fillStyle: 'red'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: -100, y: 100}], {fillStyle: 'green',  strokeStyle: 'green'});
-      // drawArrow(shapeSelection.arrowHead, [{x: 500, y: 300}, {x: 100, y: -100}], {fillStyle: 'blue', strokeStyle: 'blue'});
-
-      //drawArrow(shapeSelection.arrowHead, [collisionPoint, unitNormal], {fillStyle: 'red'});
-
       if(unitNormal){
         unitNormal = unitNormal.scalProd(50);
-        drawArrow(shapeSelection.arrowHead, [collisionPoint, unitNormal], {fillStyle: 'red', strokeStyle: 'red'});
-        drawArrow(shapeSelection.arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
-        drawArrow(shapeSelection.arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
-        drawArrow(shapeSelection.arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
+        drawArrow(arrowHead, [{x: collisionDataB.side[0].x + sideVector.x/2, y: collisionDataB.side[0].y + sideVector.y/2}, unitNormal], {fillStyle: 'purple', strokeStyle: 'purple'}, 30);
+        drawArrow(arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
+        drawArrow(arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
+        drawArrow(arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
+        drawArrow(arrowHead, [collisionPoint, velocityA], {fillStyle: 'green', strokeStyle: 'green'}, 30);
+        drawArrow(arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
       }
       screenWriter(ShapesController.getProperty(i, 'id'), idPos);
       bufferCtx.save();
@@ -464,14 +461,22 @@ function applyPhysics(i, tDelta){
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
     var centreOfMass = ShapesController.getProperty(i, 'centreOfMass');
     var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
+    var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
+    var location = referenceVectors.location;
+
     velocity.x += acceleration.x;
     velocity.y += acceleration.y;
+    location.x += acceleration.x;
+    location.y += acceleration.y;
     angularVelocity += angularAcceleration;
     var centreOfMass = ShapesController.getCentreOfMass(i);
     centreOfMass.x += velocity.x * tDelta * velFactor;
     centreOfMass.y += velocity.y * tDelta * velFactor;
     ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
     ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
+
+    ShapesController.getProperty(i, 'referenceVectors');
+
     rotateShape(centreOfRotation, angularVelocity, i);
     //rotateShape(centreOfMass, angularVelocity, i);
   }
@@ -518,11 +523,13 @@ function collisionDetector(){
             ShapesController.setProperty(k, 'colliding', true);
             var velocityA = ShapesController.getProperty(i, 'velocity', true);
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
-            ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
-            ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
             var data = collisionData(i, k, checkPoint, shape);
             ShapesController.setProperty(k,'collisionData', data);
-            shape = Scene.shapes[k]
+            shape = Scene.shapes[k];
+            /** start temporary dummy collision handling **/
+            ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
+            ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
+            /** end temporary dummy collision handling **/
             //console.log('=============shape', shape);
             console.log('=============collisionData', data);
           }
@@ -558,8 +565,8 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var tangentialVelocityMagnitudeA = Math.abs(collisionPointDistanceA * angularVelocityA);
   var tangentialVelocityMagnitudeB = Math.abs(collisionPointDistanceB * angularVelocityB);
 
-  var tangentialVelocityA = {x: tangentialVelocityMagnitudeA * Math.sin(angularVelocityA), y: tangentialVelocityMagnitudeA * Math.cos(angularVelocityA)};
-  var tangentialVelocityB = {x: tangentialVelocityMagnitudeB * Math.sin(angularVelocityB), y: tangentialVelocityMagnitudeB * Math.cos(angularVelocityB)};
+  // var tangentialVelocityA = {x: tangentialVelocityMagnitudeA * Math.sin(angularVelocityA), y: tangentialVelocityMagnitudeA * Math.cos(angularVelocityA)};
+  // var tangentialVelocityB = {x: tangentialVelocityMagnitudeB * Math.sin(angularVelocityB), y: tangentialVelocityMagnitudeB * Math.cos(angularVelocityB)};
 
   // below are the coordinates of the collisionpoint after being rotated by the angularVelocity angle
   var collisionPointRotationA = rotateVector(angularVelocityA, {x: collisionPointA.x, y: collisionPointA.y});
@@ -584,11 +591,11 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
     collisionPoint: {x:collidingSideData.x, y:collidingSideData.y},
     side: collidingSideData.side,
     sideVector: collidingSideVector,
-    unitNormal: unitNormalB
+    unitNormal: unitNormalB,
+    velocityA: collisionPointVelocityA,
+    velocityB: collisionPointVelocityB
   };
-
   return data;
-
 }
 
 function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB){
@@ -684,7 +691,8 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
 
     console.log('intersections', intersections);
     //intersections
-    return intersections[closestPoint.index];
+    var intersectionPoint = intersections.length > 0 ? intersections[closestPoint.index] : {};
+    return intersectionPoint;
 }
 
 // finds the equation of a line segment 'side' in the form of y = mx + c
