@@ -111,6 +111,10 @@ var shapeSelection = {
       ],
 };
 
+var settings = {
+  display: true
+};
+
 function circleMaker(radius, n) {
   var circle = [];
   var angle = 2*Math.PI/n;

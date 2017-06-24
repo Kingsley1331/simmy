@@ -142,31 +142,33 @@ let draw = () => {
 
       var radius = boundingRect.radius;
       var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
-      drawShape(rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
       drawShape(vertices, centreOfMass, config);
-      drawDot(3, centreOfMass, 'black');
-      drawDot(3, boundingRectCentre, 'red');
-      drawDot(3, centreOfRotation, 'green');
-      if(collisionDataB.collisionPoint){
-        drawDot(4, {x: collisionDataB.collisionPoint.x, y:collisionDataB.collisionPoint.y}, 'red');
-        drawLine(collisionDataB.side[0], collisionDataB.side[1], {strokeStyle: 'red', lineWidth: 2});
-      }
+      if(settings.display){
+        screenWriter(ShapesController.getProperty(i, 'id'), idPos);
+        drawShape(rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
+        drawDot(3, centreOfMass, 'black');
+        drawDot(3, boundingRectCentre, 'red');
+        drawDot(3, centreOfRotation, 'green');
+        if(collisionDataB.collisionPoint){
+          drawDot(4, {x: collisionDataB.collisionPoint.x, y:collisionDataB.collisionPoint.y}, 'red');
+          drawLine(collisionDataB.side[0], collisionDataB.side[1], {strokeStyle: 'red', lineWidth: 2});
+        }
 
-      if(unitNormal){
-        unitNormal = unitNormal.scalProd(50);
-        drawArrow(arrowHead, [{x: collisionDataB.side[0].x + sideVector.x/2, y: collisionDataB.side[0].y + sideVector.y/2}, unitNormal], {fillStyle: 'purple', strokeStyle: 'purple'}, 30);
-        drawArrow(arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
-        drawArrow(arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
-        drawArrow(arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
-        drawArrow(arrowHead, [collisionPoint, velocityA], {fillStyle: 'green', strokeStyle: 'green'}, 30);
-        drawArrow(arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
+        if(unitNormal){
+          unitNormal = unitNormal.scalProd(50);
+          drawArrow(arrowHead, [{x: collisionDataB.side[0].x + sideVector.x/2, y: collisionDataB.side[0].y + sideVector.y/2}, unitNormal], {fillStyle: 'purple', strokeStyle: 'purple'}, 30);
+          drawArrow(arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
+          drawArrow(arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
+          drawArrow(arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
+          drawArrow(arrowHead, [collisionPoint, velocityA], {fillStyle: 'green', strokeStyle: 'green'}, 30);
+          drawArrow(arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
+        }
+        bufferCtx.save();
+        bufferCtx.beginPath();
+        bufferCtx.arc(boundingRectCentre.x, boundingRectCentre.y, radius, 0, 2*Math.PI);
+        bufferCtx.stroke();
+        bufferCtx.restore();
       }
-      screenWriter(ShapesController.getProperty(i, 'id'), idPos);
-      bufferCtx.save();
-      bufferCtx.beginPath();
-      bufferCtx.arc(boundingRectCentre.x, boundingRectCentre.y, radius, 0, 2*Math.PI);
-      bufferCtx.stroke();
-      bufferCtx.restore();
   });
   if(shapeSelection[selectedShape] && hoveringOnShape <= 0){ // (hoveringOnShape <= 0) means not hovering on shape
     drawShape(shapeSelection[selectedShape], mousePos, {
@@ -506,18 +508,18 @@ function collisionDetector(){
   });
   forEachShape(function(i){
     var vertices = ShapesController.getVertices(i); //ShapeA
-    var centreOfMass = ShapesController.getCentreOfMass(i);
+    var centreOfMassA = ShapesController.getCentreOfMass(i);
     var length = vertices.length;
     for(var j = 0; j < length; j++){
         var checkPoint = {};
-        checkPoint.x = vertices[j].x + centreOfMass.x;
-        checkPoint.y = vertices[j].y + centreOfMass.y;
+        checkPoint.x = vertices[j].x + centreOfMassA.x;
+        checkPoint.y = vertices[j].y + centreOfMassA.y;
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
           var shape = shapes[k].vertices; //shapeB
           var shapeVertices = ShapesController.getProperty(k, 'vertices');
-          var shapeCentre = ShapesController.getProperty(k, 'centreOfMass');
-          var pointInShape = isPointInShape(shapeCentre, shapeVertices, checkPoint);
+          var centreOfMassB = ShapesController.getProperty(k, 'centreOfMass');
+          var pointInShape = isPointInShape(centreOfMassB, shapeVertices, checkPoint);
           if(pointInShape){
             ShapesController.setProperty(i, 'colliding', true);
             ShapesController.setProperty(k, 'colliding', true);
@@ -526,6 +528,17 @@ function collisionDetector(){
             var data = collisionData(i, k, checkPoint, shape);
             ShapesController.setProperty(k,'collisionData', data);
             shape = Scene.shapes[k];
+            var massA = ShapesController.getProperty(i, 'mass', true);
+            var massB = ShapesController.getProperty(k, 'mass', true);
+
+            var momentOfInertiaA = ShapesController.getProperty(i, 'momentOfInertia', true);
+            var momentOfInertiaB = ShapesController.getProperty(k, 'momentOfInertia', true);
+
+            var masses = {massA: massA, massB: massB, momentOfInertiaA: momentOfInertiaA, momentOfInertiaB: momentOfInertiaB};
+            var centres = {centreA: centreOfMassA, centreB: centreOfMassB};
+
+            var impulse = findImpulse(data, masses, centres);
+
             /** start temporary dummy collision handling **/
             ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
             ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
@@ -537,6 +550,30 @@ function collisionDetector(){
       }
     }
   });
+}
+
+function findImpulse(data, masses, centres){
+  // var data = {
+  //   collisionPoint: {x:collidingSideData.x, y:collidingSideData.y},
+  //   side: collidingSideData.side,
+  //   sideVector: collidingSideVector,
+  //   unitNormal: unitNormalB,
+  //   velocityA: collisionPointVelocityA,
+  //   velocityB: collisionPointVelocityB
+  // }
+  var collisionPoint = data.collisionPoint;
+  var collisionPointVelocityA = data.velocityA;
+  var collisionPointVelocityB = data.velocityB;
+
+  var collisionDistancetA = {x: collisionPoint.x - centres.centreA.x, x: collisionPoint.y - centres.centreA.y};
+  var collisionDistancetB = {x: collisionPoint.x - centres.centreB.x, x: collisionPoint.y - centres.centreB.y};
+  var massA = masses.massA;
+  var massB = masses.massB;
+  var momentOfInertiaA = masses.momentOfInertiaA;
+  var momentOfInertiaB = masses.momentOfInertiaB;
+  var unitNormal = data.unitNormal;
+  var collisionVelocity = new Vector({x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y});
+
 }
 
 function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices){
