@@ -525,26 +525,49 @@ function collisionDetector(){
             ShapesController.setProperty(k, 'colliding', true);
             var velocityA = ShapesController.getProperty(i, 'velocity', true);
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
+
+            var angularVelocityA = ShapesController.getProperty(i, 'angularVelocity', true);
+            var angularVelocityB = ShapesController.getProperty(k, 'angularVelocity', true);
+
             var data = collisionData(i, k, checkPoint, shape);
             ShapesController.setProperty(k,'collisionData', data);
             shape = Scene.shapes[k];
             var massA = ShapesController.getProperty(i, 'mass', true);
             var massB = ShapesController.getProperty(k, 'mass', true);
 
-            var momentOfInertiaA = ShapesController.getProperty(i, 'momentOfInertia', true);
-            var momentOfInertiaB = ShapesController.getProperty(k, 'momentOfInertia', true);
-
+            var momentOfInertiaA = ShapesController.getProperty(i, 'momentOfInertiaCOM', true);
+            var momentOfInertiaB = ShapesController.getProperty(k, 'momentOfInertiaCOM', true);
+            var unitNormal = data.unitNormal;
             var masses = {massA: massA, massB: massB, momentOfInertiaA: momentOfInertiaA, momentOfInertiaB: momentOfInertiaB};
             var centres = {centreA: centreOfMassA, centreB: centreOfMassB};
 
             var impulse = findImpulse(data, masses, centres);
-
             /** start temporary dummy collision handling **/
-            ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
-            ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
+            // ShapesController.setProperty(i, 'velocity', {x: -velocityA.x, y: -velocityA.y}, true);
+            // ShapesController.setProperty(k, 'velocity', {x: -velocityB.x, y: -velocityB.y}, true);
             /** end temporary dummy collision handling **/
-            //console.log('=============shape', shape);
-            console.log('=============collisionData', data);
+            var normalImpulse = unitNormal.scalProd(impulse);
+            var collisionDistanceA = data.collisionDistanceA;
+            var collisionDistanceB = data.collisionDistanceB;
+            var colDistCrossNormalA = collisionDistanceA.crossProd(normalImpulse);
+            var colDistCrossNormalB = collisionDistanceB.crossProd(normalImpulse);
+
+
+
+
+            var newVelocityA = {x: velocityA.x + normalImpulse.x/massA, y: velocityA.y + normalImpulse.y/massA};
+            var newVelocityB = {x: velocityB.x - normalImpulse.x/massB, y: velocityB.y - normalImpulse.y/massB};
+
+            var newAngularVelocityA = angularVelocityA + colDistCrossNormalA.magnitude/momentOfInertiaA;
+            var newAngularVelocityB = angularVelocityB - colDistCrossNormalB.magnitude/momentOfInertiaB;
+
+            ShapesController.setProperty(i, 'velocity', newVelocityA, true);
+            ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
+
+            ShapesController.setProperty(k, 'velocity', newVelocityB, true);
+            ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityB, true);
+
+            //console.log('=============collisionData', data);
           }
         }
       }
@@ -565,15 +588,41 @@ function findImpulse(data, masses, centres){
   var collisionPointVelocityA = data.velocityA;
   var collisionPointVelocityB = data.velocityB;
 
-  var collisionDistancetA = {x: collisionPoint.x - centres.centreA.x, x: collisionPoint.y - centres.centreA.y};
-  var collisionDistancetB = {x: collisionPoint.x - centres.centreB.x, x: collisionPoint.y - centres.centreB.y};
+  // var collisionDistanceA = new Vector({x: collisionPoint.x - centres.centreA.x, y: collisionPoint.y - centres.centreA.y});
+  // var collisionDistanceB = new Vector({x: collisionPoint.x - centres.centreB.x, y: collisionPoint.y - centres.centreB.y});
+  var collisionDistanceA = data.collisionDistanceA;
+  var collisionDistanceB = data.collisionDistanceB;
+
   var massA = masses.massA;
   var massB = masses.massB;
   var momentOfInertiaA = masses.momentOfInertiaA;
   var momentOfInertiaB = masses.momentOfInertiaB;
   var unitNormal = data.unitNormal;
-  var collisionVelocity = new Vector({x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y});
+  var collisionVelocity = data.collisionVelocity;
 
+  var collisionVelocityNormalDotProduct = collisionVelocity.dotProd(unitNormal);
+  var collisionDistanceNormalCrossProductA = collisionDistanceA.crossProd(unitNormal);
+  var collisionDistanceNormalCrossProductB = collisionDistanceB.crossProd(unitNormal);
+  var collisionDistSquareA = collisionDistanceNormalCrossProductA.square();
+  var collisionDistSquareB = collisionDistanceNormalCrossProductB.square();
+  var e = settings.restitution;
+
+  // console.log('============================>collisionVelocityNormalDotProduct', collisionVelocityNormalDotProduct);
+  // console.log('============================>collisionDistanceNormalCrossProductA', collisionDistanceNormalCrossProductA);
+  // console.log('============================>collisionDistanceNormalCrossProductB', collisionDistanceNormalCrossProductB);
+  // console.log('============================>collisionDistSquareA', collisionDistSquareA);
+  // console.log('============================>collisionDistSquareB', collisionDistSquareB);
+
+  //  console.log('============================>massA', massA);
+  //  console.log('============================>massB', massB);
+  //  console.log('============================>collisionDistSquareA', collisionDistSquareA);
+  //  console.log('============================>collisionDistSquareB', collisionDistSquareB);
+  //  console.log('============================>momentOfInertiaA', momentOfInertiaA);
+  //  console.log('============================>momentOfInertiaB', momentOfInertiaB);
+
+  var impulse = -(1 + e) * collisionVelocityNormalDotProduct / (1/massA + 1/massB + collisionDistSquareA/momentOfInertiaA + collisionDistSquareB/momentOfInertiaB);
+  console.log('============================>impulse', impulse);
+  return impulse;
 }
 
 function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices){
@@ -615,6 +664,9 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var collisionPointVelocityA = {x: velocityA.x + tangentialVelocityA.x, y: velocityA.y + tangentialVelocityA.y};
   var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};
 
+  var collisionVelocity = new Vector({x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y});
+  console.log('================================collisionVelocity', collisionVelocity);
+
   var collidingSideData = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB);
 
   var collidingSideVector = {x: collidingSideData.side[1].x - collidingSideData.side[0].x,  y: collidingSideData.side[1].y - collidingSideData.side[0].y};
@@ -624,13 +676,19 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   console.log('collidingSideVector', collidingSideVector);
   console.log('referenceVectors', referenceVectors);
 
+  var collisionDistanceA = new Vector({x: collidingSideData.x - centreA.x, y: collidingSideData.y - centreA.y});
+  var collisionDistanceB = new Vector({x: collidingSideData.x - centreB.x, y: collidingSideData.y - centreB.y});
+
   var data = {
-    collisionPoint: {x:collidingSideData.x, y:collidingSideData.y},
+    collisionPoint: {x: collidingSideData.x, y: collidingSideData.y},
     side: collidingSideData.side,
     sideVector: collidingSideVector,
     unitNormal: unitNormalB,
     velocityA: collisionPointVelocityA,
-    velocityB: collisionPointVelocityB
+    velocityB: collisionPointVelocityB,
+    collisionVelocity: collisionVelocity,
+    collisionDistanceA: collisionDistanceA,
+    collisionDistanceB: collisionDistanceB
   };
   return data;
 }

@@ -112,7 +112,8 @@ var shapeSelection = {
 };
 
 var settings = {
-  display: true
+  display: true,
+  restitution: 0
 };
 
 function circleMaker(radius, n) {

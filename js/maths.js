@@ -29,6 +29,11 @@ function magnitude(vector){
 	 return product;
  };
 
+ Vector.prototype.square = function(){
+	 var product = (this.x * this.x) + (this.y * this.y) + (this.z * this.z);
+	 return product;
+ };
+
  Vector.prototype.crossProd = function(vector2){
 		var x = this.y * vector2.z - this.z * vector2.y;
 		var y = this.z * vector2.x - this.x * vector2.z;
