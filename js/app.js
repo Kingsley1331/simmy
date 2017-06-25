@@ -87,6 +87,7 @@ function createShape(centreOfMass, vertices){
     shape.id = id;
     console.log('boundingRect.radius', shape.boundingRect.radius);
     Scene.shapes.push(shape);
+    return shape;
   }
 }
 
@@ -118,7 +119,7 @@ let draw = () => {
         lineWidth: lineWidth
       };
       if(ShapesController.getProperty(i, 'colliding')){
-        config.lineWidth = 10;
+        //config.lineWidth = 10;
       }
       var boundingRect = ShapesController.getProperty(i, 'boundingRect');
       var boundingRectCentre = {x: boundingRect.centre.x + centreOfMass.x, y: boundingRect.centre.y + centreOfMass.y};
@@ -137,7 +138,7 @@ let draw = () => {
       var unitNormal = collisionDataB.unitNormal;
       var sideVector = collisionDataB.sideVector;
       var collisionPoint = collisionDataB.collisionPoint;
-      var arrowHead = shapeSelection.arrowHead;
+      var arrowHead = shapes.arrowHead;
       //console.log('****collisionDataB*****', collisionDataB);
 
       var radius = boundingRect.radius;
@@ -160,7 +161,7 @@ let draw = () => {
           drawArrow(arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
           drawArrow(arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
           drawArrow(arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
-          drawArrow(arrowHead, [collisionPoint, velocityA], {fillStyle: 'green', strokeStyle: 'green'}, 30);
+          drawArrow(arrowHead, [collisionPoint, velocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
           drawArrow(arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
         }
         bufferCtx.save();
@@ -391,10 +392,12 @@ function deleteShape(i){
 
 function dragShape(i){
   var touchPoint = ShapesController.getTouchPoint(i);
-  ShapesController.setProperty(i, 'centreOfMass', {
+  var centre = {
     x: mousePos.x - touchPoint.x,
     y: mousePos.y - touchPoint.y
-   });
+  };
+  ShapesController.setProperty(i, 'centreOfMass', centre);
+  ShapesController.setProperty(i, 'centreOfRotation', centre);
 }
 
 function init(){
@@ -449,8 +452,8 @@ function throwVelocity(){
     velocity.y += velocityArray[j].y;
   }
   if(length2 > 0){
-    velocity.x /= length2;
-    velocity.y /= length2;
+    velocity.x /= length2*5;
+    velocity.y /= length2*5;
   }
   return {x: velocity.x, y: velocity.y};
 }
@@ -461,23 +464,26 @@ function applyPhysics(i, tDelta){
     var angularAcceleration = ShapesController.getProperty(i, 'angularAcceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
-    var centreOfMass = ShapesController.getProperty(i, 'centreOfMass');
+    //var centreOfMass = ShapesController.getProperty(i, 'centreOfMass');
+    var centreOfMass = ShapesController.getCentreOfMass(i);
     var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
     var location = referenceVectors.location;
 
-    velocity.x += acceleration.x;
-    velocity.y += acceleration.y;
+    velocity.x += acceleration.x * velFactor;
+    velocity.y += acceleration.y * velFactor;
     location.x += acceleration.x;
     location.y += acceleration.y;
     angularVelocity += angularAcceleration;
-    var centreOfMass = ShapesController.getCentreOfMass(i);
-    centreOfMass.x += velocity.x * tDelta * velFactor;
-    centreOfMass.y += velocity.y * tDelta * velFactor;
-    ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
-    ShapesController.setProperty(i, 'centreOfMass', {x: centreOfMass.x, y: centreOfMass.y});
+    //var centreOfMass = ShapesController.getCentreOfMass(i);
 
-    ShapesController.getProperty(i, 'referenceVectors');
+    centreOfMass.x += velocity.x * tDelta;
+    centreOfMass.y += velocity.y * tDelta;
+    ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
+    ShapesController.setProperty(i, 'centreOfMass', centreOfMass);
+    ShapesController.setProperty(i, 'centreOfRotation', centreOfMass);
+    ShapesController.setProperty(i, 'velocity', velocity);
+    //ShapesController.getProperty(i, 'referenceVectors');
 
     rotateShape(centreOfRotation, angularVelocity, i);
     //rotateShape(centreOfMass, angularVelocity, i);
@@ -519,15 +525,19 @@ function collisionDetector(){
           var shape = shapes[k].vertices; //shapeB
           var shapeVertices = ShapesController.getProperty(k, 'vertices');
           var centreOfMassB = ShapesController.getProperty(k, 'centreOfMass');
+
           var pointInShape = isPointInShape(centreOfMassB, shapeVertices, checkPoint);
           if(pointInShape){
-            ShapesController.setProperty(i, 'colliding', true);
-            ShapesController.setProperty(k, 'colliding', true);
+            // ShapesController.setProperty(i, 'colliding', true);
+            // ShapesController.setProperty(k, 'colliding', true);
             var velocityA = ShapesController.getProperty(i, 'velocity', true);
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
 
             var angularVelocityA = ShapesController.getProperty(i, 'angularVelocity', true);
             var angularVelocityB = ShapesController.getProperty(k, 'angularVelocity', true);
+
+            var centreOfRotationA = ShapesController.getProperty(i, 'centreOfRotation');
+            var centreOfRotationB = ShapesController.getProperty(k, 'centreOfRotation');
 
             var data = collisionData(i, k, checkPoint, shape);
             ShapesController.setProperty(k,'collisionData', data);
@@ -552,22 +562,34 @@ function collisionDetector(){
             var colDistCrossNormalA = collisionDistanceA.crossProd(normalImpulse);
             var colDistCrossNormalB = collisionDistanceB.crossProd(normalImpulse);
 
-
-
-
             var newVelocityA = {x: velocityA.x + normalImpulse.x/massA, y: velocityA.y + normalImpulse.y/massA};
             var newVelocityB = {x: velocityB.x - normalImpulse.x/massB, y: velocityB.y - normalImpulse.y/massB};
 
             var newAngularVelocityA = angularVelocityA + colDistCrossNormalA.magnitude/momentOfInertiaA;
             var newAngularVelocityB = angularVelocityB - colDistCrossNormalB.magnitude/momentOfInertiaB;
+            var isColliding = ShapesController.getProperty(i, 'colliding');
+            if(isColliding === false){
+              ShapesController.setProperty(i, 'velocity', newVelocityA, true);
+              ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
 
-            ShapesController.setProperty(i, 'velocity', newVelocityA, true);
-            ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
-
-            ShapesController.setProperty(k, 'velocity', newVelocityB, true);
-            ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityB, true);
-
+              ShapesController.setProperty(k, 'velocity', newVelocityB, true);
+              ShapesController.setProperty(k, 'angularVelocity', newAngularVelocityB, true);
+              ShapesController.setProperty(i, 'colliding', true);
+              ShapesController.setProperty(k, 'colliding', true);
+              velocityA = ShapesController.getProperty(i, 'velocity', true);
+              velocityB = ShapesController.getProperty(k, 'velocity', true);
+              console.log('================newVelocityA', newVelocityA);
+            }
+            console.log('=============impulse', impulse);
             //console.log('=============collisionData', data);
+            console.log('=============velocityDeltaA', normalImpulse.x/massA);
+            console.log('=============velocityDeltaB', -normalImpulse.x/massB);
+            console.log('=============massA', massA);
+            console.log('=============massB', massB);
+            console.log('=============velocityA', velocityA);
+            console.log('=============velocityB', velocityB);
+            console.log('=============centreOfRotationA', centreOfRotationA);
+            console.log('=============centreOfRotationB', centreOfRotationB);
           }
         }
       }
@@ -720,8 +742,8 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       if(Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) >= 0.0001){ //console.log('%cside vertical', 'font-size: 25px; color: blue;');
         intersectionX = side[0].x;
         intersectionY = velocityGradient * intersectionX + velocityIntercept;
-        console.log('side intersectionX', intersectionX);
-        console.log('side intersectionY', intersectionY);
+        // console.log('side intersectionX', intersectionX);
+        // console.log('side intersectionY', intersectionY);
       }
 
       // if the velocity gradient is vertical and side gradient is not horizontal
@@ -740,8 +762,8 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       if(Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) <= 10000){
         intersectionY = collisionPoint.y;
         intersectionX = (intersectionY - sideIntercept) / sideGradient;
-        console.log('velocity intersectionX', intersectionX);
-        console.log('velocity intersectionY', intersectionY);
+        // console.log('velocity intersectionX', intersectionX);
+        // console.log('velocity intersectionY', intersectionY);
       }
 
       // if velocity gradient is horizontal and the side gradient is vertical
@@ -778,7 +800,7 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       } else if(sum.min <= distance){
         closest = {min: sum.min, index: sum.index};
       }
-      console.log('closest', closest);
+      //console.log('closest', closest);
       return closest;
     }, {min:100000000000, index:0});
     console.log('closestPoint', intersections[closestPoint.index]);
@@ -787,16 +809,16 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
     console.log('intersections', intersections);
     //intersections
     var intersectionPoint = intersections.length > 0 ? intersections[closestPoint.index] : {};
+    console.log('intersectionPoint', intersectionPoint);
     return intersectionPoint;
 }
 
 // finds the equation of a line segment 'side' in the form of y = mx + c
-function lineFormula(side){ console.log('side', side);
+function lineFormula(side){ //console.log('side', side);
   var gradient = (side[1].y - side[0].y) / (side[1].x - side[0].x);
   var intercept = side[0].y - gradient * side[0].x;
   return {gradient: gradient, intercept: intercept};
 }
-
 
 var ShapesController = (function(){
   var shapes = Scene.shapes;
@@ -808,7 +830,6 @@ var ShapesController = (function(){
         y: centreOfMass.y
      };
   }
-
 
   function getTouchPoint(shapeIndex){
     var touchPoint = shapes[shapeIndex].touchPoint;
@@ -861,4 +882,28 @@ var ShapesController = (function(){
   };
 })();
 
-//createShape({x: 500, y: 250}, shapeSelection.square);
+var leftWall = createShape({x: -19, y: 297}, shapeSelection.verticalWall);
+leftWall.fillColour = 'red';
+leftWall.physics.mass = Infinity;
+leftWall.physics.momentOfInertia = Infinity;
+leftWall.physics.momentOfInertiaCOM = Infinity;
+console.log('leftWall', leftWall);
+
+var rightWall = createShape({x: 1018, y: 297}, shapeSelection.verticalWall);
+rightWall.fillColour = 'red';
+rightWall.physics.mass = Infinity;
+rightWall.physics.momentOfInertia = Infinity;
+rightWall.physics.momentOfInertiaCOM = Infinity;
+
+
+var bottomWall = createShape({x: 500, y: 619}, shapeSelection.horizontalWall);
+bottomWall.fillColour = 'red';
+bottomWall.physics.mass = Infinity;
+bottomWall.physics.momentOfInertia = Infinity;
+bottomWall.physics.momentOfInertiaCOM = Infinity;
+
+var topWall = createShape({x: 500, y: -20}, shapeSelection.horizontalWall);
+topWall.fillColour = 'red';
+topWall.physics.mass = Infinity;
+topWall.physics.momentOfInertia = Infinity;
+topWall.physics.momentOfInertiaCOM = Infinity;

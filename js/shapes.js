@@ -104,15 +104,30 @@ var shapeSelection = {
       {x: -54, y: -54},
       {x: -54, y: 54}
     ],
-    arrowHead: [
-        {x: -2.5, y: 0},
-        {x: 2.5, y: 0},
-        {x: 0, y: 5}
-      ],
+    verticalWall: [
+      {x: -18, y: -300},
+      {x: 18, y: -300},
+      {x: 18, y: 300},
+      {x: -18, y: 300}
+    ],
+    horizontalWall: [
+      {x: -500, y: -18},
+      {x: 500, y: -18},
+      {x: 500, y: 18},
+      {x: -500, y: 18}
+    ]
+    };
+
+var shapes = {
+  arrowHead: [
+      {x: -2.5, y: 0},
+      {x: 2.5, y: 0},
+      {x: 0, y: 5}
+    ]
 };
 
 var settings = {
-  display: true,
+  display: false,
   restitution: 0
 };
 

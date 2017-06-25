@@ -1,7 +1,9 @@
 function magnitude(vector){
 	var x = vector.x;
 	var y = vector.y;
-	return Math.sqrt(x*x + y*y);
+	var z = vector.z;
+	var result = vector.z ? Math.sqrt(x*x + y*y + z*z) : Math.sqrt(x*x + y*y);
+	return result;
 }
 
  function Vector(vector){
