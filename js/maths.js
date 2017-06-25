@@ -49,11 +49,23 @@ Vector.prototype.findAngle = function(vector2){
 	var dotProd = this.dotProd(vector2);
 	var mag = this.magnitude;
 	var mag2 = vector2.magnitude;
-	var angle = Math.acos(dotProd / (mag * mag2));
+	var ratio = dotProd / (mag * mag2);
+	//ratio = -5;
+	ratio = (ratio > 1) ? 1 : (ratio < -1) ? -1 : ratio;
+	console.log('ratio', ratio);
+	var angle = Math.acos(ratio);
 	var direction = checkDirection(vector1, vector2, angle);
 	angle = direction === 'clockwise' ? angle * -1 : angle;
-	//console.log('calculated angle', angle);
-	//console.log('direction', direction);
+
+	console.log('vector1', vector1);
+	console.log('dotProd', dotProd);
+	console.log('mag', mag);
+	console.log('mag2', mag2);
+	console.log('calculated angle', angle);
+	//console.log('angle2', dotProd / (mag * mag2));
+	//console.log('Math.acos(angle2)', Math.acos(-1.0000000000000002));
+	console.log('direction', direction);
+
 	return angle;
 }
 
@@ -78,6 +90,7 @@ Vector.prototype.isParallel = function(vector2){
 
 function checkDirection(vector1, vector2, angle){
 	var rotatedVector = rotateVector(angle, vector1);
+	var direction = 'anti-clockwise';
 	// console.log('rotatedVector', rotatedVector);
 	// console.log('vector2', vector2);
 	var dotProd = vector2.dotProd(rotatedVector);
@@ -88,17 +101,21 @@ function checkDirection(vector1, vector2, angle){
 	var dotProd2 = vector2.dotProd(rotatedVector2);
 	var isParallel2 = rotatedVector2.isParallel(vector2);
 	// dotProd > 0 means that the vectors are facing the same direction
-	if(isParallel === true && dotProd > 0){ //console.log('parallel');
-		return 'anti-clockwise';
-	} else {
-		// if the vectors are not parallel or they are parallel but pointing in different direction
-		if(isParallel === false || isParallel === true && dotProd <= 0){ //console.log('not parallel');
+	if(isParallel === true && dotProd >= 0){ //console.log('parallel');
+		//return 'anti-clockwise';
+		direction = 'anti-clockwise';
+		// if the vectors are not parallel or they are parallel but pointing in opposite directions
+	} else if(isParallel === false || isParallel === true && dotProd <= 0){
 		//temporary condition just for testing
 			if(isParallel2 === true && dotProd2 >= 0){
-				return 'clockwise';
+				//return 'clockwise';
+				direction = 'clockwise';
 			}
+		} else {
+			direction = 'anti-clockwise';
+			//return 'anti-clockwise';
 		}
-	}
+		return direction;
 }
 
 
@@ -252,3 +269,8 @@ vector1.findAngle(vector8);
 //vector1.findAngle(vector2);
 //vector1.isParallel(vector5);
 //console.log('crossProd', vector1.crossProd(vector2));
+
+var referenceSideVector1 = new Vector({x: 35.99988336809515, y: -0.09163778449409044, z: 0, magnitude: 36.00000000000001});
+var collidingSideVector1 = new Vector({x: -35.9998833680952, y: 0.09163778449408255, z: 0, magnitude: 36.00000000000006});
+var angle1 = referenceSideVector1.findAngle(collidingSideVector1);
+console.log('=====================angle', angle1);

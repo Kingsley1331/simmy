@@ -74,6 +74,10 @@ function findSideUnitNormal(collidingSideVector, referenceSideVector, referenceV
   referenceVector = new Vector(referenceVector);
   var angle = referenceSideVector.findAngle(collidingSideVector);
   var unitNormal = rotateVector(angle, referenceVector);
+  console.log('================================>angle', angle);
+  console.log('================================>collidingSideVector', collidingSideVector);
+  console.log('================================>referenceSideVector', referenceSideVector);
+  console.log('================================>unitNormal', unitNormal);
   return unitNormal;
 }
 
@@ -642,6 +646,9 @@ function findImpulse(data, masses, centres){
 
   //  console.log('============================>massA', massA);
   //  console.log('============================>massB', massB);
+  //  console.log('============================>unitNormal', unitNormal);
+  //  console.log('============================>collisionDistanceA', collisionDistanceA);
+  //  console.log('============================>collisionDistanceNormalCrossProductA', collisionDistanceNormalCrossProductA);
   //  console.log('============================>collisionDistSquareA', collisionDistSquareA);
   //  console.log('============================>collisionDistSquareB', collisionDistSquareB);
   //  console.log('============================>momentOfInertiaA', momentOfInertiaA);
@@ -717,6 +724,8 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
     collisionDistanceA: collisionDistanceA,
     collisionDistanceB: collisionDistanceB
   };
+
+  console.log('================================>data', data);
   return data;
 }
 
