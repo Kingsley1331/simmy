@@ -331,28 +331,27 @@ function mouseUp(){
 }
 
 function detectShape(i){
-  ShapesController.setProperty(i, 'onShape', false);
-  var centreOfMass = ShapesController.getCentreOfMass(i);
-  var vertices = ShapesController.getVertices(i);
-  var pointInShape = isPointInShape(centreOfMass, vertices, mousePos);
-  if(pointInShape){
-    hoveringOnShape++;
-    if(!onShape){
-      ShapesController.setProperty(i, 'onShape', true);
-      onShape = true;
-    }
-    if(ShapesController.getProperty(i, 'onShape')){
-      ShapesController.setProperty(i, 'onShape', true);
+    ShapesController.setProperty(i, 'onShape', false);
+    var centreOfMass = ShapesController.getCentreOfMass(i);
+    var vertices = ShapesController.getVertices(i);
+    var pointInShape = isPointInShape(centreOfMass, vertices, mousePos);
+    if(pointInShape){
+      hoveringOnShape++;
+      if(!onShape){
+        ShapesController.setProperty(i, 'onShape', true);
+        onShape = true;
+      }
+      if(ShapesController.getProperty(i, 'onShape')){
+        ShapesController.setProperty(i, 'onShape', true);
+      } else {
+        ShapesController.setProperty(i, 'onShape', false);
+      }
     } else {
       ShapesController.setProperty(i, 'onShape', false);
     }
-  } else {
-    ShapesController.setProperty(i, 'onShape', false);
-  }
-
-  if(ShapesController.getProperty(i, 'dragging')){
-    dragShape(i);
-  }
+    if(ShapesController.getProperty(i, 'dragging')){
+      dragShape(i);
+    }
 }
 
 function prepareToMoveShape(i){
@@ -513,13 +512,14 @@ function collisionDetector(){
       ShapesController.setProperty(i, 'colliding', false);
   });
   forEachShape(function(i){
-    var vertices = ShapesController.getVertices(i); //ShapeA
+    if(selectedShape === 'play'){
+    var verticesA = ShapesController.getVertices(i); //ShapeA
     var centreOfMassA = ShapesController.getCentreOfMass(i);
-    var length = vertices.length;
+    var length = verticesA.length;
     for(var j = 0; j < length; j++){
         var checkPoint = {};
-        checkPoint.x = vertices[j].x + centreOfMassA.x;
-        checkPoint.y = vertices[j].y + centreOfMassA.y;
+        checkPoint.x = verticesA[j].x + centreOfMassA.x;
+        checkPoint.y = verticesA[j].y + centreOfMassA.y;
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
           var shape = shapes[k].vertices; //shapeB
@@ -530,6 +530,7 @@ function collisionDetector(){
           if(pointInShape){
             // ShapesController.setProperty(i, 'colliding', true);
             // ShapesController.setProperty(k, 'colliding', true);
+
             var velocityA = ShapesController.getProperty(i, 'velocity', true);
             var velocityB = ShapesController.getProperty(k, 'velocity', true);
 
@@ -568,7 +569,10 @@ function collisionDetector(){
             var newAngularVelocityA = angularVelocityA + colDistCrossNormalA.magnitude/momentOfInertiaA;
             var newAngularVelocityB = angularVelocityB - colDistCrossNormalB.magnitude/momentOfInertiaB;
             var isColliding = ShapesController.getProperty(i, 'colliding');
-            if(isColliding === false){
+            var isPointColliding = verticesA[j].isColliding;
+            //if(isColliding === false){
+            if(!isPointColliding){
+              verticesA[j].isColliding = true;
               ShapesController.setProperty(i, 'velocity', newVelocityA, true);
               ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
 
@@ -594,6 +598,7 @@ function collisionDetector(){
         }
       }
     }
+  }
   });
 }
 
@@ -887,14 +892,12 @@ leftWall.fillColour = 'red';
 leftWall.physics.mass = Infinity;
 leftWall.physics.momentOfInertia = Infinity;
 leftWall.physics.momentOfInertiaCOM = Infinity;
-console.log('leftWall', leftWall);
 
 var rightWall = createShape({x: 1018, y: 297}, shapeSelection.verticalWall);
 rightWall.fillColour = 'red';
 rightWall.physics.mass = Infinity;
 rightWall.physics.momentOfInertia = Infinity;
 rightWall.physics.momentOfInertiaCOM = Infinity;
-
 
 var bottomWall = createShape({x: 500, y: 619}, shapeSelection.horizontalWall);
 bottomWall.fillColour = 'red';
