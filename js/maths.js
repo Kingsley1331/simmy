@@ -52,19 +52,17 @@ Vector.prototype.findAngle = function(vector2){
 	var ratio = dotProd / (mag * mag2);
 	//ratio = -5;
 	ratio = (ratio > 1) ? 1 : (ratio < -1) ? -1 : ratio;
-	console.log('ratio', ratio);
+	//console.log('ratio', ratio);
 	var angle = Math.acos(ratio);
 	var direction = checkDirection(vector1, vector2, angle);
 	angle = direction === 'clockwise' ? angle * -1 : angle;
 
-	console.log('vector1', vector1);
-	console.log('dotProd', dotProd);
-	console.log('mag', mag);
-	console.log('mag2', mag2);
-	console.log('calculated angle', angle);
-	//console.log('angle2', dotProd / (mag * mag2));
-	//console.log('Math.acos(angle2)', Math.acos(-1.0000000000000002));
-	console.log('direction', direction);
+	// console.log('vector1', vector1);
+	// console.log('dotProd', dotProd);
+	// console.log('mag', mag);
+	// console.log('mag2', mag2);
+	// console.log('calculated angle', angle);
+	// console.log('direction', direction);
 
 	return angle;
 }
@@ -273,4 +271,4 @@ vector1.findAngle(vector8);
 var referenceSideVector1 = new Vector({x: 35.99988336809515, y: -0.09163778449409044, z: 0, magnitude: 36.00000000000001});
 var collidingSideVector1 = new Vector({x: -35.9998833680952, y: 0.09163778449408255, z: 0, magnitude: 36.00000000000006});
 var angle1 = referenceSideVector1.findAngle(collidingSideVector1);
-console.log('=====================angle', angle1);
+//console.log('=====================angle', angle1);

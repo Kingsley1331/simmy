@@ -127,7 +127,7 @@ var shapes = {
 };
 
 var settings = {
-  display: false,
+  display: true,
   restitution: 0
 };
 
@@ -243,7 +243,7 @@ function findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect){
       }
     }
   }
-  console.log('momentOfInertiaCOM', momentOfInertiaCOM);
+  //console.log('momentOfInertiaCOM', momentOfInertiaCOM);
   //console.log('count', count);
   return momentOfInertiaCOM;
 }
@@ -260,7 +260,7 @@ function updateVertices(vertices, centre, centreOfMass){
 
 function findMomentOfInertia(pointInShape, momentOfInertiaCOM, mass){
   var momentOfInertia = momentOfInertiaCOM + mass * Math.pow(magnitude(pointInShape), 2);
-  console.log('PAT momentOfInertia', momentOfInertia);
+  //console.log('PAT momentOfInertia', momentOfInertia);
   return momentOfInertia;
 }
 

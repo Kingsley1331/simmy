@@ -89,7 +89,7 @@ function createShape(centreOfMass, vertices){
     id++;
     var shape = new Shape(centreOfMass, vertices);
     shape.id = id;
-    console.log('boundingRect.radius', shape.boundingRect.radius);
+    //console.log('boundingRect.radius', shape.boundingRect.radius);
     Scene.shapes.push(shape);
     return shape;
   }
@@ -149,6 +149,11 @@ let draw = () => {
       var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
       drawShape(vertices, centreOfMass, config);
       if(settings.display){
+        for(var n = 0; n < vertices.length; n++){
+          if(vertices[n].isColliding){
+            drawDot(5, {x: centreOfMass.x + vertices[n].x, y: centreOfMass.y + vertices[n].y}, 'blue');
+          }
+        }
         screenWriter(ShapesController.getProperty(i, 'id'), idPos);
         drawShape(rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
         drawDot(3, centreOfMass, 'black');
@@ -573,9 +578,9 @@ function collisionDetector(){
             var newAngularVelocityA = angularVelocityA + colDistCrossNormalA.magnitude/momentOfInertiaA;
             var newAngularVelocityB = angularVelocityB - colDistCrossNormalB.magnitude/momentOfInertiaB;
             var isColliding = ShapesController.getProperty(i, 'colliding');
-            var isPointColliding = verticesA[j].isColliding;
+            var isVertexColliding = verticesA[j].isColliding;
             //if(isColliding === false){
-            if(!isPointColliding){
+            if(!isVertexColliding){
               verticesA[j].isColliding = true;
               ShapesController.setProperty(i, 'velocity', newVelocityA, true);
               ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
@@ -598,6 +603,9 @@ function collisionDetector(){
             console.log('=============velocityB', velocityB);
             console.log('=============centreOfRotationA', centreOfRotationA);
             console.log('=============centreOfRotationB', centreOfRotationB);
+          } else {
+              verticesA[j].isColliding = false;
+              ShapesController.setProperty(i, 'vertices', verticesA);
           }
         }
       }
