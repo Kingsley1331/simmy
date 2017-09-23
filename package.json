@@ -4,6 +4,13 @@
   "description": "Physics Engine",
   "main": "index.js",
   "dependencies": {
+    "create-react-app": "^1.4.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "stats-js": "^1.0.0-alpha1"
   },
   "devDependencies": {
@@ -19,7 +26,8 @@
     "webpack-dev-server": "^2.2.0-rc.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",

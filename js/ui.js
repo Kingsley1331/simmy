@@ -37,8 +37,8 @@ var ui = {
 
 var uiArray = ['play','none', 'square', 'triangle', 'pentagon', 'hexagon', 'circle', 'plus', 'arrow', 'star', 'tShape', 'bar', 'concave', 'box', '_delete'];
 
-bufferCanvas = document.createElement('canvas');
-bufferCtx = bufferCanvas.getContext("2d");
+const bufferCanvas = document.createElement('canvas');
+const bufferCtx = bufferCanvas.getContext("2d");
 bufferCtx.canvas.width = context.canvas.width;
 bufferCtx.canvas.height = context.canvas.height;
 
