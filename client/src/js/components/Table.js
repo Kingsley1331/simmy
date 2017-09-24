@@ -8,8 +8,8 @@ class Table extends Component {
         <table>
           <tbody>
             <tr>
-              <th> Scenes </th>
-              <th> Date created </th>
+              <th> Name </th>
+              <th> Age </th>
             </tr>
             <tr>
               <td></td>
