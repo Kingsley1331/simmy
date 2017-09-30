@@ -3,14 +3,6 @@ import { connect } from 'react-redux';
 import { fetchUser } from '../actions/userActions';
 
 class Users extends Component {
-  // getNames() {
-  //   if(this.props.users[0]) {
-  //     let names = this.props.users.map(user => {
-  //         return <li key={user.name}>{user.name}</li>;
-  //     });
-  //     return names;
-  //   }
-  // }
   getNames() {
     if(this.props.users[0]) {
       let names = this.props.users.map(user => {
