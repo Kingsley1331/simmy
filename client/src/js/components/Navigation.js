@@ -1,7 +1,32 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 
 class Navigation extends Component {
+  renderContent() {
+    switch (this.props.auth) {
+      case null:
+        return;
+      case false:
+        return (
+           <li className='auth'>
+              <a href="/auth/google">
+                Sign in with Google
+              </a>
+           </li>
+        );
+      default:
+        return (
+           <li className='auth'>
+              <a href="/api/logout">
+                logout
+              </a>
+           </li>
+        );
+    }
+  }
+
   render() {
     return (
         <ul className='nav'>
@@ -9,10 +34,18 @@ class Navigation extends Component {
           <li><Link to="/users">Users</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><Link to="/demos">Demos</Link></li>
-          <li id="log"><Link to="/logout">Logout</Link></li>
+          {this.renderContent()}
         </ul>
     );
   }
 }
 
-export default Navigation;
+// function mapStateToProps(state) {
+//   return { auth: state.auth }
+// }
+
+function mapStateToProps({ auth }) {
+  return { auth } ;
+}
+
+export default connect(mapStateToProps)(Navigation);

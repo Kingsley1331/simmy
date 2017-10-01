@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { FETCH_CURRENT_USER } from './types';
 
 export function fetchUser() {console.log('fetchUser');
   return function(dispatch) {
@@ -16,6 +17,13 @@ export function fetchUser() {console.log('fetchUser');
   }
 }
 
+export const fetchCurrentUser = () => {
+  return function(dispatch) {
+    axios
+      .get('/api/current_user')
+      .then(res => dispatch({type: FETCH_CURRENT_USER, payload: res}));
+  };
+}
 
 export function setUserName(name) {
   return {

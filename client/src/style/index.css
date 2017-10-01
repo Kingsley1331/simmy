@@ -52,3 +52,10 @@ li a:hover:not(.active) {
 #log {
   float: right;
 }
+
+.auth {
+  color: white;
+  position: absolute;
+  right: 200px;
+  top: 20px;
+}

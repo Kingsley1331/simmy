@@ -6,11 +6,17 @@ import About from './About';
 import Users from './Users';
 import Navigation from './Navigation';
 import { BrowserRouter, Route} from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class App extends Component {
   // constructor(){
   //   super()
   // }
+  componentDidMount() {
+    this.props.fetchCurrentUser();
+  }
+
   render() {
     return (
       <div>
@@ -28,4 +34,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(null, actions)(App);

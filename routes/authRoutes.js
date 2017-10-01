@@ -12,12 +12,18 @@ module.exports = (app) => {
     send the token on back to google through passport /auth/google/callback?code=token
     token gets exchanged for the user profile
   **/
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (req, res) => {
+      res.redirect('/users');
+    }
+  );
 
   // the logout method is attched by passport, logout destroys the cookie
   app.get('/api/logout', (req, res) => {
     req.logout();
-    res.send(req.user);
+    res.redirect('/');
   });
 
   // the user model instance is attatched to the req object by passport and sent back to the client
