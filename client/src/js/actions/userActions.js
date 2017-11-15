@@ -3,7 +3,7 @@ import { FETCH_CURRENT_USER } from './types';
 
 export function fetchUser() {console.log('fetchUser');
   return function(dispatch) {
-    axios.get('http://rest.learncode.academy/api/western/users').then(function(users){
+    axios.get('/api/users').then(function(users) { console.log('=======================>users', users);
       dispatch({
         type: "GET_USERS",
         payload: users.data

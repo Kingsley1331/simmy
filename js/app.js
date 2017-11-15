@@ -90,6 +90,11 @@ function createShape(centreOfMass, vertices){
     var shape = new Shape(centreOfMass, vertices);
     shape.id = id;
     //console.log('boundingRect.radius', shape.boundingRect.radius);
+    /** START Temporory just for testing **/
+    if(vertices.length === 6){
+      shape.physics.velocity.x = -0.05;
+    }
+    /** END **/
     Scene.shapes.push(shape);
     return shape;
   }
@@ -150,8 +155,8 @@ let draw = () => {
       drawShape(vertices, centreOfMass, config);
       if(settings.display){
         for(var n = 0; n < vertices.length; n++){
-          if(vertices[n].isColliding){
-            drawDot(5, {x: centreOfMass.x + vertices[n].x, y: centreOfMass.y + vertices[n].y}, 'blue');
+          if(vertices[n].isColliding){//alert('hello');
+            drawDot(50, {x: centreOfMass.x + vertices[n].x, y: centreOfMass.y + vertices[n].y}, 'blue');
           }
         }
         screenWriter(ShapesController.getProperty(i, 'id'), idPos);
@@ -271,16 +276,21 @@ function drawDot(radius, centre, colour){
 
 
 function flicker(){
-  setInterval(draw, 17);
+  //setInterval(draw, 17);
+  setInterval(draw, 10000);
 }
 
-flicker();
+//flicker();
 
-window.requestAnimFrame = (function(callback) {
-	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+window.requestAnimFrame = (function() {
+	return window.requestAnimationFrame ||
+   window.webkitRequestAnimationFrame ||
+   window.mozRequestAnimationFrame ||
+   window.oRequestAnimationFrame ||
+   window.msRequestAnimationFrame ||
 		function(callback) {
-		window.setTimeout(callback, 1000 / 60);
-	};
+		    window.setTimeout(callback, 1000 / 60);
+	    };
 })();
 
 function animate(){
@@ -293,9 +303,7 @@ function animate(){
   });
   collisionDetector();
 	draw();
-	requestAnimFrame(function() {
-			animate();
-	});
+	requestAnimFrame(animate);
   time = currentTime;
 }
 
@@ -409,7 +417,7 @@ function dragShape(i){
 }
 
 function init(){
-  flicker();
+  //flicker();
   animate();
   mouseDown();
   mouseUp();
@@ -927,3 +935,6 @@ topWall.fillColour = 'red';
 topWall.physics.mass = Infinity;
 topWall.physics.momentOfInertia = Infinity;
 topWall.physics.momentOfInertiaCOM = Infinity;
+
+createShape({x: 350, y: 300}, shapeSelection.box);
+createShape({x: 550, y: 300}, shapeSelection.hexagon);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchUser } from '../actions/userActions';
+//import { fetchUser2 } from '../actions/userActions';
 
 class Users extends Component {
   getNames() {
@@ -21,7 +22,7 @@ class Users extends Component {
                   {names}
                 </tbody>
               </table>
-            </div>);;
+            </div>);
          }
     }
 
@@ -29,9 +30,8 @@ class Users extends Component {
     return (
       <div>
         <h1>Users</h1>
-        <button onClick={this.props.fetchUser}>fetch users</button>
+        <button onClick={this.props.fetchUser}>fetch simmy users</button>
         {this.getNames()}
-
       </div>
     );
   }
@@ -44,13 +44,21 @@ const mapStateToProps = state => {
   };
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchUser : () => dispatch(fetchUser())
-  }
-}
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     fetchUser : () => dispatch(fetchUser())
+//   }
+// }
+//
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(Users);
+
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {
+    fetchUser: fetchUser
+  }
 )(Users);
