@@ -51,7 +51,7 @@ function addUiEventListener(event, elem) {
     selectedShape = elem;
     deselect();
     uiElem.classList.add("selected");
-    console.log('selectedShape', selectedShape);
+    //console.log('selectedShape', selectedShape);
   }, false);
 }
 

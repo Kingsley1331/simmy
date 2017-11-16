@@ -176,12 +176,19 @@ function rotateShape(centre, theta, index){
 		//var vertices = ShapesController.getProperty(index, 'vertices');
 		var centreOfMass = typeof index === 'number' ? ShapesController.getProperty(index, 'centreOfMass') : centre;
 		var vertices = typeof index === 'number' ? ShapesController.getProperty(index, 'vertices') : index;
+
 		var rotatedVertices = [];
 		var length = vertices.length;
 		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
 		for(var i = 0; i < length; i++){
+
+			//if(vertices.length === 6 && i === 4){console.log('isVertexColliding', vertices[4].isColliding)};
+
 			var rotatedVertex = rotateVector(theta, {x: vertices[i].x, y: vertices[i].y});
+			rotatedVertex.isColliding = vertices[i].isColliding;
 			rotatedVertices.push(rotatedVertex);
+
+			//if(vertices.length === 6 && i === 4){console.log('rotatedVertex', rotatedVertex.isColliding)}
 		}
 
 		if(typeof index === 'number'){

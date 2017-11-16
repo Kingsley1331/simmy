@@ -69,15 +69,15 @@ function referenceVectors(centre, vertices){
   return {location: location, sideVector: firstSideVector, unitNormal: unitNormal};
 }
 
-function findSideUnitNormal(collidingSideVector, referenceSideVector, referenceVector){console.log('referenceSideVector', referenceSideVector);
+function findSideUnitNormal(collidingSideVector, referenceSideVector, referenceVector){//console.log('referenceSideVector', referenceSideVector);
   collidingSideVector = new Vector(collidingSideVector);
   referenceVector = new Vector(referenceVector);
   var angle = referenceSideVector.findAngle(collidingSideVector);
   var unitNormal = rotateVector(angle, referenceVector);
-  console.log('================================>angle', angle);
-  console.log('================================>collidingSideVector', collidingSideVector);
-  console.log('================================>referenceSideVector', referenceSideVector);
-  console.log('================================>unitNormal', unitNormal);
+  // console.log('================================>angle', angle);
+  // console.log('================================>collidingSideVector', collidingSideVector);
+  // console.log('================================>referenceSideVector', referenceSideVector);
+  // console.log('================================>unitNormal', unitNormal);
   return unitNormal;
 }
 
@@ -92,7 +92,7 @@ function createShape(centreOfMass, vertices){
     //console.log('boundingRect.radius', shape.boundingRect.radius);
     /** START Temporory just for testing **/
     if(vertices.length === 6){
-      shape.physics.velocity.x = -0.05;
+      shape.physics.velocity.x = -0.1;
     }
     /** END **/
     Scene.shapes.push(shape);
@@ -153,10 +153,11 @@ let draw = () => {
       var radius = boundingRect.radius;
       var idPos = {x: centreOfMass.x - 4, y: centreOfMass.y - 5};
       drawShape(vertices, centreOfMass, config);
-      if(settings.display){
+
+      if(settings.display){ //if(10 < counter && selectedShape === 'play' && vertices[4] && vertices.length === 6) {console.log(vertices[4].isColliding);}
         for(var n = 0; n < vertices.length; n++){
-          if(vertices[n].isColliding){//alert('hello');
-            drawDot(50, {x: centreOfMass.x + vertices[n].x, y: centreOfMass.y + vertices[n].y}, 'blue');
+          if(vertices[n] && vertices[n].isColliding){
+            drawDot(10, {x: centreOfMass.x + vertices[n].x, y: centreOfMass.y + vertices[n].y}, 'blue');
           }
         }
         screenWriter(ShapesController.getProperty(i, 'id'), idPos);
@@ -165,7 +166,8 @@ let draw = () => {
         drawDot(3, boundingRectCentre, 'red');
         drawDot(3, centreOfRotation, 'green');
         if(collisionDataB.collisionPoint){
-          drawDot(4, {x: collisionDataB.collisionPoint.x, y:collisionDataB.collisionPoint.y}, 'red');
+          //drawDot(4, {x: collisionDataB.collisionPoint.x, y:collisionDataB.collisionPoint.y}, 'red');
+          drawDot(4, {x:collisionPoint.x, y:collisionPoint.y}, 'red');
           drawLine(collisionDataB.side[0], collisionDataB.side[1], {strokeStyle: 'red', lineWidth: 2});
         }
 
@@ -485,7 +487,7 @@ function applyPhysics(i, tDelta){
     var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
     var location = referenceVectors.location;
-
+    /** velocity equation looks dodgy should look like deltaVelocity = acceleration * deltaTime **/
     velocity.x += acceleration.x * velFactor;
     velocity.y += acceleration.y * velFactor;
     location.x += acceleration.x;
@@ -522,29 +524,32 @@ function applyForces(i){
   ShapesController.setProperty(i, 'angularAcceleration', angularAcceleration, true);
 }
 
+var counter = 0;
 function collisionDetector(){
   var shapes = Scene.shapes;
   var numShapes = shapes.length;
   forEachShape(function(i){
-      ShapesController.setProperty(i, 'colliding', false);
+      //ShapesController.setProperty(i, 'colliding', false);
   });
   forEachShape(function(i){
     if(selectedShape === 'play'){
     var verticesA = ShapesController.getVertices(i); //ShapeA
+    //if(verticesA.length === 6){console.log('verticesA', verticesA[4]);}
+    //if(verticesA.length === 6){console.log('verticesA', JSON.parse(JSON.stringify(verticesA[4])));}
     var centreOfMassA = ShapesController.getCentreOfMass(i);
     var length = verticesA.length;
-    for(var j = 0; j < length; j++){
+    for(var vertIndexA = 0; vertIndexA < length; vertIndexA++){
         var checkPoint = {};
-        checkPoint.x = verticesA[j].x + centreOfMassA.x;
-        checkPoint.y = verticesA[j].y + centreOfMassA.y;
+        checkPoint.x = verticesA[vertIndexA].x + centreOfMassA.x;
+        checkPoint.y = verticesA[vertIndexA].y + centreOfMassA.y;
         for(var k = 0; k < numShapes; k++){
           if(i!== k){
-          var shape = shapes[k].vertices; //shapeB
-          var shapeVertices = ShapesController.getProperty(k, 'vertices');
+          //var shape = shapes[k].vertices; //shapeB
+          var verticesB = ShapesController.getVertices(k); //shapeB
           var centreOfMassB = ShapesController.getProperty(k, 'centreOfMass');
 
-          var pointInShape = isPointInShape(centreOfMassB, shapeVertices, checkPoint);
-          if(pointInShape){
+          //var pointInShape = isPointInShape(centreOfMassB, verticesB, checkPoint);
+          if(isPointInShape(centreOfMassB, verticesB, checkPoint)){
             // ShapesController.setProperty(i, 'colliding', true);
             // ShapesController.setProperty(k, 'colliding', true);
 
@@ -557,9 +562,12 @@ function collisionDetector(){
             var centreOfRotationA = ShapesController.getProperty(i, 'centreOfRotation');
             var centreOfRotationB = ShapesController.getProperty(k, 'centreOfRotation');
 
-            var data = collisionData(i, k, checkPoint, shape);
+            //var data = collisionData(i, k, checkPoint, shape);
+            var data = collisionData(i, k, checkPoint, verticesB);
+
+            //drawDot(10, {x: checkPoint.x, y:checkPoint.y}, 'blue');
             ShapesController.setProperty(k,'collisionData', data);
-            shape = Scene.shapes[k];
+            //shape = Scene.shapes[k];
             var massA = ShapesController.getProperty(i, 'mass', true);
             var massB = ShapesController.getProperty(k, 'mass', true);
 
@@ -585,34 +593,57 @@ function collisionDetector(){
 
             var newAngularVelocityA = angularVelocityA + colDistCrossNormalA.magnitude/momentOfInertiaA;
             var newAngularVelocityB = angularVelocityB - colDistCrossNormalB.magnitude/momentOfInertiaB;
-            var isColliding = ShapesController.getProperty(i, 'colliding');
-            var isVertexColliding = verticesA[j].isColliding;
+            //var isColliding = ShapesController.getProperty(i, 'colliding');
+            verticesA[vertIndexA].isOverlapping = true;
+            var isVertexColliding = verticesA[vertIndexA].isColliding;
             //if(isColliding === false){
+
+            if(verticesA.length === 6 && vertIndexA === 4){console.log('isVertexColliding1', verticesA[4].isColliding)};
+            // console.log('HEXAGON', verticesA[vertIndexA]);
+            // console.log('HEXAGON2', verticesA[4]);
+
+
             if(!isVertexColliding){
-              verticesA[j].isColliding = true;
+              console.log('colliding!')
+              verticesA[vertIndexA].isOverlapping = true;
+              verticesA[vertIndexA].isColliding = true;
+              //if(verticesA.length === 6 && vertIndexA === 4){console.log('isVertexColliding2', verticesA[4].isColliding)};
               ShapesController.setProperty(i, 'velocity', newVelocityA, true);
               ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
-
+              //if(verticesA.length === 6 && vertIndexA === 4){console.log('verticesA', verticesA)};
+              ShapesController.setProperty(i, 'vertices', verticesA);
               ShapesController.setProperty(k, 'velocity', newVelocityB, true);
               ShapesController.setProperty(k, 'angularVelocity', newAngularVelocityB, true);
-              ShapesController.setProperty(i, 'colliding', true);
-              ShapesController.setProperty(k, 'colliding', true);
+              // ShapesController.setProperty(i, 'colliding', true);
+              // ShapesController.setProperty(k, 'colliding', true);
               velocityA = ShapesController.getProperty(i, 'velocity', true);
               velocityB = ShapesController.getProperty(k, 'velocity', true);
-              console.log('================newVelocityA', newVelocityA);
+              // counter++;
+              // console.log('==>counter', counter);
+              //console.log('================newVelocityA', newVelocityA);
             }
-            console.log('=============impulse', impulse);
+            //console.log('=============impulse', impulse);
             //console.log('=============collisionData', data);
-            console.log('=============velocityDeltaA', normalImpulse.x/massA);
-            console.log('=============velocityDeltaB', -normalImpulse.x/massB);
-            console.log('=============massA', massA);
-            console.log('=============massB', massB);
-            console.log('=============velocityA', velocityA);
-            console.log('=============velocityB', velocityB);
-            console.log('=============centreOfRotationA', centreOfRotationA);
-            console.log('=============centreOfRotationB', centreOfRotationB);
+
+            // console.log('=============velocityDeltaA', normalImpulse.x/massA);
+            // console.log('=============velocityDeltaB', -normalImpulse.x/massB);
+            // console.log('=============massA', massA);
+            // console.log('=============massB', massB);
+            // console.log('=============velocityA', velocityA);
+            // console.log('=============velocityB', velocityB);
+            // console.log('=============centreOfRotationA', centreOfRotationA);
+            // console.log('=============centreOfRotationB', centreOfRotationB);
           } else {
-              verticesA[j].isColliding = false;
+            // if(verticesA.length === 6 && vertIndexA === 4 /*&& verticesA[4].isColliding*/){
+            //     //console.log('ELSE isVertexColliding', verticesA[4].isColliding);
+            //     console.log('verticesA', verticesA);
+            //     console.log('vertIndexA', vertIndexA);
+            //     console.log('not colliding!')
+            // }
+            //if(verticesA.length === 6 && vertIndexA !== 4){console.log('vertIndexA', vertIndexA);}
+
+              verticesA[vertIndexA].isOverlapping = false;
+              verticesA[vertIndexA].isColliding = false;
               ShapesController.setProperty(i, 'vertices', verticesA);
           }
         }
@@ -671,7 +702,7 @@ function findImpulse(data, masses, centres){
   //  console.log('============================>momentOfInertiaB', momentOfInertiaB);
 
   var impulse = -(1 + e) * collisionVelocityNormalDotProduct / (1/massA + 1/massB + collisionDistSquareA/momentOfInertiaA + collisionDistSquareB/momentOfInertiaB);
-  console.log('============================>impulse', impulse);
+  //console.log('============================>impulse', impulse);
   return impulse;
 }
 
@@ -715,7 +746,7 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
   var collisionPointVelocityB = {x: velocityB.x + tangentialVelocityB.x, y: velocityB.y + tangentialVelocityB.y};
 
   var collisionVelocity = new Vector({x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y});
-  console.log('================================collisionVelocity', collisionVelocity);
+  //console.log('================================collisionVelocity', collisionVelocity);
 
   var collidingSideData = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB);
 
@@ -723,14 +754,15 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
 
   var unitNormalB = findSideUnitNormal(collidingSideVector, referenceSideVector, referenceVectors.unitNormal);
 
-  console.log('collidingSideVector', collidingSideVector);
-  console.log('referenceVectors', referenceVectors);
+  // console.log('collidingSideVector', collidingSideVector);
+  // console.log('referenceVectors', referenceVectors);
 
   var collisionDistanceA = new Vector({x: collidingSideData.x - centreA.x, y: collidingSideData.y - centreA.y});
   var collisionDistanceB = new Vector({x: collidingSideData.x - centreB.x, y: collidingSideData.y - centreB.y});
 
   var data = {
-    collisionPoint: {x: collidingSideData.x, y: collidingSideData.y},
+    //collisionPoint: {x: collidingSideData.x, y: collidingSideData.y},
+    collisionPoint: collisionPoint,
     side: collidingSideData.side,
     sideVector: collidingSideVector,
     unitNormal: unitNormalB,
@@ -741,7 +773,7 @@ function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices)
     collisionDistanceB: collisionDistanceB
   };
 
-  console.log('================================>data', data);
+  //console.log('================================>data', data);
   return data;
 }
 
@@ -833,13 +865,13 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
       //console.log('closest', closest);
       return closest;
     }, {min:100000000000, index:0});
-    console.log('closestPoint', intersections[closestPoint.index]);
+    //console.log('closestPoint', intersections[closestPoint.index]);
   }
 
-    console.log('intersections', intersections);
+    //console.log('intersections', intersections);
     //intersections
     var intersectionPoint = intersections.length > 0 ? intersections[closestPoint.index] : {};
-    console.log('intersectionPoint', intersectionPoint);
+    //console.log('intersectionPoint', intersectionPoint);
     return intersectionPoint;
 }
 
@@ -871,10 +903,15 @@ var ShapesController = (function(){
 
   function getVertices(shapeIndex){
     var vertices = [];
+    var point = {};
     var shape = shapes[shapeIndex];
     var size = shape.vertices.length;
+    if(shape.vertices.length === 6 && selectedShape === 'play'){
+      //console.log('vertices', JSON.parse(JSON.stringify(vertices[4])));
+      //console.log('vertices', JSON.parse(JSON.stringify(shape.vertices[4])));
+    }
     for(var i = 0; i < size; i++){
-      var point = {x: shape.vertices[i].x, y: shape.vertices[i].y};
+      point = {x: shape.vertices[i].x, y: shape.vertices[i].y, isColliding: shape.vertices[i].isColliding};
       vertices.push(point);
     }
     return vertices;
@@ -892,6 +929,12 @@ var ShapesController = (function(){
 
   function setProperty(shapeIndex, property, value, bool){
     if (!bool) {
+
+      // if(shapeIndex === 1 && selectedShape === 'play' && property === 'vertices'){
+      //   //console.log('vertices', JSON.parse(JSON.stringify(vertices[4])));
+      //   console.log('vertices', JSON.parse(JSON.stringify(value[4])));
+      // }
+
       Scene.shapes[shapeIndex][property] = value;
     } else if(bool === true) { //physics property
       Scene.shapes[shapeIndex]['physics'][property] = value;
@@ -936,5 +979,5 @@ topWall.physics.mass = Infinity;
 topWall.physics.momentOfInertia = Infinity;
 topWall.physics.momentOfInertiaCOM = Infinity;
 
-createShape({x: 350, y: 300}, shapeSelection.box);
-createShape({x: 550, y: 300}, shapeSelection.hexagon);
+// createShape({x: 350, y: 300}, shapeSelection.box);
+// createShape({x: 500, y: 300}, shapeSelection.hexagon);
