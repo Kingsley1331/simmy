@@ -34,6 +34,7 @@ class Navigation extends Component {
           <li><Link to="/users">Users</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><Link to="/demos">Demos</Link></li>
+          <li><Link to="/scenes">Scenes</Link></li>
           {this.renderContent()}
         </ul>
     );
