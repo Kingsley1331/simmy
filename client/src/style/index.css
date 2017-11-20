@@ -61,5 +61,110 @@ li a:hover:not(.active) {
 }
 
 canvas {
+  position: absolute;
+  top: 70px;
+  left: 60px;
   border: 1px solid black;
+}
+.buttons {
+  position: absolute;
+  top: 80px;
+  left: 0px;
+}
+
+#play {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+#square {
+  position: absolute;
+  top: 110px;
+  left: 20px;
+}
+
+#triangle {
+  position: absolute;
+  top: 145px;
+  left: 20px;
+}
+
+#pentagon {
+  position: absolute;
+  top: 183px;
+  left: 20px;
+}
+
+#hexagon {
+  position: absolute;
+  top: 217px;
+  left: 18px;
+}
+
+#circle {
+  position: absolute;
+  top: 255px;
+  left: 18px;
+}
+
+#plus {
+  position: absolute;
+  top: 295px;
+  left: 18px
+}
+
+#arrow {
+  position: absolute;
+  top: 330px;
+  left: 18px;
+}
+
+#star {
+  position: absolute;
+  top: 360px;
+  left: 18px;
+}
+
+#tShape {
+  position: absolute;
+  top: 405px;
+  left: 18px;
+}
+
+#bar {
+  position: absolute;
+  top: 445px;
+  left: 28px;
+}
+#box {
+  color: blue;
+  position: absolute;
+  top: 520px;
+  left: 23px;
+}
+
+#none {
+  position: absolute;
+  font-size: 15px;
+  top: 55px;
+  left: 20px;
+  color: blue;
+}
+
+#_delete {
+  position: absolute;
+  top: 535px;
+  left: 20px;
+  color: blue;
+}
+
+#concave {
+  position: absolute;
+  top: 460px;
+  left: 23px;
+  color: blue;
+}
+
+.selected{
+  border: 2px solid black;
 }

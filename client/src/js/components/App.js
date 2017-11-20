@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Table from './Table';
 import Home from './Home';
 import Demos from './Demos';
 import About from './About';

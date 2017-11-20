@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Buttons from './buttons';
 class Scenes extends Component {
   constructor(){
     super();
@@ -22,8 +23,8 @@ class Scenes extends Component {
   render() {
     return (
       <div>
-        <h1>simmy.js</h1>
         <canvas id='canvas' width='1000' height='600'></canvas>
+        <Buttons/>
       </div>
     );
   }
