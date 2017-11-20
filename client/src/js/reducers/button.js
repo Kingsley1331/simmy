@@ -1,4 +1,4 @@
-const buttonReducer = (state={}, action) => {
+const buttonReducer = (state=shapeSelection, action) => {
   switch (action.type) {
     case 'SELECT':
       return selectShape(action.payload, shapeSelection);
@@ -8,19 +8,21 @@ const buttonReducer = (state={}, action) => {
 }
 
 function selectShape(selected='', shapes) {
+  var newShapes = {};
   for (let shape in shapes) {
+    newShapes[shape] = shape
     if (shape === selected) {
-      shapes[shape] = true;
+      newShapes[shape] = true;
     } else {
-      shapes[shape] = false;
+      newShapes[shape] = false;
     }
   }
-  return shapes;
+  return newShapes;
 }
 
 const shapeSelection = {
   play: false,
-  none: false,
+  none: true,
   square: false,
   triangle: false,
   pentagon: false,
@@ -32,7 +34,8 @@ const shapeSelection = {
   tShape: false,
   bar: false,
   concave: false,
-  box: false
+  box: false,
+  _delete: false
 };
 
 export default buttonReducer;
