@@ -68,7 +68,7 @@ canvas {
 }
 .buttons {
   position: absolute;
-  top: 80px;
+  top: 60px;
   left: 0px;
 }
 
@@ -79,74 +79,74 @@ canvas {
 }
 #square {
   position: absolute;
-  top: 110px;
+  top: 95px;
   left: 20px;
 }
 
 #triangle {
   position: absolute;
-  top: 145px;
+  top: 130px;
   left: 20px;
 }
 
 #pentagon {
   position: absolute;
-  top: 183px;
+  top: 168px;
   left: 20px;
 }
 
 #hexagon {
   position: absolute;
-  top: 217px;
+  top: 202px;
   left: 18px;
 }
 
 #circle {
   position: absolute;
-  top: 255px;
+  top: 240px;
   left: 18px;
 }
 
 #plus {
   position: absolute;
-  top: 295px;
+  top: 280px;
   left: 18px
 }
 
 #arrow {
   position: absolute;
-  top: 330px;
+  top: 315px;
   left: 18px;
 }
 
 #star {
   position: absolute;
-  top: 360px;
+  top: 345px;
   left: 18px;
 }
 
 #tShape {
   position: absolute;
-  top: 405px;
+  top: 390px;
   left: 18px;
 }
 
 #bar {
   position: absolute;
-  top: 445px;
+  top: 430px;
   left: 28px;
 }
 #box {
   color: blue;
   position: absolute;
-  top: 520px;
+  top: 505px;
   left: 23px;
 }
 
 #none {
   position: absolute;
   font-size: 15px;
-  top: 55px;
+  top: 50px;
   left: 20px;
   color: blue;
 }
@@ -154,14 +154,14 @@ canvas {
 #_delete {
   position: absolute;
   font-size: 15px;
-  top: 548px;
+  top: 533px;
   left: 20px;
   color: blue;
 }
 
 #concave {
   position: absolute;
-  top: 460px;
+  top: 445px;
   left: 23px;
   color: blue;
 }

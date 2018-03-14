@@ -1,33 +1,46 @@
 import React, { Component } from 'react';
-import Buttons from './buttons';
+import { connect } from 'react-redux';
+import Buttons from './buttons/';
+import { draw1 } from '../../physics/scenes/draw';
+import Scene from '../../physics/scenes/scene';
+import { createShape, shapeSelection } from '../../physics/shapes/shapes';
+import getMousePos from '../../physics/utils/position';
+
 class Scenes extends Component {
-  constructor(){
-    super();
-    console.log('hello simmy!');
+  constructor(props){
+    super(props);
   }
-  componentDidMount(){
-    var canvas = document.getElementById("canvas");
-    var context = canvas.getContext("2d");
-
-    const bufferCanvas = document.createElement('canvas');
-    const bufferCtx = bufferCanvas.getContext("2d");
-    bufferCtx.canvas.width = context.canvas.width;
-    bufferCtx.canvas.height = context.canvas.height;
-
-    bufferCtx.fillStyle = '#E0E0E0';
-    bufferCtx.fillRect(0, 0, 1000, 600);
-    bufferCtx.fill();
-
-    context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
+  componentDidMount() {
+    const canvas = document.getElementById('canvas');
+    canvas.addEventListener('click', (evt) => {
+      let mousePos = getMousePos(evt, canvas);
+      let selectedShape;
+      const buttons = this.props.buttons;
+      for(let button in buttons){
+        if(buttons[button]){
+          selectedShape = button;
+        }
+      }
+      createShape(mousePos, shapeSelection[selectedShape]);
+      setInterval(draw1, 17, canvas);
+    })
+    draw1(canvas);
   }
+
   render() {
     return (
       <div>
-        <canvas id='canvas' width='1000' height='600'></canvas>
         <Buttons/>
+        <canvas id='canvas' width='1000' height='600' />
       </div>
     );
   }
 }
 
-export default Scenes;
+const mapStateToProps = state => {
+  return {
+    buttons: state.buttons
+  };
+}
+
+export default connect(mapStateToProps)(Scenes);
