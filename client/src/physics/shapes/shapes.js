@@ -289,7 +289,7 @@ function dragShape(i){
 
 export function releaseShape(i){
     var velocity = throwVelocity();
-    console.log('velocity', velocity);
+    // console.log('velocity', velocity);
     if(Scene.throwArray.length > 0 && ShapesController.getProperty(i, 'dragging')){
       ShapesController.setProperty(i, 'velocity', {x: velocity.x, y: velocity.y}, true);
     }

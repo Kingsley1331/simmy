@@ -1,4 +1,5 @@
 import getMousePos from './position';
+import { makeThrowArray } from './throw';
 import { detectShape, createShape, shapeSelection, forEachShape, prepareToMoveShape, releaseShape } from '../shapes/shapes';
 import ShapesController from '../shapes/ShapesController';
 import { draw1 } from '../scenes/draw';
@@ -33,9 +34,9 @@ export const mouseMove = (element) => {
   element.addEventListener('mousemove', function(evt){
     let mousePos = getMousePos(evt, element);
     // hoveringOnShape = 0;
-    // if(selectedShape === 'play'){
-    //   makeThrowArray();
-    // }
+    if(Scene.selected === 'play'){
+      makeThrowArray();
+    }
     forEachShape(function(i){
         detectShape(i);
     }, true);

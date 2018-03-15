@@ -1,17 +1,21 @@
 import Scene from '../scenes/scene';
-let mousePos = Scene.mousePos;
-let throwArray = Scene.throwArray;
+
+
 
 export function makeThrowArray(){
-  var length = throwArray.length;
+  let mousePos = Scene.mousePos;
+  var length = Scene.throwArray.length;
   var arraySize = 5
   if(length >= arraySize){
-    throwArray = throwArray.splice(length - arraySize);
+    Scene.throwArray = Scene.throwArray.splice(length - arraySize);
   }
-  throwArray.push({ x: mousePos.x, y: mousePos.y });
+  // console.log('mousePos', mousePos);
+  Scene.throwArray.push({ x: mousePos.x, y: mousePos.y });
 }
 
 export function throwVelocity(){
+  let throwArray = Scene.throwArray;
+  console.log('throwArray', Scene.throwArray);
   var velocityArray = [];
   var velocity = {x: 0, y: 0};
   var length = throwArray.length;
@@ -27,6 +31,6 @@ export function throwVelocity(){
     velocity.x /= length2*5;
     velocity.y /= length2*5;
   }
-  console.log('velocity', velocity);
+
   return { x: velocity.x, y: velocity.y };
 }
