@@ -116,9 +116,10 @@ export const draw1 = (canvas) => {
     // console.log(' Scene.shapes[i]',  Scene.shapes[i])
     const vertices = Scene.shapes[i].vertices;
     const centreOfMass = Scene.shapes[i].centreOfMass;
-    const config = { strokeStyle: 'black', lineWidth: 1, fillStyle: 'blue' };
+    const lineWidth = Scene.shapes[i].onShape ? 10 : 1;
+    const config = { strokeStyle: 'black', lineWidth: lineWidth, fillStyle: 'blue' };
     drawShape(vertices, centreOfMass, config, bufferCtx);
   })
-
+  Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
 }

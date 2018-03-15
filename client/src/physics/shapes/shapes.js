@@ -1,4 +1,7 @@
 import Scene from '../scenes/scene';
+import ShapesController from './ShapesController';
+import getMousePos from '../utils/position'
+
 export const shapeSelection = {
   square: [
       {x: -18, y: -18},
@@ -180,7 +183,6 @@ export function Shape(centre, vertices){
 }
 
 export function createShape(centreOfMass, vertices){
-  // console.log('==============> createShape');
   let id = 1000000 * Math.ceil(Math.random());
   var shape = new Shape(centreOfMass, vertices);
   shape.id = id;
@@ -229,5 +231,51 @@ export function drawShape(vertices, centreOfMass, config, bufferCtx ){
       bufferCtx.stroke();
       bufferCtx.fill();
       bufferCtx.restore();
+  }
+}
+let hoveringOnShape = 0;
+let onShape = false;
+
+export function detectShape(i){
+    ShapesController.setProperty(i, 'onShape', false);
+    var centreOfMass = ShapesController.getCentreOfMass(i);
+    var vertices = ShapesController.getVertices(i);
+
+    var pointInShape = isPointInShape(centreOfMass, vertices, Scene.mousePos);
+    if(pointInShape){
+      hoveringOnShape++;
+      if(!onShape){
+        ShapesController.setProperty(i, 'onShape', true);
+        // onShape = true;
+      }
+      if(ShapesController.getProperty(i, 'onShape')){
+        ShapesController.setProperty(i, 'onShape', true);
+      } else {
+        ShapesController.setProperty(i, 'onShape', false);
+      }
+    } else {
+      ShapesController.setProperty(i, 'onShape', false);
+    }
+    // if(ShapesController.getProperty(i, 'dragging')){
+    //   dragShape(i);
+    // }
+}
+
+function isPointInShape(centreOfMass, vertices, point){
+  var x0 = centreOfMass.x + vertices[0].x;
+  var y0 = centreOfMass.y + vertices[0].y;
+  const bufferCtx = Scene.context.buffer;
+  bufferCtx.beginPath();
+  bufferCtx.moveTo(x0, y0);
+  for(var m = 1; m < vertices.length; m++){
+    var x = centreOfMass.x + vertices[m].x;
+    var y = centreOfMass.y + vertices[m].y;
+    bufferCtx.lineTo(x, y);
+  }
+
+  if(bufferCtx.isPointInPath(point.x, point.y)){
+      return true;
+  } else {
+      return false;
   }
 }

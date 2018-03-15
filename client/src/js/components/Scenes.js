@@ -5,6 +5,7 @@ import { draw1 } from '../../physics/scenes/draw';
 import Scene from '../../physics/scenes/scene';
 import { createShape, shapeSelection } from '../../physics/shapes/shapes';
 import getMousePos from '../../physics/utils/position';
+import { mouseDown, mouseMove } from '../../physics/utils/listeners';
 
 class Scenes extends Component {
   constructor(props){
@@ -12,19 +13,9 @@ class Scenes extends Component {
   }
   componentDidMount() {
     const canvas = document.getElementById('canvas');
-    canvas.addEventListener('click', (evt) => {
-      let mousePos = getMousePos(evt, canvas);
-      let selectedShape;
-      const buttons = this.props.buttons;
-      for(let button in buttons){
-        if(buttons[button]){
-          selectedShape = button;
-        }
-      }
-      createShape(mousePos, shapeSelection[selectedShape]);
-      setInterval(draw1, 17, canvas);
-    })
-    draw1(canvas);
+    mouseDown(canvas, this);
+    mouseMove(canvas);
+    setInterval(draw1, 17, canvas);
   }
 
   render() {
