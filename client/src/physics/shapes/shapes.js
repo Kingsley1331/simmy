@@ -1,6 +1,7 @@
 import Scene from '../scenes/scene';
 import ShapesController from './ShapesController';
 import getMousePos from '../utils/position'
+import { throwVelocity } from '../utils/throw'
 
 export const shapeSelection = {
   square: [
@@ -180,6 +181,21 @@ export function Shape(centre, vertices){
   this.linewidth = 0.7;
   this.vertices = vertices;
   this.centreOfMass = centre;
+  this.touchPoint = [];
+  this.onShape = false;
+  this.dragging = false;
+  this.physics = {
+    // density: 1,
+    // mass: massData.mass,
+    // momentOfInertiaCOM: momentOfInertiaCOM,
+    velocity: {x:0, y:0}
+    // acceleration: {x:0, y:0},
+    // angularVelocity: 0,
+    // angularAcceleration: 0,
+    // forcesCOM: [{x:0, y:0}],
+    // torque: 0
+  };
+  this.selected = false;
 }
 
 export function createShape(centreOfMass, vertices){
@@ -233,32 +249,52 @@ export function drawShape(vertices, centreOfMass, config, bufferCtx ){
       bufferCtx.restore();
   }
 }
-let hoveringOnShape = 0;
-let onShape = false;
+// let hoveringOnShape = 0;
+// let onShape = false;
 
 export function detectShape(i){
-    ShapesController.setProperty(i, 'onShape', false);
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var vertices = ShapesController.getVertices(i);
 
     var pointInShape = isPointInShape(centreOfMass, vertices, Scene.mousePos);
     if(pointInShape){
-      hoveringOnShape++;
-      if(!onShape){
+      // hoveringOnShape++;s
+    if(!Scene.cursorOnshape){
         ShapesController.setProperty(i, 'onShape', true);
-        // onShape = true;
-      }
-      if(ShapesController.getProperty(i, 'onShape')){
-        ShapesController.setProperty(i, 'onShape', true);
-      } else {
-        ShapesController.setProperty(i, 'onShape', false);
-      }
+        Scene.cursorOnshape = true;
+    }
+      // if(ShapesController.getProperty(i, 'onShape')){
+      //   ShapesController.setProperty(i, 'onShape', true);
+      // } else {
+      //   ShapesController.setProperty(i, 'onShape', false);
+      // }
     } else {
       ShapesController.setProperty(i, 'onShape', false);
     }
-    // if(ShapesController.getProperty(i, 'dragging')){
-    //   dragShape(i);
-    // }
+    if(ShapesController.getProperty(i, 'dragging')){
+      dragShape(i);
+    }
+}
+
+function dragShape(i){
+  var touchPoint = ShapesController.getTouchPoint(i);
+  let mousePos = Scene.mousePos;
+  var centre = {
+    x: mousePos.x - touchPoint.x,
+    y: mousePos.y - touchPoint.y
+  };
+  ShapesController.setProperty(i, 'centreOfMass', centre);
+  // ShapesController.setProperty(i, 'centreOfRotation', centre);
+}
+
+export function releaseShape(i){
+  console.log('RELEASE')
+    var velocity = throwVelocity();
+    if(Scene.throwArray.length > 0 && ShapesController.getProperty(i, 'dragging')){
+      ShapesController.setProperty(i, 'velocity', {x: velocity.x, y: velocity.y}, true);
+    }
+    ShapesController.setProperty(i, 'dragging', false);
+    ShapesController.setProperty(i, 'selected', false);
 }
 
 function isPointInShape(centreOfMass, vertices, point){
@@ -278,4 +314,30 @@ function isPointInShape(centreOfMass, vertices, point){
   } else {
       return false;
   }
+}
+
+export function prepareToMoveShape(i){
+  if(ShapesController.getProperty(i, 'onShape')){
+    let mousePos = Scene.mousePos;
+    // if(selectedShape === 'play'){
+    if(Scene.selected === 'play'){
+      ShapesController.setProperty(i, 'velocity', {x: 0, y: 0}, true);
+    }
+    var centreOfMass = ShapesController.getCentreOfMass(i);
+    ShapesController.setProperty(i, 'dragging', true);
+    var distanceX = mousePos.x - centreOfMass.x;
+    var distanceY = mousePos.y - centreOfMass.y;
+    ShapesController.setProperty(i, 'touchPoint', {x: distanceX, y: distanceY});
+    // var x = document.getElementsByClassName("dg");
+    // if(gui){
+    //   gui.destroy();
+    // }
+    // addGui(i);
+  }
+}
+
+
+
+export function deleteShape(shapeIndex){
+  Scene.shapes.splice(shapeIndex, 1);
 }

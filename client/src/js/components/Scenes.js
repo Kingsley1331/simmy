@@ -5,7 +5,7 @@ import { draw1 } from '../../physics/scenes/draw';
 import Scene from '../../physics/scenes/scene';
 import { createShape, shapeSelection } from '../../physics/shapes/shapes';
 import getMousePos from '../../physics/utils/position';
-import { mouseDown, mouseMove } from '../../physics/utils/listeners';
+import { mouseDown, mouseMove, mouseUp } from '../../physics/utils/listeners';
 
 class Scenes extends Component {
   constructor(props){
@@ -15,6 +15,7 @@ class Scenes extends Component {
     const canvas = document.getElementById('canvas');
     mouseDown(canvas, this);
     mouseMove(canvas);
+    mouseUp(canvas);
     setInterval(draw1, 17, canvas);
   }
 

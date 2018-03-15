@@ -10,13 +10,13 @@ var ShapesController = (function(){
      };
   }
 
-  // function getTouchPoint(shapeIndex){
-  //   var touchPoint = shapes[shapeIndex].touchPoint;
-  //   return {
-  //       x: touchPoint.x,
-  //       y: touchPoint.y
-  //    };
-  // }
+  function getTouchPoint(shapeIndex){
+    var touchPoint = shapes[shapeIndex].touchPoint;
+    return {
+        x: touchPoint.x,
+        y: touchPoint.y
+     };
+  }
 
   function getVertices(shapeIndex){
     var vertices = [];
@@ -67,11 +67,11 @@ var ShapesController = (function(){
 
   return {
     getCentreOfMass: getCentreOfMass,
-  //  getTouchPoint: getTouchPoint,
+    getTouchPoint: getTouchPoint,
     getVertices: getVertices,
     getProperty: getProperty,
     setProperty: setProperty,
-  //  deleteShape: deleteShape
+    deleteShape: deleteShape
   };
 })();
 
