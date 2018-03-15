@@ -5,7 +5,8 @@ const Scene = {
   context: { buffer: {} },
   cursorOnshape: false,
   selected: 'none',
-  throwArray: []
+  throwArray: [],
+  time: 0
 };
 
 export default Scene;

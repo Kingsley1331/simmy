@@ -23,7 +23,6 @@ export const mouseDown = (element, self) => {
       }
     });
 
-
     if(typeof shapeSelection[selectedShape] === 'object' && !Scene.cursorOnshape){
       createShape(mousePos, shapeSelection[selectedShape]);
     }
@@ -47,11 +46,12 @@ export const mouseMove = (element) => {
   });
 }
 
-export const  mouseUp = (element) => {
+export const mouseUp = (element) => {
   element.addEventListener('mouseup', function(evt){
     forEachShape(function(i){
       releaseShape(i);
     });
+    console.log('shapes', Scene.shapes[0])
     Scene.throwArray = [];
   }, false);
 }

@@ -97,9 +97,8 @@
 // }
 import { drawShape, forEachShape } from '../shapes/shapes';
 import Scene from './scene';
-export const canvas = document.getElementById("canvas");
+// export const canvas = document.getElementById("canvas");
 export const draw1 = (canvas) => {
-  // console.log('=================================> draw1')
   var context = canvas.getContext("2d");
   const bufferCanvas = document.createElement('canvas');
   const bufferCtx = bufferCanvas.getContext("2d");

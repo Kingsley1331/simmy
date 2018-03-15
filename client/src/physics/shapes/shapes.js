@@ -188,12 +188,12 @@ export function Shape(centre, vertices){
     // density: 1,
     // mass: massData.mass,
     // momentOfInertiaCOM: momentOfInertiaCOM,
-    velocity: {x:0, y:0}
-    // acceleration: {x:0, y:0},
-    // angularVelocity: 0,
-    // angularAcceleration: 0,
-    // forcesCOM: [{x:0, y:0}],
-    // torque: 0
+    velocity: { x: 0, y: 0 },
+    acceleration: { x: 0, y: 0 },
+    angularVelocity: 0,
+    angularAcceleration: 0,
+    forcesCOM: [{ x :0, y :0 }],
+    torque: 0
   };
   this.selected = false;
 }
@@ -288,8 +288,8 @@ function dragShape(i){
 }
 
 export function releaseShape(i){
-  console.log('RELEASE')
     var velocity = throwVelocity();
+    console.log('velocity', velocity);
     if(Scene.throwArray.length > 0 && ShapesController.getProperty(i, 'dragging')){
       ShapesController.setProperty(i, 'velocity', {x: velocity.x, y: velocity.y}, true);
     }
