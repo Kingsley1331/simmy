@@ -1,5 +1,6 @@
 import getMousePos from './position';
-import { detectShape, createShape, shapeSelection, forEachShape, prepareToMoveShape, deleteShape, releaseShape } from '../shapes/shapes';
+import { detectShape, createShape, shapeSelection, forEachShape, prepareToMoveShape, releaseShape } from '../shapes/shapes';
+import ShapesController from '../shapes/ShapesController';
 import { draw1 } from '../scenes/draw';
 import Scene from '../scenes/scene';
 
@@ -7,7 +8,6 @@ export const mouseDown = (element, self) => {
   element.addEventListener('mousedown', (evt) => {
     let mousePos = getMousePos(evt, element);
     let selectedShape;
-    console.log('Scene.mousePos', Scene.mousePos);
     const buttons = self.props.buttons;
     for(let button in buttons){
       if(buttons[button]){
@@ -19,7 +19,7 @@ export const mouseDown = (element, self) => {
     forEachShape(function(i){
       prepareToMoveShape(i);
       if(Scene.selected === '_delete'){
-        deleteShape(i);
+        ShapesController.deleteShape(i);
       }
     });
 
@@ -51,7 +51,6 @@ export const mouseUp = (element) => {
     forEachShape(function(i){
       releaseShape(i);
     });
-    console.log('shapes', Scene.shapes[0])
     Scene.throwArray = [];
   }, false);
 }

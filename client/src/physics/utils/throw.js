@@ -27,5 +27,6 @@ export function throwVelocity(){
     velocity.x /= length2*5;
     velocity.y /= length2*5;
   }
+  console.log('velocity', velocity);
   return { x: velocity.x, y: velocity.y };
 }

@@ -9,6 +9,7 @@ export function applyMotion(i, tDelta){
 
     var angularAcceleration = ShapesController.getProperty(i, 'angularAcceleration', true);
     var velocity = ShapesController.getProperty(i, 'velocity', true);
+    console.log('velocity', velocity);
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
 
     var centreOfMass = ShapesController.getCentreOfMass(i);
@@ -21,10 +22,10 @@ export function applyMotion(i, tDelta){
     // location.x += acceleration.x;
     // location.y += acceleration.y;
     angularVelocity += angularAcceleration;
-
+// velocity = { x: 0.5, y: 0 };
     centreOfMass.x += velocity.x * tDelta;
     centreOfMass.y += velocity.y * tDelta;
-    
+
     ShapesController.setProperty(i, 'angularVelocity', angularVelocity, true);
     ShapesController.setProperty(i, 'centreOfMass', centreOfMass);
     ShapesController.setProperty(i, 'centreOfRotation', centreOfMass);

@@ -62,7 +62,11 @@ var ShapesController = (function(){
   }
 
   function deleteShape(shapeIndex){
-    Scene.shapes.splice(shapeIndex, 1);
+    console.log('Scene.shapes', Scene.shapes);
+    console.log('shapeIndex', shapeIndex);
+    if(Scene.shapes[shapeIndex].onShape){
+      Scene.shapes.splice(shapeIndex, 1);
+    }
   }
 
   return {

@@ -294,7 +294,7 @@ export function releaseShape(i){
       ShapesController.setProperty(i, 'velocity', {x: velocity.x, y: velocity.y}, true);
     }
     ShapesController.setProperty(i, 'dragging', false);
-    ShapesController.setProperty(i, 'selected', false);
+    // ShapesController.setProperty(i, 'selected', false);
 }
 
 function isPointInShape(centreOfMass, vertices, point){
@@ -336,8 +336,6 @@ export function prepareToMoveShape(i){
   }
 }
 
-
-
-export function deleteShape(shapeIndex){
-  Scene.shapes.splice(shapeIndex, 1);
-}
+// export function deleteShape(shapeIndex){
+//   Scene.shapes.splice(shapeIndex, 1);
+// }
