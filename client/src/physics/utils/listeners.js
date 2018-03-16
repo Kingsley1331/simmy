@@ -39,7 +39,8 @@ export const mouseMove = (element) => {
     }
     forEachShape(function(i){
         detectShape(i);
-    }, true);
+    }, false);
+    /**** TODO: consider using ShapesController to get shape properties ****/
     Scene.cursorOnshape = Scene.shapes.some(shape => shape.onShape)
     // if(hoveringOnShape > 0){
     //   onShape = false;

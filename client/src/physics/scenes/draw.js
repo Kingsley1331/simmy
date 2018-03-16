@@ -118,7 +118,7 @@ export const draw1 = (canvas) => {
     const lineWidth = Scene.shapes[i].onShape ? 10 : 1;
     const config = { strokeStyle: 'black', lineWidth: lineWidth, fillStyle: '#6495ED' };
     drawShape(vertices, centreOfMass, config, bufferCtx);
-  })
+  });
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
 }

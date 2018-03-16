@@ -1,7 +1,5 @@
 import Scene from '../scenes/scene';
 
-
-
 export function makeThrowArray(){
   let mousePos = Scene.mousePos;
   var length = Scene.throwArray.length;
@@ -15,7 +13,6 @@ export function makeThrowArray(){
 
 export function throwVelocity(){
   let throwArray = Scene.throwArray;
-  console.log('throwArray', Scene.throwArray);
   var velocityArray = [];
   var velocity = {x: 0, y: 0};
   var length = throwArray.length;
@@ -28,8 +25,8 @@ export function throwVelocity(){
     velocity.y += velocityArray[j].y;
   }
   if(length2 > 0){
-    velocity.x /= length2*5;
-    velocity.y /= length2*5;
+    velocity.x /= length2*10;
+    velocity.y /= length2*10;
   }
 
   return { x: velocity.x, y: velocity.y };

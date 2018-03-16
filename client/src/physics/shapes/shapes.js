@@ -205,18 +205,18 @@ export function createShape(centreOfMass, vertices){
   Scene.shapes.push(shape);
   return shape;
 }
-
-export function forEachShape(callback, bool){
+// order=true => FORWARD, order=false => REVERSE
+export function forEachShape(callback, order){
   var shapes = Scene.shapes;
   var length = shapes.length;
-  if(!bool){
+  if(!order){
     for(var i = 0; i < length; i++){
       var shape = shapes[i];
       if(shape){
         callback(i);
       }
     }
-  } else if(bool) {
+  } else if(order) {
     for(var i = length-1; i >= 0; i--){
       var shape = shapes[i];
       if(shape){
@@ -253,12 +253,12 @@ export function drawShape(vertices, centreOfMass, config, bufferCtx ){
 // let onShape = false;
 
 export function detectShape(i){
-    var centreOfMass = ShapesController.getCentreOfMass(i);
-    var vertices = ShapesController.getVertices(i);
+  var centreOfMass = ShapesController.getCentreOfMass(i);
+  var vertices = ShapesController.getVertices(i);
 
-    var pointInShape = isPointInShape(centreOfMass, vertices, Scene.mousePos);
-    if(pointInShape){
-      // hoveringOnShape++;s
+  var pointInShape = isPointInShape(centreOfMass, vertices, Scene.mousePos);
+  if(pointInShape){
+    // hoveringOnShape++;s
     if(!Scene.cursorOnshape){
         ShapesController.setProperty(i, 'onShape', true);
         Scene.cursorOnshape = true;
@@ -268,6 +268,15 @@ export function detectShape(i){
       // } else {
       //   ShapesController.setProperty(i, 'onShape', false);
       // }
+
+      if(!ShapesController.getProperty(i, 'onShape')){
+        Scene.shapes.forEach((shape, index) => {
+          ShapesController.setProperty(index, 'onShape', false);
+        });
+        ShapesController.setProperty(i, 'onShape', true);
+      }
+
+
     } else {
       ShapesController.setProperty(i, 'onShape', false);
     }
