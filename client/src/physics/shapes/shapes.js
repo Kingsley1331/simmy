@@ -2,6 +2,10 @@ import Scene from '../scenes/scene';
 import ShapesController from './ShapesController';
 import getMousePos from '../utils/position'
 import { throwVelocity } from '../utils/throw'
+import { findMass } from '../physics/mass/mass';
+import referenceVectors from '../physics/collisions/referenceVectors';
+import { findMomentOfInertiaCOM } from '../physics/mass/momentOfInertia';
+import { magnitude } from '../utils/maths/Vector';
 
 export const shapeSelection = {
   square: [
@@ -136,68 +140,68 @@ function circleMaker(radius, n) {
 
 var circle = circleMaker(20, 30);
 shapeSelection.circle = circle;
-// export function Shape(centre, vertices){
-  // var boundingRect = findBoundingRect(vertices);
-  // var massData = findMass(centre, vertices, boundingRect);
-  // var centreOfMass = massData.centreOfMass;
-  // var momentOfInertiaCOM = findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect);
-  // var references = referenceVectors(centre, vertices)
-  // this.id;
-  // this.fillColour = '#6495ED';
-  // this.lineColour = 'black';
-  // this.linewidth = 0.7;
-  // this.centreOfMass = centreOfMass;
-  // this.centreOfRotation = centreOfMass;
-  // this.vertices = vertices;
-  // this.colliding = false;
-  // this.physics = {
-  //   density: 1,
-  //   mass: massData.mass,
-  //   momentOfInertiaCOM: momentOfInertiaCOM,
-  //   velocity: {x:0, y:0},
-  //   acceleration: {x:0, y:0},
-  //   angularVelocity: 0,
-  //   angularAcceleration: 0,
-  //   forcesCOM: [{x:0, y:0}],
-  //   torque: 0
-  // };
-  // this.onShape = false;
-	// this.dragging = false;
-	// this.selected = false;
-  // this.touchPoint = [];
-  // this.display = [];
-  // this.boundingRect = boundingRect;
-  // var boundingRectCentre = {x: this.boundingRect.centre.x, y: this.boundingRect.centre.y};
-  // var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
-  // this.boundingRect.radius = radius;
-  // this.collisionData = {};
-  // this.referenceVectors = references;
-// }
-
 export function Shape(centre, vertices){
+  var boundingRect = findBoundingRect(vertices);
+  var massData = findMass(centre, vertices, boundingRect);
+  var centreOfMass = massData.centreOfMass;
+  var momentOfInertiaCOM = findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect);
+  var references = referenceVectors(centre, vertices)
   this.id;
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
   this.linewidth = 0.7;
+  this.centreOfMass = centreOfMass;
+  this.centreOfRotation = centreOfMass;
   this.vertices = vertices;
-  this.centreOfMass = centre;
-  this.touchPoint = [];
-  this.onShape = false;
-  this.dragging = false;
   this.colliding = false;
   this.physics = {
-    // density: 1,
-    // mass: massData.mass,
-    // momentOfInertiaCOM: momentOfInertiaCOM,
-    velocity: { x: 0, y: 0 },
-    acceleration: { x: 0, y: 0 },
+    density: 1,
+    mass: massData.mass,
+    momentOfInertiaCOM: momentOfInertiaCOM,
+    velocity: {x:0, y:0},
+    acceleration: {x:0, y:0},
     angularVelocity: 0,
     angularAcceleration: 0,
-    forcesCOM: [{ x :0, y :0 }],
+    forcesCOM: [{x:0, y:0}],
     torque: 0
   };
-  this.selected = false;
+  this.onShape = false;
+	this.dragging = false;
+	this.selected = false;
+  this.touchPoint = [];
+  this.display = [];
+  this.boundingRect = boundingRect;
+  var boundingRectCentre = {x: this.boundingRect.centre.x, y: this.boundingRect.centre.y};
+  var radius = magnitude({x: boundingRectCentre.x - this.boundingRect.vertices[0].x, y: boundingRectCentre.y - this.boundingRect.vertices[0].y});
+  this.boundingRect.radius = radius;
+  this.collisionData = {};
+  this.referenceVectors = references;
 }
+
+// export function Shape(centre, vertices){
+//   this.id;
+//   this.fillColour = '#6495ED';
+//   this.lineColour = 'black';
+//   this.linewidth = 0.7;
+//   this.vertices = vertices;
+//   this.centreOfMass = centre;
+//   this.touchPoint = [];
+//   this.onShape = false;
+//   this.dragging = false;
+//   this.colliding = false;
+//   this.physics = {
+//     // density: 1,
+//     // mass: massData.mass,
+//     // momentOfInertiaCOM: momentOfInertiaCOM,
+//     velocity: { x: 0, y: 0 },
+//     acceleration: { x: 0, y: 0 },
+//     angularVelocity: 0,
+//     angularAcceleration: 0,
+//     forcesCOM: [{ x :0, y :0 }],
+//     torque: 0
+//   };
+//   this.selected = false;
+// }
 
 export function createShape(centreOfMass, vertices){
   let id = 1000000 * Math.ceil(Math.random());
@@ -346,6 +350,42 @@ export function prepareToMoveShape(i){
   }
 }
 
-// export function deleteShape(shapeIndex){
-//   Scene.shapes.splice(shapeIndex, 1);
-// }
+export function findBoundingRect(vertices){
+  var boundingRect = {};
+  var maxX = vertices[0].x;
+  var minX = vertices[0].x;
+  var maxY = vertices[0].y;
+  var minY = vertices[0].y;
+  var length = vertices.length;
+  for(var i = 0; i < length; i++){
+    if(maxX < vertices[i].x){
+      maxX = vertices[i].x
+    }
+    if(minX > vertices[i].x){
+      minX = vertices[i].x
+    }
+    if(maxY < vertices[i].y){
+      maxY = vertices[i].y
+    }
+    if(minY > vertices[i].y){
+      minY = vertices[i].y
+    }
+  }
+  boundingRect = {
+    minX: minX,
+    maxX: maxX,
+    minY: minY,
+    maxY: maxY,
+    centre: {
+      x: (minX + maxX)/2,
+      y: (minY + maxY)/2
+    },
+    vertices: [
+      {x: minX, y: minY},
+      {x: maxX, y: minY},
+      {x: maxX, y: maxY},
+      {x: minX, y: maxY}
+    ]
+  };
+  return boundingRect;
+};

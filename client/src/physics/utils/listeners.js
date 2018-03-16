@@ -5,8 +5,20 @@ import ShapesController from '../shapes/ShapesController';
 import { draw1 } from '../scenes/draw';
 import Scene from '../scenes/scene';
 
+import Vector from './maths/Vector';
+
 export const mouseDown = (element, self) => {
   element.addEventListener('mousedown', (evt) => {
+
+
+    var vector1 = new Vector({x:0, y:1});
+    var vector2 = new Vector({x:1, y:1});
+    var angle = vector1.findAngle(vector2);
+    console.log(angle);
+
+    if(Scene.shapes[0]){console.log('scene.shapes', Scene.shapes[0])}
+
+
     let mousePos = getMousePos(evt, element);
     let selectedShape;
     const buttons = self.props.buttons;

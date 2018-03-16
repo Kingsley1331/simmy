@@ -22,7 +22,7 @@ export default function animate(){
   var currentTime = date.getTime();
   let time = Scene.time;
   var tDelta = (currentTime - time);
-  console.log('selected' ,Scene.selected);
+  // console.log('selected', Scene.selected);
   if(Scene.selected === 'play'){
     forEachShape(function(i){
       applyMotion(i, tDelta);
