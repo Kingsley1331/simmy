@@ -97,6 +97,8 @@
 // }
 import { drawShape, forEachShape } from '../shapes/shapes';
 import Scene from './scene';
+import ShapesController from '../shapes/ShapesController';
+
 // export const canvas = document.getElementById("canvas");
 export const draw1 = (canvas) => {
   var context = canvas.getContext("2d");
@@ -107,18 +109,37 @@ export const draw1 = (canvas) => {
   bufferCtx.fillStyle = '#E0E0E0';
   bufferCtx.fillRect(0, 0, 1000, 600);
 
-  // const randCords = {x: 500 * Math.random(), y: 500 * Math.random()}
-  // bufferCtx.strokeStyle="black";
-  // bufferCtx.strokeRect(0 + randCords.x, 0 + randCords.y, 50, 50);
-  // bufferCtx.stroke()
   forEachShape((i) => {
-    // console.log(' Scene.shapes[i]',  Scene.shapes[i])
-    const vertices = Scene.shapes[i].vertices;
-    const centreOfMass = Scene.shapes[i].centreOfMass;
-    const lineWidth = Scene.shapes[i].onShape ? 10 : 1;
-    const config = { strokeStyle: 'black', lineWidth: lineWidth, fillStyle: '#6495ED' };
+    var onShape = ShapesController.getProperty(i, 'onShape');
+    //bufferCtx.save();
+    if(onShape){
+      var shadowColor = shadowColor = 'rgba( 9, 9, 9, 0.3)';
+      var shadowOffsetX = shadowOffsetX = 10;
+      var shadowOffsetY = shadowOffsetY = 10;
+      var shadowBlur = shadowBlur = 10;
+    }
+
+    var fillColour = ShapesController.getProperty(i, 'fillColour');
+    var lineWidth = ShapesController.getProperty(i, 'linewidth');
+    var centreOfMass = ShapesController.getCentreOfMass(i);
+
+    var vertices = ShapesController.getVertices(i);
+    var config = {
+      shadowColor: shadowColor,
+      shadowOffsetX: shadowOffsetX,
+      shadowOffsetY: shadowOffsetY,
+      shadowBlur: shadowBlur,
+      fillStyle: fillColour,
+      lineWidth: lineWidth
+    };
+    if(ShapesController.getProperty(i, 'colliding')){
+      config.lineWidth = 10;
+    }
+
+
     drawShape(vertices, centreOfMass, config, bufferCtx);
   });
+
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
 }

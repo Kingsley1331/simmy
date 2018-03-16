@@ -184,6 +184,7 @@ export function Shape(centre, vertices){
   this.touchPoint = [];
   this.onShape = false;
   this.dragging = false;
+  this.colliding = false;
   this.physics = {
     // density: 1,
     // mass: massData.mass,
@@ -306,7 +307,7 @@ export function releaseShape(i){
     // ShapesController.setProperty(i, 'selected', false);
 }
 
-function isPointInShape(centreOfMass, vertices, point){
+export function isPointInShape(centreOfMass, vertices, point){
   var x0 = centreOfMass.x + vertices[0].x;
   var y0 = centreOfMass.y + vertices[0].y;
   const bufferCtx = Scene.context.buffer;
