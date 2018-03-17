@@ -45,7 +45,6 @@ export const mouseDown = (element, self) => {
 export const mouseMove = (element) => {
   element.addEventListener('mousemove', function(evt){
     let mousePos = getMousePos(evt, element);
-    // hoveringOnShape = 0;
     if(Scene.selected === 'play'){
       makeThrowArray();
     }
@@ -54,9 +53,6 @@ export const mouseMove = (element) => {
     }, false);
     /**** TODO: consider using ShapesController to get shape properties ****/
     Scene.cursorOnshape = Scene.shapes.some(shape => shape.onShape)
-    // if(hoveringOnShape > 0){
-    //   onShape = false;
-    // }
   });
 }
 

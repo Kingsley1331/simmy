@@ -2,7 +2,8 @@ import Scene from '../scenes/scene';
 import { forEachShape } from '../shapes/shapes';
 import { applyMotion } from '../physics/motion';
 import { draw1 } from '../scenes/draw';
-import collisionDetector from '../physics/collisions/collisionDetector'
+import collisionDetector from '../physics/collisions/collisionDetector';
+import applyForces from '../physics/forces/applyForces';
 
 let canvas;
 window.requestAnimFrame = (function() {
@@ -26,7 +27,7 @@ export default function animate(){
   if(Scene.selected === 'play'){
     forEachShape(function(i){
       applyMotion(i, tDelta);
-      // applyForces(i);
+      applyForces(i);
     });
     collisionDetector();
   }

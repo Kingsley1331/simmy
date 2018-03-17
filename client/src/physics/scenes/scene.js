@@ -6,7 +6,11 @@ const Scene = {
   cursorOnshape: false,
   selected: 'none',
   throwArray: [],
-  time: 0
+  time: 0,
+  settings: {
+    display: true,
+    restitution: 0
+  }
 };
 
 export default Scene;

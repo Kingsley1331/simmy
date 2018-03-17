@@ -135,10 +135,11 @@ var shapes = {
     ]
 };
 
-var settings = {
-  display: true,
-  restitution: 0
-};
+//TODO: add settings to Scene object
+// export const settings = {
+//   display: true,
+//   restitution: 0
+// };
 
 function circleMaker(radius, n) {
   var circle = [];
