@@ -4,6 +4,7 @@ import Buttons from './buttons/';
 import { draw1 } from '../../physics/scenes/draw';
 import Scene from '../../physics/scenes/scene';
 import { createShape, shapeSelection, forEachShape } from '../../physics/shapes/shapes';
+import reCentre from '../../physics/shapes/reCentre';
 import getMousePos from '../../physics/utils/position';
 import { mouseDown, mouseMove, mouseUp } from '../../physics/utils/listeners';
 import { applyMotion } from '../../physics/physics/motion';
@@ -15,11 +16,13 @@ class Scenes extends Component {
     super(props);
   }
   componentDidMount() {
+    //TODO: move functions into single index file and import
     canvas = document.getElementById('canvas');
     animate();
     mouseDown(canvas, this);
     mouseMove(canvas);
     mouseUp(canvas);
+    reCentre(shapeSelection);
   }
 
   render() {

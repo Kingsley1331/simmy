@@ -6,6 +6,7 @@ import { findMass } from '../physics/mass/mass';
 import referenceVectors from '../physics/collisions/referenceVectors';
 import { findMomentOfInertiaCOM } from '../physics/mass/momentOfInertia';
 import { magnitude } from '../utils/maths/Vector';
+import reCentre from './reCentre';
 
 export const shapeSelection = {
   square: [
@@ -124,7 +125,20 @@ export const shapeSelection = {
       {x: 500, y: -18},
       {x: 500, y: 18},
       {x: -500, y: 18}
-    ]};
+]};
+
+var shapes = {
+  arrowHead: [
+      {x: -2.5, y: 0},
+      {x: 2.5, y: 0},
+      {x: 0, y: 5}
+    ]
+};
+
+var settings = {
+  display: true,
+  restitution: 0
+};
 
 function circleMaker(radius, n) {
   var circle = [];
@@ -322,13 +336,34 @@ export function isPointInShape(centreOfMass, vertices, point){
     var y = centreOfMass.y + vertices[m].y;
     bufferCtx.lineTo(x, y);
   }
-
   if(bufferCtx.isPointInPath(point.x, point.y)){
       return true;
   } else {
       return false;
   }
 }
+
+// export function isPointInShape(centreOfMass, vertices, point){
+//   const canvas = document.getElementById('canvas');
+//   const context = canvas.getContext("2d");
+//   var x0 = centreOfMass.x + vertices[0].x;
+//   var y0 = centreOfMass.y + vertices[0].y;
+//   console.log('canvas', canvas);
+//   // const context = Scene.context.buffer;
+//   context.beginPath();
+//   context.moveTo(x0, y0);
+//   for(var m = 1; m < vertices.length; m++){
+//     var x = centreOfMass.x + vertices[m].x;
+//     var y = centreOfMass.y + vertices[m].y;
+//     context.lineTo(x, y);
+//   }
+//
+//   if(context.isPointInPath(point.x, point.y)){
+//       return true;
+//   } else {
+//       return false;
+//   }
+// }
 
 export function prepareToMoveShape(i){
   if(ShapesController.getProperty(i, 'onShape')){

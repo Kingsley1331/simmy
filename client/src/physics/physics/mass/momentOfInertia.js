@@ -28,3 +28,9 @@ export function findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect){
   //console.log('count', count);
   return momentOfInertiaCOM;
 }
+
+export function findMomentOfInertia(pointInShape, momentOfInertiaCOM, mass){
+  var momentOfInertia = momentOfInertiaCOM + mass * Math.pow(magnitude(pointInShape), 2);
+  //console.log('PAT momentOfInertia', momentOfInertia);
+  return momentOfInertia;
+}

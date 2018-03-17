@@ -1,2 +1,2 @@
-import findMass from './mass';
-import findMomentOfInertiaCOM from './momentOfInertia';
+// import findMass from './mass';
+// import findMomentOfInertiaCOM from './momentOfInertia';

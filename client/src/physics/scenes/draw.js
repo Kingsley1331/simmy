@@ -139,7 +139,7 @@ export const draw1 = (canvas) => {
 
     drawShape(vertices, centreOfMass, config, bufferCtx);
   });
-
+//TODO: do this only once rather than in every frame
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas,0,0, canvas.width, canvas.height);
 }
