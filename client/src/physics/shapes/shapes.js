@@ -127,7 +127,7 @@ export const shapeSelection = {
       {x: -500, y: 18}
 ]};
 
-var shapes = {
+export const shapes = {
   arrowHead: [
       {x: -2.5, y: 0},
       {x: 2.5, y: 0},
@@ -219,7 +219,8 @@ export function Shape(centre, vertices){
 // }
 
 export function createShape(centreOfMass, vertices){
-  let id = 1000000 * Math.ceil(Math.random());
+  // let id = 1000000 * Math.ceil(Math.random());
+  let id = Scene.shapes.length + 1;
   var shape = new Shape(centreOfMass, vertices);
   shape.id = id;
   Scene.shapes.push(shape);
@@ -246,32 +247,6 @@ export function forEachShape(callback, order){
   }
 }
 
-export function drawShape(vertices, centreOfMass, config, bufferCtx ){
-  var num = vertices.length;
-  if(num > 0){
-    var x0 = vertices[0].x + centreOfMass.x;
-    var y0 = vertices[0].y + centreOfMass.y;
-
-    bufferCtx.beginPath();
-    bufferCtx.moveTo(x0, y0);
-    for(var j = 1; j < num; j++){
-      var x = vertices[j].x + centreOfMass.x;
-      var y = vertices[j].y + centreOfMass.y;
-      bufferCtx.lineTo(x, y);
-    }
-      bufferCtx.save();
-      for(var prop in config){
-        bufferCtx[prop] = config[prop];
-      }
-      bufferCtx.closePath();
-      bufferCtx.stroke();
-      bufferCtx.fill();
-      bufferCtx.restore();
-  }
-}
-// let hoveringOnShape = 0;
-// let onShape = false;
-
 export function detectShape(i){
   var centreOfMass = ShapesController.getCentreOfMass(i);
   var vertices = ShapesController.getVertices(i);
@@ -295,7 +270,6 @@ export function detectShape(i){
         });
         ShapesController.setProperty(i, 'onShape', true);
       }
-
 
     } else {
       ShapesController.setProperty(i, 'onShape', false);
