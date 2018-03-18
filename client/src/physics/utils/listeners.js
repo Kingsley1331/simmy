@@ -7,7 +7,7 @@ import Scene from '../scenes/scene';
 
 import Vector from './maths/Vector';
 
-export const mouseDown = (element, self) => {
+export const mouseDown = (element) => {
   element.addEventListener('mousedown', (evt) => {
 
 
@@ -20,15 +20,6 @@ export const mouseDown = (element, self) => {
 
 
     let mousePos = getMousePos(evt, element);
-    let selectedShape;
-    const buttons = self.props.buttons;
-    for(let button in buttons){
-      if(buttons[button]){
-        selectedShape = button;
-        Scene.selected = button;
-      }
-    }
-
     forEachShape(function(i){
       prepareToMoveShape(i);
       if(Scene.selected === '_delete'){
@@ -36,8 +27,8 @@ export const mouseDown = (element, self) => {
       }
     });
 
-    if(typeof shapeSelection[selectedShape] === 'object' && !Scene.cursorOnshape){
-      createShape(mousePos, shapeSelection[selectedShape]);
+    if(typeof shapeSelection[Scene.selected] === 'object' && !Scene.cursorOnshape){
+      createShape(mousePos, shapeSelection[Scene.selected]);
     }
   }, false)
 }

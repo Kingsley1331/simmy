@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import selectShape from '../../actions/buttons';
+import Scene, { updateSelected } from '../../../physics/scenes/scene';
 
 import {PlayButton, NoneButton, SquareButton, TriangleButton, PentagonButton, HexagonButton, CircleButton, PlusButton, ArrowButton, StarButton, TshapeButton, BarButton, ConcaveButton, BoxButton, DeleteButton} from './buttons';
 
@@ -33,6 +34,7 @@ class Buttons extends Component {
 }
 
 const mapStateToProps = state => {
+  updateSelected(state, Scene);
   return {
     buttons: state.buttons
   };
@@ -40,7 +42,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectShape : shape => dispatch(selectShape(shape))
+    selectShape: shape => dispatch(selectShape(shape))
   }
 }
 

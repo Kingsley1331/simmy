@@ -19,7 +19,7 @@ class Scenes extends Component {
     //TODO: move functions into single index file and import
     canvas = document.getElementById('canvas');
     animate();
-    mouseDown(canvas, this);
+    mouseDown(canvas);
     mouseMove(canvas);
     mouseUp(canvas);
     reCentre(shapeSelection);
