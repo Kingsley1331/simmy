@@ -74,9 +74,9 @@ export default function findCollidingSide(collisionPoint, shapeBVertices, collis
 
       if(intersectionX >= sideMinX && intersectionX <= sideMaxX && intersectionY >= sideMinY && intersectionY <= sideMaxY){ console.log('555555555555555555555555555555555555555555555')
         intersections.push({x: intersectionX, y: intersectionY, side: side});
-      }/* else {
+      } else {
         intersections.push({x: collisionPoint.x, y: collisionPoint.y, side: side});
-      }*/
+      }
 
 
     }

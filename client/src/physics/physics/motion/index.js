@@ -1,5 +1,6 @@
 import Scene from '../../scenes/scene';
 import ShapesController from '../../shapes/ShapesController';
+import { rotateShape } from '../../utils/maths/Vector';
 
 export function applyMotion(i, tDelta){
   const velFactor = 0.1;
@@ -17,11 +18,11 @@ export function applyMotion(i, tDelta){
     // var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
     // var location = referenceVectors.location;
     /** velocity equation looks dodgy should look like deltaVelocity = acceleration * deltaTime **/
-    velocity.x += acceleration.x * velFactor;
-    velocity.y += acceleration.y * velFactor;
+    velocity.x += acceleration.x * tDelta * velFactor;
+    velocity.y += acceleration.y * tDelta * velFactor;
     // location.x += acceleration.x;
     // location.y += acceleration.y;
-    angularVelocity += angularAcceleration;
+    angularVelocity += angularAcceleration * tDelta;
 // velocity = { x: 0.5, y: 0 };
     centreOfMass.x += velocity.x * tDelta;
     centreOfMass.y += velocity.y * tDelta;
@@ -31,6 +32,6 @@ export function applyMotion(i, tDelta){
     ShapesController.setProperty(i, 'centreOfRotation', centreOfMass);
     ShapesController.setProperty(i, 'velocity', velocity);
 
-    // rotateShape(centreOfRotation, angularVelocity, i);
+    rotateShape(centreOfRotation, angularVelocity * tDelta, i);
   }
 }

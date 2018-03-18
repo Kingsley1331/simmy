@@ -504,7 +504,7 @@ function applyPhysics(i, tDelta){
     //ShapesController.getProperty(i, 'referenceVectors');
 
     rotateShape(centreOfRotation, angularVelocity, i);
-    //rotateShape(centreOfMass, angularVelocity, i);
+    rotateShape(centreOfMass, angularVelocity, i);
   }
 }
 
@@ -858,9 +858,9 @@ function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocit
 
       if(intersectionX >= sideMinX && intersectionX <= sideMaxX && intersectionY >= sideMinY && intersectionY <= sideMaxY){ console.log('555555555555555555555555555555555555555555555')
         intersections.push({x: intersectionX, y: intersectionY, side: side});
-      }/* else {
+      } else {
         intersections.push({x: collisionPoint.x, y: collisionPoint.y, side: side});
-      }*/
+      }
 
 
     }
@@ -971,29 +971,29 @@ var ShapesController = (function(){
   };
 })();
 
-// var leftWall = createShape({x: -19, y: 297}, shapeSelection.verticalWall);
-// leftWall.fillColour = 'red';
-// leftWall.physics.mass = Infinity;
-// leftWall.physics.momentOfInertia = Infinity;
-// leftWall.physics.momentOfInertiaCOM = Infinity;
-//
-// var rightWall = createShape({x: 1018, y: 297}, shapeSelection.verticalWall);
-// rightWall.fillColour = 'red';
-// rightWall.physics.mass = Infinity;
-// rightWall.physics.momentOfInertia = Infinity;
-// rightWall.physics.momentOfInertiaCOM = Infinity;
-//
-// var bottomWall = createShape({x: 500, y: 619}, shapeSelection.horizontalWall);
-// bottomWall.fillColour = 'red';
-// bottomWall.physics.mass = Infinity;
-// bottomWall.physics.momentOfInertia = Infinity;
-// bottomWall.physics.momentOfInertiaCOM = Infinity;
-//
-// var topWall = createShape({x: 500, y: -20}, shapeSelection.horizontalWall);
-// topWall.fillColour = 'red';
-// topWall.physics.mass = Infinity;
-// topWall.physics.momentOfInertia = Infinity;
-// topWall.physics.momentOfInertiaCOM = Infinity;
+var leftWall = createShape({x: -19, y: 297}, shapeSelection.verticalWall);
+leftWall.fillColour = 'red';
+leftWall.physics.mass = Infinity;
+leftWall.physics.momentOfInertia = Infinity;
+leftWall.physics.momentOfInertiaCOM = Infinity;
+
+var rightWall = createShape({x: 1018, y: 297}, shapeSelection.verticalWall);
+rightWall.fillColour = 'red';
+rightWall.physics.mass = Infinity;
+rightWall.physics.momentOfInertia = Infinity;
+rightWall.physics.momentOfInertiaCOM = Infinity;
+
+var bottomWall = createShape({x: 500, y: 619}, shapeSelection.horizontalWall);
+bottomWall.fillColour = 'red';
+bottomWall.physics.mass = Infinity;
+bottomWall.physics.momentOfInertia = Infinity;
+bottomWall.physics.momentOfInertiaCOM = Infinity;
+
+var topWall = createShape({x: 500, y: -20}, shapeSelection.horizontalWall);
+topWall.fillColour = 'red';
+topWall.physics.mass = Infinity;
+topWall.physics.momentOfInertia = Infinity;
+topWall.physics.momentOfInertiaCOM = Infinity;
 
 createShape({x: 350, y: 300}, shapeSelection.box);
-//createShape({x: 470, y: 300}, shapeSelection.hexagon);
+createShape({x: 470, y: 300}, shapeSelection.hexagon);

@@ -1,4 +1,3 @@
-import { shapeSelection } from './ShapesController';
 import { findMass } from '../physics/mass/mass';
 import findBoundingRect from './findBoundingRect';
 

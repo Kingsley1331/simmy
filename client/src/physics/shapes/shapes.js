@@ -155,6 +155,7 @@ function circleMaker(radius, n) {
 
 var circle = circleMaker(20, 30);
 shapeSelection.circle = circle;
+
 export function Shape(centre, vertices){
   var boundingRect = findBoundingRect(vertices);
   var massData = findMass(centre, vertices, boundingRect);
@@ -192,31 +193,6 @@ export function Shape(centre, vertices){
   this.collisionData = {};
   this.referenceVectors = references;
 }
-
-// export function Shape(centre, vertices){
-//   this.id;
-//   this.fillColour = '#6495ED';
-//   this.lineColour = 'black';
-//   this.linewidth = 0.7;
-//   this.vertices = vertices;
-//   this.centreOfMass = centre;
-//   this.touchPoint = [];
-//   this.onShape = false;
-//   this.dragging = false;
-//   this.colliding = false;
-//   this.physics = {
-//     // density: 1,
-//     // mass: massData.mass,
-//     // momentOfInertiaCOM: momentOfInertiaCOM,
-//     velocity: { x: 0, y: 0 },
-//     acceleration: { x: 0, y: 0 },
-//     angularVelocity: 0,
-//     angularAcceleration: 0,
-//     forcesCOM: [{ x :0, y :0 }],
-//     torque: 0
-//   };
-//   this.selected = false;
-// }
 
 export function createShape(centreOfMass, vertices){
   // let id = 1000000 * Math.ceil(Math.random());
@@ -318,28 +294,6 @@ export function isPointInShape(centreOfMass, vertices, point){
   }
 }
 
-// export function isPointInShape(centreOfMass, vertices, point){
-//   const canvas = document.getElementById('canvas');
-//   const context = canvas.getContext("2d");
-//   var x0 = centreOfMass.x + vertices[0].x;
-//   var y0 = centreOfMass.y + vertices[0].y;
-//   console.log('canvas', canvas);
-//   // const context = Scene.context.buffer;
-//   context.beginPath();
-//   context.moveTo(x0, y0);
-//   for(var m = 1; m < vertices.length; m++){
-//     var x = centreOfMass.x + vertices[m].x;
-//     var y = centreOfMass.y + vertices[m].y;
-//     context.lineTo(x, y);
-//   }
-//
-//   if(context.isPointInPath(point.x, point.y)){
-//       return true;
-//   } else {
-//       return false;
-//   }
-// }
-
 export function prepareToMoveShape(i){
   if(ShapesController.getProperty(i, 'onShape')){
     let mousePos = Scene.mousePos;
@@ -352,11 +306,6 @@ export function prepareToMoveShape(i){
     var distanceX = mousePos.x - centreOfMass.x;
     var distanceY = mousePos.y - centreOfMass.y;
     ShapesController.setProperty(i, 'touchPoint', {x: distanceX, y: distanceY});
-    // var x = document.getElementsByClassName("dg");
-    // if(gui){
-    //   gui.destroy();
-    // }
-    // addGui(i);
   }
 }
 

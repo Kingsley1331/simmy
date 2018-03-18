@@ -4,6 +4,7 @@ import Buttons from './buttons/';
 import { draw1 } from '../../physics/scenes/draw';
 import Scene from '../../physics/scenes/scene';
 import { createShape, shapeSelection, forEachShape } from '../../physics/shapes/shapes';
+import createWalls from '../../physics/shapes/walls';
 import reCentre from '../../physics/shapes/reCentre';
 import getMousePos from '../../physics/utils/position';
 import { mouseDown, mouseMove, mouseUp } from '../../physics/utils/listeners';
@@ -23,6 +24,7 @@ class Scenes extends Component {
     mouseMove(canvas);
     mouseUp(canvas);
     reCentre(shapeSelection);
+    createWalls();
   }
 
   render() {
