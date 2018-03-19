@@ -5,9 +5,10 @@ import { shapes, shapeSelection } from '../shapes/shapes';
 import { screenWriter, drawLine, drawDot, drawShape, drawArrow } from './display/drawing/drawings';
 
 // export const canvas = document.getElementById("canvas");
-export const draw1 = (canvas) => {
+export const draw = (canvas) => {
   let mousePos = Scene.mousePos;
   var context = canvas.getContext("2d");
+  /** TODO: store buffer canvas globally in Scene to make it less expensive **/
   const bufferCanvas = document.createElement('canvas');
   const bufferCtx = bufferCanvas.getContext("2d");
   let width = bufferCtx.canvas.width = context.canvas.width;
@@ -30,6 +31,7 @@ export const draw1 = (canvas) => {
     var centreOfMass = ShapesController.getCentreOfMass(i);
 
     var vertices = ShapesController.getVertices(i);
+    /** TODO: store config globally in Scene**/
     var config = {
       shadowColor: shadowColor,
       shadowOffsetX: shadowOffsetX,
@@ -85,11 +87,11 @@ export const draw1 = (canvas) => {
       if(unitNormal){
         unitNormal = unitNormal.scalProd(50);
         drawArrow(bufferCtx, arrowHead, [{x: collisionDataB.side[0].x + sideVector.x/2, y: collisionDataB.side[0].y + sideVector.y/2}, unitNormal], {fillStyle: 'purple', strokeStyle: 'purple'}, 30);
-        drawArrow(bufferCtx, arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
-        drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
-        drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
+        // drawArrow(bufferCtx, arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
+        // drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
+        // drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
         drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
-        drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
+        // drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
       }
       bufferCtx.save();
       bufferCtx.beginPath();

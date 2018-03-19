@@ -2,7 +2,7 @@ import getMousePos from './position';
 import { makeThrowArray } from './throw';
 import { detectShape, createShape, shapeSelection, forEachShape, prepareToMoveShape, releaseShape } from '../shapes/shapes';
 import ShapesController from '../shapes/ShapesController';
-import { draw1 } from '../scenes/draw';
+import { draw } from '../scenes/draw';
 import Scene from '../scenes/scene';
 
 import Vector from './maths/Vector';

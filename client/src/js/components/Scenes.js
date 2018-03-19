@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Buttons from './buttons/';
-import { draw1 } from '../../physics/scenes/draw';
+import { draw } from '../../physics/scenes/draw';
 import Scene from '../../physics/scenes/scene';
 import { createShape, shapeSelection, forEachShape } from '../../physics/shapes/shapes';
 import createWalls from '../../physics/shapes/walls';
@@ -17,7 +17,7 @@ class Scenes extends Component {
     super(props);
   }
   componentDidMount() {
-    //TODO: move functions into single index file and import
+    /** TODO: move functions into single index file and import **/
     canvas = document.getElementById('canvas');
     animate();
     mouseDown(canvas);
@@ -26,7 +26,6 @@ class Scenes extends Component {
     reCentre(shapeSelection);
     createWalls();
   }
-
   render() {
     return (
       <div>

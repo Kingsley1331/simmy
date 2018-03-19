@@ -20,7 +20,7 @@ export default function collisionDetector() {
           checkPoint.x = verticesA[vertIndexA].x + centreOfMassA.x;
           checkPoint.y = verticesA[vertIndexA].y + centreOfMassA.y;
           var collidingShape;
-          for(var k = 0; k < numShapes; k++){
+          for(let k = 0; k < numShapes; k++){
             if(i!== k){
             //var shape = shapes[k].vertices; //shapeB
             var verticesB = ShapesController.getVertices(k); //shapeB
@@ -29,6 +29,7 @@ export default function collisionDetector() {
               ShapesController.setProperty(i, 'colliding', true);
               ShapesController.setProperty(k, 'colliding', true);
               collidingShape = k;
+              verticesA[vertIndexA].collidingShape = collidingShape;
               break;
             }
           }
@@ -36,15 +37,16 @@ export default function collisionDetector() {
 
         /*** After vertex checks all other shapes ***/
         if(collidingShape !== undefined && verticesA.length === 6 && vertIndexA === 4){
-          console.log('collidingShape', collidingShape);
-          console.log('collidingShape2', verticesA[vertIndexA].collidingShape)
+          // console.log('collidingShape', collidingShape);
+          // console.log('collidingShape2', verticesA[vertIndexA].collidingShape)
           }
           //console.log('collidingShape2', verticesA[i].collidingShape);
 
         if(collidingShape !== undefined && collidingShape !== verticesA[vertIndexA].collidingShape){
           verticesA[vertIndexA].collidingShapes = collidingShape;
-          ShapesController.setProperty(i, 'vertices', verticesA);
-          console.log('new shape', collidingShape);
+          // ShapesController.setProperty(i, 'vertices', verticesA);
+          console.log('collidingShape', collidingShape);
+          console.log('centreOfMass', ShapesController.getProperty(collidingShape, 'centreOfMass'));
 
 
                   /*************************************************************************************************START PHYSICS ********************************************************************************/
@@ -125,17 +127,11 @@ export default function collisionDetector() {
 
 
                   /****************************************************************************************END PHYSICS ***********************************************************************************/
-                } else if (collidingShape === undefined) {
+                } /*else if (collidingShape === undefined) {
                   verticesA[vertIndexA].collidingShape = undefined;
                   ShapesController.setProperty(i, 'vertices', verticesA)
-                }
+                }*/
               //}
-
-
-
-
-
-
 
     }
   }

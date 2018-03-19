@@ -1,7 +1,7 @@
 import Scene from '../scenes/scene';
 import { forEachShape } from '../shapes/shapes';
 import { applyMotion } from '../physics/motion';
-import { draw1 } from '../scenes/draw';
+import { draw } from '../scenes/draw';
 import collisionDetector from '../physics/collisions/collisionDetector';
 import applyForces from '../physics/forces/applyForces';
 
@@ -18,12 +18,12 @@ window.requestAnimFrame = (function() {
 })();
 
 export default function animate(){
+	/** TODO: store canvas globally in Scene to make it less expensive **/
   canvas = document.getElementById('canvas');
   var date = new Date();
   var currentTime = date.getTime();
   let time = Scene.time;
   var tDelta = (currentTime - time);
-  // console.log('selected', Scene.selected);
   if(Scene.selected === 'play'){
     forEachShape(function(i){
       applyMotion(i, tDelta);
@@ -31,7 +31,7 @@ export default function animate(){
     });
     collisionDetector();
   }
-	draw1(canvas);
+	draw(canvas);
 	window.requestAnimFrame(animate);
   Scene.time = currentTime;
 }
