@@ -40,7 +40,7 @@ export const draw = (canvas) => {
       fillStyle: fillColour,
       lineWidth: lineWidth
     };
-    if(ShapesController.getProperty(i, 'colliding')){
+    if(ShapesController.getProperty(i, 'colliding') && Scene.selected === 'play'){
       config.lineWidth = 10;
     }
     var boundingRect = ShapesController.getProperty(i, 'boundingRect');

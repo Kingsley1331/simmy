@@ -28,5 +28,5 @@ export default function createWalls(){
   //const box = createShape({x: 350, y: 300}, shapeSelection.box);
   const box = createShape({x: 420, y: 300}, shapeSelection.bar);
   const hexagon = createShape({x: 470, y: 300}, shapeSelection.hexagon);
-  hexagon.physics.velocity.x = -0.01;
+  hexagon.physics.velocity.x = -0.005;
 }

@@ -15,25 +15,31 @@ export default function collisionDetector() {
       var verticesA = ShapesController.getVertices(i); //ShapeA
       var centreOfMassA = ShapesController.getCentreOfMass(i);
       var length = verticesA.length;
-      for(var vertIndexA = 0; vertIndexA < length; vertIndexA++){
-          var checkPoint = {};
+      for(let vertIndexA = 0; vertIndexA < length; vertIndexA++){
+          verticesA[vertIndexA].isColliding = false;
+          let checkPoint = {};
+
           checkPoint.x = verticesA[vertIndexA].x + centreOfMassA.x;
           checkPoint.y = verticesA[vertIndexA].y + centreOfMassA.y;
           var collidingShape;
           for(let k = 0; k < numShapes; k++){
             if(i!== k){
+            var collidingVertexCoord = {};
             //var shape = shapes[k].vertices; //shapeB
+
+
+
             var verticesB = ShapesController.getVertices(k); //shapeB
             var centreOfMassB = ShapesController.getProperty(k, 'centreOfMass');
             if(isPointInShape(centreOfMassB, verticesB, checkPoint)){
               ShapesController.setProperty(i, 'colliding', true);
               ShapesController.setProperty(k, 'colliding', true);
               collidingShape = k;
-              verticesA[vertIndexA].collidingShape = collidingShape;
-              break;
+              verticesA[vertIndexA].isColliding = true;
+              //break;
             }
           }
-        }
+        //}
 
         /*** After vertex checks all other shapes ***/
         if(collidingShape !== undefined && verticesA.length === 6 && vertIndexA === 4){
@@ -42,11 +48,16 @@ export default function collisionDetector() {
           }
           //console.log('collidingShape2', verticesA[i].collidingShape);
 
-        if(collidingShape !== undefined && collidingShape !== verticesA[vertIndexA].collidingShape){
-          verticesA[vertIndexA].collidingShapes = collidingShape;
-          // ShapesController.setProperty(i, 'vertices', verticesA);
-          console.log('collidingShape', collidingShape);
-          console.log('centreOfMass', ShapesController.getProperty(collidingShape, 'centreOfMass'));
+        console.log('isColliding', verticesA[vertIndexA].isColliding);
+        console.log('collidingShape', collidingShape);
+        console.log('verticesA[vertIndexA].collidingShape', verticesA[vertIndexA].collidingShape);
+
+        if(collidingShape !== undefined && collidingShape !== verticesA[vertIndexA].collidingShape && verticesA[vertIndexA].isColliding){
+          verticesA[vertIndexA].collidingShape = collidingShape;
+
+          // console.log('collidingShape', collidingShape);
+          // console.log('centreOfMass', ShapesController.getProperty(collidingShape, 'centreOfMass'));
+          // console.count('collisions');
 
 
                   /*************************************************************************************************START PHYSICS ********************************************************************************/
@@ -63,8 +74,19 @@ export default function collisionDetector() {
                   var centreOfRotationB = ShapesController.getProperty(collidingShape, 'centreOfRotation');
 
                   //var data = collisionData(i, k, checkPoint, shape);
+                  // // let collidingVertexCoord = {};
+                  //
+                  // collidingVertexCoord.x = verticesA[vertIndexA].x + centreOfMassA.x;
+                  // collidingVertexCoord.y = verticesA[vertIndexA].y + centreOfMassA.y;
+
+
                   var data = collisionData(i, collidingShape, checkPoint, verticesB);
-                  //console.log('collisionData', data);
+                  console.log('checkPoint', checkPoint);
+                  //console.log('collidingVertexCoord', collidingVertexCoord);
+                  console.log('vertIndexA', vertIndexA);
+                  console.log('verticesA', verticesA);
+
+
                   //drawDot(10, {x: checkPoint.x, y:checkPoint.y}, 'blue');
                   ShapesController.setProperty(collidingShape,'collisionData', data);
                   //shape = Scene.shapes[k];
@@ -106,8 +128,8 @@ export default function collisionDetector() {
 
                     //if(verticesA.length === 6 && vertIndexA === 4){console.log('colliding!');}
                     verticesA[vertIndexA].isOverlapping = true;
-                    verticesA[vertIndexA].isColliding = true;
-                    //if(verticesA.length === 6 && vertIndexA === 4){console.log('isVertexColliding2', verticesA[4].isColliding)};
+                    //verticesA[vertIndexA].isColliding = true;
+
                     ShapesController.setProperty(i, 'velocity', newVelocityA, true);
                     ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
                     //if(verticesA.length === 6 && vertIndexA === 4){console.log('verticesA', verticesA)};
@@ -131,7 +153,7 @@ export default function collisionDetector() {
                   verticesA[vertIndexA].collidingShape = undefined;
                   ShapesController.setProperty(i, 'vertices', verticesA)
                 }*/
-              //}
+              }
 
     }
   }
