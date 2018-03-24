@@ -17,7 +17,7 @@ var ShapesController = (function(){
         y: touchPoint.y
      };
   }
-
+/** TODO: remove this function, getProperty does the same thing **/
   function getVertices(shapeIndex){
     var vertices = [];
     var point = {};
@@ -36,12 +36,15 @@ var ShapesController = (function(){
     return vertices;
   }
 
-  function getProperty(shapeIndex, property, bool){
+  function getProperty(shapeIndex, propertyName, bool){
     var shape = shapes[shapeIndex];
+    // if(propertyName === 'vertices') {
+    //   console.log('============>getProperty shape', shapes[shapeIndex]);
+    // }
     if (!bool) {
-      var property = shape[property];
+      var property = shape[propertyName];
     } else {
-      var property = shape['physics'][property];
+      var property = shape['physics'][propertyName];
     }
     return property;
   }
@@ -49,11 +52,12 @@ var ShapesController = (function(){
   function setProperty(shapeIndex, property, value, bool){
     if (!bool) {
 
-      // if(selectedShape === 'play' && property === 'vertices' && value.length === 6){
-      //   //console.log('vertices', JSON.parse(JSON.stringify(vertices[4])));
-      //   //console.log('vertices', JSON.parse(JSON.stringify(value[4])));
-      //   console.log('vertices collidingShape', value[4].collidingShape);
-      // }
+      if(Scene.selected === 'play' && property === 'vertices' && value.length === 6){
+        // console.log('vertices', JSON.parse(JSON.stringify(vertices[4])));
+        // console.log('vertices', JSON.parse(JSON.stringify(value[4])));
+        // console.log('vertices collidingShape', value[4].collidingShape);
+        // console.log('vertices collidingShape', value);
+      }
 
       Scene.shapes[shapeIndex][property] = value;
     } else if(bool === true) { //physics property

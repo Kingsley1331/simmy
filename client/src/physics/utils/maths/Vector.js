@@ -64,7 +64,12 @@ export function rotateShape(centre, theta, index){
 			//if(vertices.length === 6 && i === 4){console.log('collidingShape', vertices[4].collidingShape)};
 
 			var rotatedVertex = rotateVector(theta, {x: vertices[i].x, y: vertices[i].y});
-			rotatedVertex.collidingShape = vertices[i].collidingShape;
+
+			for(let prop in vertices[i]) {
+				if(prop !== 'x' && prop !== 'y'){
+					rotatedVertex[prop] = vertices[i][prop];
+				}
+			}
 			rotatedVertices.push(rotatedVertex);
 
 			//if(vertices.length === 6 && i === 4){console.log('collidingShape', rotatedVertex.collidingShape)}
