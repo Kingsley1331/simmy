@@ -12,20 +12,22 @@ export default function collisionDetector() {
   });
   forEachShape(function(i){
     if(Scene.selected === 'play'){
-      var verticesA = ShapesController.getVertices(i); //ShapeA
+      var verticesA = ShapesController.getProperty(i, 'vertices'); //ShapeA
       var centreOfMassA = ShapesController.getCentreOfMass(i);
       var length = verticesA.length;
+
       vertices:
       for(var vertIndexA = 0; vertIndexA < length; vertIndexA++){ // loop through all the vertices of shapeA
           let checkPoint = {};
-
           checkPoint.x = verticesA[vertIndexA].x + centreOfMassA.x;
           checkPoint.y = verticesA[vertIndexA].y + centreOfMassA.y;
           var collidingShape;
+
           innerShapes:
           for(var k = 0; k < numShapes; k++){ // check all other shapes against the vertex
-            if(i!== k){
-            var verticesB = ShapesController.getVertices(k); //shapeB
+            const lastShapeIndex = numShapes - 1 === i ? numShapes - 2 : numShapes - 1; // find index of the last shape to be checked
+            if(i !== k){
+            var verticesB = ShapesController.getProperty(k, 'vertices'); //shapeB
             var centreOfMassB = ShapesController.getProperty(k, 'centreOfMass');
 
             if(isPointInShape(centreOfMassB, verticesB, checkPoint)){
@@ -33,11 +35,11 @@ export default function collisionDetector() {
               ShapesController.setProperty(k, 'colliding', true);
               collidingShape = k;
 
-                  /*** After vertex checks all other shapes ***/
-
+              /*** After vertex checks all other shapes ***/
               if(typeof collidingShape === 'number' && collidingShape !== verticesA[vertIndexA].collidingShape){
                 verticesA[vertIndexA].collidingShape = collidingShape;
-                console.count('COLLISION COUNT');
+                console.log('verticesA[vertIndexA].collidingShape2', verticesA[vertIndexA].collidingShape);
+                console.count('****************************************************************COLLISION COUNT');
 
                 /*************************************************************************************************START PHYSICS ********************************************************************************/
 
@@ -91,7 +93,7 @@ export default function collisionDetector() {
                   /****************************************************************************************END PHYSICS ***********************************************************************************/
                 }
                 break innerShapes;
-              } else if (k + 1 === numShapes) { // check if current shape is the last shape
+              } else if (k === lastShapeIndex) { // check if current shape is the last shape tob checked
                 verticesA[vertIndexA].collidingShape = null;
                 ShapesController.setProperty(i, 'vertices', verticesA);
               }

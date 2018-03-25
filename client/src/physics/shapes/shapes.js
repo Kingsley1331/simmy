@@ -225,28 +225,19 @@ export function forEachShape(callback, order){
 
 export function detectShape(i){
   var centreOfMass = ShapesController.getCentreOfMass(i);
-  var vertices = ShapesController.getVertices(i);
-
+  var vertices = ShapesController.getProperty(i, 'vertices');
   var pointInShape = isPointInShape(centreOfMass, vertices, Scene.mousePos);
   if(pointInShape){
-    // hoveringOnShape++;s
     if(!Scene.cursorOnshape){
         ShapesController.setProperty(i, 'onShape', true);
         Scene.cursorOnshape = true;
     }
-      // if(ShapesController.getProperty(i, 'onShape')){
-      //   ShapesController.setProperty(i, 'onShape', true);
-      // } else {
-      //   ShapesController.setProperty(i, 'onShape', false);
-      // }
-
       if(!ShapesController.getProperty(i, 'onShape')){
         Scene.shapes.forEach((shape, index) => {
           ShapesController.setProperty(index, 'onShape', false);
         });
         ShapesController.setProperty(i, 'onShape', true);
       }
-
     } else {
       ShapesController.setProperty(i, 'onShape', false);
     }
@@ -263,17 +254,14 @@ function dragShape(i){
     y: mousePos.y - touchPoint.y
   };
   ShapesController.setProperty(i, 'centreOfMass', centre);
-  // ShapesController.setProperty(i, 'centreOfRotation', centre);
 }
 
 export function releaseShape(i){
     var velocity = throwVelocity();
-    // console.log('velocity', velocity);
     if(Scene.throwArray.length > 0 && ShapesController.getProperty(i, 'dragging')){
       ShapesController.setProperty(i, 'velocity', {x: velocity.x, y: velocity.y}, true);
     }
     ShapesController.setProperty(i, 'dragging', false);
-    // ShapesController.setProperty(i, 'selected', false);
 }
 
 export function isPointInShape(centreOfMass, vertices, point){
@@ -297,7 +285,6 @@ export function isPointInShape(centreOfMass, vertices, point){
 export function prepareToMoveShape(i){
   if(ShapesController.getProperty(i, 'onShape')){
     let mousePos = Scene.mousePos;
-    // if(selectedShape === 'play'){
     if(Scene.selected === 'play'){
       ShapesController.setProperty(i, 'velocity', {x: 0, y: 0}, true);
     }

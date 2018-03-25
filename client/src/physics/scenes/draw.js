@@ -29,8 +29,7 @@ export const draw = (canvas) => {
     var fillColour = ShapesController.getProperty(i, 'fillColour');
     var lineWidth = ShapesController.getProperty(i, 'linewidth');
     var centreOfMass = ShapesController.getCentreOfMass(i);
-
-    var vertices = ShapesController.getVertices(i);
+    var vertices = ShapesController.getProperty(i, 'vertices');
     /** TODO: store config globally in Scene**/
     var config = {
       shadowColor: shadowColor,
@@ -41,7 +40,7 @@ export const draw = (canvas) => {
       lineWidth: lineWidth
     };
     if(ShapesController.getProperty(i, 'colliding') && Scene.selected === 'play'){
-      config.lineWidth = 10;
+      // config.lineWidth = 10;
     }
     var boundingRect = ShapesController.getProperty(i, 'boundingRect');
     var boundingRectCentre = {x: boundingRect.centre.x + centreOfMass.x, y: boundingRect.centre.y + centreOfMass.y};
@@ -74,7 +73,7 @@ export const draw = (canvas) => {
         }
       }
       screenWriter(bufferCtx, ShapesController.getProperty(i, 'id'), idPos);
-      drawShape(bufferCtx, rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
+      // drawShape(bufferCtx, rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
       drawDot(bufferCtx, 3, centreOfMass, 'black');
       drawDot(bufferCtx, 3, boundingRectCentre, 'red');
       drawDot(bufferCtx,3, centreOfRotation, 'green');
@@ -93,11 +92,11 @@ export const draw = (canvas) => {
         drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
         // drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
       }
-      bufferCtx.save();
-      bufferCtx.beginPath();
-      bufferCtx.arc(boundingRectCentre.x, boundingRectCentre.y, radius, 0, 2*Math.PI);
-      bufferCtx.stroke();
-      bufferCtx.restore();
+      // bufferCtx.save();
+      // bufferCtx.beginPath();
+      // bufferCtx.arc(boundingRectCentre.x, boundingRectCentre.y, radius, 0, 2*Math.PI);
+      // bufferCtx.stroke();
+      // bufferCtx.restore();
     }
   });
   if(shapeSelection[Scene.selected] && !Scene.cursorOnshape){ // (hoveringOnShape <= 0) means not hovering on shape

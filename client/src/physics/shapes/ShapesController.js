@@ -17,24 +17,6 @@ var ShapesController = (function(){
         y: touchPoint.y
      };
   }
-/** TODO: remove this function, getProperty does the same thing **/
-  function getVertices(shapeIndex){
-    var vertices = [];
-    var point = {};
-    var shape = shapes[shapeIndex];
-    var size = shape.vertices.length;
-    const selectedShape = 'player'
-    if(shape.vertices.length === 6 && selectedShape === 'play'){
-      //console.log('vertices', JSON.parse(JSON.stringify(vertices[4])));
-      //console.log('vertices', JSON.parse(JSON.stringify(shape.vertices[4])));
-      //console.log('getVertices vertices', shape.vertices[4].collidingShape);
-    }
-    for(var i = 0; i < size; i++){
-      point = {x: shape.vertices[i].x, y: shape.vertices[i].y, collidingShape: shape.vertices[i].collidingShape};
-      vertices.push(point);
-    }
-    return vertices;
-  }
 
   function getProperty(shapeIndex, propertyName, bool){
     var shape = shapes[shapeIndex];
@@ -73,7 +55,6 @@ var ShapesController = (function(){
   return {
     getCentreOfMass: getCentreOfMass,
     getTouchPoint: getTouchPoint,
-    getVertices: getVertices,
     getProperty: getProperty,
     setProperty: setProperty,
     deleteShape: deleteShape

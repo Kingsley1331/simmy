@@ -26,7 +26,16 @@ export default function createWalls(){
   topWall.physics.momentOfInertiaCOM = Infinity;
 
   // const box = createShape({x: 350, y: 300}, shapeSelection.box);
-  const hexagon = createShape({x: 470, y: 250}, shapeSelection.hexagon);
+
+  // const hexagon = createShape({x: 465, y: 250}, shapeSelection.hexagon);
+  // const bar = createShape({x: 420, y: 300}, shapeSelection.bar);
+  // const hexagon = createShape({x: 465, y: 250}, shapeSelection.hexagon);
+  // hexagon.physics.velocity.x = -0.005;
+
   const bar = createShape({x: 420, y: 300}, shapeSelection.bar);
-  hexagon.physics.velocity.x = -0.005;
+  bar.physics.mass = Infinity;
+  bar.physics.momentOfInertia = Infinity;
+  bar.physics.momentOfInertiaCOM = Infinity;
+  const triangle2 = createShape({x: 480, y: 300}, shapeSelection.triangle);
+  triangle2.physics.velocity.x = -0.01;
 }

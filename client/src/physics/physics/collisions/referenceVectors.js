@@ -10,9 +10,7 @@ export default function referenceVectors(centre, vertices){
   var angle = Math.PI / 2;
   var normalVector = rotateVector(angle, firstSideVector);
   var unitNormal = {x: normalVector.x / sideLength, y: normalVector.y / sideLength};
-  //var location = {x: centre.x + firstPoint.x + firstSideVector.x/2, y: centre.y + firstPoint.y + firstSideVector.y/2};
   var location = {x: firstPoint.x + firstSideVector.x/2, y: firstPoint.y + firstSideVector.y/2};
-  //var point = {x: location.x + unitNormal.x, y: location.y + unitNormal.y};
   var point = {x:centre.x + location.x + unitNormal.x, y: centre.y + location.y + unitNormal.y}
   var pointInShape = isPointInShape(centre, vertices, point);
   if(pointInShape){

@@ -11,7 +11,6 @@ export default function applyForces(i){
   acceleration.x = forcesCOM[0].x / mass;
   acceleration.y = forcesCOM[0].y / mass;
   angularAcceleration = torque / momentOfInertiaCOM;
-  //console.log('angularAcceleration', angularAcceleration);
   ShapesController.setProperty(i, 'acceleration', acceleration, true);
   ShapesController.setProperty(i, 'angularAcceleration', angularAcceleration, true);
 }
