@@ -50,7 +50,6 @@ export function rotateVector(theta, vector){
 
 export function rotateShape(centre, theta, index){
 	if(Scene.shapes[0]){
-
 		//var centreOfMass = ShapesController.getProperty(index, 'centreOfMass');
 		//var vertices = ShapesController.getProperty(index, 'vertices');
 		var centreOfMass = typeof index === 'number' ? ShapesController.getProperty(index, 'centreOfMass') : centre;

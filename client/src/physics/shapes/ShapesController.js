@@ -38,9 +38,6 @@ var ShapesController = (function(){
 
   function getProperty(shapeIndex, propertyName, bool){
     var shape = shapes[shapeIndex];
-    // if(propertyName === 'vertices') {
-    //   console.log('============>getProperty shape', shapes[shapeIndex]);
-    // }
     if (!bool) {
       var property = shape[propertyName];
     } else {
