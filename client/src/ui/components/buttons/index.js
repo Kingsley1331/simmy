@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import selectShape from '../../actions/buttons';
-import Scene, { updateSelected } from '../../../physics/scenes/scene';
+import Scene, { updateSelected } from '../../../engine/scenes/scene';
 
 import {PlayButton, NoneButton, SquareButton, TriangleButton, PentagonButton, HexagonButton, CircleButton, PlusButton, ArrowButton, StarButton, TshapeButton, BarButton, ConcaveButton, BoxButton, DeleteButton} from './buttons';
 

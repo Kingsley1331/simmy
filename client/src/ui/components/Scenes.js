@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Buttons from './buttons/';
-import { draw } from '../../physics/scenes/draw';
-import Scene from '../../physics/scenes/scene';
-import { createShape, shapeSelection, forEachShape } from '../../physics/shapes/shapes';
-import createWalls from '../../physics/shapes/walls';
-import reCentre from '../../physics/shapes/reCentre';
-import getMousePos from '../../physics/utils/position';
-import { mouseDown, mouseMove, mouseUp } from '../../physics/utils/listeners';
-import { applyMotion } from '../../physics/physics/motion';
-import animate from '../../physics/utils/animation';
+import { draw } from '../../engine/scenes/draw';
+import Scene from '../../engine/scenes/scene';
+import { createShape, shapeSelection, forEachShape } from '../../engine/shapes/shapes';
+import createWalls from '../../engine/shapes/walls';
+import reCentre from '../../engine/shapes/reCentre';
+import getMousePos from '../../engine/utils/position';
+import { mouseDown, mouseMove, mouseUp } from '../../engine/utils/listeners';
+import { applyMotion } from '../../engine/physics/motion';
+import animate from '../../engine/utils/animation';
 
 let canvas;
 class Scenes extends Component {
