@@ -3,16 +3,16 @@ import Vector, { magnitude, rotateVector } from '../../utils/maths/Vector';
 import findCollidingSide from './findCollidingSide';
 import findSideUnitNormal from './findSideUnitNormal';
 
-export default function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices){
+export default function collisionData(shapeAIndex, shapeBIndex, collisionPoint, shapeBVertices, velocities){
 
   var referenceVectors = ShapesController.getProperty(shapeBIndex, 'referenceVectors');
   var referenceSideVector = referenceVectors.sideVector;
 
-  var velocityA = ShapesController.getProperty(shapeAIndex, 'velocity', true);
-  var velocityB = ShapesController.getProperty(shapeBIndex, 'velocity', true);
+  var velocityA = velocities.velocityA;
+  var velocityB = velocities.velocityB;
 
-  var angularVelocityA = ShapesController.getProperty(shapeAIndex, 'angularVelocity', true);
-  var angularVelocityB = ShapesController.getProperty(shapeBIndex, 'angularVelocity', true);
+  var angularVelocityA = velocities.angularVelocityA
+  var angularVelocityB = velocities.angularVelocityB
 
   var massA = ShapesController.getProperty(shapeAIndex, 'mass', true);
   var massB = ShapesController.getProperty(shapeBIndex, 'mass', true);

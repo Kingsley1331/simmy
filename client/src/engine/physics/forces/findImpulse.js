@@ -24,7 +24,7 @@ export default function findImpulse(data, masses, centres){
   var momentOfInertiaB = masses.momentOfInertiaB;
   var unitNormal = data.unitNormal;
   var collisionVelocity = data.collisionVelocity;
-
+  
   var collisionVelocityNormalDotProduct = collisionVelocity.dotProd(unitNormal);
   var collisionDistanceNormalCrossProductA = collisionDistanceA.crossProd(unitNormal);
   var collisionDistanceNormalCrossProductB = collisionDistanceB.crossProd(unitNormal);

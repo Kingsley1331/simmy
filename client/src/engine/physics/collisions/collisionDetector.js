@@ -3,6 +3,7 @@ import { forEachShape, isPointInShape } from '../../shapes/shapes';
 import ShapesController from '../../shapes/ShapesController';
 import collisionData from './collisionData';
 import findImpulse from '../forces/findImpulse';
+import findVelocities from '../motion/findVelocities';
 
 export default function collisionDetector() {
   var shapes = Scene.shapes;
@@ -49,10 +50,17 @@ export default function collisionDetector() {
                 var angularVelocityA = ShapesController.getProperty(i, 'angularVelocity', true);
                 var angularVelocityB = ShapesController.getProperty(collidingShape, 'angularVelocity', true);
 
+                const velocities = {
+                  velocityA,
+                  velocityB,
+                  angularVelocityA,
+                  angularVelocityB
+                }
+
                 var centreOfRotationA = ShapesController.getProperty(i, 'centreOfRotation');
                 var centreOfRotationB = ShapesController.getProperty(collidingShape, 'centreOfRotation');
 
-                var data = collisionData(i, collidingShape, checkPoint, verticesB);
+                var data = collisionData(i, collidingShape, checkPoint, verticesB, velocities);
 
                 ShapesController.setProperty(collidingShape,'collisionData', data);
 
@@ -65,19 +73,11 @@ export default function collisionDetector() {
                 var masses = {massA: massA, massB: massB, momentOfInertiaA: momentOfInertiaA, momentOfInertiaB: momentOfInertiaB};
                 var centres = {centreA: centreOfMassA, centreB: centreOfMassB};
 
-                var impulse = findImpulse(data, masses, centres);
-
-                var normalImpulse = unitNormal.scalProd(impulse);
-                var collisionDistanceA = data.collisionDistanceA;
-                var collisionDistanceB = data.collisionDistanceB;
-                var colDistCrossNormalA = collisionDistanceA.crossProd(normalImpulse);
-                var colDistCrossNormalB = collisionDistanceB.crossProd(normalImpulse);
-
-                var newVelocityA = {x: velocityA.x + normalImpulse.x / massA, y: velocityA.y + normalImpulse.y / massA};
-                var newVelocityB = {x: velocityB.x - normalImpulse.x / massB, y: velocityB.y - normalImpulse.y / massB};
-
-                var newAngularVelocityA = angularVelocityA + colDistCrossNormalA.magnitude / momentOfInertiaA;
-                var newAngularVelocityB = angularVelocityB - colDistCrossNormalB.magnitude / momentOfInertiaB;
+                const newVelocity = findVelocities(data, masses, centres, velocities, findImpulse);
+                const newVelocityA = newVelocity.linearA;
+                const newVelocityB = newVelocity.linearB;
+                const newAngularVelocityA = newVelocity.angularA;
+                const newAngularVelocityB = newVelocity.angularB;
 
                 verticesA[vertIndexA].isOverlapping = true;
 
@@ -86,9 +86,6 @@ export default function collisionDetector() {
 
                 ShapesController.setProperty(collidingShape, 'velocity', newVelocityB, true);
                 ShapesController.setProperty(collidingShape, 'angularVelocity', newAngularVelocityB, true);
-
-                velocityA = ShapesController.getProperty(i, 'velocity', true);
-                velocityB = ShapesController.getProperty(collidingShape, 'velocity', true);
 
                   /****************************************************************************************END PHYSICS ***********************************************************************************/
                 }
