@@ -22,9 +22,12 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
+    "chai": "^4.1.2",
     "css-loader": "^0.28.7",
     "html-webpack-plugin": "^2.30.1",
+    "mocha": "^5.0.5",
     "rimraf": "^2.6.2",
+    "sinon": "^4.5.0",
     "style-loader": "^0.18.2",
     "webpack": "^2.2.0-rc.0",
     "webpack-dev-server": "^2.2.0-rc.0"
@@ -34,7 +37,8 @@
     "build": "webpack",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "mocha --compilers js:babel-core/register ./test/**/*.js"
   },
   "repository": {
     "type": "git",
