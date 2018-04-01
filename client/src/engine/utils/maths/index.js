@@ -1,100 +1,5 @@
 import Vector from './Vector';
 
-// export function checkDirection(vector1, vector2, angle){
-// 	var rotatedVector = rotateVector(angle, vector1);
-// 	var direction = 'anti-clockwise';
-// 	// console.log('rotatedVector', rotatedVector);
-// 	// console.log('vector2', vector2);
-// 	var dotProd = vector2.dotProd(rotatedVector);
-// 	var isParallel = rotatedVector.isParallel(vector2);
-//
-//
-// 	var rotatedVector2 = rotateVector(angle * -1, vector1)
-// 	var dotProd2 = vector2.dotProd(rotatedVector2);
-// 	var isParallel2 = rotatedVector2.isParallel(vector2);
-// 	// dotProd > 0 means that the vectors are facing the same direction
-// 	if(isParallel === true && dotProd >= 0){ //console.log('parallel');
-// 		//return 'anti-clockwise';
-// 		direction = 'anti-clockwise';
-// 		// if the vectors are not parallel or they are parallel but pointing in opposite directions
-// 	} else if(isParallel === false || isParallel === true && dotProd <= 0){
-// 		//temporary condition just for testing
-// 			if(isParallel2 === true && dotProd2 >= 0){
-// 				//return 'clockwise';
-// 				direction = 'clockwise';
-// 			}
-// 		} else {
-// 			direction = 'anti-clockwise';
-// 			//return 'anti-clockwise';
-// 		}
-// 		return direction;
-// }
-//
-// function rotateVector(theta, vector){
-// 	var vector = new Vector(vector);
-// 	var rotationMatrix = new Matrix({
-// 		r1: [Math.cos(theta), -Math.sin(theta), 0],
-// 		r2: [Math.sin(theta), Math.cos(theta), 0],
-// 		r3: [0, 0, 1]
-// 	});
-// 	// console.log('vector', vector);
-// 	// console.log('rotationMatrix', rotationMatrix);
-// 	var rotatedVector = rotationMatrix.vMult(vector);
-// 	//console.log('rotatedVector', rotatedVector);
-// 	return rotatedVector;
-// }
-//
-//
-// function rotateShape(centre, theta, index){
-// 	if(Scene.shapes[0]){
-//
-// 		//var centreOfMass = ShapesController.getProperty(index, 'centreOfMass');
-// 		//var vertices = ShapesController.getProperty(index, 'vertices');
-// 		var centreOfMass = typeof index === 'number' ? ShapesController.getProperty(index, 'centreOfMass') : centre;
-// 		var vertices = typeof index === 'number' ? ShapesController.getProperty(index, 'vertices') : index;
-//
-// 		var rotatedVertices = [];
-// 		var length = vertices.length;
-// 		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
-// 		for(var i = 0; i < length; i++){
-//
-// 			//if(vertices.length === 6 && i === 4){console.log('collidingShape', vertices[4].collidingShape)};
-//
-// 			var rotatedVertex = rotateVector(theta, {x: vertices[i].x, y: vertices[i].y});
-// 			rotatedVertex.collidingShape = vertices[i].collidingShape;
-// 			rotatedVertices.push(rotatedVertex);
-//
-// 			//if(vertices.length === 6 && i === 4){console.log('collidingShape', rotatedVertex.collidingShape)}
-// 		}
-//
-// 		if(typeof index === 'number'){
-// 			var referenceVectors = ShapesController.getProperty(index, 'referenceVectors');
-// 			var location = referenceVectors.location; // need to find way of updating "sub-objects" individually
-// 			var sideVector = referenceVectors.sideVector;
-// 			var unitNormal = referenceVectors.unitNormal;
-// 			if(location){
-// 				var rotatedLocation = rotateVector(theta, {x: location.x, y: location.y});
-// 			}
-// 			if(sideVector){
-// 				var rotatedSideVector = rotateVector(theta, {x: sideVector.x, y: sideVector.y});
-// 			}
-// 			if(unitNormal){
-// 				var rotatedUnitNormal = rotateVector(theta, {x: unitNormal.x, y: unitNormal.y});
-// 			}
-// 			referenceVectors = {location: rotatedLocation, sideVector: rotatedSideVector, unitNormal: rotatedUnitNormal};
-// 		}
-// 		var centreOR = {x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y};
-// 		var rotateCOM = rotateVector(theta, {x: centreOR.x, y: centreOR.y});
-// 		var newCentreOfMass = {x: centre.x + rotateCOM.x, y: centre.y + rotateCOM.y};
-// 		if(typeof index === 'number'){
-// 			ShapesController.setProperty(index, 'centreOfMass', newCentreOfMass);
-// 			ShapesController.setProperty(index, 'vertices', rotatedVertices);
-// 			ShapesController.setProperty(index, 'referenceVectors', referenceVectors);
-// 		}
-// 		return rotatedVertices;
-// 	}
-// }
-
 console.log('Vector', Vector);
 var v1 = new Vector({x:5, y:-4, z:-15});
 var v2 = new Vector({x:4, y:6, z:-8});
@@ -115,7 +20,6 @@ var v7 = m1.vMult(v1);
 // console.log('m3', m3);
 // console.log('v7', v7);
 
-
 // console.log('v1', v1);
 // console.log('v2', v2);
 // console.log('v3', v3);
@@ -125,8 +29,6 @@ var v7 = m1.vMult(v1);
 //
 // var v10 = new Vector({x:3, y:4, z:8});
 // console.log('v10.magnitude', v10.magnitude);
-
-
 
 var vector1 = new Vector({x:0, y:1});
 var vector1a = new Vector({x:0, y:2})

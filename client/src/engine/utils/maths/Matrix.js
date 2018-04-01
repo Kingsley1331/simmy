@@ -1,5 +1,4 @@
 import Vector from './Vector';
-
 // 3 x 3 Matrix
 const Matrix = function(matrix){
 	this.r1 = matrix.r1;

@@ -2,7 +2,6 @@ import Scene from '../../scenes/scene';
 import Matrix from './Matrix';
 import ShapesController from '../../shapes/ShapesController';
 
-
 export function checkDirection(vector1, vector2, angle){
 	var rotatedVector = rotateVector(angle, vector1);
 	var direction = 'anti-clockwise';
@@ -10,7 +9,6 @@ export function checkDirection(vector1, vector2, angle){
 	// console.log('vector2', vector2);
 	var dotProd = vector2.dotProd(rotatedVector);
 	var isParallel = rotatedVector.isParallel(vector2);
-
 
 	var rotatedVector2 = rotateVector(angle * -1, vector1)
 	var dotProd2 = vector2.dotProd(rotatedVector2);
@@ -150,6 +148,7 @@ Vector.prototype.crossProd = function(vector2){
 
 Vector.prototype.findAngle = function(vector2){
  var vector1 = {x: this.x, y: this.y};
+ var vector2 = new Vector(vector2);
  var dotProd = this.dotProd(vector2);
  var mag = this.magnitude;
  var mag2 = vector2.magnitude;
@@ -160,14 +159,12 @@ Vector.prototype.findAngle = function(vector2){
  var angle = Math.acos(ratio);
  var direction = checkDirection(vector1, vector2, angle);
  angle = direction === 'clockwise' ? angle * -1 : angle;
-
  // console.log('vector1', vector1);
  // console.log('dotProd', dotProd);
  // console.log('mag', mag);
  // console.log('mag2', mag2);
  // console.log('calculated angle', angle);
  // console.log('direction', direction);
-
  return angle;
 }
 
