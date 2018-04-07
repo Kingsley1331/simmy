@@ -11,10 +11,10 @@ export const mouseDown = (element) => {
   element.addEventListener('mousedown', (evt) => {
 
 
-    var vector1 = new Vector({x:0, y:1});
-    var vector2 = new Vector({x:1, y:1});
-    var angle = vector1.findAngle(vector2);
-    console.log(angle);
+    // var vector1 = new Vector({x:0, y:1});
+    // var vector2 = new Vector({x:1, y:1});
+    // var angle = vector1.findAngle(vector2);
+    // console.log(angle);
 
     if(Scene.shapes[0]){console.log('scene.shapes', Scene.shapes[0])}
 

@@ -2,33 +2,18 @@ import Scene from '../../scenes/scene';
 import Matrix from './Matrix';
 import ShapesController from '../../shapes/ShapesController';
 
+ /** check direction from vector1 to vector2 **/
 export function checkDirection(vector1, vector2, angle){
 	var rotatedVector = rotateVector(angle, vector1);
 	var direction = 'anti-clockwise';
-	// console.log('rotatedVector', rotatedVector);
-	// console.log('vector2', vector2);
 	var dotProd = vector2.dotProd(rotatedVector);
 	var isParallel = rotatedVector.isParallel(vector2);
-
-	var rotatedVector2 = rotateVector(angle * -1, vector1)
-	var dotProd2 = vector2.dotProd(rotatedVector2);
-	var isParallel2 = rotatedVector2.isParallel(vector2);
 	// dotProd > 0 means that the vectors are facing the same direction
-	if(isParallel === true && dotProd >= 0){ //console.log('parallel');
-		//return 'anti-clockwise';
-		direction = 'anti-clockwise';
-		// if the vectors are not parallel or they are parallel but pointing in opposite directions
-	} else if(isParallel === false || isParallel === true && dotProd <= 0){
-		//temporary condition just for testing
-			if(isParallel2 === true && dotProd2 >= 0){
-				//return 'clockwise';
-				direction = 'clockwise';
-			}
-		} else {
-			direction = 'anti-clockwise';
-			//return 'anti-clockwise';
-		}
-		return direction;
+	if(isParallel === true && dotProd >= 0){
+		return 'anti-clockwise';
+	} else {
+		return 'clockwise';
+	}
 }
 
 export function rotateVector(theta, vector){
@@ -44,7 +29,6 @@ export function rotateVector(theta, vector){
 	//console.log('rotatedVector', rotatedVector);
 	return rotatedVector;
 }
-
 
 export function rotateShape(centre, theta, index){
 	if(Scene.shapes[0]){
@@ -105,6 +89,7 @@ export function magnitude(vector){
 	var y = vector.y;
 	var z = vector.z;
 	const result = vector.z ? Math.sqrt(x*x + y*y + z*z) : Math.sqrt(x*x + y*y);
+	// const result = vector.z ? Math.hypot(x, y, z) : Math.hypot(x, y);
 	return result;
 }
 
@@ -178,7 +163,7 @@ Vector.prototype.isParallel = function(vector2){
  product.y = Math.abs(product.y) <= 0.0000001 ? 0: product.y;
  product.z = Math.abs(product.z) <= 0.0000001 ? 0: product.z;
 
- //console.log('isParallel', product.x === 0 && product.y === 0 && product.z === 0);
+ // console.log('isParallel', product.x === 0 && product.y === 0 && product.z === 0);
 
  if(product.x === 0 && product.y === 0 && product.z === 0){
    return true;

@@ -1,6 +1,9 @@
 import Scene from '../../scenes/scene';
 
 export default function findImpulse(data, masses, centres){
+  console.log('data', data);
+  console.log('masses', masses);
+  console.log('centres', centres);
   // var data = {
   //   collisionPoint: {x:collidingSideData.x, y:collidingSideData.y},
   //   side: collidingSideData.side,
@@ -24,7 +27,7 @@ export default function findImpulse(data, masses, centres){
   var momentOfInertiaB = masses.momentOfInertiaB;
   var unitNormal = data.unitNormal;
   var collisionVelocity = data.collisionVelocity;
-  
+
   var collisionVelocityNormalDotProduct = collisionVelocity.dotProd(unitNormal);
   var collisionDistanceNormalCrossProductA = collisionDistanceA.crossProd(unitNormal);
   var collisionDistanceNormalCrossProductB = collisionDistanceB.crossProd(unitNormal);
@@ -49,6 +52,6 @@ export default function findImpulse(data, masses, centres){
   //  console.log('============================>momentOfInertiaB', momentOfInertiaB);
 
   var impulse = -(1 + e) * collisionVelocityNormalDotProduct / (1/massA + 1/massB + collisionDistSquareA/momentOfInertiaA + collisionDistSquareB/momentOfInertiaB);
-  //console.log('============================>impulse', impulse);
+  console.log('============================>impulse', impulse);
   return impulse;
 }

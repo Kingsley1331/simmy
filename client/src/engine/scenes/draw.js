@@ -89,7 +89,7 @@ export const draw = (canvas) => {
         // drawArrow(bufferCtx, arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
         // drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
         drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
-        drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
+      //**  drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
         // drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
       }
       // bufferCtx.save();
