@@ -12,7 +12,8 @@ export function applyMotion(i, tDelta){
     var velocity = ShapesController.getProperty(i, 'velocity', true);
     // console.log('velocity', velocity);
     var angularVelocity = ShapesController.getProperty(i, 'angularVelocity', true);
-
+    // console.log('============================>angularVelocity', angularVelocity);
+    // console.log('============================>tDelta', tDelta);
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     // var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
@@ -31,7 +32,7 @@ export function applyMotion(i, tDelta){
     ShapesController.setProperty(i, 'centreOfMass', centreOfMass);
     ShapesController.setProperty(i, 'centreOfRotation', centreOfMass);
     ShapesController.setProperty(i, 'velocity', velocity);
-
+    // console.log('============================>angularVelocity', angularVelocity);
     rotateShape(centreOfRotation, angularVelocity * tDelta, i);
   }
 }

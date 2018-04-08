@@ -9,7 +9,7 @@ let Scene = {
   time: 0,
   settings: {
     display: true,
-    restitution: 0
+    restitution: 1
   }
 };
 

@@ -40,6 +40,7 @@ export default function findImpulse(data, masses, centres){
   // console.log('============================>collisionDistanceNormalCrossProductB', collisionDistanceNormalCrossProductB);
   // console.log('============================>collisionDistSquareA', collisionDistSquareA);
   // console.log('============================>collisionDistSquareB', collisionDistSquareB);
+  // console.log('============================>e', e);
 
   //  console.log('============================>massA', massA);
   //  console.log('============================>massB', massB);
@@ -52,6 +53,7 @@ export default function findImpulse(data, masses, centres){
   //  console.log('============================>momentOfInertiaB', momentOfInertiaB);
 
   var impulse = -(1 + e) * collisionVelocityNormalDotProduct / (1/massA + 1/massB + collisionDistSquareA/momentOfInertiaA + collisionDistSquareB/momentOfInertiaB);
+  // console.log('============================>-(1 + e) * collisionVelocityNormalDotProduct', -(1 + e) * collisionVelocityNormalDotProduct);
   console.log('============================>impulse', impulse);
   return impulse;
 }

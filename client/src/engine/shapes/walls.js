@@ -41,9 +41,10 @@ export default function createWalls(){
   triangle2.physics.velocity.x = -0.01;*/
 
   const centreA = {x: 420, y: 300};
-  const centreB = {x: 480, y: 300};
+  const centreB = {x: 480, y: 312};
   const squareA = createShape(centreA, shapeSelection.square)
   const squareB = createShape(centreB, shapeSelection.square)
   rotateShape(centreB, Math.PI / 4, 5);
   squareB.physics.velocity.x = -0.02;
+  // squareB.physics.angularVelocity = Math.PI/4;
 }
