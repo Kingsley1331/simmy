@@ -2,18 +2,6 @@ import Vector, { checkDirection, rotateVector } from '../../../../../../client/s
 import Matrix from '../../../../../../client/src/engine/utils/maths/Matrix';
 import assert from 'assert';
 
-// rotateVector
-// checkDirection ***
-// rotateShape
-// magnitude ***
-// Vector ***
-// Vector.add ***
-// Vector.scalProd ***
-// Vector.dotProd ***
-// Vector.crossProd ***
-// Vector.square ***
-// Vector.findAngle ***
-// Vector.isParallel ***
 const root2 = Math.sqrt(2);
 
 describe('Vector', function(){

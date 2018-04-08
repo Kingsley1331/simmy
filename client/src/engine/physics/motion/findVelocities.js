@@ -1,6 +1,5 @@
 export default function findVelocities(data, masses, centres, velocities, findImpulse) {
   const impulse = findImpulse(data, masses, centres);
-  // const impulse = 2*findImpulse(data, masses, centres);
 
   const unitNormal = data.unitNormal;
   const momentOfInertiaA = masses.momentOfInertiaA;
@@ -24,8 +23,6 @@ export default function findVelocities(data, masses, centres, velocities, findIm
 
   let newAngularVelocityA = angularVelocityA + colDistCrossNormalA.z / momentOfInertiaA;
   let newAngularVelocityB = angularVelocityB - colDistCrossNormalB.z / momentOfInertiaB;
-  // newAngularVelocityA /= 10;
-  // newAngularVelocityB /= 10;
 
   // console.log('============================>newVelocityA', newVelocityA);
   // console.log('============================>newVelocityB', newVelocityB);
