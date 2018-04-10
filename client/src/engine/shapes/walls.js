@@ -33,18 +33,27 @@ export default function createWalls(){
   // const hexagon = createShape({x: 465, y: 250}, shapeSelection.hexagon);
   // hexagon.physics.velocity.x = -0.005;
 
-  /*const bar = createShape({x: 420, y: 300}, shapeSelection.bar);
-  bar.physics.mass = Infinity;
-  bar.physics.momentOfInertia = Infinity;
-  bar.physics.momentOfInertiaCOM = Infinity;
-  const triangle2 = createShape({x: 480, y: 300}, shapeSelection.triangle);
-  triangle2.physics.velocity.x = -0.01;*/
+                    /** collision bugs**/
 
-  // const centreA = {x: 420, y: 300};
-  // const centreB = {x: 480, y: 312};
-  // const squareA = createShape(centreA, shapeSelection.square)
-  // const squareB = createShape(centreB, shapeSelection.square)
-  // rotateShape(centreB, Math.PI / 4, 5);
-  // squareB.physics.velocity.x = -0.02;
-  // squareB.physics.angularVelocity = Math.PI/4;
+  // const bar = createShape({ x: 430, y: 252 }, shapeSelection.bar);
+  // const bar1 = createShape({ x: 480, y: 262 }, shapeSelection.bar);
+  // bar1.physics.velocity.x = -0.005;
+
+  // const bar2 = createShape({ x: 430, y: 252 }, shapeSelection.bar);
+  // const bar3 = createShape({ x: 480, y: 252 }, shapeSelection.bar);
+  // bar3.physics.velocity.x = -0.005;
+
+  // const bar4 = createShape({ x: 430, y: 400 }, shapeSelection.bar);
+  // const bar5 = createShape({ x: 570, y: 252 }, shapeSelection.bar);
+  // bar5.physics.angularVelocity = -0.00025;
+
+  // const bar5 = createShape({ x: 430, y: 250 }, shapeSelection.bar);
+  // const bar6 = createShape({ x: 600, y: 230 }, shapeSelection.bar);
+  // rotateShape({ x: 570, y: 252 }, Math.PI / 2, 5);
+  // bar6.physics.velocity.x = -0.005;
+
+  const bar7 = createShape({ x: 430, y: 400 }, shapeSelection.bar);
+  const bar8 = createShape({ x: 570, y: 252 }, shapeSelection.bar);
+  // bar.physics.angularVelocity = -0.00025;
+
 }

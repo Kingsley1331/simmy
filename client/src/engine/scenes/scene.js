@@ -8,7 +8,7 @@ let Scene = {
   throwArray: [],
   time: 0,
   settings: {
-    display: false,
+    display: true,
     restitution: 1
   }
 };
