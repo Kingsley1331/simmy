@@ -52,8 +52,10 @@ export default function createWalls(){
   // rotateShape({ x: 570, y: 252 }, Math.PI / 2, 5);
   // bar6.physics.velocity.x = -0.005;
 
-  const bar7 = createShape({ x: 430, y: 400 }, shapeSelection.bar);
-  const bar8 = createShape({ x: 570, y: 252 }, shapeSelection.bar);
-  // bar.physics.angularVelocity = -0.00025;
+  const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
+  const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
+  const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
+  square.physics.velocity.x = -0.05;
+  square2.physics.velocity.x = -0.05;
 
 }
