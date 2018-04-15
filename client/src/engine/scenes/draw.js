@@ -48,8 +48,8 @@ export const draw = (canvas) => {
     var rectVertices = boundingRect.vertices;
     var centreOfRotation = ShapesController.getProperty(i, 'centreOfRotation');
     var collisionDataB = ShapesController.getProperty(i, 'collisionData');
-    var velocityA = collisionDataB.velocityA;
-    var velocityB = collisionDataB.velocityB;
+    var collisionPointVelocityA = collisionDataB.collisionPointVelocityA;
+    var collisionPointVelocityB = collisionDataB.collisionPointVelocityB;
     var referenceVectors = ShapesController.getProperty(i, 'referenceVectors');
     // Reference Vectors
     var referenceUnitNormal = referenceVectors.unitNormal;
@@ -93,8 +93,8 @@ export const draw = (canvas) => {
         // drawArrow(bufferCtx, arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
         // drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
         // drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
-        drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
-        drawArrow(bufferCtx, arrowHead, [collisionPoint, velocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
+        drawArrow(bufferCtx, arrowHead, [collisionPoint, collisionPointVelocityA], {fillStyle: 'blue', strokeStyle: 'blue'}, 30);
+        drawArrow(bufferCtx, arrowHead, [collisionPoint, collisionPointVelocityB], {fillStyle: 'green', strokeStyle: 'green'}, 60);
       }
       // bufferCtx.save();
       // bufferCtx.beginPath();

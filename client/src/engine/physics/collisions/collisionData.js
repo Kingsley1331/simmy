@@ -58,15 +58,16 @@ export default function collisionData(shapeAIndex, shapeBIndex, collisionPoint, 
   var collisionDistanceB = new Vector({x: collidingSideData.x - centreB.x, y: collidingSideData.y - centreB.y});
 
   var data = {
-    collisionPoint: collisionPoint,
+    shapeBIndex,
+    collisionPoint,
     side: collidingSideData.side,
     sideVector: collidingSideVector,
     unitNormal: unitNormalB,
-    velocityA: collisionPointVelocityA,
-    velocityB: collisionPointVelocityB,
-    collisionVelocity: collisionVelocity,
-    collisionDistanceA: collisionDistanceA,
-    collisionDistanceB: collisionDistanceB
+    collisionPointVelocityA,
+    collisionPointVelocityB,
+    collisionVelocity,
+    collisionDistanceA,
+    collisionDistanceB
   };
 
   console.log('================================>data', data);

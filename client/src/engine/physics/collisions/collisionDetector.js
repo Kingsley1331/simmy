@@ -4,6 +4,8 @@ import ShapesController from '../../shapes/ShapesController';
 import collisionData from './collisionData';
 import findImpulse from '../forces/findImpulse';
 import findVelocities from '../motion/findVelocities';
+import averageCollision from './averageCollision';
+const newCollision = true;
 
 export default function collisionDetector() {
   var shapes = Scene.shapes;
@@ -13,6 +15,8 @@ export default function collisionDetector() {
   });
   forEachShape(function(i){
     if (Scene.selected === 'play' || Scene.selected === 'step'){
+      // let collisionDataArray = [];
+      let collidingShapesData = {};
       var verticesA = ShapesController.getProperty(i, 'vertices'); //ShapeA
       var centreOfMassA = ShapesController.getCentreOfMass(i);
       var length = verticesA.length;
@@ -61,42 +65,61 @@ export default function collisionDetector() {
                 var centreOfRotationB = ShapesController.getProperty(collidingShape, 'centreOfRotation');
 
                 var data = collisionData(i, collidingShape, checkPoint, verticesB, velocities);
+                // collisionDataArray.push(data);
+
+                if (collidingShapesData[collidingShape]) {
+                  collidingShapesData[collidingShape].push(data);
+                } else {
+                  collidingShapesData[collidingShape] = [data];
+                }
 
                 ShapesController.setProperty(collidingShape,'collisionData', data);
 
-                var massA = ShapesController.getProperty(i, 'mass', true);
-                var massB = ShapesController.getProperty(collidingShape, 'mass', true);
+                  /** Collision handling start **/
+                if (!newCollision){
+                  console.log('%cstandard collision', 'color:red');
+                  var massA = ShapesController.getProperty(i, 'mass', true);
+                  var massB = ShapesController.getProperty(collidingShape, 'mass', true);
 
-                var momentOfInertiaA = ShapesController.getProperty(i, 'momentOfInertiaCOM', true);
-                var momentOfInertiaB = ShapesController.getProperty(collidingShape, 'momentOfInertiaCOM', true);
-                var unitNormal = data.unitNormal;
-                var masses = {massA: massA, massB: massB, momentOfInertiaA: momentOfInertiaA, momentOfInertiaB: momentOfInertiaB};
-                var centres = {centreA: centreOfMassA, centreB: centreOfMassB};
+                  var momentOfInertiaA = ShapesController.getProperty(i, 'momentOfInertiaCOM', true);
+                  var momentOfInertiaB = ShapesController.getProperty(collidingShape, 'momentOfInertiaCOM', true);
+                  var unitNormal = data.unitNormal;
+                  var masses = {massA: massA, massB: massB, momentOfInertiaA: momentOfInertiaA, momentOfInertiaB: momentOfInertiaB};
+                  var centres = {centreA: centreOfMassA, centreB: centreOfMassB};
 
-                const newVelocity = findVelocities(data, masses, centres, velocities, findImpulse);
-                const newVelocityA = newVelocity.linearA;
-                const newVelocityB = newVelocity.linearB;
-                const newAngularVelocityA = newVelocity.angularA;
-                const newAngularVelocityB = newVelocity.angularB;
+                  const newVelocity = findVelocities(data, masses, centres, velocities, findImpulse);
+                  const newVelocityA = newVelocity.linearA;
+                  const newVelocityB = newVelocity.linearB;
+                  const newAngularVelocityA = newVelocity.angularA;
+                  const newAngularVelocityB = newVelocity.angularB;
 
-                verticesA[vertIndexA].isOverlapping = true;
+                  //verticesA[vertIndexA].isOverlapping = true;
 
-                ShapesController.setProperty(i, 'velocity', newVelocityA, true);
-                ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
+                  ShapesController.setProperty(i, 'velocity', newVelocityA, true);
+                  ShapesController.setProperty(i, 'angularVelocity', newAngularVelocityA, true);
 
-                ShapesController.setProperty(collidingShape, 'velocity', newVelocityB, true);
-                ShapesController.setProperty(collidingShape, 'angularVelocity', newAngularVelocityB, true);
-
+                  ShapesController.setProperty(collidingShape, 'velocity', newVelocityB, true);
+                  ShapesController.setProperty(collidingShape, 'angularVelocity', newAngularVelocityB, true);
+              }
+                            /** Collision handling end **/
                   /****************************************************************************************END PHYSICS ***********************************************************************************/
                 }
                 break innerShapes;
-              } else if (k === lastShapeIndex) { // check if current shape is the last shape tob checked
+            } else if (k === lastShapeIndex) { // check if current shape is the last shape tob checked
                 verticesA[vertIndexA].collidingShape = null;
                 ShapesController.setProperty(i, 'vertices', verticesA);
               }
             }
           }
     }
+                                            /** Collision handling **/
+
+      // console.log('collisionDataArray', collisionDataArray);
+      if (Object.keys(collidingShapesData).length > 0 && newCollision){
+        console.log('%cnew collision','color:red');
+      averageCollision(collidingShapesData, i);
+    }
+
   }
   });
 }
