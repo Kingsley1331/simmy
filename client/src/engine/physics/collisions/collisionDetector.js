@@ -4,7 +4,7 @@ import ShapesController from '../../shapes/ShapesController';
 import collisionData from './collisionData';
 import findImpulse from '../forces/findImpulse';
 import findVelocities from '../motion/findVelocities';
-import averageCollision from './averageCollision';
+import collisionHandler from './collisionHandler';
 const newCollision = true;
 
 export default function collisionDetector() {
@@ -117,7 +117,7 @@ export default function collisionDetector() {
       // console.log('collisionDataArray', collisionDataArray);
       if (Object.keys(collidingShapesData).length > 0 && newCollision){
         console.log('%cnew collision','color:red');
-      averageCollision(collidingShapesData, i);
+        collisionHandler(collidingShapesData, i);
     }
 
   }
