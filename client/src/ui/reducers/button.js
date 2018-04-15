@@ -22,6 +22,7 @@ function selectShape(selected='', shapes) {
 
 const shapeSelection = {
   play: false,
+  step: false,
   none: true,
   square: false,
   triangle: false,

@@ -119,3 +119,11 @@ export class DeleteButton extends Component {
     );
   }
 }
+
+export class StepButton extends Component {
+  render() {
+    return (
+      <h1 className={this.props.selected ? 'selected' : ''} id='step' onClick={this.props.selectShape}>Step</h1>
+    );
+  }
+}

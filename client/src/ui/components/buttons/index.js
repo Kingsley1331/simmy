@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import selectShape from '../../actions/buttons';
 import Scene, { updateSelected } from '../../../engine/scenes/scene';
 
-import {PlayButton, NoneButton, SquareButton, TriangleButton, PentagonButton, HexagonButton, CircleButton, PlusButton, ArrowButton, StarButton, TshapeButton, BarButton, ConcaveButton, BoxButton, DeleteButton} from './buttons';
+import { PlayButton, StepButton, NoneButton, SquareButton, TriangleButton, PentagonButton, HexagonButton, CircleButton, PlusButton, ArrowButton, StarButton, TshapeButton, BarButton, ConcaveButton, BoxButton, DeleteButton} from './buttons';
 
 class Buttons extends Component {
   selectButton(){
@@ -14,6 +14,7 @@ class Buttons extends Component {
     return (
       <div className='buttons'>
           <PlayButton selected={this.props.buttons['play']} selectShape={() => {this.props.selectShape('play')}}/>
+          <StepButton selected={this.props.buttons['step']} selectShape={() => {this.props.selectShape('step')}}/>
           <NoneButton selected={this.props.buttons['none']} selectShape={() => {this.props.selectShape('none')}}/>
           <SquareButton selected={this.props.buttons['square']} selectShape={() => this.props.selectShape('square')}/>
           <TriangleButton selected={this.props.buttons['triangle']} selectShape={() => this.props.selectShape('triangle')}/>

@@ -4,20 +4,22 @@ import { detectShape, createShape, shapeSelection, forEachShape, prepareToMoveSh
 import ShapesController from '../shapes/ShapesController';
 import { draw } from '../scenes/draw';
 import Scene from '../scenes/scene';
+import { applyMotion } from '../physics/motion';
+import applyForces from '../physics/forces/applyForces';
+import collisionDetector from '../physics/collisions/collisionDetector';
 
 import Vector from './maths/Vector';
 
 export const mouseDown = (element) => {
   element.addEventListener('mousedown', (evt) => {
 
-
-    // var vector1 = new Vector({x:0, y:1});
-    // var vector2 = new Vector({x:1, y:1});
-    // var angle = vector1.findAngle(vector2);
-    // console.log(angle);
-
-    if(Scene.shapes[0]){console.log('scene.shapes', Scene.shapes[0])}
-
+    if (Scene.selected === 'step') {
+      forEachShape(function (i) {
+        applyMotion(i, 16);
+        applyForces(i);
+      });
+      collisionDetector();
+    }
 
     let mousePos = getMousePos(evt, element);
     forEachShape(function(i){

@@ -164,6 +164,7 @@ export function Shape(centre, vertices){
   var momentOfInertiaCOM = findMomentOfInertiaCOM(centreOfMass, vertices, boundingRect);
   var references = referenceVectors(centre, vertices)
   this.id;
+  this.type = '';
   this.fillColour = '#6495ED';
   this.lineColour = 'black';
   this.linewidth = 0.7;

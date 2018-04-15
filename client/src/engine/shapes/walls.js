@@ -33,7 +33,10 @@ export default function createWalls(){
   // const hexagon = createShape({x: 465, y: 250}, shapeSelection.hexagon);
   // hexagon.physics.velocity.x = -0.005;
 
-                    /** collision bugs**/
+              /** collision bugs**/
+
+  const bar = createShape({ x: 30, y: 252 }, shapeSelection.bar);
+  bar.physics.velocity.x = -0.01;
 
   // const bar = createShape({ x: 430, y: 252 }, shapeSelection.bar);
   // const bar1 = createShape({ x: 480, y: 262 }, shapeSelection.bar);
@@ -52,10 +55,30 @@ export default function createWalls(){
   // rotateShape({ x: 570, y: 252 }, Math.PI / 2, 5);
   // bar6.physics.velocity.x = -0.005;
 
-  const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
-  const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
-  const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
-  square.physics.velocity.x = -0.05;
-  square2.physics.velocity.x = -0.05;
+  // const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
+  // const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
+  // const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
+  // square.physics.velocity.x = -0.05;
+  // square2.physics.velocity.x = -0.05;
+
+  // const square = createShape({ x: 470, y: 300 }, shapeSelection.square);
+  // const square2 = createShape({ x: 507, y: 300 }, shapeSelection.square);
+  // const square3 = createShape({ x: 544, y: 300 }, shapeSelection.square);
+  // const hexagon = createShape({ x: 600, y: 300 }, shapeSelection.hexagon);
+  // hexagon.physics.velocity.x = -0.05;
+
+  // const circle = createShape({ x: 470, y: 300 }, shapeSelection.circle);
+  // const circle2 = createShape({ x: 510, y: 300 }, shapeSelection.circle);
+  // const circle3 = createShape({ x: 550, y: 300 }, shapeSelection.circle);
+  // const circle4 = createShape({ x: 650, y: 300 }, shapeSelection.circle);
+  // circle.type = 'circle'
+  // circle2.type = 'circle'
+  // circle3.type = 'circle'
+  // circle4.type = 'circle'
+  // circle4.physics.velocity.x = -0.05;
+  
+  // const arrow = createShape({ x: 500, y: 300 }, shapeSelection.arrow);
+  // const arrow2 = createShape({ x: 400, y: 300 }, shapeSelection.arrow);
+  // arrow2.physics.velocity.x = 0.05;
 
 }

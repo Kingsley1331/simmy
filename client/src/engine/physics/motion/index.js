@@ -5,7 +5,7 @@ import { rotateShape } from '../../utils/maths/Vector';
 export function applyMotion(i, tDelta){
   const velFactor = 0.1;
   // if(selectedShape === 'play'){
-  if(Scene.selected === 'play'){
+  if (Scene.selected === 'play' || Scene.selected === 'step'){
     var acceleration = ShapesController.getProperty(i, 'acceleration', true);
 
     var angularAcceleration = ShapesController.getProperty(i, 'angularAcceleration', true);

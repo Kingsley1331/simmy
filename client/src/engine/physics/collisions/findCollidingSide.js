@@ -73,7 +73,7 @@ export default function findCollidingSide(collisionPoint, shapeBVertices, collis
 
       if(intersectionX >= sideMinX && intersectionX <= sideMaxX && intersectionY >= sideMinY && intersectionY <= sideMaxY){
         intersections.push({x: intersectionX, y: intersectionY, side: side});
-        console.log('side', side);
+        // console.log('side', side);
       } else {
         if(sideOrientation === 'horizontal' && intersectionX >= sideMinX && intersectionX <= sideMaxX){
           intersections.push({x: collisionPoint.x, y: collisionPoint.y, side: side});
@@ -100,7 +100,7 @@ export default function findCollidingSide(collisionPoint, shapeBVertices, collis
     }
 
     var intersectionPoint = intersections.length > 0 ? intersections[closestPoint.index] : {};
-    console.log('collisionPoint', collisionPoint);
-    console.log('intersectionPoint', intersectionPoint);
+    // console.log('collisionPoint', collisionPoint);
+    // console.log('intersectionPoint', intersectionPoint);
     return intersectionPoint;
 }

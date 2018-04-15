@@ -31,7 +31,7 @@ var ShapesController = (function(){
   function setProperty(shapeIndex, property, value, bool){
     if (!bool) {
 
-      if(Scene.selected === 'play' && property === 'vertices' && value.length === 6){
+      if ((Scene.selected === 'play' || Scene.selected === 'step') && property === 'vertices' && value.length === 6){
         // console.log('vertices', JSON.parse(JSON.stringify(vertices[4])));
         // console.log('vertices', JSON.parse(JSON.stringify(value[4])));
         // console.log('vertices collidingShape', value[4].collidingShape);

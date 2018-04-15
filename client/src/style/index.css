@@ -159,6 +159,14 @@ canvas {
   color: blue;
 }
 
+#step {
+  position: absolute;
+  font-size: 15px;
+  top: 560px;
+  left: 20px;
+  color: blue;
+}
+
 #concave {
   position: absolute;
   top: 445px;

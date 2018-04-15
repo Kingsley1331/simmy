@@ -18,6 +18,7 @@ export const draw = (canvas) => {
 
   forEachShape((i) => {
     var onShape = ShapesController.getProperty(i, 'onShape');
+    var type = ShapesController.getProperty(i, 'type');
     //bufferCtx.save();
     if(onShape){
       var shadowColor = shadowColor = 'rgba( 9, 9, 9, 0.3)';
@@ -39,7 +40,7 @@ export const draw = (canvas) => {
       fillStyle: fillColour,
       lineWidth: lineWidth
     };
-    if(ShapesController.getProperty(i, 'colliding') && Scene.selected === 'play'){
+    if (ShapesController.getProperty(i, 'colliding') && (Scene.selected === 'play' || Scene.selected === 'step')){
       // config.lineWidth = 10;
     }
     var boundingRect = ShapesController.getProperty(i, 'boundingRect');
@@ -82,7 +83,10 @@ export const draw = (canvas) => {
         drawDot(bufferCtx, 4, {x:collisionPoint.x, y:collisionPoint.y}, 'red');
         drawLine(bufferCtx, collisionDataB.side[0], collisionDataB.side[1], {strokeStyle: 'red', lineWidth: 2});
       }
-
+      if(type === 'circle'){
+        drawLine(bufferCtx, centreOfMass, { x: centreOfMass.x + vertices[0].x, y: centreOfMass.y + vertices[0].y }, { strokeStyle: 'black', lineWidth: 1 });
+      }
+      
       if(unitNormal){
         unitNormal = unitNormal.scalProd(50);
         drawArrow(bufferCtx, arrowHead, [{x: collisionDataB.side[0].x + sideVector.x/2, y: collisionDataB.side[0].y + sideVector.y/2}, unitNormal], {fillStyle: 'purple', strokeStyle: 'purple'}, 30);

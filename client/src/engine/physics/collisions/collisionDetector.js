@@ -12,7 +12,7 @@ export default function collisionDetector() {
     ShapesController.setProperty(i, 'colliding', false);
   });
   forEachShape(function(i){
-    if(Scene.selected === 'play'){
+    if (Scene.selected === 'play' || Scene.selected === 'step'){
       var verticesA = ShapesController.getProperty(i, 'vertices'); //ShapeA
       var centreOfMassA = ShapesController.getCentreOfMass(i);
       var length = verticesA.length;
