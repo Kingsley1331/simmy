@@ -9,6 +9,7 @@ const collisionHandler = (collidingShapesData, shapeAIndex) => {
     // console.log('shapeAIndex', shapeAIndex);
 
     for (let collidingShape in collidingShapesData){
+        // console.count('collisionHandler');
         const data = averageData(collidingShapesData[collidingShape]);
         // console.log('averageData', data)
         var centreOfMassA = ShapesController.getCentreOfMass(shapeAIndex);
@@ -41,6 +42,11 @@ const collisionHandler = (collidingShapesData, shapeAIndex) => {
         const newVelocityB = newVelocity.linearB;
         const newAngularVelocityA = newVelocity.angularA;
         const newAngularVelocityB = newVelocity.angularB;
+
+        console.log('newVelocityA', newVelocityA);
+        console.log('newVelocityB', newVelocityB);
+        console.log('newAngularVelocityA', newAngularVelocityA);
+        console.log('newAngularVelocityB', newAngularVelocityB);
 
         ShapesController.setProperty(shapeAIndex, 'velocity', newVelocityA, true);
         ShapesController.setProperty(shapeAIndex, 'angularVelocity', newAngularVelocityA, true);

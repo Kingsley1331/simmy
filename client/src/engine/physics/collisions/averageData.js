@@ -8,6 +8,7 @@ const averageData = (dataArray, centreOfMassA, centreOfMassB) => {
     let collisionDistanceB = new Vector({x:0, y:0});
     let collisionPointVelocityA = new Vector({x:0, y:0});
     let collisionPointVelocityB = new Vector({x:0, y:0});
+    let unitNormal = new Vector({ x: 0, y: 0 });
     for (let data of dataArray) {
         collisionPoint.x += data.collisionPoint.x;
         collisionPoint.y += data.collisionPoint.y
@@ -26,6 +27,9 @@ const averageData = (dataArray, centreOfMassA, centreOfMassB) => {
         
         collisionPointVelocityB.x += data.collisionPointVelocityB.x;
         collisionPointVelocityB.y += data.collisionPointVelocityB.y;
+
+        unitNormal.x += data.unitNormal.x;
+        unitNormal.y += data.unitNormal.y;
     }
     collisionPoint.x /= length;
     collisionPoint.y /= length;
@@ -39,13 +43,15 @@ const averageData = (dataArray, centreOfMassA, centreOfMassB) => {
     collisionPointVelocityA.y /= length;
     collisionPointVelocityB.x /= length;
     collisionPointVelocityB.y /= length;
+    unitNormal.x /= length;
+    unitNormal.y /= length;
     
     return {
         shapeBIndex: dataArray[0].shapeBIndex,
         collisionPoint,
         side: dataArray[0].side,
         sideVector: dataArray[0].sideVector,
-        unitNormal: dataArray[0].unitNormal,
+        unitNormal,
         collisionPointVelocityA,
         collisionPointVelocityB,
         collisionVelocity,

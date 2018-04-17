@@ -5,7 +5,9 @@ import collisionData from './collisionData';
 import findImpulse from '../forces/findImpulse';
 import findVelocities from '../motion/findVelocities';
 import collisionHandler from './collisionHandler';
-const newCollision = true;
+import collisionHandler1 from './collisionHandler1';
+const newCollision = 1;
+const newHandler = 1;
 
 export default function collisionDetector() {
   var shapes = Scene.shapes;
@@ -13,6 +15,7 @@ export default function collisionDetector() {
   forEachShape(function(i){
     ShapesController.setProperty(i, 'colliding', false);
   });
+  let collidingShapesData2 = {};
   forEachShape(function(i){
     if (Scene.selected === 'play' || Scene.selected === 'step'){
       // let collisionDataArray = [];
@@ -43,8 +46,8 @@ export default function collisionDetector() {
               /*** After vertex checks all other shapes ***/
               if(typeof collidingShape === 'number' && collidingShape !== verticesA[vertIndexA].collidingShape){
                 verticesA[vertIndexA].collidingShape = collidingShape;
-                console.log('verticesA[vertIndexA].collidingShape2', verticesA[vertIndexA].collidingShape);
-                console.count('****************************************************************COLLISION COUNT');
+               
+                // console.count('****************************************************************COLLISION COUNT');
 
                 /*************************************************************************************************START PHYSICS ********************************************************************************/
 
@@ -72,12 +75,14 @@ export default function collisionDetector() {
                 } else {
                   collidingShapesData[collidingShape] = [data];
                 }
-
-                ShapesController.setProperty(collidingShape,'collisionData', data);
+                if (newHandler){
+                    collidingShapesData2[i] = collidingShapesData;
+                }
 
                   /** Collision handling start **/
                 if (!newCollision){
-                  console.log('%cstandard collision', 'color:red');
+                  ShapesController.setProperty(collidingShape, 'collisionData', data);
+                  console.log('%coriginal collision', 'color:red');
                   var massA = ShapesController.getProperty(i, 'mass', true);
                   var massB = ShapesController.getProperty(collidingShape, 'mass', true);
 
@@ -115,11 +120,16 @@ export default function collisionDetector() {
                                             /** Collision handling **/
 
       // console.log('collisionDataArray', collisionDataArray);
-      if (Object.keys(collidingShapesData).length > 0 && newCollision){
+      if (Object.keys(collidingShapesData).length > 0 && newCollision && !newHandler){
         console.log('%cnew collision','color:red');
+        console.log('%coriginal collision handler', 'color:red');
         collisionHandler(collidingShapesData, i);
-    }
-
+      }
   }
   });
+  if (Object.keys(collidingShapesData2).length > 0 && newCollision && newHandler) {
+    console.log('%cnew collision handler', 'color:red');
+    console.log('collidingShapesData2', collidingShapesData2);
+    collisionHandler1(collidingShapesData2);
+  }
 }

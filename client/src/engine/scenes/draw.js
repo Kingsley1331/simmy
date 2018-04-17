@@ -73,7 +73,7 @@ export const draw = (canvas) => {
           drawDot(bufferCtx, 10, {x: centreOfMass.x + vertices[n].x, y: centreOfMass.y + vertices[n].y}, 'blue');
         }
       }
-      // screenWriter(bufferCtx, ShapesController.getProperty(i, 'id'), idPos);
+      screenWriter(bufferCtx, (Number(ShapesController.getProperty(i, 'id')) - 1), idPos);
       // drawShape(bufferCtx, rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
       // drawDot(bufferCtx, 3, centreOfMass, 'black');
       // drawDot(bufferCtx, 3, boundingRectCentre, 'red');
