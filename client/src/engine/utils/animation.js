@@ -18,6 +18,7 @@ window.requestAnimFrame = (function () {
 })();
 
 export default function animate() {
+  const timeStep = Scene.timeStep;
   /** TODO: store canvas globally in Scene to make it less expensive **/
   canvas = document.getElementById('canvas');
   var date = new Date();
@@ -26,13 +27,16 @@ export default function animate() {
   var tDelta = (currentTime - time);
   if (Scene.selected === 'play') {
     forEachShape(function (i) {
-      applyMotion(i, tDelta);
+      // applyMotion(i, tDelta);
+      applyMotion(i, timeStep);
       applyForces(i);
     });
     /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
     collisionDetector();
+    Scene.time += timeStep;
   }
   draw(canvas);
   window.requestAnimFrame(animate);
-  Scene.time = currentTime;
+  // Scene.time += currentTime;
+  
 }

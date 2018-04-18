@@ -74,6 +74,8 @@ export const draw = (canvas) => {
         }
       }
       screenWriter(bufferCtx, (Number(ShapesController.getProperty(i, 'id')) - 1), idPos);
+      screenWriter(bufferCtx, Math.round(Scene.time/100) / 10, {x: 950, y: 20});
+      screenWriter(bufferCtx, Scene.stepCount, {x: 900, y: 20});
       // drawShape(bufferCtx, rectVertices, centreOfMass, {lineWidth: 0.5, fillStyle: 'transparent'});
       // drawDot(bufferCtx, 3, centreOfMass, 'black');
       // drawDot(bufferCtx, 3, boundingRectCentre, 'red');

@@ -97,21 +97,31 @@ export default function createWalls(){
   // arrow2.physics.velocity.x = 0.03;
 
   /* ----------------------------------------------------------------------- */
-    // const arrowVelocity = 0.03;
-    const arrowVelocity = 0.4;
-    const bar = createShape({ x: 20, y: 252 }, shapeSelection.bar);
-    bar.physics.velocity.x = -0.01;
 
-    const arrow3 = createShape({ x: 500, y: 300 }, shapeSelection.arrow);
-    const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
-    arrow4.physics.velocity.x = arrowVelocity;
+    // const arrowVelocity = 0.4;
+    // const bar = createShape({ x: 20, y: 252 }, shapeSelection.bar);
+    // bar.physics.velocity.x = -0.01;
 
-    const arrow5 = createShape({ x: 500, y: 350 }, shapeSelection.arrow);
-    const arrow6 = createShape({ x: 416, y: 350 }, shapeSelection.arrow);
-    arrow6.physics.velocity.x = arrowVelocity;
+    // const arrow3 = createShape({ x: 500, y: 300 }, shapeSelection.arrow);
+    // const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
+    // arrow4.physics.velocity.x = arrowVelocity;
 
-    const arrow7 = createShape({ x: 500, y: 400 }, shapeSelection.arrow);
-    const arrow8 = createShape({ x: 416, y: 400 }, shapeSelection.arrow);
-    arrow8.physics.velocity.x = arrowVelocity;
+    // const arrow5 = createShape({ x: 500, y: 350 }, shapeSelection.arrow);
+    // const arrow6 = createShape({ x: 416, y: 350 }, shapeSelection.arrow);
+    // arrow6.physics.velocity.x = arrowVelocity;
+
+    // const arrow7 = createShape({ x: 500, y: 400 }, shapeSelection.arrow);
+    // const arrow8 = createShape({ x: 416, y: 400 }, shapeSelection.arrow);
+    // arrow8.physics.velocity.x = arrowVelocity;
+
+   /* ----------------------------------------------------------------------- */
+
+  const bar = createShape({ x: 600, y: 252 }, shapeSelection.bar);
+  const bar2 = createShape({ x: 300, y: 252 }, shapeSelection.bar);
+  rotateShape({ x: 570, y: 252 }, Math.PI / 4, 4);
+  bar.physics.velocity.x = -1.2;
+
+
+
 
 }

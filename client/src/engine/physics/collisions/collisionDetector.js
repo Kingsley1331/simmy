@@ -7,7 +7,7 @@ import findVelocities from '../motion/findVelocities';
 import collisionHandler from './collisionHandler';
 import collisionHandler1 from './collisionHandler1';
 const newCollision = 1;
-const newHandler = 1;
+const newHandler = 0;
 
 export default function collisionDetector() {
   var shapes = Scene.shapes;
@@ -126,7 +126,7 @@ export default function collisionDetector() {
         collisionHandler(collidingShapesData, i);
       }
   }
-  });
+  }); 
   if (Object.keys(collidingShapesData2).length > 0 && newCollision && newHandler) {
     console.log('%cnew collision handler', 'color:red');
     console.log('collidingShapesData2', collidingShapesData2);

@@ -6,6 +6,8 @@ let Scene = {
   cursorOnshape: false,
   selected: 'none',
   throwArray: [],
+  timeStep: 16,
+  stepCount: 0,
   time: 0,
   settings: {
     display: true,

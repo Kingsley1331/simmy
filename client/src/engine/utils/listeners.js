@@ -7,15 +7,17 @@ import Scene from '../scenes/scene';
 import { applyMotion } from '../physics/motion';
 import applyForces from '../physics/forces/applyForces';
 import collisionDetector from '../physics/collisions/collisionDetector';
-
 import Vector from './maths/Vector';
 
+const timeStep = Scene.timeStep;
 export const mouseDown = (element) => {
   element.addEventListener('mousedown', (evt) => {
 
     if (Scene.selected === 'step') {
+      Scene.time += timeStep;
+      Scene.stepCount += 1;
       forEachShape(function (i) {
-        applyMotion(i, 16);
+        applyMotion(i, timeStep);
         applyForces(i);
       });
       collisionDetector();

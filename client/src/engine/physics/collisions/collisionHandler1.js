@@ -4,9 +4,9 @@ import findVelocities from '../motion/findVelocities';
 import averageData from './averageData';
 
 const collisionHandler1 = (collidingShapesData2) => {
-    for (let shapeAIndex in collidingShapesData2 ){
+    for (const shapeAIndex in collidingShapesData2 ){
         const collidingShapesData = collidingShapesData2[shapeAIndex];
-        for (let collidingShape in collidingShapesData){
+        for (const collidingShape in collidingShapesData){
             // console.count('collisionHandler1');
             const data = averageData(collidingShapesData[collidingShape]);
             ShapesController.setProperty(collidingShape, 'collisionData', data);
