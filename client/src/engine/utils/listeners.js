@@ -15,7 +15,6 @@ export const mouseDown = (element) => {
 
     if (Scene.selected === 'step') {
       Scene.time += timeStep;
-      Scene.stepCount += 1;
       forEachShape(function (i) {
         applyMotion(i, timeStep);
         applyForces(i);

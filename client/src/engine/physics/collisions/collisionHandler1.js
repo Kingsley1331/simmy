@@ -3,9 +3,9 @@ import findImpulse from '../forces/findImpulse';
 import findVelocities from '../motion/findVelocities';
 import averageData from './averageData';
 
-const collisionHandler1 = (collidingShapesData2) => {
-    for (const shapeAIndex in collidingShapesData2 ){
-        const collidingShapesData = collidingShapesData2[shapeAIndex];
+const collisionHandler1 = (aCollisions, bCollisions) => {
+    for (const shapeAIndex in aCollisions ){
+        const collidingShapesData = aCollisions[shapeAIndex];
         for (const collidingShape in collidingShapesData){
             // console.count('collisionHandler1');
             const data = averageData(collidingShapesData[collidingShape]);
@@ -46,6 +46,8 @@ const collisionHandler1 = (collidingShapesData2) => {
             console.log('newVelocityB', newVelocityB);
             console.log('newAngularVelocityA', newAngularVelocityA);
             console.log('newAngularVelocityB', newAngularVelocityB);
+            console.log('shapeAIndex', shapeAIndex);
+            console.log('shapeBIndex', collidingShape);
 
             ShapesController.setProperty(shapeAIndex, 'velocity', newVelocityA, true);
             ShapesController.setProperty(shapeAIndex, 'angularVelocity', newAngularVelocityA, true);
