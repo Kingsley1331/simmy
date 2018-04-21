@@ -38,10 +38,10 @@ export default function createWalls(){
   // const bar = createShape({ x: 20, y: 252 }, shapeSelection.bar);
   // bar.physics.velocity.x = -0.01;
 
-  /* ----------------------------------------------------------------------- */
+  /* ---------------------------- Two vertical bars ------------------------------------------- */
   // const bar = createShape({ x: 430, y: 252 }, shapeSelection.bar);
-  // const bar1 = createShape({ x: 480, y: 262 }, shapeSelection.bar);
-  // bar1.physics.velocity.x = -0.005;
+  // const bar1 = createShape({ x: 470, y: 262 }, shapeSelection.bar);
+  // bar1.physics.velocity.x = -0.02;
 
   /* ----------------------------------------------------------------------- */
   // const bar2 = createShape({ x: 430, y: 252 }, shapeSelection.bar);
@@ -60,11 +60,11 @@ export default function createWalls(){
   // bar6.physics.velocity.x = -0.005;
 
   /* ----------------------------------------------------------------------- */
-  // const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
-  // const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
-  // const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
-  // square.physics.velocity.x = -0.05;
-  // square2.physics.velocity.x = -0.05;
+  const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
+  const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
+  const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
+  square.physics.velocity.x = -0.05;
+  square2.physics.velocity.x = -0.05;
 
   /* ----------------------------------------------------------------------- */
   // const square = createShape({ x: 470, y: 300 }, shapeSelection.square);
@@ -100,26 +100,37 @@ export default function createWalls(){
 
     // const arrowVelocity = 0.4;
     // const bar = createShape({ x: 20, y: 252 }, shapeSelection.bar);
+    //   /**Temporary squares*/
+    // const square = createShape({ x: 528, y: 272 }, shapeSelection.square);
+    // const square2 = createShape({ x: 528, y: 428 }, shapeSelection.square);
     // bar.physics.velocity.x = -0.01;
 
-    // const arrow3 = createShape({ x: 500, y: 300 }, shapeSelection.arrow);
+    //   /**Temporary commenting */
+    // const arrow3 = createShape({ x: /*500*/545, y: 300 }, shapeSelection.arrow);
+    // const arrow5 = createShape({ x: /*500*/545, y: 350 }, shapeSelection.arrow);
+    // const arrow7 = createShape({ x: /*500*/545, y: 400 }, shapeSelection.arrow);
+
     // const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
-    // arrow4.physics.velocity.x = arrowVelocity;
-
-    // const arrow5 = createShape({ x: 500, y: 350 }, shapeSelection.arrow);
     // const arrow6 = createShape({ x: 416, y: 350 }, shapeSelection.arrow);
-    // arrow6.physics.velocity.x = arrowVelocity;
-
-    // const arrow7 = createShape({ x: 500, y: 400 }, shapeSelection.arrow);
     // const arrow8 = createShape({ x: 416, y: 400 }, shapeSelection.arrow);
+    
+    // arrow4.physics.velocity.x = arrowVelocity;
+    // arrow6.physics.velocity.x = arrowVelocity;  
     // arrow8.physics.velocity.x = arrowVelocity;
 
-   /* ----------------------------------------------------------------------- */
+    // arrow3.physics.velocity.x = -arrowVelocity;
+    // arrow5.physics.velocity.x = -arrowVelocity;
+    // arrow7.physics.velocity.x = -arrowVelocity;
 
-  const bar = createShape({ x: 600, y: 252 }, shapeSelection.bar);
-  const bar2 = createShape({ x: 300, y: 252 }, shapeSelection.bar);
-  rotateShape({ x: 570, y: 252 }, Math.PI / 4, 4);
-  bar.physics.velocity.x = -1.2;
+    // /**Temporary */
+    // const bar1 = createShape({ x: 480, y: 346 }, shapeSelection.bar);
+
+   /* ----------------------------------------------------------------------- */
+      // Step 32 wrong colliding sides chosen
+  // const bar = createShape({ x: 600, y: 252 }, shapeSelection.bar);
+  // const bar2 = createShape({ x: 300, y: 252 }, shapeSelection.bar);
+  // rotateShape({ x: 570, y: 252 }, Math.PI / 4, 4);
+  // bar.physics.velocity.x = -1.2;
 
 
 

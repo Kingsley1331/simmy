@@ -45,7 +45,7 @@ export default function collisionData(shapeAIndex, shapeBIndex, collisionPoint, 
   var collisionVelocity = new Vector({x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y});
   //console.log('================================collisionVelocity', collisionVelocity);
 
-  var collidingSideData = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB);
+  var collidingSideData = findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB, shapeBIndex);
 
   var collidingSideVector = {x: collidingSideData.side[1].x - collidingSideData.side[0].x,  y: collidingSideData.side[1].y - collidingSideData.side[0].y};
 

@@ -16,5 +16,6 @@ export default function referenceVectors(centre, vertices){
   if(pointInShape){
     unitNormal = {x: -unitNormal.x, y: -unitNormal.y};
   }
-  return {location: location, sideVector: firstSideVector, unitNormal: unitNormal};
+  /** TODO - Should be able to change property name sideVector => firstSideVector without having to make changes everywhere **/
+  return {location, sideVector: firstSideVector, unitNormal};
 }
