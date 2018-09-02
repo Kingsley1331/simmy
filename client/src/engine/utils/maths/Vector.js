@@ -84,6 +84,14 @@ export function rotateShape(centre, theta, index){
 		return rotatedVertices;
 	}
 }
+export function doVectorsOppose(vector1, vector2) {
+	let angle = vector1.findAngle(vector2);
+	angle = Math.abs(angle);
+	const condition = (angle > Math.PI / 2 && angle < Math.PI) || angle === Math.PI
+	const opposing = condition ? true : false;
+	console.log('opposing', opposing);
+	return opposing;
+}
 
 export function magnitude(vector){
 	var x = vector.x;

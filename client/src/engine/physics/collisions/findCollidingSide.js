@@ -1,27 +1,43 @@
-import { magnitude } from '../../utils/maths/Vector';
+import Vector, { magnitude, doVectorsOppose } from '../../utils/maths/Vector';
 import lineFormula from './lineFormula';
+import ShapesController from '../../shapes/ShapesController';
+import findSideUnitNormal from './findSideUnitNormal'
 
-export default function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB){
+export default function findCollidingSide(collisionPoint, shapeBVertices, collisionPointVelocityA, collisionPointVelocityB, centreB, shapeBIndex){
   var length = shapeBVertices.length;
+  collisionPointVelocityA = new Vector(collisionPointVelocityA);
   var relativeCollisionPointVel = {x: collisionPointVelocityA.x - collisionPointVelocityB.x, y: collisionPointVelocityA.y - collisionPointVelocityB.y};
   var velocityFormula = lineFormula([{x: collisionPoint.x, y: collisionPoint.y}, {x: collisionPoint.x + relativeCollisionPointVel.x, y: collisionPoint.y + relativeCollisionPointVel.y}]);
   var velocityGradient = velocityFormula.gradient;
   var velocityIntercept = velocityFormula.intercept;
-  var intersections = [];
+  const referenceVectors = ShapesController.getProperty(shapeBIndex, 'referenceVectors');
+  const referenceNormalVector = referenceVectors.unitNormal;
+  const referenceSideVector = referenceVectors.sideVector;
+  let intersections = [];
     for(var i = 0; i < length; i++){
       let sideOrientation = '';
+      let sideVector;
       var side = [];
-      if(i !== length - 1){
+      if(i !== length - 1){ // if the ith vector is not the last vector
         side = [{x:shapeBVertices[i].x + centreB.x, y:shapeBVertices[i].y + centreB.y}, {x:shapeBVertices[i+1].x + centreB.x, y:shapeBVertices[i+1].y + centreB.y}];
-      } else {
+        sideVector = new Vector({
+          x: shapeBVertices[i + 1].x - shapeBVertices[i].x,
+          y: shapeBVertices[i + 1].y - shapeBVertices[i].y
+        })
+      } else { 
         side = [{x:shapeBVertices[i].x + centreB.x, y:shapeBVertices[i].y + centreB.y}, {x:shapeBVertices[0].x + centreB.x, y:shapeBVertices[0].y + centreB.y}];
+        sideVector = new Vector({
+          x: shapeBVertices[0].x - shapeBVertices[i].x,
+          y: shapeBVertices[0].y - shapeBVertices[i].y
+        })
       }
       var sideFormula = lineFormula(side);
       var sideGradient = sideFormula.gradient;
       var sideIntercept = sideFormula.intercept;
       var intersectionX = (sideIntercept - velocityIntercept) / (velocityGradient - sideGradient);
       var intersectionY = sideGradient * intersectionX + sideIntercept;
-
+      let unitNormal = findSideUnitNormal(sideVector, referenceSideVector, referenceNormalVector)
+      
       // if the side gradient is vertical and velocity gradient is not horizontal
       if(Math.abs(sideGradient) > 10000 && Math.abs(velocityGradient) >= 0.0001){
         intersectionX = side[0].x;
@@ -72,11 +88,21 @@ export default function findCollidingSide(collisionPoint, shapeBVertices, collis
       var sideMaxY = Math.max(side[0].y, side[1].y);
 
       if(intersectionX >= sideMinX && intersectionX <= sideMaxX && intersectionY >= sideMinY && intersectionY <= sideMaxY){
-        intersections.push({x: intersectionX, y: intersectionY, side: side});
+        intersections.push({
+          x: intersectionX, 
+          y: intersectionY,
+          side,
+          unitNormal
+        });
         // console.log('side', side);
       } else {
         if(sideOrientation === 'horizontal' && intersectionX >= sideMinX && intersectionX <= sideMaxX){
-          intersections.push({x: collisionPoint.x, y: collisionPoint.y, side: side});
+          intersections.push({
+            x: collisionPoint.x,
+            y: collisionPoint.y,
+            side,
+            unitNormal
+          });
         }
         if(sideOrientation === 'vertical' && intersectionY >= sideMinY && intersectionY <= sideMaxY){
           intersections.push({x: collisionPoint.x, y: collisionPoint.y, side: side});
@@ -84,6 +110,14 @@ export default function findCollidingSide(collisionPoint, shapeBVertices, collis
       }
     }
 
+    // let filteredIntersections = intersections.filter((intersection) => {
+    //   return doVectorsOppose(intersection.unitNormal, collisionPointVelocityA)
+    // })
+    // if (filteredIntersections.length > 0){
+    //   intersections = filteredIntersections
+    // } 
+    // console.log('************************************intersections', intersections);
+ 
     if(intersections.length > 0){
       var closestPoint = intersections.reduce(function(sum, e, index){
       var closest = {};

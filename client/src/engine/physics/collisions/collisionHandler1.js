@@ -6,19 +6,19 @@ import averageData from './averageData';
 const collisionHandler1 = (aCollisions, bCollisions) => {
     for (const shapeAIndex in aCollisions ){
         const collidingShapesData = aCollisions[shapeAIndex];
-        for (const collidingShape in collidingShapesData){
+        for (const shapeBIndex in collidingShapesData){
             // console.count('collisionHandler1');
-            const data = averageData(collidingShapesData[collidingShape]);
-            ShapesController.setProperty(collidingShape, 'collisionData', data);
+            const data = averageData(collidingShapesData[shapeBIndex]);
+            ShapesController.setProperty(shapeBIndex, 'collisionData', data);
             // console.log('averageData', data)
             var centreOfMassA = ShapesController.getCentreOfMass(shapeAIndex);
-            var centreOfMassB = ShapesController.getCentreOfMass(collidingShape); //collidingShape = shapeBIndex
+            var centreOfMassB = ShapesController.getCentreOfMass(shapeBIndex);
 
             var velocityA = ShapesController.getProperty(shapeAIndex, 'velocity', true);
-            var velocityB = ShapesController.getProperty(collidingShape, 'velocity', true);
+            var velocityB = ShapesController.getProperty(shapeBIndex, 'velocity', true);
 
             var angularVelocityA = ShapesController.getProperty(shapeAIndex, 'angularVelocity', true);
-            var angularVelocityB = ShapesController.getProperty(collidingShape, 'angularVelocity', true);
+            var angularVelocityB = ShapesController.getProperty(shapeBIndex, 'angularVelocity', true);
 
             const velocities = {
                 velocityA,
@@ -28,10 +28,10 @@ const collisionHandler1 = (aCollisions, bCollisions) => {
             }
 
             var massA = ShapesController.getProperty(shapeAIndex, 'mass', true);
-            var massB = ShapesController.getProperty(collidingShape, 'mass', true);
+            var massB = ShapesController.getProperty(shapeBIndex, 'mass', true);
 
             var momentOfInertiaA = ShapesController.getProperty(shapeAIndex, 'momentOfInertiaCOM', true);
-            var momentOfInertiaB = ShapesController.getProperty(collidingShape, 'momentOfInertiaCOM', true);
+            var momentOfInertiaB = ShapesController.getProperty(shapeBIndex, 'momentOfInertiaCOM', true);
             var unitNormal = data.unitNormal;
             var masses = { massA: massA, massB: massB, momentOfInertiaA: momentOfInertiaA, momentOfInertiaB: momentOfInertiaB };
             var centres = { centreA: centreOfMassA, centreB: centreOfMassB };
@@ -47,13 +47,13 @@ const collisionHandler1 = (aCollisions, bCollisions) => {
             console.log('newAngularVelocityA', newAngularVelocityA);
             console.log('newAngularVelocityB', newAngularVelocityB);
             console.log('shapeAIndex', shapeAIndex);
-            console.log('shapeBIndex', collidingShape);
+            console.log('shapeBIndex', shapeBIndex);
 
             ShapesController.setProperty(shapeAIndex, 'velocity', newVelocityA, true);
             ShapesController.setProperty(shapeAIndex, 'angularVelocity', newAngularVelocityA, true);
 
-            ShapesController.setProperty(collidingShape, 'velocity', newVelocityB, true);
-            ShapesController.setProperty(collidingShape, 'angularVelocity', newAngularVelocityB, true);
+            ShapesController.setProperty(shapeBIndex, 'velocity', newVelocityB, true);
+            ShapesController.setProperty(shapeBIndex, 'angularVelocity', newAngularVelocityB, true);
             console.log('collision!');
         }
     }
