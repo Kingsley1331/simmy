@@ -2,6 +2,8 @@ import Vector from '../../utils/maths/Vector';
 const averageData = (dataArray, centreOfMassA, centreOfMassB) => {
     const length = dataArray.length;
     let newData = {};
+    let x;
+    console.log();
     let collisionPoint = new Vector({x:0, y:0});
     let collisionVelocity = new Vector({x:0, y:0});
     let collisionDistanceA = new Vector({x:0, y:0});
