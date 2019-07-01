@@ -38,7 +38,7 @@ require("./routes/authRoutes")(app);
 require("./routes/user")(app);
 
 app.post("/scenes", (req, res) => {
-  // console.log("BODY", req.body);
+  console.log("BODY", req.body);
   const scene = new Scenes({
     _id: new mongoose.Types.ObjectId(),
     ...req.body

@@ -1,12 +1,13 @@
-import { combineReducers } from 'redux';
-import userReducer from './user';
-import sceneReducer from './scene';
-import authReducer from './authReducer';
-import buttonReducer from './button';
+import { combineReducers } from "redux";
+import userReducer from "./user";
+import { sceneReducer, scenesReducer } from "./scene";
+import authReducer from "./authReducer";
+import buttonReducer from "./button";
 
 const reducer = combineReducers({
   users: userReducer,
-  scenes: sceneReducer,
+  scene: sceneReducer,
+  scenes: scenesReducer,
   auth: authReducer,
   buttons: buttonReducer
 });
