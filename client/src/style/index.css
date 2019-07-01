@@ -180,3 +180,11 @@ canvas {
 .selected {
   border: 2px solid black;
 }
+
+#save {
+  position: absolute;
+  font-size: 15px;
+  top: 585px;
+  left: 20px;
+  color: blue;
+}

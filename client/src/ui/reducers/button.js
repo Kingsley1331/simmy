@@ -1,16 +1,16 @@
-const buttonReducer = (state=shapeSelection, action) => {
+const buttonReducer = (state = shapeSelection, action) => {
   switch (action.type) {
-    case 'SELECT':
+    case "SELECT":
       return selectShape(action.payload, shapeSelection);
     default:
-    return shapeSelection;
+      return shapeSelection;
   }
-}
+};
 
-function selectShape(selected='', shapes) {
+function selectShape(selected = "", shapes) {
   var newShapes = {};
   for (let shape in shapes) {
-    newShapes[shape] = shape
+    newShapes[shape] = shape;
     if (shape === selected) {
       newShapes[shape] = true;
     } else {
@@ -21,6 +21,7 @@ function selectShape(selected='', shapes) {
 }
 
 const shapeSelection = {
+  save: false,
   play: false,
   step: false,
   none: true,
