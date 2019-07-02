@@ -1,26 +1,24 @@
 import React, { Component } from "react";
 import Scene from "../../../../src/engine/scenes/scene";
 
-// const save = that => {
-//   that.props.selectShape();
-//   console.log("Scene", Scene);
-//   Scene.backgroundColour = "green";
-//   Scene._id = "5d193499fb29a51ccc20d640";
-//   fetch("/scenes/5d193499fb29a51ccc20d640", {
-//     method: "PATCH", // or 'PUT'
-//     // body: JSON.stringify(product), // data can be `string` or {object}!
-//     body: JSON.stringify(Scene), // data can be `string` or {object}!
-//     headers: {
-//       "Content-Type": "application/json"
-//     }
-//   })
-//     .then(res => {
-//       console.log("result", res);
-//     })
-//     .catch(err => {
-//       console.log("err", err);
-//     });
-// };
+const update = that => {
+  that.props.selectShape();
+  Scene.backgroundColour = "white";
+  Scene._id = "5d193499fb29a51ccc20d640";
+  fetch("/scenes/5d193499fb29a51ccc20d640", {
+    method: "PATCH",
+    body: JSON.stringify(Scene), // data can be `string` or {object}!
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+    .then(res => {
+      console.log("result", res);
+    })
+    .catch(err => {
+      console.log("err", err);
+    });
+};
 
 const save = that => {
   that.props.selectShape();
@@ -288,6 +286,22 @@ export class SaveButton extends Component {
         }}
       >
         Save
+      </h1>
+    );
+  }
+}
+
+export class UpdateButton extends Component {
+  render() {
+    return (
+      <h1
+        className={this.props.selected ? "selected" : ""}
+        id="update"
+        onClick={() => {
+          update(this);
+        }}
+      >
+        Update
       </h1>
     );
   }

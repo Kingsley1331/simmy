@@ -20,7 +20,8 @@ import {
   ConcaveButton,
   BoxButton,
   DeleteButton,
-  SaveButton
+  SaveButton,
+  UpdateButton
 } from "./buttons";
 
 class Buttons extends Component {
@@ -105,6 +106,12 @@ class Buttons extends Component {
           selected={this.props.buttons["save"]}
           selectShape={() => {
             this.props.selectShape("save");
+          }}
+        />
+        <UpdateButton
+          selected={this.props.buttons["update"]}
+          selectShape={() => {
+            this.props.selectShape("update");
           }}
         />
       </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchScenes, fetchScene } from "../actions/scenes";
+import { fetchScenes, fetchScene, deleteScene } from "../actions/scenes";
 
 class Profile extends Component {
   componentDidMount() {
@@ -14,8 +14,17 @@ class Profile extends Component {
     setTimeout(() => history.replace("/scenes"), 1500);
   };
 
+  deleteScene = sceneId => {
+    const { deleteScene } = this.props;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this scene?"
+    );
+    if (confirmDelete) {
+      deleteScene(sceneId);
+    }
+  };
+
   getScenes() {
-    // const { fetchScene } = this.props;
     if (this.props.scenes[0]) {
       let names = this.props.scenes.map(scene => {
         return (
@@ -25,7 +34,9 @@ class Profile extends Component {
               <button onClick={() => this.fetchScene(scene._id)}>
                 load scene
               </button>
-              {/* <button onClick={() => fetchScene(scene._id)}>load scene</button> */}
+              <button onClick={() => this.deleteScene(scene._id)}>
+                delete scene
+              </button>
             </td>
           </tr>
         );
@@ -82,6 +93,7 @@ export default connect(
   mapStateToProps,
   {
     fetchScenes,
-    fetchScene
+    fetchScene,
+    deleteScene
   }
 )(Profile);

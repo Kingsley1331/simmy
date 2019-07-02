@@ -1,10 +1,12 @@
+// import createWalls from "../shapes/walls";
+
 let Scene = {
-  backgroundColour: '#E0E0E0',
+  backgroundColour: "#E0E0E0",
   shapes: [],
   mousePos: {},
   context: { buffer: {} },
   cursorOnshape: false,
-  selected: 'none',
+  selected: "none",
   throwArray: [],
   timeStep: 16,
   time: 0,
@@ -14,15 +16,17 @@ let Scene = {
   }
 };
 
-export function updateSelected(state, Scene){
+export function updateSelected(state, Scene) {
   let selectedShape;
   const buttons = state.buttons;
-  for(let button in buttons){
-    if(buttons[button]){
+  for (let button in buttons) {
+    if (buttons[button]) {
       selectedShape = button;
       Scene.selected = button;
     }
   }
 }
+
+// createWalls();
 
 export default Scene;

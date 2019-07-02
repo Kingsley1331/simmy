@@ -5,10 +5,11 @@ import { draw } from "../../engine/scenes/draw";
 import Scene from "../../engine/scenes/scene";
 import {
   createShape,
+  clearShapes,
   shapeSelection,
   forEachShape
 } from "../../engine/shapes/shapes";
-import createWalls from "../../engine/shapes/walls";
+import { createWalls } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
 import getMousePos from "../../engine/utils/position";
 import { mouseDown, mouseMove, mouseUp } from "../../engine/utils/listeners";
@@ -23,7 +24,9 @@ class Scenes extends Component {
   componentDidMount() {
     // Scene.shapes = this.props.scene.shapes;
     /** TODO: move functions into single index file and import **/
+    console.log("SCENE =====>", Scene);
     console.log("scene =====>", this.props.scene);
+
     canvas = document.getElementById("canvas");
     animate(this.props.scene);
     mouseDown(canvas);
@@ -31,7 +34,13 @@ class Scenes extends Component {
     mouseUp(canvas);
     reCentre(shapeSelection);
     createWalls();
+    // Scene.shapes = this.props.scene.shapes;
   }
+
+  // componentWillUnmount() {
+  //   clearShapes();
+  // }
+
   render() {
     console.log("scene2 =====>", this.props.scene);
     console.log("props =====>", this.props);

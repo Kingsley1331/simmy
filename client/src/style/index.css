@@ -188,3 +188,11 @@ canvas {
   left: 20px;
   color: blue;
 }
+
+#update {
+  position: absolute;
+  font-size: 15px;
+  top: 613px;
+  left: 20px;
+  color: blue;
+}

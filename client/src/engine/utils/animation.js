@@ -37,7 +37,9 @@ export default function animate() {
     collisionDetector();
     Scene.time += timeStep;
   }
-  draw(canvas, Scene);
+  if (canvas) {
+    draw(canvas, Scene);
+  }
   window.requestAnimFrame(animate);
   // Scene.time += currentTime;
 }
