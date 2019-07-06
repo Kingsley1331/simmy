@@ -8,6 +8,12 @@
     },
     "/api/*": {
       "target": "http://localhost:5000"
+    },
+    "/allscenes/": {
+      "target": "http://localhost:5000"
+    },
+    "/scenes/*": {
+      "target": "http://localhost:5000"
     }
   },
   "dependencies": {

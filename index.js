@@ -77,7 +77,7 @@ app.get("/scenes/:sceneId", (req, res) => {
     });
 });
 
-app.get("/scenes/", (req, res) => {
+app.get("/allscenes/", (req, res) => {
   Scenes.find()
     .exec()
     .then(docs => {

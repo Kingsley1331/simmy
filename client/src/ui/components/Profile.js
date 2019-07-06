@@ -8,7 +8,6 @@ class Profile extends Component {
   }
 
   fetchScene = sceneId => {
-    console.log("props", this.props);
     const { fetchScene, history } = this.props;
     fetchScene(sceneId);
     setTimeout(() => history.replace("/scenes"), 1500);

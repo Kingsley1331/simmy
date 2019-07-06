@@ -3,15 +3,16 @@ import axios from "axios";
 export function fetchScenes() {
   return function(dispatch) {
     axios
-      .get("/scenes/")
+      .get("/allscenes/")
       .then(function(scenes) {
-        dispatch({
+        console.log("fetchScenes");
+        return dispatch({
           type: "GET_SCENES",
           payload: scenes.data
         });
       })
       .catch(function(err) {
-        dispatch({
+        return dispatch({
           type: "ERROR",
           payload: err
         });
@@ -24,13 +25,13 @@ export function fetchScene(sceneId) {
     axios
       .get(`/scenes/${sceneId}`)
       .then(function(scene) {
-        dispatch({
+        return dispatch({
           type: "GET_SCENE",
           payload: scene.data
         });
       })
       .catch(function(err) {
-        dispatch({
+        return dispatch({
           type: "ERROR",
           payload: err
         });
@@ -45,14 +46,14 @@ export function deleteScene(sceneId) {
       .then(function(response) {
         console.log("delete response", response);
         axios.get("/scenes/").then(function(scenes) {
-          dispatch({
+          return dispatch({
             type: "GET_SCENES",
             payload: scenes.data
           });
         });
       })
       .catch(function(err) {
-        dispatch({
+        return dispatch({
           type: "ERROR",
           payload: err
         });

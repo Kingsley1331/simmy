@@ -1,5 +1,6 @@
 import Scene from "../scenes/scene";
 var ShapesController = (function() {
+  console.log("ShapesController SCENE", Scene);
   var shapes = Scene.shapes;
 
   function getCentreOfMass(shapeIndex) {
@@ -19,6 +20,7 @@ var ShapesController = (function() {
   }
 
   function getProperty(shapeIndex, propertyName, bool) {
+    // console.log("ShapesController SCENE", Scene);
     var shape = shapes[shapeIndex];
     if (!bool) {
       var property = shape[propertyName];
