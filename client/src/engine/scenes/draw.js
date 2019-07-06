@@ -46,12 +46,12 @@ export const draw = canvas => {
       fillStyle: fillColour,
       lineWidth: lineWidth
     };
-    if (
+    /*if (
       ShapesController.getProperty(i, "colliding") &&
       (Scene.selected === "play" || Scene.selected === "step")
     ) {
       // config.lineWidth = 10;
-    }
+    }*/
     var boundingRect = ShapesController.getProperty(i, "boundingRect");
     var boundingRectCentre = {
       x: boundingRect.centre.x + centreOfMass.x,
