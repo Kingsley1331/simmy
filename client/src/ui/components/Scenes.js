@@ -32,7 +32,9 @@ class Scenes extends Component {
     mouseMove(canvas);
     mouseUp(canvas);
     reCentre(shapeSelection);
-    createWalls();
+    if (!Object.keys(this.props.scene).length) {
+      createWalls();
+    }
     updateScene(this.props.scene);
   }
 

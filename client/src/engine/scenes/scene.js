@@ -1,5 +1,5 @@
 // import createWalls from "../shapes/walls";
-// import { Shape } from "../../engine/shapes/shapes";
+// import { clearShapes } from "../../engine/shapes/shapes";
 
 let Scene = {
   name: "",
@@ -37,6 +37,7 @@ export function updateScene(scene) {
   // Scene.shapes[4].vertices[0].x = 200;
   // Scene.shapes[5].centreOfMass.x = scene.shapes[4].centreOfMass.x;
   // Scene.shapes[5].vertices[0].x = scene.shapes[4].vertices[0].x;
+  // Scene.shapes = [];
   if (scene.shapes) {
     // Scene.backgroundColour = "lightblue";
     // Scene = { ...scene };
