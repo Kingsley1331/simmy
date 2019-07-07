@@ -1,10 +1,29 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchScenes, fetchScene, deleteScene } from "../actions/scenes";
+import { updateScene } from "../../engine/scenes/scene";
 
 class Profile extends Component {
   componentDidMount() {
     this.props.fetchScenes();
+  }
+
+  // componentDidUpdate(prevProps) {
+  //   console.log("componentDidUpdate SCENE");
+  //   if (this.props.scene) {
+  //     console.log("===========================> check");
+  //     if (prevProps.scene !== this.props.scene) {
+  //       console.log(
+  //         "-----------------------------------------------> updateScene running"
+  //       );
+  //       updateScene(this.props.scene);
+  //     }
+  //   }
+  // }
+
+  componentDidUpdate(prevProps) {
+    console.log("prevProps", prevProps.scene.shapes);
+    console.log("props =>", this.props.scene.shapes);
   }
 
   fetchScene = sceneId => {
@@ -28,7 +47,8 @@ class Profile extends Component {
       let names = this.props.scenes.map(scene => {
         return (
           <tr key={scene._id}>
-            <td>{scene._id}</td>
+            <td>{scene.name || scene._id}</td>
+            {/* <td>{scene._id}</td> */}
             <td>
               <button onClick={() => this.fetchScene(scene._id)}>
                 load scene
@@ -47,7 +67,7 @@ class Profile extends Component {
           <table>
             <tbody>
               <tr>
-                <th> scene ID </th>
+                <th> scene name </th>
                 <th> load scene </th>
                 {/* <th> Delete </th> */}
               </tr>

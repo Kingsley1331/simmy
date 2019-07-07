@@ -12,7 +12,7 @@
     "/allscenes/": {
       "target": "http://localhost:5000"
     },
-    "/scenes/*": {
+    "/scene/*": {
       "target": "http://localhost:5000"
     }
   },

@@ -23,7 +23,7 @@ export function fetchScenes() {
 export function fetchScene(sceneId) {
   return function(dispatch) {
     axios
-      .get(`/scenes/${sceneId}`)
+      .get(`/scene/${sceneId}`)
       .then(function(scene) {
         return dispatch({
           type: "GET_SCENE",
@@ -45,7 +45,7 @@ export function deleteScene(sceneId) {
       .delete(`/scenes/${sceneId}`)
       .then(function(response) {
         console.log("delete response", response);
-        axios.get("/scenes/").then(function(scenes) {
+        axios.get("/allscenes/").then(function(scenes) {
           return dispatch({
             type: "GET_SCENES",
             payload: scenes.data

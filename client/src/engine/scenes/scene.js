@@ -2,6 +2,7 @@
 // import { Shape } from "../../engine/shapes/shapes";
 
 let Scene = {
+  name: "",
   backgroundColour: "#E0E0E0",
   shapes: [],
   mousePos: {},
@@ -17,22 +18,6 @@ let Scene = {
   }
 };
 
-export const setScene = scene => ({
-  backgroundColour: scene.backgroundColour,
-  shapes: scene.shapes,
-  mousePos: {},
-  context: { buffer: {} },
-  cursorOnshape: false,
-  selected: "none",
-  throwArray: [],
-  timeStep: 16,
-  time: 0,
-  settings: {
-    display: true,
-    restitution: 1
-  }
-});
-
 export function updateSelected(state, Scene) {
   let selectedShape;
   const buttons = state.buttons;
@@ -45,6 +30,7 @@ export function updateSelected(state, Scene) {
 }
 
 export function updateScene(scene) {
+  console.log("before shapes", Scene.shapes);
   // console.log("SCENE =====>", Scene);
   // console.log("scene =====>", scene);
   // Scene.shapes[4].centreOfMass.x = 50;
@@ -60,7 +46,9 @@ export function updateScene(scene) {
         Scene[key] = scene[key];
       }
       if (key === "shapes") {
+        // Scene.shapes = [];
         for (let i = 0; i < scene.shapes.length; i++) {
+          console.log("scene.shapes.length", scene.shapes.length);
           Scene.shapes[i] = {};
           Scene.shapes[i].centreOfMass = {};
 
@@ -80,7 +68,10 @@ export function updateScene(scene) {
             vertices: [...scene.shapes[i].boundingRect.vertices]
           };
 
-          Scene.shapes[i].centreOfMass = { ...scene.shapes[i].centreOfMass };
+          // Scene.shapes[i].centreOfMass = { ...scene.shapes[i].centreOfMass };
+          Scene.shapes[i].centreOfMass.x = scene.shapes[i].centreOfMass.x;
+          Scene.shapes[i].centreOfMass.y = scene.shapes[i].centreOfMass.y;
+
           Scene.shapes[i].centreOfRotation = {
             ...scene.shapes[i].centreOfRotation
           };
@@ -101,38 +92,19 @@ export function updateScene(scene) {
           Scene.shapes[i].touchPoint = scene.shapes[i].touchPoint;
           Scene.shapes[i].type = scene.shapes[i].type;
           Scene.shapes[i].collisionData = scene.shapes[i].collisionData || {};
+
+          if (scene.shapes[i].type === "fixed") {
+            Scene.shapes[i].physics.mass = Infinity;
+            Scene.shapes[i].physics.momentOfInertia = Infinity;
+            Scene.shapes[i].physics.momentOfInertiaCOM = Infinity;
+          }
         }
       }
     }
   }
+
   console.log("Scene.shapes", Scene.shapes);
+  console.log("scene.shapes", scene.shapes);
 }
-
-export function updateScene1(scene) {
-  console.log("SCENE =====>", Scene.shapes);
-  console.log("scene =====>", scene.shapes);
-  // Scene.backgroundColour = "lightblue";
-  Scene.backgroundColour = scene.backgroundColour || "#E0E0E0";
-  if (scene.shapes) {
-    for (let i = 0; i < scene.shapes.length; i++) {
-      if (Scene.shapes[i]) {
-        Scene.shapes[i].centreOfMass = { ...scene.shapes[i].centreOfMass };
-        Scene.shapes[i].vertices = [...scene.shapes[i].vertices];
-      } /*else {
-        Scene.shapes[i] = new Shape(
-          scene.shapes[i].centreOfMass,
-          scene.shapes[i].vertices
-        );*/
-
-      // }
-    }
-  }
-
-  // Scene.shapes[5].centreOfMass = scene.shapes[5].centreOfMass;
-  // console.log(JSON.stringify(Scene.shapes[5]));
-  // console.log(JSON.stringify(scene.shapes[5]));
-}
-
-// createWalls();
 
 export default Scene;

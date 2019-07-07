@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const scenesSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
+  name: String,
   backgroundColour: String,
   context: Object,
   cursorOnshape: Boolean,

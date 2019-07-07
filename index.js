@@ -63,7 +63,7 @@ app.post("/scenes", (req, res) => {
   // res.send(scene);
 });
 
-app.get("/scenes/:sceneId", (req, res) => {
+app.get("/scene/:sceneId", (req, res) => {
   const id = req.params.sceneId;
   Scenes.findById(id)
     .exec()

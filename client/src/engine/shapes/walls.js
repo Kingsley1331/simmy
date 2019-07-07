@@ -7,6 +7,7 @@ export function createWalls() {
   leftWall.physics.mass = Infinity;
   leftWall.physics.momentOfInertia = Infinity;
   leftWall.physics.momentOfInertiaCOM = Infinity;
+  leftWall.type = "fixed";
 
   const rightWall = createShape(
     { x: 1018, y: 297 },
@@ -16,6 +17,7 @@ export function createWalls() {
   rightWall.physics.mass = Infinity;
   rightWall.physics.momentOfInertia = Infinity;
   rightWall.physics.momentOfInertiaCOM = Infinity;
+  rightWall.type = "fixed";
 
   const bottomWall = createShape(
     { x: 500, y: 619 },
@@ -25,6 +27,7 @@ export function createWalls() {
   bottomWall.physics.mass = Infinity;
   bottomWall.physics.momentOfInertia = Infinity;
   bottomWall.physics.momentOfInertiaCOM = Infinity;
+  bottomWall.type = "fixed";
 
   const topWall = createShape(
     { x: 500, y: -20 },
@@ -34,6 +37,7 @@ export function createWalls() {
   topWall.physics.mass = Infinity;
   topWall.physics.momentOfInertia = Infinity;
   topWall.physics.momentOfInertiaCOM = Infinity;
+  topWall.type = "fixed";
 
   // const box = createShape({x: 350, y: 300}, shapeSelection.box);
 
@@ -69,18 +73,26 @@ export function createWalls() {
   // bar6.physics.velocity.x = -0.005;
 
   /* ----------------------------------------------------------------------- */
-  const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
-  const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
-  const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
-  square.physics.velocity.x = -0.05;
-  square2.physics.velocity.x = -0.05;
+  // const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
+  // const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
+  // const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
+  // square.physics.velocity.x = -0.05;
+  // square2.physics.velocity.x = -0.05;
 
   /* ----------------------------------------------------------------------- */
+  const hexagon = createShape({ x: 650, y: 300 }, shapeSelection.hexagon);
+  createShape({ x: 450, y: 300 }, shapeSelection.hexagon);
+  createShape({ x: 507, y: 300 }, shapeSelection.hexagon);
+  createShape({ x: 575, y: 300 }, shapeSelection.arrow);
+
+  hexagon.physics.velocity.x = -0.1;
+  // /* ----------------------------------------------------------------------- */
+  // const hexagon = createShape({ x: 600, y: 300 }, shapeSelection.hexagon);
   // const square = createShape({ x: 470, y: 300 }, shapeSelection.square);
   // const square2 = createShape({ x: 507, y: 300 }, shapeSelection.square);
   // const square3 = createShape({ x: 544, y: 300 }, shapeSelection.square);
-  // const hexagon = createShape({ x: 600, y: 300 }, shapeSelection.hexagon);
-  // hexagon.physics.velocity.x = -0.05;
+
+  // hexagon.physics.velocity.x = -0.1;
 
   /* ----------------------------------------------------------------------- */
   // const circle = createShape({ x: 470, y: 300 }, shapeSelection.circle);

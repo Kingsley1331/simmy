@@ -24,19 +24,22 @@ const save = that => {
   that.props.selectShape();
   console.log("Scene", Scene);
 
-  fetch("/scenes", {
-    method: "POST", // or 'PUT'
-    body: JSON.stringify(Scene), // data can be `string` or {object}!
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res => {
-      console.log("result", res);
+  const name = prompt("Please enter a name for the scene", "untitled");
+  if (name !== null) {
+    fetch("/scenes", {
+      method: "POST", // or 'PUT'
+      body: JSON.stringify({ ...Scene, name }), // data can be `string` or {object}!
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
-    .catch(err => {
-      console.log("err", err);
-    });
+      .then(res => {
+        console.log("result", res);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
+  }
 };
 
 export class PlayButton extends Component {

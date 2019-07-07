@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
 import { draw } from "../../engine/scenes/draw";
-import Scene, { updateScene, setScene } from "../../engine/scenes/scene";
+import Scene, { updateScene } from "../../engine/scenes/scene";
 import {
   createShape,
   clearShapes,
@@ -33,42 +33,8 @@ class Scenes extends Component {
     mouseUp(canvas);
     reCentre(shapeSelection);
     createWalls();
-    // Scene.shapes = this.props.scene.shapes;
     updateScene(this.props.scene);
-    // console.log("SCENE =====>", JSON.stringify(Scene.shapes[5]));
-    // console.log("scene =====>", JSON.stringify(this.props.scene));
   }
-
-  /*
-  componentDidUpdate(prevProps) {
-    if (Object.keys(this.props.scene).length) {
-      const newScene = setScene(this.props.scene);
-      Scene.backgroundColour = newScene.backgroundColour;
-      Scene.shapes = { ...newScene.shapes };
-      //   mousePos: { },
-      // context: { buffer: { } },
-      // cursorOnshape: false,
-      //   selected: "none",
-      //     throwArray: [],
-      //       timeStep: 16,
-      //         time: 0,
-      //           settings: {
-      //   display: true,
-      //     restitution: 1
-    }
-  }*/
-
-  // componentDidUpdate(prevProps) {
-  //   if (Object.keys(this.props.scene).length) {
-  //     console.log(
-  //       "888888888888888888888888888888888888888888888888888888888888888888888888888888888888"
-  //     );
-  //     Scene.backgroundColour = this.props.scene.backgroundColour;
-  //     Scene.shapes = this.props.scene.shapes.map(shape => {
-  //       return new Shape(shape.centreOfMass, shape.vertices);
-  //     });
-  //   }
-  // }
 
   componentWillUnmount() {
     clearShapes();
