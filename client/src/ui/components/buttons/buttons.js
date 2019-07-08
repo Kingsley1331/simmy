@@ -4,10 +4,12 @@ import Scene from "../../../../src/engine/scenes/scene";
 const update = that => {
   that.props.selectShape();
   const name = prompt("Please enter a name for the scene", Scene.name);
+  const imageURL = Scene.context.buffer.canvas.toDataURL();
+
   if (name !== null) {
     fetch(`/scenes/${Scene._id}`, {
       method: "PATCH",
-      body: JSON.stringify({ ...Scene, name }), // data can be `string` or {object}!
+      body: JSON.stringify({ ...Scene, name, imageURL }), // data can be `string` or {object}!
       headers: {
         "Content-Type": "application/json"
       }
@@ -23,12 +25,13 @@ const update = that => {
 
 const save = that => {
   that.props.selectShape();
-
   const name = prompt("Please enter a name for the scene", "untitled");
+  const imageURL = Scene.context.buffer.canvas.toDataURL();
+  delete Scene._id;
   if (name !== null) {
     fetch("/scenes", {
       method: "POST", // or 'PUT'
-      body: JSON.stringify({ ...Scene, name }), // data can be `string` or {object}!
+      body: JSON.stringify({ ...Scene, name, imageURL }), // data can be `string` or {object}!
       headers: {
         "Content-Type": "application/json"
       }

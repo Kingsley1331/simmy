@@ -35,10 +35,18 @@ class Profile extends Component {
           <tr key={scene._id}>
             <td>{scene.name || scene._id}</td>
             <td>
-              <button onClick={() => this.fetchScene(scene._id)}>
-                load scene
-              </button>
-              <button onClick={() => this.deleteScene(scene._id)}>
+              <img
+                onClick={() => this.fetchScene(scene._id)}
+                src={scene.imageURL}
+                alt="thumbnail"
+                width="200"
+              />
+            </td>
+            <td>
+              <button
+                className="button button--delete"
+                onClick={() => this.deleteScene(scene._id)}
+              >
                 delete scene
               </button>
             </td>
@@ -48,16 +56,8 @@ class Profile extends Component {
 
       return (
         <div>
-          <h1>User's Table</h1>
           <table>
-            <tbody>
-              <tr>
-                <th> scene name </th>
-                <th> load scene </th>
-                {/* <th> Delete </th> */}
-              </tr>
-              {names}
-            </tbody>
+            <tbody>{names}</tbody>
           </table>
         </div>
       );
@@ -68,7 +68,6 @@ class Profile extends Component {
     return (
       <div>
         <h1>Scenes</h1>
-        {/* <button onClick={this.props.fetchUser}>fetch simmy users</button> */}
         {this.getScenes()}
       </div>
     );

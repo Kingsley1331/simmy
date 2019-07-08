@@ -4,6 +4,9 @@
 let Scene = {
   name: "",
   backgroundColour: "#E0E0E0",
+  imagUrl: "",
+  created: "",
+  lastModified: "",
   shapes: [],
   mousePos: {},
   context: { buffer: {} },

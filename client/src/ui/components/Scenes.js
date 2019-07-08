@@ -38,6 +38,9 @@ class Scenes extends Component {
       createWalls();
     }
     updateScene(this.props.scene);
+    // var pngUrl = canvas.toDataURL();
+    // console.log("pngUrl", pngUrl);
+    Scene.context.buffer = canvas;
   }
 
   componentWillUnmount() {
