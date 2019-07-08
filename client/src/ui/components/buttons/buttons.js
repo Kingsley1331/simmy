@@ -3,26 +3,26 @@ import Scene from "../../../../src/engine/scenes/scene";
 
 const update = that => {
   that.props.selectShape();
-  Scene.backgroundColour = "white";
-  Scene._id = "5d193499fb29a51ccc20d640";
-  fetch("/scenes/5d193499fb29a51ccc20d640", {
-    method: "PATCH",
-    body: JSON.stringify(Scene), // data can be `string` or {object}!
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res => {
-      console.log("result", res);
+  const name = prompt("Please enter a name for the scene", Scene.name);
+  if (name !== null) {
+    fetch(`/scenes/${Scene._id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ ...Scene, name }), // data can be `string` or {object}!
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
-    .catch(err => {
-      console.log("err", err);
-    });
+      .then(res => {
+        console.log("result", res);
+      })
+      .catch(err => {
+        console.log("err", err);
+      });
+  }
 };
 
 const save = that => {
   that.props.selectShape();
-  console.log("Scene", Scene);
 
   const name = prompt("Please enter a name for the scene", "untitled");
   if (name !== null) {

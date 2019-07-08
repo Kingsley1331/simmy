@@ -9,6 +9,7 @@ import {
   drawShape,
   drawArrow
 } from "./display/drawing/drawings";
+import Vector from "../utils/maths/Vector";
 
 // export const canvas = document.getElementById("canvas");
 export const draw = canvas => {
@@ -138,7 +139,10 @@ export const draw = canvas => {
       }
 
       if (unitNormal) {
-        unitNormal = unitNormal.scalProd(50);
+        unitNormal = unitNormal.scalProd
+          ? unitNormal.scalProd(50)
+          : new Vector({ x: unitNormal.x, y: unitNormal.y }).scalProd(50);
+
         drawArrow(
           bufferCtx,
           arrowHead,

@@ -15,14 +15,6 @@ export const sceneReducer = (state = {}, action) => {
       state = action.payload;
       console.log("%cA SINGLE SCENE", "color:blue; font-weight:bold;");
       break;
-    // case 'UPDATE_SCENE':
-    //   state = {users: 'users', userList: action.payload};
-    //   console.log('%cUPDATING SCENE', 'color:blue; font-weight:bold;');
-    //   break;
-    // case 'DELETE_SCENE':
-    //   state = {users: 'users', userList: action.payload};
-    //   console.log('%cDELETING SCENE', 'color:blue; font-weight:bold;');
-    //   break;
     default:
   }
   return state;

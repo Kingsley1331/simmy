@@ -34,7 +34,6 @@ class Profile extends Component {
         return (
           <tr key={scene._id}>
             <td>{scene.name || scene._id}</td>
-            {/* <td>{scene._id}</td> */}
             <td>
               <button onClick={() => this.fetchScene(scene._id)}>
                 load scene
