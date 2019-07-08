@@ -20,6 +20,7 @@ window.requestAnimFrame = (function() {
 })();
 
 export default function animate() {
+  // console.log("animate", Scene.shapes);
   const timeStep = Scene.timeStep;
   /** TODO: store canvas globally in Scene to make it less expensive **/
   canvas = document.getElementById("canvas");

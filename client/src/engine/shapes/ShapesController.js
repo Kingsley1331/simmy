@@ -4,7 +4,7 @@ var ShapesController = (function() {
   var shapes = Scene.shapes;
 
   function getCentreOfMass(shapeIndex) {
-    var centreOfMass = shapes[shapeIndex].centreOfMass;
+    var centreOfMass = Scene.shapes[shapeIndex].centreOfMass;
     return {
       x: centreOfMass.x,
       y: centreOfMass.y
@@ -12,7 +12,7 @@ var ShapesController = (function() {
   }
 
   function getTouchPoint(shapeIndex) {
-    var touchPoint = shapes[shapeIndex].touchPoint;
+    var touchPoint = Scene.shapes[shapeIndex].touchPoint;
     return {
       x: touchPoint.x,
       y: touchPoint.y
@@ -20,8 +20,7 @@ var ShapesController = (function() {
   }
 
   function getProperty(shapeIndex, propertyName, bool) {
-    // console.log("ShapesController SCENE", Scene);
-    var shape = shapes[shapeIndex];
+    var shape = Scene.shapes[shapeIndex];
     if (!bool) {
       var property = shape[propertyName];
     } else {

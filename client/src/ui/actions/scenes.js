@@ -20,10 +20,11 @@ export function fetchScenes() {
   };
 }
 
+export const getScene = path => axios.get(path);
+
 export function fetchScene(sceneId) {
   return function(dispatch) {
-    axios
-      .get(`/scene/${sceneId}`)
+    getScene(`/scene/${sceneId}`)
       .then(function(scene) {
         return dispatch({
           type: "GET_SCENE",

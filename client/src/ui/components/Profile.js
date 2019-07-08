@@ -1,25 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchScenes, fetchScene, deleteScene } from "../actions/scenes";
-import { updateScene } from "../../engine/scenes/scene";
 
 class Profile extends Component {
   componentDidMount() {
     this.props.fetchScenes();
   }
-
-  // componentDidUpdate(prevProps) {
-  //   console.log("componentDidUpdate SCENE");
-  //   if (this.props.scene) {
-  //     console.log("===========================> check");
-  //     if (prevProps.scene !== this.props.scene) {
-  //       console.log(
-  //         "-----------------------------------------------> updateScene running"
-  //       );
-  //       updateScene(this.props.scene);
-  //     }
-  //   }
-  // }
 
   componentDidUpdate(prevProps) {
     console.log("prevProps", prevProps.scene.shapes);
@@ -96,17 +82,6 @@ const mapStateToProps = ({ scenes, scene }) => {
     scene
   };
 };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     fetchUser : () => dispatch(fetchUser())
-//   }
-// }
-//
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(Users);
 
 export default connect(
   mapStateToProps,

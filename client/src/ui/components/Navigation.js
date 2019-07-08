@@ -23,6 +23,7 @@ class Navigation extends Component {
   }
 
   render() {
+    // console.log("Navigation", this.props);
     return (
       <ul className="nav">
         <li>

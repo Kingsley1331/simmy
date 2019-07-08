@@ -38,6 +38,12 @@ export function updateScene(scene) {
   // Scene.shapes[5].centreOfMass.x = scene.shapes[4].centreOfMass.x;
   // Scene.shapes[5].vertices[0].x = scene.shapes[4].vertices[0].x;
   // Scene.shapes = [];
+
+  // for (let s = 0; s < Scene.shapes.length; s++) {
+  //   Scene.shapes[s] = {};
+  //   Scene.shapes[s].centreOfMass.x = 0;
+  // }
+
   if (scene.shapes) {
     // Scene.backgroundColour = "lightblue";
     // Scene = { ...scene };

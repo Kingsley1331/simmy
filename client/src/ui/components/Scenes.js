@@ -16,12 +16,14 @@ import getMousePos from "../../engine/utils/position";
 import { mouseDown, mouseMove, mouseUp } from "../../engine/utils/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
+import { getScene } from "../actions/scenes";
 
 let canvas;
 class Scenes extends Component {
   constructor(props) {
     super(props);
   }
+
   componentDidMount() {
     // Scene.shapes = this.props.scene.shapes;
     /** TODO: move functions into single index file and import **/
@@ -40,11 +42,13 @@ class Scenes extends Component {
 
   componentWillUnmount() {
     clearShapes();
+    this.props.dispatch({
+      type: "GET_SCENE",
+      payload: {}
+    });
   }
 
   render() {
-    // console.log("scene2 =====>", this.props.scene);
-    // console.log("props =====>", this.props);
     return (
       <div>
         <Buttons />
@@ -60,10 +64,5 @@ const mapStateToProps = ({ buttons, scene }) => {
     scene
   };
 };
-// const mapStateToProps = state => {
-//   return {
-//     buttons: state.buttons
-//   };
-// }
 
 export default connect(mapStateToProps)(Scenes);

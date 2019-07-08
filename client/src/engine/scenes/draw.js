@@ -37,6 +37,7 @@ export const draw = canvas => {
     var lineWidth = ShapesController.getProperty(i, "linewidth");
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var vertices = ShapesController.getProperty(i, "vertices");
+    // console.log("vertices", vertices);
     /** TODO: store config globally in Scene**/
     var config = {
       shadowColor: shadowColor,
