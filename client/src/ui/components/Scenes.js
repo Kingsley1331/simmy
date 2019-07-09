@@ -29,7 +29,7 @@ class Scenes extends Component {
     /** TODO: move functions into single index file and import **/
 
     canvas = document.getElementById("canvas");
-    animate(this.props.scene);
+    animate();
     mouseDown(canvas);
     mouseMove(canvas);
     mouseUp(canvas);
@@ -38,9 +38,6 @@ class Scenes extends Component {
       createWalls();
     }
     updateScene(this.props.scene);
-    // var pngUrl = canvas.toDataURL();
-    // console.log("pngUrl", pngUrl);
-    Scene.context.buffer = canvas;
   }
 
   componentWillUnmount() {

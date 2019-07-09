@@ -80,12 +80,12 @@ export function createWalls() {
   // square2.physics.velocity.x = -0.05;
 
   /* ----------------------------------------------------------------------- */
-  const hexagon = createShape({ x: 650, y: 300 }, shapeSelection.hexagon);
-  createShape({ x: 450, y: 300 }, shapeSelection.hexagon);
-  createShape({ x: 507, y: 300 }, shapeSelection.hexagon);
-  createShape({ x: 575, y: 300 }, shapeSelection.arrow);
+  // const hexagon = createShape({ x: 650, y: 300 }, shapeSelection.hexagon);
+  // createShape({ x: 450, y: 300 }, shapeSelection.hexagon);
+  // createShape({ x: 507, y: 300 }, shapeSelection.hexagon);
+  // createShape({ x: 575, y: 300 }, shapeSelection.arrow);
 
-  hexagon.physics.velocity.x = -0.1;
+  // hexagon.physics.velocity.x = -0.1;
   // /* ----------------------------------------------------------------------- */
   // const hexagon = createShape({ x: 600, y: 300 }, shapeSelection.hexagon);
   // const square = createShape({ x: 470, y: 300 }, shapeSelection.square);

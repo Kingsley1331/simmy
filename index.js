@@ -19,7 +19,8 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb", extended: true }));
 
 app.get("/ping", (req, res) => res.send("pong"));
 
