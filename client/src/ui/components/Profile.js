@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchScenes, fetchScene, deleteScene } from "../actions/scenes";
+// import { fetchScenes, fetchScene, deleteScene } from "../actions/scenes";
 
 class Profile extends Component {
   componentDidMount() {
@@ -81,11 +81,15 @@ const mapStateToProps = ({ scenes, scene }) => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchScenes: () => dispatch({ type: "SCENES" }),
+    fetchScene: sceneId => dispatch({ type: "GET_SCENE_ID", sceneId }),
+    deleteScene: sceneId => dispatch({ type: "DELETE_SCENE", sceneId })
+  };
+};
+
 export default connect(
   mapStateToProps,
-  {
-    fetchScenes,
-    fetchScene,
-    deleteScene
-  }
+  mapDispatchToProps
 )(Profile);
