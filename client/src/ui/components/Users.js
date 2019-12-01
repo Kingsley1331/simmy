@@ -38,9 +38,6 @@ class Users extends Component {
     return (
       <div>
         <h1>Users</h1>
-        {/* <button onClick={this.props.dispatch({ type: "USERS" })}>
-          fetch simmy users
-        </button> */}
         <button onClick={this.props.fetchUser}>fetch simmy users</button>
         {this.getNames()}
       </div>
@@ -50,8 +47,7 @@ class Users extends Component {
 
 const mapStateToProps = state => {
   return {
-    users: state.users,
-    scenes: state.scenes
+    users: state.users
   };
 };
 
@@ -60,18 +56,6 @@ const mapDispatchToProps = dispatch => {
     fetchUser: () => dispatch({ type: "USERS" })
   };
 };
-//
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(Users);
-
-// export default connect(
-//   mapStateToProps,
-//   {
-//     fetchUser: fetchUser
-//   }
-// )(Users);
 
 export default connect(
   mapStateToProps,

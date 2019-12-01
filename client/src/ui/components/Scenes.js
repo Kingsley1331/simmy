@@ -16,7 +16,6 @@ import getMousePos from "../../engine/utils/position";
 import { mouseDown, mouseMove, mouseUp } from "../../engine/utils/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
-import { getScene } from "../actions/scenes";
 
 let canvas;
 class Scenes extends Component {

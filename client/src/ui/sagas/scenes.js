@@ -1,63 +1,46 @@
+import { takeEvery, takeLatest, put, call } from "redux-saga/effects";
 import axios from "axios";
-
-export function fetchScenes() {
-  return function(dispatch) {
-    axios
-      .get("/allscenes/")
-      .then(function(scenes) {
-        console.log("fetchScenes");
-        return dispatch({
-          type: "GET_SCENES",
-          payload: scenes.data
-        });
-      })
-      .catch(function(err) {
-        return dispatch({
-          type: "ERROR",
-          payload: err
-        });
-      });
-  };
-}
 
 export const getScene = path => axios.get(path);
 
-export function fetchScene(sceneId) {
-  return function(dispatch) {
-    getScene(`/scene/${sceneId}`)
-      .then(function(scene) {
-        return dispatch({
-          type: "GET_SCENE",
-          payload: scene.data
-        });
-      })
-      .catch(function(err) {
-        return dispatch({
-          type: "ERROR",
-          payload: err
-        });
-      });
-  };
+export function* deleteScene(sceneId) {
+  yield axios.delete(`/scenes/${sceneId}`);
+  const scenes = yield axios.get("/allscenes/");
+  try {
+    yield put({
+      type: "GET_SCENES",
+      payload: scenes.data
+    });
+  } catch (error) {
+    yield put({ type: "ERROR", payload: error });
+  }
 }
 
-export function deleteScene(sceneId) {
-  return function(dispatch) {
-    axios
-      .delete(`/scenes/${sceneId}`)
-      .then(function(response) {
-        console.log("delete response", response);
-        axios.get("/allscenes/").then(function(scenes) {
-          return dispatch({
-            type: "GET_SCENES",
-            payload: scenes.data
-          });
-        });
-      })
-      .catch(function(err) {
-        return dispatch({
-          type: "ERROR",
-          payload: err
-        });
-      });
-  };
+export function* sceneSaga(sceneId) {
+  const scene = yield getScene(`/scene/${sceneId}`);
+  yield put({
+    type: "GET_SCENE",
+    payload: scene.data
+  });
+}
+
+export function* sceneIdSaga({ type, sceneId }) {
+  if (type === "GET_SCENE_ID") {
+    yield sceneSaga(sceneId);
+  }
+  if (type === "DELETE_SCENE") {
+    yield deleteScene(sceneId);
+  }
+}
+
+export function* scenesSaga() {
+  const scenes = yield axios.get("/allscenes/");
+  try {
+    yield put({
+      type: "GET_SCENES",
+      payload: scenes.data
+    });
+  } catch (error) {
+    yield put({ type: "ERROR", payload: error });
+  }
 }
