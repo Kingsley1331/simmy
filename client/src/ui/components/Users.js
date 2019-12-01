@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchUser } from "../actions/userActions";
-//import { fetchUser2 } from '../actions/userActions';
+// import { fetchUser } from "../actions/userActions";
 
 class Users extends Component {
   getNames() {

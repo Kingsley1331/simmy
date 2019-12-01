@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest, put, call } from "redux-saga/effects";
+import { takeEvery, put, call } from "redux-saga/effects";
 import axios from "axios";
 
 export const getScene = path => axios.get(path);
@@ -24,7 +24,7 @@ export function* sceneSaga(sceneId) {
   });
 }
 
-export function* sceneIdSaga({ type, sceneId }) {
+export function* getSceneId({ type, sceneId }) {
   if (type === "GET_SCENE_ID") {
     yield sceneSaga(sceneId);
   }
@@ -33,7 +33,7 @@ export function* sceneIdSaga({ type, sceneId }) {
   }
 }
 
-export function* scenesSaga() {
+export function* getAllscenes() {
   const scenes = yield axios.get("/allscenes/");
   try {
     yield put({
@@ -43,4 +43,10 @@ export function* scenesSaga() {
   } catch (error) {
     yield put({ type: "ERROR", payload: error });
   }
+}
+
+export function* scenesSaga() {
+  yield call(getAllscenes);
+  yield takeEvery("GET_SCENE_ID", getSceneId);
+  yield takeEvery("DELETE_SCENE", getSceneId);
 }
