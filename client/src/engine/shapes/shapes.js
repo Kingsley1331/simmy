@@ -253,9 +253,12 @@ export function Shape(centre, vertices) {
     collision: {
       runningActions: false,
       actions: [
-        () => (this.fillColour = "red"),
-        () => console.log("ACTION2!"),
-        () => console.log("ACTION3!")
+        {
+          condition: () => this.physics.velocity.x > 0,
+          execute: () => {
+            this.fillColour = "red";
+          }
+        }
       ]
     },
     click: {
@@ -271,7 +274,9 @@ export function Shape(centre, vertices) {
     if (collision.runningActions) {
       const length = collision.actions.length;
       for (let i = 0; i < length; i++) {
-        collision.actions[i]();
+        if (collision.actions[i].condition()) {
+          collision.actions[i].execute();
+        }
         if (i === length - 1) {
           collision.runningActions = false;
         }
