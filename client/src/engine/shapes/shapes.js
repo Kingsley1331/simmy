@@ -258,6 +258,12 @@ export function Shape(centre, vertices) {
           execute: () => {
             this.fillColour = "red";
           }
+        },
+        {
+          condition: () => this.physics.velocity.x <= 0,
+          execute: () => {
+            this.fillColour = "green";
+          }
         }
       ]
     },
