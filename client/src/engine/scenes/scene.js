@@ -70,6 +70,7 @@ export function updateScene(scene) {
           Scene.shapes[i].touchPoint = scene.shapes[i].touchPoint;
           Scene.shapes[i].type = scene.shapes[i].type;
           Scene.shapes[i].collisionData = scene.shapes[i].collisionData || {};
+          Scene.shapes[i].subscriptions = scene.shapes[i].subscriptions || {};
 
           if (scene.shapes[i].type === "fixed") {
             Scene.shapes[i].physics.mass = Infinity;

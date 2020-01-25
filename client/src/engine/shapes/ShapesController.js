@@ -3,6 +3,10 @@ var ShapesController = (function() {
   console.log("ShapesController SCENE", Scene);
   var shapes = Scene.shapes;
 
+  function checkSubscriptions(shapeIndex) {
+    shapes[shapeIndex].checkSubscriptions();
+  }
+
   function getCentreOfMass(shapeIndex) {
     var centreOfMass = Scene.shapes[shapeIndex].centreOfMass;
     return {
@@ -30,6 +34,8 @@ var ShapesController = (function() {
   }
 
   function setProperty(shapeIndex, property, value, bool) {
+    // console.log("property", property);
+    const shape = Scene.shapes[shapeIndex];
     if (!bool) {
       if (
         (Scene.selected === "play" || Scene.selected === "step") &&
@@ -41,11 +47,23 @@ var ShapesController = (function() {
         // console.log('vertices collidingShape', value[4].collidingShape);
         // console.log('vertices collidingShape', value);
       }
+      // const properties = property.split(".");
+      // console.log("properties", properties);
+      // for (let i = 0; i < properties.length; i++) {
+      // }
 
-      Scene.shapes[shapeIndex][property] = value;
+      if (property === "subscriptions.collision.runningActions") {
+        console.log("SHAPE", shape);
+        shape["subscriptions"]["collision"]["runningActions"] = value;
+      } else {
+        shape[property] = value;
+      }
+
+      // Scene.shapes[shapeIndex][property] = value;
     } else if (bool === true) {
       //physics property
-      Scene.shapes[shapeIndex]["physics"][property] = value;
+      shape["physics"][property] = value;
+      // Scene.shapes[shapeIndex]["physics"][property] = value;
     }
   }
 
@@ -56,11 +74,12 @@ var ShapesController = (function() {
   }
 
   return {
-    getCentreOfMass: getCentreOfMass,
-    getTouchPoint: getTouchPoint,
-    getProperty: getProperty,
-    setProperty: setProperty,
-    deleteShape: deleteShape
+    checkSubscriptions,
+    getCentreOfMass,
+    getTouchPoint,
+    getProperty,
+    setProperty,
+    deleteShape
   };
 })();
 

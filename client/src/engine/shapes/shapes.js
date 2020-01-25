@@ -249,6 +249,35 @@ export function Shape(centre, vertices) {
   this.boundingRect.radius = radius;
   this.collisionData = {};
   this.referenceVectors = references;
+  this.subscriptions = {
+    collision: {
+      runningActions: false,
+      actions: [
+        () => (this.fillColour = "red"),
+        () => console.log("ACTION2!"),
+        () => console.log("ACTION3!")
+      ]
+    },
+    click: {
+      runningActions: false,
+      actions: [
+        () => console.log("shape clicked"),
+        () => console.log("turn shape green")
+      ]
+    }
+  };
+  this.checkSubscriptions = function() {
+    const collision = this.subscriptions.collision;
+    if (collision.runningActions) {
+      const length = collision.actions.length;
+      for (let i = 0; i < length; i++) {
+        collision.actions[i]();
+        if (i === length - 1) {
+          collision.runningActions = false;
+        }
+      }
+    }
+  };
 }
 
 export function createShape(centreOfMass, vertices) {
