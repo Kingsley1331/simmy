@@ -18,7 +18,8 @@ let Scene = {
   settings: {
     display: true,
     restitution: 1
-  }
+  },
+  currentEvents: { click: false, doubleClick: false, collision: false }
 };
 
 export function updateSelected(state, Scene) {
@@ -70,7 +71,7 @@ export function updateScene(scene) {
           Scene.shapes[i].touchPoint = scene.shapes[i].touchPoint;
           Scene.shapes[i].type = scene.shapes[i].type;
           Scene.shapes[i].collisionData = scene.shapes[i].collisionData || {};
-          Scene.shapes[i].subscriptions = scene.shapes[i].subscriptions || {};
+          Scene.shapes[i].events = scene.shapes[i].events || {};
 
           if (scene.shapes[i].type === "fixed") {
             Scene.shapes[i].physics.mass = Infinity;

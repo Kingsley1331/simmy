@@ -3,8 +3,12 @@ var ShapesController = (function() {
   console.log("ShapesController SCENE", Scene);
   var shapes = Scene.shapes;
 
-  function checkSubscriptions(shapeIndex) {
-    shapes[shapeIndex].checkSubscriptions();
+  function checkLocalEvents(shapeIndex) {
+    shapes[shapeIndex].checkLocalEvents();
+  }
+
+  function checkGlobalEvents(shapeIndex) {
+    shapes[shapeIndex].checkGlobalEvents();
   }
 
   function getCentreOfMass(shapeIndex) {
@@ -52,9 +56,9 @@ var ShapesController = (function() {
       // for (let i = 0; i < properties.length; i++) {
       // }
 
-      if (property === "subscriptions.collision.runningActions") {
+      if (property === "events.local.collision.runningActions") {
         console.log("SHAPE", shape);
-        shape["subscriptions"]["collision"]["runningActions"] = value;
+        shape["events"]["local"]["collision"]["runningActions"] = value;
       } else {
         shape[property] = value;
       }
@@ -74,7 +78,8 @@ var ShapesController = (function() {
   }
 
   return {
-    checkSubscriptions,
+    checkLocalEvents,
+    checkGlobalEvents,
     getCentreOfMass,
     getTouchPoint,
     getProperty,

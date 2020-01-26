@@ -249,37 +249,76 @@ export function Shape(centre, vertices) {
   this.boundingRect.radius = radius;
   this.collisionData = {};
   this.referenceVectors = references;
-  this.subscriptions = {
-    global: true,
-    collision: {
-      runningActions: false,
-      actions: [
-        {
-          condition: () => this.physics.velocity.x > 0,
-          execute: () => {
-            this.fillColour = "red";
+  this.events = {
+    local: {
+      subscribed: true,
+      collision: {
+        runningActions: false,
+        actions: [
+          {
+            condition: () => this.physics.velocity.x > 0,
+            execute: () => {
+              this.fillColour = "red";
+            }
+          },
+          {
+            condition: () => this.physics.velocity.x <= 0,
+            execute: () => {
+              this.fillColour = "green";
+            }
           }
-        },
-        {
-          condition: () => this.physics.velocity.x <= 0,
-          execute: () => {
-            this.fillColour = "green";
+        ]
+      },
+      click: {
+        actions: [
+          {
+            condition: () => {},
+            execute: () => {}
+          },
+          {
+            condition: () => {},
+            execute: () => {}
           }
-        }
-      ]
+        ]
+      }
     },
-    click: {
-      runningActions: false,
-      actions: [
-        () => console.log("shape clicked"),
-        () => console.log("turn shape green")
-      ]
+    global: {
+      subscribed: true,
+      collision: {
+        actions: []
+      },
+      doubleClick: {
+        actions: [
+          {
+            condition: () => true,
+            execute: () => {
+              this.fillColour = "black";
+            }
+          },
+          {
+            condition: () => true,
+            execute: () => {
+              this.lineColour = "yellow";
+            }
+          },
+          {
+            condition: () => true,
+            execute: () => {
+              this.linewidth = 10;
+            }
+          }
+        ]
+      },
+      click: {
+        actions: []
+      }
     }
   };
   this.tags = [];
-  this.checkSubscriptions = function() {
-    const collision = this.subscriptions.collision;
-    if (collision.runningActions) {
+  this.checkLocalEvents = function() {
+    // console.log("checking local events");
+    const collision = this.events.local.collision;
+    if (collision.runningActions && this.events.local.subscribed) {
       const length = collision.actions.length;
       for (let i = 0; i < length; i++) {
         if (collision.actions[i].condition()) {
@@ -290,6 +329,30 @@ export function Shape(centre, vertices) {
         }
       }
     }
+  };
+  this.checkGlobalEvents = function() {
+    // console.log("checking global events");
+    const globalEvents = Scene.currentEvents;
+    console.log("Scene.currentEvents", globalEvents);
+    if (this.events.global.subscribed) {
+      for (let event in globalEvents) {
+        const numOfClickActions = this.events.global[event].actions.length;
+        const clickActions = this.events.global[event].actions;
+
+        if (globalEvents[event] && numOfClickActions) {
+          for (let j = 0; j < numOfClickActions; j++) {
+            if (clickActions[j].condition()) {
+              clickActions[j].execute();
+            }
+          }
+        }
+      }
+    }
+    // Scene.currentEvents = {
+    //   click: false,
+    //   doubleClick: false,
+    //   collision: false
+    // };
   };
 }
 

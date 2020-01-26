@@ -13,7 +13,12 @@ import {
 import { createWalls } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
 import getMousePos from "../../engine/utils/position";
-import { mouseDown, mouseMove, mouseUp } from "../../engine/utils/listeners";
+import {
+  mouseDown,
+  mouseMove,
+  mouseUp,
+  doubleClick
+} from "../../engine/utils/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
 
@@ -32,6 +37,7 @@ class Scenes extends Component {
     mouseDown(canvas);
     mouseMove(canvas);
     mouseUp(canvas);
+    doubleClick(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(this.props.scene).length) {
       createWalls();

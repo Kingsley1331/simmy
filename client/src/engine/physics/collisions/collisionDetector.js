@@ -23,7 +23,8 @@ export default function collisionDetector() {
       let collidingShapesData = {};
       var verticesA = ShapesController.getProperty(i, "vertices"); //ShapeA
       var centreOfMassA = ShapesController.getCentreOfMass(i);
-      ShapesController.checkSubscriptions(i);
+      ShapesController.checkLocalEvents(i);
+      ShapesController.checkGlobalEvents(i);
       var length = verticesA.length;
 
       vertices: for (var vertIndexA = 0; vertIndexA < length; vertIndexA++) {
@@ -46,9 +47,10 @@ export default function collisionDetector() {
               ShapesController.setProperty(k, "colliding", true);
               ShapesController.setProperty(
                 i,
-                "subscriptions.collision.runningActions",
+                "events.local.collision.runningActions",
                 true
               );
+              // Scene.currentEvents.push('collision');
               collidingShape = k;
 
               /*** After vertex checks all other shapes ***/
