@@ -250,6 +250,7 @@ export function Shape(centre, vertices) {
   this.collisionData = {};
   this.referenceVectors = references;
   this.subscriptions = {
+    global: true,
     collision: {
       runningActions: false,
       actions: [
