@@ -275,6 +275,7 @@ export function Shape(centre, vertices) {
       ]
     }
   };
+  this.tags = [];
   this.checkSubscriptions = function() {
     const collision = this.subscriptions.collision;
     if (collision.runningActions) {
