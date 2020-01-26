@@ -7,8 +7,8 @@ var ShapesController = (function() {
     shapes[shapeIndex].checkLocalEvents();
   }
 
-  function checkGlobalEvents(shapeIndex) {
-    shapes[shapeIndex].checkGlobalEvents();
+  function checkGlobalEvents(shapeIndex, stop) {
+    shapes[shapeIndex].checkGlobalEvents(stop);
   }
 
   function getCentreOfMass(shapeIndex) {

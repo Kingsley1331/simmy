@@ -294,19 +294,19 @@ export function Shape(centre, vertices) {
             execute: () => {
               this.fillColour = "black";
             }
-          },
-          {
-            condition: () => true,
-            execute: () => {
-              this.lineColour = "yellow";
-            }
-          },
-          {
-            condition: () => true,
-            execute: () => {
-              this.linewidth = 10;
-            }
           }
+          // {
+          //   condition: () => true,
+          //   execute: () => {
+          //     this.lineColour = "yellow";
+          //   }
+          // },
+          // {
+          //   condition: () => true,
+          //   execute: () => {
+          //     this.linewidth = 10;
+          //   }
+          // }
         ]
       },
       click: {
@@ -330,10 +330,10 @@ export function Shape(centre, vertices) {
       }
     }
   };
-  this.checkGlobalEvents = function() {
+  this.checkGlobalEvents = function(stop) {
     // console.log("checking global events");
     const globalEvents = Scene.currentEvents;
-    console.log("Scene.currentEvents", globalEvents);
+    // console.log("Scene.currentEvents", globalEvents);
     if (this.events.global.subscribed) {
       for (let event in globalEvents) {
         const numOfClickActions = this.events.global[event].actions.length;
@@ -348,11 +348,13 @@ export function Shape(centre, vertices) {
         }
       }
     }
-    // Scene.currentEvents = {
-    //   click: false,
-    //   doubleClick: false,
-    //   collision: false
-    // };
+    if (stop) {
+      Scene.currentEvents = {
+        click: false,
+        doubleClick: false,
+        collision: false
+      };
+    }
   };
 }
 
