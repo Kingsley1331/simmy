@@ -19,7 +19,8 @@ let Scene = {
     display: true,
     restitution: 1
   },
-  currentEvents: { click: false, doubleClick: false, collision: false }
+  currentEvents: { click: false, doubleClick: false, collision: false },
+  selectedShape: ""
 };
 
 export function updateSelected(state, Scene) {

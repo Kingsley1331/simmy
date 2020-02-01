@@ -17,6 +17,17 @@ import collisionDetector from "../physics/collisions/collisionDetector";
 import Vector from "./maths/Vector";
 
 const timeStep = Scene.timeStep;
+export const click = element => {
+  element.addEventListener(
+    "click",
+    evt => {
+      Scene.currentEvents.click = true;
+      console.log("receiving click :)");
+    },
+    false
+  );
+};
+
 export const doubleClick = element => {
   element.addEventListener(
     "dblclick",
@@ -31,7 +42,7 @@ export const mouseDown = element => {
   element.addEventListener(
     "mousedown",
     evt => {
-      Scene.currentEvents.click = true;
+      // Scene.currentEvents.click = true;
       if (Scene.selected === "step") {
         Scene.time += timeStep;
         forEachShape(function(i) {

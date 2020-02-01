@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
+import Events from "./events/local";
 import { draw } from "../../engine/scenes/draw";
 import Scene, { updateScene } from "../../engine/scenes/scene";
 import {
@@ -17,7 +18,8 @@ import {
   mouseDown,
   mouseMove,
   mouseUp,
-  doubleClick
+  doubleClick,
+  click
 } from "../../engine/utils/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
@@ -38,6 +40,7 @@ class Scenes extends Component {
     mouseMove(canvas);
     mouseUp(canvas);
     doubleClick(canvas);
+    click(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(this.props.scene).length) {
       createWalls();
@@ -55,9 +58,10 @@ class Scenes extends Component {
 
   render() {
     return (
-      <div>
+      <div className="scenesWrapper">
         <Buttons />
         <canvas id="canvas" width="1000" height="600" />
+        <Events />
       </div>
     );
   }

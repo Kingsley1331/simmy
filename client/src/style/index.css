@@ -210,3 +210,8 @@ canvas {
   font-size: 16px;
   cursor: pointer;
 }
+
+.eventsWrapper {
+  position: relative;
+  top: 680px;
+}

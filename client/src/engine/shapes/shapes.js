@@ -254,16 +254,26 @@ export function Shape(centre, vertices) {
       subscribed: true,
       collision: {
         actions: [
+          // {
+          //   condition: () => this.colliding && this.physics.velocity.x > 0,
+          //   execute: () => {
+          //     this.fillColour = "red";
+          //   }
+          // },
+          // {
+          //   condition: () => this.colliding && this.physics.velocity.x <= 0,
+          //   execute: () => {
+          //     this.fillColour = "green";
+          //   }
+          // }
+        ]
+      },
+      selected: {
+        actions: [
           {
-            condition: () => this.colliding && this.physics.velocity.x > 0,
+            condition: () => Scene.selected === this.id,
             execute: () => {
-              this.fillColour = "red";
-            }
-          },
-          {
-            condition: () => this.colliding && this.physics.velocity.x <= 0,
-            execute: () => {
-              this.fillColour = "green";
+              this.fillColour = "purple";
             }
           }
         ]
@@ -309,19 +319,31 @@ export function Shape(centre, vertices) {
         ]
       },
       click: {
-        actions: []
+        actions: [
+          {
+            condition: () => this.onShape,
+            execute: () => {
+              console.log("id", this.id);
+              this.selected = true;
+              // this.physics.velocity.x = 0;
+              // this.physics.velocity.y = 0;
+              Scene.selectedShape = this.id;
+            }
+          }
+        ]
       }
     }
   };
   this.tags = [];
   this.checkLocalEvents = function() {
     // console.log("checking local events");
-    const collision = this.events.local.collision;
+    const collision = this.events.local
+      .collision; /**TEMP: rewrite for all collision types as in global below */
     if (this.events.local.subscribed) {
       const length = collision.actions.length;
       for (let i = 0; i < length; i++) {
-        if (collision.actions[i].condition()) {
-          collision.actions[i].execute();
+        if (collision.actions[i].condition(this)) {
+          collision.actions[i].execute(this);
         }
       }
     }
