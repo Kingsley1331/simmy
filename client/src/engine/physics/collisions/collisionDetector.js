@@ -23,8 +23,6 @@ export default function collisionDetector() {
       let collidingShapesData = {};
       var verticesA = ShapesController.getProperty(i, "vertices"); //ShapeA
       var centreOfMassA = ShapesController.getCentreOfMass(i);
-      ShapesController.checkLocalEvents(i);
-      ShapesController.checkGlobalEvents(i, i === numShapes - 1);
       var length = verticesA.length;
 
       vertices: for (var vertIndexA = 0; vertIndexA < length; vertIndexA++) {

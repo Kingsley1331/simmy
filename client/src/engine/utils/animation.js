@@ -3,6 +3,7 @@ import { forEachShape } from "../shapes/shapes";
 import { applyMotion } from "../physics/motion";
 import { draw } from "../scenes/draw";
 import collisionDetector from "../physics/collisions/collisionDetector";
+import ShapesController from "../shapes/ShapesController";
 import applyForces from "../physics/forces/applyForces";
 
 let canvas;
@@ -28,11 +29,15 @@ export default function animate() {
   var currentTime = date.getTime();
   let time = Scene.time;
   var tDelta = currentTime - time;
+  let shapes = Scene.shapes;
+  let numShapes = shapes.length;
   if (Scene.selected === "play") {
     forEachShape(function(i) {
       // applyMotion(i, tDelta);
       applyMotion(i, timeStep);
       applyForces(i);
+      ShapesController.checkLocalEvents(i);
+      ShapesController.checkGlobalEvents(i, i === numShapes - 1);
     });
     /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
     collisionDetector();
