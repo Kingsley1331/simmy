@@ -220,7 +220,6 @@ export function Shape(centre, vertices) {
   this.centreOfMass = centreOfMass;
   this.centreOfRotation = centreOfMass;
   this.vertices = vertices;
-  this.colliding = false;
   this.physics = {
     density: 1,
     mass: massData.mass,
@@ -232,9 +231,6 @@ export function Shape(centre, vertices) {
     forcesCOM: [{ x: 0, y: 0 }],
     torque: 0
   };
-  this.onShape = false;
-  this.dragging = false;
-  this.selected = false;
   this.touchPoint = [];
   this.display = [];
   this.boundingRect = boundingRect;
@@ -249,20 +245,23 @@ export function Shape(centre, vertices) {
   this.boundingRect.radius = radius;
   this.collisionData = {};
   this.referenceVectors = references;
+  this.colliding = false;
+  this.onShape = false;
+  this.dragging = false;
+  this.selected = false;
   this.events = {
     local: {
       subscribed: true,
       collision: {
-        runningActions: false,
         actions: [
           {
-            condition: () => this.physics.velocity.x > 0,
+            condition: () => this.colliding && this.physics.velocity.x > 0,
             execute: () => {
               this.fillColour = "red";
             }
           },
           {
-            condition: () => this.physics.velocity.x <= 0,
+            condition: () => this.colliding && this.physics.velocity.x <= 0,
             execute: () => {
               this.fillColour = "green";
             }
@@ -318,14 +317,11 @@ export function Shape(centre, vertices) {
   this.checkLocalEvents = function() {
     // console.log("checking local events");
     const collision = this.events.local.collision;
-    if (collision.runningActions && this.events.local.subscribed) {
+    if (this.events.local.subscribed) {
       const length = collision.actions.length;
       for (let i = 0; i < length; i++) {
         if (collision.actions[i].condition()) {
           collision.actions[i].execute();
-        }
-        if (i === length - 1) {
-          collision.runningActions = false;
         }
       }
     }
@@ -338,7 +334,6 @@ export function Shape(centre, vertices) {
       for (let event in globalEvents) {
         const numOfClickActions = this.events.global[event].actions.length;
         const clickActions = this.events.global[event].actions;
-
         if (globalEvents[event] && numOfClickActions) {
           for (let j = 0; j < numOfClickActions; j++) {
             if (clickActions[j].condition()) {

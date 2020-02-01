@@ -55,15 +55,7 @@ var ShapesController = (function() {
       // console.log("properties", properties);
       // for (let i = 0; i < properties.length; i++) {
       // }
-
-      if (property === "events.local.collision.runningActions") {
-        console.log("SHAPE", shape);
-        shape["events"]["local"]["collision"]["runningActions"] = value;
-      } else {
-        shape[property] = value;
-      }
-
-      // Scene.shapes[shapeIndex][property] = value;
+      shape[property] = value;
     } else if (bool === true) {
       //physics property
       shape["physics"][property] = value;

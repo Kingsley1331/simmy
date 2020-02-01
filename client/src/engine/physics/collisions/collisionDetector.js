@@ -43,11 +43,6 @@ export default function collisionDetector() {
             if (isPointInShape(centreOfMassB, verticesB, checkPoint)) {
               ShapesController.setProperty(i, "colliding", true);
               ShapesController.setProperty(k, "colliding", true);
-              ShapesController.setProperty(
-                i,
-                "events.local.collision.runningActions",
-                true
-              );
               // Scene.currentEvents.push('collision');
               collidingShape = k;
 
