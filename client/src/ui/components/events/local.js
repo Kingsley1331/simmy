@@ -2,48 +2,74 @@ import React, { useRef } from "react";
 import Scene from "../../../engine/scenes/scene";
 
 const EventForm = () => {
-  const properties = useRef(null);
   const properties2 = useRef(null);
-  const newPropValue = useRef(null);
+  const propertiesc2 = useRef(null);
+  const newPropValue1 = useRef(null);
   const newPropValue2 = useRef(null);
   const comparisonValue = useRef(null);
+  const comparisonValuec2 = useRef(null);
   const eventTypes = useRef(null);
   const operator = useRef(null);
+  const operatorc2 = useRef(null);
+  const actionProperty = useRef(null);
+  const actionProperty2 = useRef(null);
+
+  const propertyMap = {
+    fillColour: "fillColour",
+    lineColour: "lineColour",
+    linewidth: "linewidth",
+    "centreOfMass.x": "centreOfMass.x",
+    "centreOfMass.y": "centreOfMass.y",
+    "velocity.x": "physics.velocity.x",
+    "velocity.y": "physics.velocity.y"
+  };
 
   const showEvent = () => {
-    // const property = properties.current.value;
     const propertyName = properties2.current.value;
-    // const newValue = newPropValue.current.value;
+    const propertyName2 = propertiesc2.current.value;
+    const actionPropertyName = actionProperty.current.value;
+    const actionPropertyName2 = actionProperty2.current.value;
+    const newValue1 = newPropValue1.current.value;
     const newValue2 = newPropValue2.current.value;
     const comparison = comparisonValue.current.value;
+    const comparison2 = comparisonValuec2.current.value;
     const eventType = eventTypes.current.value;
     const operatorValue = operator.current.value;
+    const operatorValue2 = operatorc2.current.value;
 
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
 
-    const action = {};
+    const action1 = {};
+    const action2 = {};
+
+    const property = propertyMap[propertyName];
+    const property2 = propertyMap[propertyName2] || true;
+    const actionProperty1 = propertyMap[actionPropertyName];
+    const actionProperty2a = propertyMap[actionPropertyName2];
 
     const conditionFunction = eval(
-      `(shape) => shape.colliding && shape.${propertyName}${operatorValue}'${comparison}'`
+      `(shape) => shape.colliding && shape.${property}${operatorValue}'${comparison}'`
     );
 
-    action.condition = conditionFunction;
+    const conditionFunction2 = eval(
+      `(shape) => shape.colliding && shape.${property2}${operatorValue2}'${comparison2}'`
+    );
 
-    console.log("conditionFunction", conditionFunction);
+    action1.condition = conditionFunction;
+    action2.condition = conditionFunction2;
 
-    // const executionFunction = eval(`(shape)=>{shape.fillColour='red'}`);
     const executionFunction = eval(
-      `(shape)=>{shape.${propertyName}='${newValue2}'}`
+      `(shape)=>{shape.${actionProperty1}='${newValue1}'}`
     );
-    action.execute = executionFunction;
-
-    console.log("executionFunction", executionFunction);
-    // action.condition();
-    console.log("action", action);
-    shape.events.local[eventType].actions.push(
-      action
-    ); /**TEMP: consider using shapesController */
+    const executionFunction2 = eval(
+      `(shape)=>{shape.${actionProperty2a}='${newValue2}'}`
+    );
+    action1.execute = executionFunction;
+    action2.execute = executionFunction2;
+    shape.events.local[eventType].actions.push(action1);
+    shape.events.local[eventType].actions.push(action2);
+    /**TEMP: consider using shapesController */
   };
 
   return (
@@ -63,27 +89,63 @@ const EventForm = () => {
         <select ref={properties2}>
           <option value="fillColour">fillcolour</option>
           <option value="linewidth">linewidth</option>
+          <option value="velocity.x">velocity.x</option>
+          <option value="velocity.y">velocity.y</option>
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select ref={operator}>
           <option value="===">equal</option>
           <option value="!==">not equal</option>
+          <option value=">">greater than</option>
+          <option value="<">less than</option>
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input defaultValue="#6495ED" ref={comparisonValue} />
       </div>
-      <h2> Actions:</h2>
-      New value: <input defaultValue="red" ref={newPropValue2} />
-      {/* <hr />
-      choose property to modify:{" "}
-      <select ref={properties}>
-        <option value="fillColour">fillcolour</option>
-        <option value="linewidth">linewidth</option>
-      </select>
+      <div>
+        <h3>Condition 2:</h3>
+        Property name:&nbsp; &nbsp;
+        <select ref={propertiesc2}>
+          <option value="fillColour">fillcolour</option>
+          <option value="linewidth">linewidth</option>
+          <option value="velocity.x">velocity.x</option>
+          <option value="velocity.y">velocity.y</option>
+        </select>
+        &nbsp; &nbsp; operator &nbsp; &nbsp;
+        <select ref={operatorc2}>
+          <option value="===">equal</option>
+          <option value="!==">not equal</option>
+          <option value=">">greater than</option>
+          <option value="<">less than</option>
+        </select>
+        &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
+        <input defaultValue="#6495ED" ref={comparisonValuec2} />
+      </div>
+      <h2> Code Execution1:</h2>
+      <div>
+        Property name:&nbsp; &nbsp;
+        <select ref={actionProperty}>
+          <option value="fillColour">fillcolour</option>
+          <option value="linewidth">linewidth</option>
+          <option value="velocity.x">velocity.x</option>
+          <option value="velocity.y">velocity.y</option>
+        </select>
+        &nbsp; &nbsp; New value1:{" "}
+        <input defaultValue="red" ref={newPropValue1} />
+      </div>
       <br />
+      <div>
+        Property name:&nbsp; &nbsp;
+        <select ref={actionProperty2}>
+          <option value="fillColour">fillcolour</option>
+          <option value="linewidth">linewidth</option>
+          <option value="velocity.x">velocity.x</option>
+          <option value="velocity.y">velocity.y</option>
+        </select>
+        &nbsp; &nbsp; New value2:{" "}
+        <input defaultValue="green" ref={newPropValue2} />
+      </div>
       <br />
-      New value: <input ref={newPropValue} />
-      <br /> <br />*/}
       <button onClick={showEvent}>submit</button>
     </div>
   );
