@@ -253,42 +253,7 @@ export function Shape(centre, vertices) {
     local: {
       subscribed: true,
       collision: {
-        actions: [
-          // {
-          //   condition: () => this.colliding && this.physics.velocity.x > 0,
-          //   execute: () => {
-          //     this.fillColour = "red";
-          //   }
-          // },
-          // {
-          //   condition: () => this.colliding && this.physics.velocity.x <= 0,
-          //   execute: () => {
-          //     this.fillColour = "green";
-          //   }
-          // }
-        ]
-      },
-      selected: {
-        actions: [
-          {
-            condition: () => Scene.selected === this.id,
-            execute: () => {
-              this.fillColour = "purple";
-            }
-          }
-        ]
-      },
-      click: {
-        actions: [
-          {
-            condition: () => {},
-            execute: () => {}
-          },
-          {
-            condition: () => {},
-            execute: () => {}
-          }
-        ]
+        actions: []
       }
     },
     global: {
@@ -325,8 +290,6 @@ export function Shape(centre, vertices) {
             execute: () => {
               console.log("id", this.id);
               this.selected = true;
-              // this.physics.velocity.x = 0;
-              // this.physics.velocity.y = 0;
               Scene.selectedShape = this.id;
             }
           }
@@ -336,22 +299,24 @@ export function Shape(centre, vertices) {
   };
   this.tags = [];
   this.checkLocalEvents = function() {
-    // console.log("checking local events");
-    const collision = this.events.local
-      .collision; /**TEMP: rewrite for all collision types as in global below */
-    if (this.events.local.subscribed) {
-      const length = collision.actions.length;
-      for (let i = 0; i < length; i++) {
-        if (collision.actions[i].condition(this)) {
-          collision.actions[i].execute(this);
+    const localEvents = this.events.local;
+    if (localEvents.subscribed) {
+      for (let event in localEvents) {
+        if (event !== "subscribed") {
+          const actions = localEvents[event].actions;
+          const length = actions.length;
+          for (let i = 0; i < length; i++) {
+            if (actions[i].condition(this)) {
+              actions[i].execute(this);
+            }
+          }
         }
       }
     }
   };
+
   this.checkGlobalEvents = function(stop) {
-    // console.log("checking global events");
     const globalEvents = Scene.currentEvents;
-    // console.log("Scene.currentEvents", globalEvents);
     if (this.events.global.subscribed) {
       for (let event in globalEvents) {
         const numOfClickActions = this.events.global[event].actions.length;

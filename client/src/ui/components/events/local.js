@@ -87,41 +87,41 @@ const EventForm = () => {
         <h3>Condition 1:</h3>
         Property name:&nbsp; &nbsp;
         <select ref={properties2}>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
           <option value="velocity.x">velocity.x</option>
           <option value="velocity.y">velocity.y</option>
+          <option value="fillColour">fillcolour</option>
+          <option value="linewidth">linewidth</option>
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select ref={operator}>
-          <option value="===">equal</option>
-          <option value="!==">not equal</option>
           <option value=">">greater than</option>
           <option value="<">less than</option>
+          <option value="===">equal</option>
+          <option value="!==">not equal</option>
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
-        <input defaultValue="#6495ED" ref={comparisonValue} />
+        <input defaultValue="0" ref={comparisonValue} />
       </div>
       <div>
         <h3>Condition 2:</h3>
         Property name:&nbsp; &nbsp;
         <select ref={propertiesc2}>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
           <option value="velocity.x">velocity.x</option>
           <option value="velocity.y">velocity.y</option>
+          <option value="fillColour">fillcolour</option>
+          <option value="linewidth">linewidth</option>
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select ref={operatorc2}>
+          <option value="<">less than</option>
+          <option value=">">greater than</option>
           <option value="===">equal</option>
           <option value="!==">not equal</option>
-          <option value=">">greater than</option>
-          <option value="<">less than</option>
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
-        <input defaultValue="#6495ED" ref={comparisonValuec2} />
+        <input defaultValue="0" ref={comparisonValuec2} />
       </div>
-      <h2> Code Execution1:</h2>
+      <h2> Actions:</h2>
       <div>
         Property name:&nbsp; &nbsp;
         <select ref={actionProperty}>
