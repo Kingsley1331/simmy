@@ -67,8 +67,10 @@ const EventForm = () => {
     );
     action1.execute = executionFunction;
     action2.execute = executionFunction2;
-    shape.events.local[eventType].actions.push(action1);
-    shape.events.local[eventType].actions.push(action2);
+    if (shape) {
+      shape.events.local[eventType].actions.push(action1);
+      shape.events.local[eventType].actions.push(action2);
+    }
     /**TEMP: consider using shapesController */
   };
 

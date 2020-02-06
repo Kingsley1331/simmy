@@ -285,14 +285,14 @@ export function Shape(centre, vertices) {
       },
       click: {
         actions: [
-          {
-            condition: () => this.onShape,
-            execute: () => {
-              console.log("id", this.id);
-              this.selected = true;
-              Scene.selectedShape = this.id;
-            }
-          }
+          // {
+          //   condition: () => this.onShape,
+          //   execute: () => {
+          //     console.log("id", this.id);
+          //     this.selected = true;
+          //     Scene.selectedShape = this.id;
+          //   }
+          // }
         ]
       }
     }
@@ -370,10 +370,12 @@ export function forEachShape(callback, order) {
 }
 
 export function detectShape(i) {
+  let shapeIndex;
   var centreOfMass = ShapesController.getCentreOfMass(i);
   var vertices = ShapesController.getProperty(i, "vertices");
   var pointInShape = isPointInShape(centreOfMass, vertices, Scene.mousePos);
   if (pointInShape) {
+    shapeIndex = i;
     if (!Scene.cursorOnshape) {
       ShapesController.setProperty(i, "onShape", true);
       Scene.cursorOnshape = true;
@@ -390,6 +392,7 @@ export function detectShape(i) {
   if (ShapesController.getProperty(i, "dragging")) {
     dragShape(i);
   }
+  return shapeIndex;
 }
 
 function dragShape(i) {
