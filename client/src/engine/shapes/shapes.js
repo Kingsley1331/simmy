@@ -2,6 +2,11 @@ import Scene from "../scenes/scene";
 import ShapesController from "./ShapesController";
 import getMousePos from "../utils/position";
 import { throwVelocity } from "../utils/throw";
+import { evaluateComparison } from "../utils/maths/operators";
+import {
+  getObjectValueFromString,
+  setObjectValueFromString
+} from "../utils/objects";
 import { findMass } from "../physics/mass/mass";
 import referenceVectors from "../physics/collisions/referenceVectors";
 import { findMomentOfInertiaCOM } from "../physics/mass/momentOfInertia";
@@ -253,41 +258,46 @@ export function Shape(centre, vertices) {
     local: {
       subscribed: true,
       collision: {
-        actions: []
+        rules: [
+          {
+            condition: {
+              propertyName: "physics.velocity.x",
+              operator: ">",
+              comparisonValue: "0"
+            },
+            action: { propertyName: "fillColour", newValue: "red" }
+          },
+          {
+            condition: {
+              propertyName: "physics.velocity.x",
+              operator: "<",
+              comparisonValue: "0"
+            },
+            action: { propertyName: "fillColour", newValue: "green" }
+          }
+        ]
       }
     },
     global: {
       subscribed: true,
       collision: {
-        actions: []
+        rules: []
       },
       doubleClick: {
-        actions: [
+        rules: [
           {
             condition: () => true,
-            execute: () => {
+            action: () => {
               this.fillColour = "black";
             }
           }
-          // {
-          //   condition: () => true,
-          //   execute: () => {
-          //     this.lineColour = "yellow";
-          //   }
-          // },
-          // {
-          //   condition: () => true,
-          //   execute: () => {
-          //     this.linewidth = 10;
-          //   }
-          // }
         ]
       },
       click: {
-        actions: [
+        rules: [
           // {
           //   condition: () => this.onShape,
-          //   execute: () => {
+          //   action: () => {
           //     console.log("id", this.id);
           //     this.selected = true;
           //     Scene.selectedShape = this.id;
@@ -298,16 +308,29 @@ export function Shape(centre, vertices) {
     }
   };
   this.tags = [];
+
   this.checkLocalEvents = function() {
     const localEvents = this.events.local;
+
     if (localEvents.subscribed) {
       for (let event in localEvents) {
         if (event !== "subscribed") {
-          const actions = localEvents[event].actions;
-          const length = actions.length;
+          const rules = localEvents[event].rules;
+          const length = rules.length;
+
           for (let i = 0; i < length; i++) {
-            if (actions[i].condition(this)) {
-              actions[i].execute(this);
+            let bool = false;
+            const rule = rules[i];
+            const condition = rule.condition;
+            const action = rule.action;
+            const propertyName = condition.propertyName;
+            const comparisonValue = condition.comparisonValue;
+            const operator = condition.operator;
+            const actionPropName = action.propertyName;
+            const propertyValue = getObjectValueFromString(this, propertyName);
+            bool = evaluateComparison(propertyValue, comparisonValue, operator);
+            if (this.colliding && bool) {
+              setObjectValueFromString(this, actionPropName, action.newValue);
             }
           }
         }
@@ -315,16 +338,33 @@ export function Shape(centre, vertices) {
     }
   };
 
+  // this.checkLocalEvents = function() {
+  //   const localEvents = this.events.local;
+  //   if (localEvents.subscribed) {
+  //     for (let event in localEvents) {
+  //       if (event !== "subscribed") {
+  //         const rules = localEvents[event].rules;
+  //         const length = rules.length;
+  //         for (let i = 0; i < length; i++) {
+  //           if (rules[i].condition(this)) {
+  //             rules[i].action(this);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
+
   this.checkGlobalEvents = function(stop) {
     const globalEvents = Scene.currentEvents;
     if (this.events.global.subscribed) {
       for (let event in globalEvents) {
-        const numOfClickActions = this.events.global[event].actions.length;
-        const clickActions = this.events.global[event].actions;
+        const numOfClickActions = this.events.global[event].rules.length;
+        const clickActions = this.events.global[event].rules;
         if (globalEvents[event] && numOfClickActions) {
           for (let j = 0; j < numOfClickActions; j++) {
             if (clickActions[j].condition()) {
-              clickActions[j].execute();
+              clickActions[j].action();
             }
           }
         }

@@ -24,6 +24,56 @@ const EventForm = () => {
     "velocity.y": "physics.velocity.y"
   };
 
+  // const showEvent = () => {
+  //   const propertyName = properties2.current.value;
+  //   const propertyName2 = propertiesc2.current.value;
+  //   const actionPropertyName = actionProperty.current.value;
+  //   const actionPropertyName2 = actionProperty2.current.value;
+  //   const newValue1 = newPropValue1.current.value;
+  //   const newValue2 = newPropValue2.current.value;
+  //   const comparison = comparisonValue.current.value;
+  //   const comparison2 = comparisonValuec2.current.value;
+  //   const eventType = eventTypes.current.value;
+  //   const operatorValue = operator.current.value;
+  //   const operatorValue2 = operatorc2.current.value;
+
+  //   const selectedShape = Scene.selectedShape;
+  //   const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
+
+  //   const action1 = {};
+  //   const action2 = {};
+
+  //   const property = propertyMap[propertyName];
+  //   const property2 = propertyMap[propertyName2] || true;
+  //   const actionProperty1 = propertyMap[actionPropertyName];
+  //   const actionProperty2a = propertyMap[actionPropertyName2];
+
+  //   const conditionFunction = eval(
+  //     `(shape) => shape.colliding && shape.${property}${operatorValue}'${comparison}'`
+  //   );
+
+  //   const conditionFunction2 = eval(
+  //     `(shape) => shape.colliding && shape.${property2}${operatorValue2}'${comparison2}'`
+  //   );
+
+  //   action1.condition = conditionFunction;
+  //   action2.condition = conditionFunction2;
+
+  //   const executionFunction = eval(
+  //     `(shape)=>{shape.${actionProperty1}='${newValue1}'}`
+  //   );
+  //   const executionFunction2 = eval(
+  //     `(shape)=>{shape.${actionProperty2a}='${newValue2}'}`
+  //   );
+  //   action1.action = executionFunction;
+  //   action2.action = executionFunction2;
+  //   if (shape) {
+  //     shape.events.local[eventType].rules.push(action1);
+  //     shape.events.local[eventType].rules.push(action2);
+  //   }
+  //   /**TEMP: consider using shapesController */
+  // };
+
   const showEvent = () => {
     const propertyName = properties2.current.value;
     const propertyName2 = propertiesc2.current.value;
@@ -65,11 +115,11 @@ const EventForm = () => {
     const executionFunction2 = eval(
       `(shape)=>{shape.${actionProperty2a}='${newValue2}'}`
     );
-    action1.execute = executionFunction;
-    action2.execute = executionFunction2;
+    action1.action = executionFunction;
+    action2.action = executionFunction2;
     if (shape) {
-      shape.events.local[eventType].actions.push(action1);
-      shape.events.local[eventType].actions.push(action2);
+      shape.events.local[eventType].rules.push(action1);
+      shape.events.local[eventType].rules.push(action2);
     }
     /**TEMP: consider using shapesController */
   };
@@ -84,69 +134,80 @@ const EventForm = () => {
         <option value="double click">double click</option>
         <option value="hover">hover</option>
       </select>
-      <h2> Conditions:</h2>
-      <div>
-        <h3>Condition 1:</h3>
-        Property name:&nbsp; &nbsp;
-        <select ref={properties2}>
-          <option value="velocity.x">velocity.x</option>
-          <option value="velocity.y">velocity.y</option>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
-        </select>
-        &nbsp; &nbsp; operator &nbsp; &nbsp;
-        <select ref={operator}>
-          <option value=">">greater than</option>
-          <option value="<">less than</option>
-          <option value="===">equal</option>
-          <option value="!==">not equal</option>
-        </select>
-        &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
-        <input defaultValue="0" ref={comparisonValue} />
+      <div className="rule">
+        <h2> Rule 1:</h2>
+        <div>
+          <h3>Condition 1:</h3>
+          Property name:&nbsp; &nbsp;
+          <select ref={properties2}>
+            <option value="velocity.x">velocity.x</option>
+            <option value="velocity.y">velocity.y</option>
+            <option value="fillColour">fillcolour</option>
+            <option value="linewidth">linewidth</option>
+          </select>
+          &nbsp; &nbsp; operator &nbsp; &nbsp;
+          <select ref={operator}>
+            <option value=">">greater than</option>
+            <option value="<">less than</option>
+            <option value="===">equal</option>
+            <option value="!==">not equal</option>
+          </select>
+          &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
+          <input defaultValue="0" ref={comparisonValue} />
+        </div>
+
+        <div>
+          <h3>Execution 1:</h3>
+          Property name:&nbsp; &nbsp;
+          <select ref={actionProperty}>
+            <option value="fillColour">fillcolour</option>
+            <option value="linewidth">linewidth</option>
+            <option value="velocity.x">velocity.x</option>
+            <option value="velocity.y">velocity.y</option>
+          </select>
+          &nbsp; &nbsp; New value1:{" "}
+          <input defaultValue="red" ref={newPropValue1} />
+        </div>
       </div>
-      <div>
-        <h3>Condition 2:</h3>
-        Property name:&nbsp; &nbsp;
-        <select ref={propertiesc2}>
-          <option value="velocity.x">velocity.x</option>
-          <option value="velocity.y">velocity.y</option>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
-        </select>
-        &nbsp; &nbsp; operator &nbsp; &nbsp;
-        <select ref={operatorc2}>
-          <option value="<">less than</option>
-          <option value=">">greater than</option>
-          <option value="===">equal</option>
-          <option value="!==">not equal</option>
-        </select>
-        &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
-        <input defaultValue="0" ref={comparisonValuec2} />
+
+      <div className="rule">
+        <h2> Rule 2:</h2>
+
+        <div>
+          <h3>Condition 2:</h3>
+          Property name:&nbsp; &nbsp;
+          <select ref={propertiesc2}>
+            <option value="velocity.x">velocity.x</option>
+            <option value="velocity.y">velocity.y</option>
+            <option value="fillColour">fillcolour</option>
+            <option value="linewidth">linewidth</option>
+          </select>
+          &nbsp; &nbsp; operator &nbsp; &nbsp;
+          <select ref={operatorc2}>
+            <option value="<">less than</option>
+            <option value=">">greater than</option>
+            <option value="===">equal</option>
+            <option value="!==">not equal</option>
+          </select>
+          &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
+          <input defaultValue="0" ref={comparisonValuec2} />
+        </div>
+
+        <br />
+        <div>
+          <h3>Execution 2:</h3>
+          Property name:&nbsp; &nbsp;
+          <select ref={actionProperty2}>
+            <option value="fillColour">fillcolour</option>
+            <option value="linewidth">linewidth</option>
+            <option value="velocity.x">velocity.x</option>
+            <option value="velocity.y">velocity.y</option>
+          </select>
+          &nbsp; &nbsp; New value2:{" "}
+          <input defaultValue="green" ref={newPropValue2} />
+        </div>
       </div>
-      <h2> Actions:</h2>
-      <div>
-        Property name:&nbsp; &nbsp;
-        <select ref={actionProperty}>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
-          <option value="velocity.x">velocity.x</option>
-          <option value="velocity.y">velocity.y</option>
-        </select>
-        &nbsp; &nbsp; New value1:{" "}
-        <input defaultValue="red" ref={newPropValue1} />
-      </div>
-      <br />
-      <div>
-        Property name:&nbsp; &nbsp;
-        <select ref={actionProperty2}>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
-          <option value="velocity.x">velocity.x</option>
-          <option value="velocity.y">velocity.y</option>
-        </select>
-        &nbsp; &nbsp; New value2:{" "}
-        <input defaultValue="green" ref={newPropValue2} />
-      </div>
+
       <br />
       <button onClick={showEvent}>submit</button>
     </div>
