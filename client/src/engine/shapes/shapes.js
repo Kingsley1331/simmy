@@ -259,22 +259,22 @@ export function Shape(centre, vertices) {
       subscribed: true,
       collision: {
         rules: [
-          {
-            condition: {
-              propertyName: "physics.velocity.x",
-              operator: ">",
-              comparisonValue: "0"
-            },
-            action: { propertyName: "fillColour", newValue: "red" }
-          },
-          {
-            condition: {
-              propertyName: "physics.velocity.x",
-              operator: "<",
-              comparisonValue: "0"
-            },
-            action: { propertyName: "fillColour", newValue: "green" }
-          }
+          // {
+          //   condition: {
+          //     propertyName: "physics.velocity.x",
+          //     operator: ">",
+          //     comparisonValue: "0"
+          //   },
+          //   action: { propertyName: "fillColour", newValue: "red" }
+          // },
+          // {
+          //   condition: {
+          //     propertyName: "physics.velocity.x",
+          //     operator: "<",
+          //     comparisonValue: "0"
+          //   },
+          //   action: { propertyName: "fillColour", newValue: "green" }
+          // }
         ]
       }
     },

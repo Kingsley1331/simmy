@@ -24,56 +24,6 @@ const EventForm = () => {
     "velocity.y": "physics.velocity.y"
   };
 
-  // const showEvent = () => {
-  //   const propertyName = properties2.current.value;
-  //   const propertyName2 = propertiesc2.current.value;
-  //   const actionPropertyName = actionProperty.current.value;
-  //   const actionPropertyName2 = actionProperty2.current.value;
-  //   const newValue1 = newPropValue1.current.value;
-  //   const newValue2 = newPropValue2.current.value;
-  //   const comparison = comparisonValue.current.value;
-  //   const comparison2 = comparisonValuec2.current.value;
-  //   const eventType = eventTypes.current.value;
-  //   const operatorValue = operator.current.value;
-  //   const operatorValue2 = operatorc2.current.value;
-
-  //   const selectedShape = Scene.selectedShape;
-  //   const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
-
-  //   const action1 = {};
-  //   const action2 = {};
-
-  //   const property = propertyMap[propertyName];
-  //   const property2 = propertyMap[propertyName2] || true;
-  //   const actionProperty1 = propertyMap[actionPropertyName];
-  //   const actionProperty2a = propertyMap[actionPropertyName2];
-
-  //   const conditionFunction = eval(
-  //     `(shape) => shape.colliding && shape.${property}${operatorValue}'${comparison}'`
-  //   );
-
-  //   const conditionFunction2 = eval(
-  //     `(shape) => shape.colliding && shape.${property2}${operatorValue2}'${comparison2}'`
-  //   );
-
-  //   action1.condition = conditionFunction;
-  //   action2.condition = conditionFunction2;
-
-  //   const executionFunction = eval(
-  //     `(shape)=>{shape.${actionProperty1}='${newValue1}'}`
-  //   );
-  //   const executionFunction2 = eval(
-  //     `(shape)=>{shape.${actionProperty2a}='${newValue2}'}`
-  //   );
-  //   action1.action = executionFunction;
-  //   action2.action = executionFunction2;
-  //   if (shape) {
-  //     shape.events.local[eventType].rules.push(action1);
-  //     shape.events.local[eventType].rules.push(action2);
-  //   }
-  //   /**TEMP: consider using shapesController */
-  // };
-
   const showEvent = () => {
     const propertyName = properties2.current.value;
     const propertyName2 = propertiesc2.current.value;
@@ -90,36 +40,32 @@ const EventForm = () => {
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
 
-    const action1 = {};
-    const action2 = {};
+    const rule1 = {};
+    const rule2 = {};
 
-    const property = propertyMap[propertyName];
-    const property2 = propertyMap[propertyName2] || true;
-    const actionProperty1 = propertyMap[actionPropertyName];
-    const actionProperty2a = propertyMap[actionPropertyName2];
+    rule1.condition = {
+      propertyName: propertyMap[propertyName],
+      operator: operatorValue,
+      comparisonValue: comparison
+    };
+    rule2.condition = {
+      propertyName: propertyMap[propertyName2],
+      operator: operatorValue2,
+      comparisonValue: comparison2
+    };
 
-    const conditionFunction = eval(
-      `(shape) => shape.colliding && shape.${property}${operatorValue}'${comparison}'`
-    );
+    rule1.action = {
+      propertyName: propertyMap[actionPropertyName],
+      newValue: newValue1
+    };
+    rule2.action = {
+      propertyName: propertyMap[actionPropertyName2],
+      newValue: newValue2
+    };
 
-    const conditionFunction2 = eval(
-      `(shape) => shape.colliding && shape.${property2}${operatorValue2}'${comparison2}'`
-    );
-
-    action1.condition = conditionFunction;
-    action2.condition = conditionFunction2;
-
-    const executionFunction = eval(
-      `(shape)=>{shape.${actionProperty1}='${newValue1}'}`
-    );
-    const executionFunction2 = eval(
-      `(shape)=>{shape.${actionProperty2a}='${newValue2}'}`
-    );
-    action1.action = executionFunction;
-    action2.action = executionFunction2;
     if (shape) {
-      shape.events.local[eventType].rules.push(action1);
-      shape.events.local[eventType].rules.push(action2);
+      shape.events.local[eventType].rules.push(rule1);
+      shape.events.local[eventType].rules.push(rule2);
     }
     /**TEMP: consider using shapesController */
   };
