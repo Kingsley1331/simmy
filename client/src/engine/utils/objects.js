@@ -1,4 +1,7 @@
 export function getObjectValueFromString(object, prop) {
+  if (!prop) {
+    return;
+  }
   const propArray = prop.split(".");
   return propArray.reduce((acc, curr) => {
     if (typeof acc === "object") {

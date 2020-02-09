@@ -1,19 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import Scene from "../../../engine/scenes/scene";
+import Rule from "./rule";
 
 const EventForm = () => {
-  const properties2 = useRef(null);
-  const propertiesc2 = useRef(null);
-  const newPropValue1 = useRef(null);
-  const newPropValue2 = useRef(null);
-  const comparisonValue = useRef(null);
-  const comparisonValuec2 = useRef(null);
   const eventTypes = useRef(null);
-  const operator = useRef(null);
-  const operatorc2 = useRef(null);
-  const actionProperty = useRef(null);
-  const actionProperty2 = useRef(null);
+  const event = useRef(null);
+  const [rulesArray, setRulesArray] = useState([]);
 
+  console.log("rulesArray", rulesArray);
   const propertyMap = {
     fillColour: "fillColour",
     lineColour: "lineColour",
@@ -24,54 +18,45 @@ const EventForm = () => {
     "velocity.y": "physics.velocity.y"
   };
 
-  const showEvent = () => {
-    const propertyName = properties2.current.value;
-    const propertyName2 = propertiesc2.current.value;
-    const actionPropertyName = actionProperty.current.value;
-    const actionPropertyName2 = actionProperty2.current.value;
-    const newValue1 = newPropValue1.current.value;
-    const newValue2 = newPropValue2.current.value;
-    const comparison = comparisonValue.current.value;
-    const comparison2 = comparisonValuec2.current.value;
+  const applyRules = () => {
     const eventType = eventTypes.current.value;
-    const operatorValue = operator.current.value;
-    const operatorValue2 = operatorc2.current.value;
 
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
 
-    const rule1 = {};
-    const rule2 = {};
-
-    rule1.condition = {
-      propertyName: propertyMap[propertyName],
-      operator: operatorValue,
-      comparisonValue: comparison
-    };
-    rule2.condition = {
-      propertyName: propertyMap[propertyName2],
-      operator: operatorValue2,
-      comparisonValue: comparison2
-    };
-
-    rule1.action = {
-      propertyName: propertyMap[actionPropertyName],
-      newValue: newValue1
-    };
-    rule2.action = {
-      propertyName: propertyMap[actionPropertyName2],
-      newValue: newValue2
-    };
-
-    if (shape) {
-      shape.events.local[eventType].rules.push(rule1);
-      shape.events.local[eventType].rules.push(rule2);
+    const numOfRules = rulesArray.length;
+    for (let i = 0; i < numOfRules; i++) {
+      let rule = {};
+      rule.condition = {
+        propertyName: propertyMap[rulesArray[i].propertyName],
+        operator: rulesArray[i].operatorValue,
+        comparisonValue: rulesArray[i].comparison
+      };
+      rule.action = {
+        propertyName: propertyMap[rulesArray[i].actionPropertyName],
+        newValue: rulesArray[i].newValue
+      };
+      if (shape) {
+        shape.events.local[eventType].rules.push(rule);
+      }
     }
-    /**TEMP: consider using shapesController */
   };
 
+  const addRule = useCallback(() => {
+    setRulesArray([
+      ...rulesArray,
+      {
+        propertyName: "",
+        actionPropertyName: "",
+        newValue: "",
+        comparison: "",
+        operatorValue: ""
+      }
+    ]);
+  }, [setRulesArray, rulesArray]);
+
   return (
-    <div className="eventsWrapper">
+    <div ref={event} className="eventsWrapper">
       <h2>Event:</h2>
       <select ref={eventTypes}>
         <option value="collision">collision</option>
@@ -80,82 +65,18 @@ const EventForm = () => {
         <option value="double click">double click</option>
         <option value="hover">hover</option>
       </select>
-      <div className="rule">
-        <h2> Rule 1:</h2>
-        <div>
-          <h3>Condition 1:</h3>
-          Property name:&nbsp; &nbsp;
-          <select ref={properties2}>
-            <option value="velocity.x">velocity.x</option>
-            <option value="velocity.y">velocity.y</option>
-            <option value="fillColour">fillcolour</option>
-            <option value="linewidth">linewidth</option>
-          </select>
-          &nbsp; &nbsp; operator &nbsp; &nbsp;
-          <select ref={operator}>
-            <option value=">">greater than</option>
-            <option value="<">less than</option>
-            <option value="===">equal</option>
-            <option value="!==">not equal</option>
-          </select>
-          &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
-          <input defaultValue="0" ref={comparisonValue} />
-        </div>
 
-        <div>
-          <h3>Execution 1:</h3>
-          Property name:&nbsp; &nbsp;
-          <select ref={actionProperty}>
-            <option value="fillColour">fillcolour</option>
-            <option value="linewidth">linewidth</option>
-            <option value="velocity.x">velocity.x</option>
-            <option value="velocity.y">velocity.y</option>
-          </select>
-          &nbsp; &nbsp; New value1:{" "}
-          <input defaultValue="red" ref={newPropValue1} />
-        </div>
-      </div>
+      {rulesArray.map((rule, index) => (
+        <Rule
+          index={index}
+          rulesArray={rulesArray}
+          setRulesArray={setRulesArray}
+        />
+      ))}
 
-      <div className="rule">
-        <h2> Rule 2:</h2>
-
-        <div>
-          <h3>Condition 2:</h3>
-          Property name:&nbsp; &nbsp;
-          <select ref={propertiesc2}>
-            <option value="velocity.x">velocity.x</option>
-            <option value="velocity.y">velocity.y</option>
-            <option value="fillColour">fillcolour</option>
-            <option value="linewidth">linewidth</option>
-          </select>
-          &nbsp; &nbsp; operator &nbsp; &nbsp;
-          <select ref={operatorc2}>
-            <option value="<">less than</option>
-            <option value=">">greater than</option>
-            <option value="===">equal</option>
-            <option value="!==">not equal</option>
-          </select>
-          &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
-          <input defaultValue="0" ref={comparisonValuec2} />
-        </div>
-
-        <br />
-        <div>
-          <h3>Execution 2:</h3>
-          Property name:&nbsp; &nbsp;
-          <select ref={actionProperty2}>
-            <option value="fillColour">fillcolour</option>
-            <option value="linewidth">linewidth</option>
-            <option value="velocity.x">velocity.x</option>
-            <option value="velocity.y">velocity.y</option>
-          </select>
-          &nbsp; &nbsp; New value2:{" "}
-          <input defaultValue="green" ref={newPropValue2} />
-        </div>
-      </div>
-
+      <button onClick={addRule}>Add rule</button>
       <br />
-      <button onClick={showEvent}>submit</button>
+      <button onClick={applyRules}>submit</button>
     </div>
   );
 };
