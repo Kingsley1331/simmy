@@ -46,7 +46,14 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
     };
 
     setRulesArray([...rulesArray]);
-  }, [properties, actionProperty, newPropValue, comparisonValue, operator]);
+  }, [
+    properties,
+    actionProperty,
+    newPropValue,
+    comparisonValue,
+    operator,
+    rulesArray
+  ]);
 
   const setPopertyName = e => {
     setPropertyName(e.target.value);
@@ -77,33 +84,28 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
         Property name:&nbsp; &nbsp;
         <select
           onChange={setPopertyName}
+          defaultValue={rule.propertyName}
           className="propertyName"
           ref={properties}
         >
-          {propertiesArray.map(property => {
-            const selected = rule.propertyName === property;
-            if (selected) {
-              return (
-                <option selected value={property}>
-                  {property}
-                </option>
-              );
-            }
-            return <option value={property}>{property}</option>;
-          })}
+          {propertiesArray.map(property => (
+            <option value={property}>{property}</option>
+          ))}
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
-        <select onChange={setOperator} ref={operator}>
-          <option value="">none</option>
-          <option value=">">greater than</option>
-          <option value="<">less than</option>
-          <option value="===">equal</option>
-          <option value="!==">not equal</option>
+        <select
+          defaultValue={rule.operatorValue}
+          onChange={setOperator}
+          ref={operator}
+        >
+          {operatorsArray.map(property => (
+            <option value={property[0]}>{property[1]}</option>
+          ))}
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input
           onChange={setComparisonValue}
-          // defaultValue="0"
+          defaultValue={rule.comparison}
           ref={comparisonValue}
         />
       </div>
@@ -111,23 +113,19 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
       <div>
         <h3>Action:</h3>
         Property name:&nbsp; &nbsp;
-        <select onChange={setActionPopertyName} ref={actionProperty}>
-          {propertiesArray.map(property => {
-            const selected = rule.actionPropertyName === property;
-            if (selected) {
-              return (
-                <option selected value={property}>
-                  {property}
-                </option>
-              );
-            }
-            return <option value={property}>{property}</option>;
-          })}
+        <select
+          defaultValue={rule.actionPropertyName}
+          onChange={setActionPopertyName}
+          ref={actionProperty}
+        >
+          {propertiesArray.map(property => (
+            <option value={property}>{property}</option>
+          ))}
         </select>
         &nbsp; &nbsp; New value:{" "}
         <input
           onChange={setNewPropValue}
-          // defaultValue="red"
+          defaultValue={rule.newValue}
           ref={newPropValue}
         />
       </div>
