@@ -69,6 +69,7 @@ const EventForm = () => {
       {rulesArray.map((rule, index) => (
         <Rule
           index={index}
+          rule={rule}
           rulesArray={rulesArray}
           setRulesArray={setRulesArray}
         />

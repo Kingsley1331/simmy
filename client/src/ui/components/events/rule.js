@@ -1,17 +1,34 @@
 import React, { useRef, useState, useCallback } from "react";
 
-const Rule = ({ index, rulesArray, setRulesArray, rules }) => {
+const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
+  console.log({ index, rule, rulesArray, setRulesArray, rulesList });
   const properties = useRef({});
   const newPropValue = useRef({});
   const comparisonValue = useRef({});
   const operator = useRef({});
   const actionProperty = useRef({});
 
-  const [propertyName, setPropertyName] = useState("");
-  const [actionPropertyName, setActionPropertyName] = useState("");
-  const [newValue, setNewValue] = useState("");
-  const [comparison, setComparison] = useState("");
-  const [operatorValue, setOperatorValue] = useState("");
+  const propertiesArray = [
+    "none",
+    "velocity.x",
+    "velocity.y",
+    "fillColour",
+    "linewidth"
+  ];
+  const operatorsArray = [
+    ["", "none"],
+    [">", "greater than"],
+    ["<", "less than"],
+    ["===", "equal"],
+    ["!==", "not equal"]
+  ];
+
+  //   properties.current !== false
+  const [propertyName, setPropertyName] = useState();
+  const [actionPropertyName, setActionPropertyName] = useState();
+  const [newValue, setNewValue] = useState();
+  const [comparison, setComparison] = useState();
+  const [operatorValue, setOperatorValue] = useState();
 
   const updateRules = useCallback(() => {
     const propertyName = properties.current.value;
@@ -63,11 +80,17 @@ const Rule = ({ index, rulesArray, setRulesArray, rules }) => {
           className="propertyName"
           ref={properties}
         >
-          <option value="">none</option>
-          <option value="velocity.x">velocity.x</option>
-          <option value="velocity.y">velocity.y</option>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
+          {propertiesArray.map(property => {
+            const selected = rule.propertyName === property;
+            if (selected) {
+              return (
+                <option selected value={property}>
+                  {property}
+                </option>
+              );
+            }
+            return <option value={property}>{property}</option>;
+          })}
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select onChange={setOperator} ref={operator}>
@@ -80,7 +103,7 @@ const Rule = ({ index, rulesArray, setRulesArray, rules }) => {
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input
           onChange={setComparisonValue}
-          defaultValue="0"
+          // defaultValue="0"
           ref={comparisonValue}
         />
       </div>
@@ -89,16 +112,22 @@ const Rule = ({ index, rulesArray, setRulesArray, rules }) => {
         <h3>Action:</h3>
         Property name:&nbsp; &nbsp;
         <select onChange={setActionPopertyName} ref={actionProperty}>
-          <option value="">none</option>
-          <option value="fillColour">fillcolour</option>
-          <option value="linewidth">linewidth</option>
-          <option value="velocity.x">velocity.x</option>
-          <option value="velocity.y">velocity.y</option>
+          {propertiesArray.map(property => {
+            const selected = rule.actionPropertyName === property;
+            if (selected) {
+              return (
+                <option selected value={property}>
+                  {property}
+                </option>
+              );
+            }
+            return <option value={property}>{property}</option>;
+          })}
         </select>
         &nbsp; &nbsp; New value:{" "}
         <input
           onChange={setNewPropValue}
-          defaultValue="red"
+          // defaultValue="red"
           ref={newPropValue}
         />
       </div>
