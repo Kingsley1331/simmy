@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback } from "react";
 
-const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
-  console.log({ index, rule, rulesArray, setRulesArray, rulesList });
+const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
+  console.log({ index, rule, rulesArray, setRulesArray });
   const properties = useRef({});
   const newPropValue = useRef({});
   const comparisonValue = useRef({});
@@ -55,6 +55,17 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
     rulesArray
   ]);
 
+  const deleteRule = useCallback(() => {
+    const deleteRule = window.confirm(
+      "Are you sure you want to delete this rule"
+    );
+    if (deleteRule) {
+      rulesArray.splice(index, 1);
+      setRulesArray([...rulesArray]);
+      applyRules();
+    }
+  }, [rulesArray]);
+
   const setPopertyName = e => {
     setPropertyName(e.target.value);
     updateRules();
@@ -78,7 +89,8 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
 
   return (
     <div className="rule">
-      <h2> Rule:</h2>
+      <button onClick={deleteRule}>delete this rule</button>
+      <h2>Rule:</h2>
       <div>
         <h3>Condition:</h3>
         Property name:&nbsp; &nbsp;
@@ -108,6 +120,7 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, rulesList }) => {
           defaultValue={rule.comparison}
           ref={comparisonValue}
         />
+        {rule.comparison}
       </div>
 
       <div>

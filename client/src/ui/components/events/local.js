@@ -25,6 +25,9 @@ const EventForm = () => {
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
 
     const numOfRules = rulesArray.length;
+    if (shape) {
+      shape.events.local[eventType].rules = [];
+    }
     for (let i = 0; i < numOfRules; i++) {
       let rule = {};
       rule.condition = {
@@ -72,12 +75,13 @@ const EventForm = () => {
           rule={rule}
           rulesArray={rulesArray}
           setRulesArray={setRulesArray}
+          applyRules={applyRules}
         />
       ))}
 
       <button onClick={addRule}>Add rule</button>
       <br />
-      <button onClick={applyRules}>submit</button>
+      <button onClick={applyRules}>Apply rules</button>
     </div>
   );
 };
