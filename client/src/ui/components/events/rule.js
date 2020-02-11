@@ -131,7 +131,7 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input
-          onBlur={updateNewPropValue}
+          onBlur={updateComparisonValue}
           // onChange={updateComparisonValue}
           defaultValue={rule.comparison}
           ref={comparisonValue}
