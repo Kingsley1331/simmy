@@ -5,9 +5,16 @@ import Rule from "./rule";
 const EventForm = () => {
   const eventTypes = useRef(null);
   const event = useRef(null);
-  const [rulesArray, setRulesArray] = useState([]);
+  const [rulesArray, setRulesArray] = useState([
+    // {
+    //   propertyName: "velocity.x",
+    //   actionPropertyName: "fillColour",
+    //   newValue: "red",
+    //   comparison: "0",
+    //   operatorValue: ">"
+    // }
+  ]);
 
-  console.log("rulesArray", rulesArray);
   const propertyMap = {
     fillColour: "fillColour",
     lineColour: "lineColour",
@@ -71,6 +78,7 @@ const EventForm = () => {
 
       {rulesArray.map((rule, index) => (
         <Rule
+          key={Math.random()}
           index={index}
           rule={rule}
           rulesArray={rulesArray}

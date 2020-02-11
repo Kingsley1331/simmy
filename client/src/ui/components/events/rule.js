@@ -24,11 +24,14 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
   ];
 
   //   properties.current !== false
+  // const [random, setRandom] = useState();
   const [propertyName, setPropertyName] = useState();
   const [actionPropertyName, setActionPropertyName] = useState();
   const [newValue, setNewValue] = useState();
   const [comparison, setComparison] = useState();
   const [operatorValue, setOperatorValue] = useState();
+
+  // console.log("propertyName", propertyName);
 
   const updateRules = useCallback(() => {
     const propertyName = properties.current.value;
@@ -36,6 +39,8 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
     const newValue = newPropValue.current.value;
     const comparison = comparisonValue.current.value;
     const operatorValue = operator.current.value;
+
+    console.log("rulesArray", rulesArray);
 
     rulesArray[index] = {
       propertyName,
@@ -66,23 +71,29 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
     }
   }, [rulesArray]);
 
-  const setPopertyName = e => {
-    setPropertyName(e.target.value);
-    updateRules();
-  };
-  const setActionPopertyName = e => {
+  const updatePropertyName = useCallback(
+    e => {
+      console.log("value", e.target.value);
+      setPropertyName(e.target.value);
+      updateRules();
+    },
+    [setPropertyName, updateRules, rulesArray]
+  );
+
+  const updateActionPropertyName = e => {
     setActionPropertyName(e.target.value);
     updateRules();
   };
-  const setOperator = e => {
+  const updateOperator = e => {
     setOperatorValue(e.target.value);
     updateRules();
   };
-  const setComparisonValue = e => {
+  const updateComparisonValue = e => {
     setComparison(e.target.value);
     updateRules();
   };
-  const setNewPropValue = e => {
+  const updateNewPropValue = e => {
+    console.log("BLURRING!!!!");
     setNewValue(e.target.value);
     updateRules();
   };
@@ -95,49 +106,65 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
         <h3>Condition:</h3>
         Property name:&nbsp; &nbsp;
         <select
-          onChange={setPopertyName}
+          onChange={updatePropertyName}
           defaultValue={rule.propertyName}
           className="propertyName"
           ref={properties}
         >
           {propertiesArray.map(property => (
-            <option value={property}>{property}</option>
+            <option key={property} value={property}>
+              {property}
+            </option>
           ))}
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select
           defaultValue={rule.operatorValue}
-          onChange={setOperator}
+          onChange={updateOperator}
           ref={operator}
         >
           {operatorsArray.map(property => (
-            <option value={property[0]}>{property[1]}</option>
+            <option key={property[1]} value={property[0]}>
+              {property[1]}
+            </option>
           ))}
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input
-          onChange={setComparisonValue}
+          onBlur={updateNewPropValue}
+          // onChange={updateComparisonValue}
           defaultValue={rule.comparison}
           ref={comparisonValue}
         />
         {rule.comparison}
+        {comparisonValue.current.value}
       </div>
-
+      {/* rule: {rule.propertyName}
+      <br></br>
+      ref: {properties.current.value}
+      <br></br>
+      rulesArray: {rulesArray[index].propertyName}
+      <br></br> */}
       <div>
         <h3>Action:</h3>
         Property name:&nbsp; &nbsp;
         <select
           defaultValue={rule.actionPropertyName}
-          onChange={setActionPopertyName}
+          onChange={updateActionPropertyName}
           ref={actionProperty}
         >
           {propertiesArray.map(property => (
-            <option value={property}>{property}</option>
+            <option key={property} value={property}>
+              {property}
+            </option>
           ))}
         </select>
         &nbsp; &nbsp; New value:{" "}
         <input
-          onChange={setNewPropValue}
+          autofocus
+          key={index}
+          onBlur={updateNewPropValue}
+          // onChange={updateNewPropValue}
           defaultValue={rule.newValue}
           ref={newPropValue}
         />
