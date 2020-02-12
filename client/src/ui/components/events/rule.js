@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback } from "react";
 
-const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
-  console.log({ index, rule, rulesArray, setRulesArray });
+const Rule = ({ index, rule, setRulesArray, updateRule, deleteRule }) => {
+  console.log({ index, rule, setRulesArray });
   const properties = useRef({});
   const newPropValue = useRef({});
   const comparisonValue = useRef({});
@@ -23,15 +23,11 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
     ["!==", "not equal"]
   ];
 
-  //   properties.current !== false
-  // const [random, setRandom] = useState();
   const [propertyName, setPropertyName] = useState();
   const [actionPropertyName, setActionPropertyName] = useState();
   const [newValue, setNewValue] = useState();
   const [comparison, setComparison] = useState();
   const [operatorValue, setOperatorValue] = useState();
-
-  // console.log("propertyName", propertyName);
 
   const updateRules = useCallback(() => {
     const propertyName = properties.current.value;
@@ -40,9 +36,7 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
     const comparison = comparisonValue.current.value;
     const operatorValue = operator.current.value;
 
-    console.log("rulesArray", rulesArray);
-
-    rulesArray[index] = {
+    const newRule = {
       propertyName,
       actionPropertyName,
       newValue,
@@ -50,26 +44,17 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
       operatorValue
     };
 
-    setRulesArray([...rulesArray]);
-  }, [
-    properties,
-    actionProperty,
-    newPropValue,
-    comparisonValue,
-    operator,
-    rulesArray
-  ]);
+    updateRule(newRule, index);
+  }, [properties, actionProperty, newPropValue, comparisonValue, operator]);
 
-  const deleteRule = useCallback(() => {
-    const deleteRule = window.confirm(
+  const Delete = useCallback(() => {
+    const deleteThisRule = window.confirm(
       "Are you sure you want to delete this rule"
     );
-    if (deleteRule) {
-      rulesArray.splice(index, 1);
-      setRulesArray([...rulesArray]);
-      applyRules();
+    if (deleteThisRule) {
+      deleteRule(index);
     }
-  }, [rulesArray]);
+  }, [setRulesArray]);
 
   const updatePropertyName = useCallback(
     e => {
@@ -77,7 +62,7 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
       setPropertyName(e.target.value);
       updateRules();
     },
-    [setPropertyName, updateRules, rulesArray]
+    [setPropertyName, updateRules]
   );
 
   const updateActionPropertyName = e => {
@@ -100,7 +85,7 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
 
   return (
     <div className="rule">
-      <button onClick={deleteRule}>delete this rule</button>
+      <button onClick={Delete}>delete this rule</button>
       <h2>Rule:</h2>
       <div>
         <h3>Condition:</h3>
@@ -161,7 +146,7 @@ const Rule = ({ index, rule, rulesArray, setRulesArray, applyRules }) => {
         </select>
         &nbsp; &nbsp; New value:{" "}
         <input
-          autofocus
+          // autofocus
           key={index}
           onBlur={updateNewPropValue}
           // onChange={updateNewPropValue}

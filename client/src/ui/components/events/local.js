@@ -52,6 +52,38 @@ const EventForm = () => {
     }
   };
 
+  const updateRule = useCallback(
+    (newRule, index) => {
+      const {
+        propertyName,
+        actionPropertyName,
+        newValue,
+        comparison,
+        operatorValue
+      } = newRule;
+
+      rulesArray[index] = {
+        propertyName,
+        actionPropertyName,
+        newValue,
+        comparison,
+        operatorValue
+      };
+
+      setRulesArray([...rulesArray]);
+    },
+    [rulesArray, setRulesArray]
+  );
+
+  const deleteRule = useCallback(
+    index => {
+      rulesArray.splice(index, 1);
+      setRulesArray([...rulesArray]);
+      applyRules();
+    },
+    [rulesArray, setRulesArray, applyRules]
+  );
+
   const addRule = useCallback(() => {
     setRulesArray([
       ...rulesArray,
@@ -76,16 +108,18 @@ const EventForm = () => {
         <option value="hover">hover</option>
       </select>
 
-      {rulesArray.map((rule, index) => (
-        <Rule
-          key={Math.random()}
-          index={index}
-          rule={rule}
-          rulesArray={rulesArray}
-          setRulesArray={setRulesArray}
-          applyRules={applyRules}
-        />
-      ))}
+      {rulesArray &&
+        rulesArray.map((rule, index) => (
+          <Rule
+            key={Math.random()}
+            index={index}
+            rule={rule}
+            setRulesArray={setRulesArray}
+            applyRules={applyRules}
+            updateRule={updateRule}
+            deleteRule={deleteRule}
+          />
+        ))}
 
       <button onClick={addRule}>Add rule</button>
       <br />
