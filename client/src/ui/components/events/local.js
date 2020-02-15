@@ -1,19 +1,12 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
+import { connect } from "react-redux";
 import Scene from "../../../engine/scenes/scene";
 import Rule from "./rule";
 
-const EventForm = () => {
+const EventForm = ({ selectedShapeId, addRules, rules }) => {
   const eventTypes = useRef(null);
   const event = useRef(null);
-  const [rulesArray, setRulesArray] = useState([
-    // {
-    //   propertyName: "velocity.x",
-    //   actionPropertyName: "fillColour",
-    //   newValue: "red",
-    //   comparison: "0",
-    //   operatorValue: ">"
-    // }
-  ]);
+  const rulesArray = rules[selectedShapeId] || [];
 
   const propertyMap = {
     fillColour: "fillColour",
@@ -52,53 +45,24 @@ const EventForm = () => {
     }
   };
 
-  const updateRule = useCallback(
-    (newRule, index) => {
-      const {
-        propertyName,
-        actionPropertyName,
-        newValue,
-        comparison,
-        operatorValue
-      } = newRule;
-
-      rulesArray[index] = {
-        propertyName,
-        actionPropertyName,
-        newValue,
-        comparison,
-        operatorValue
-      };
-
-      setRulesArray([...rulesArray]);
-    },
-    [rulesArray, setRulesArray]
-  );
-
-  const deleteRule = useCallback(
-    index => {
-      rulesArray.splice(index, 1);
-      setRulesArray([...rulesArray]);
-      applyRules();
-    },
-    [rulesArray, setRulesArray, applyRules]
-  );
-
   const addRule = useCallback(() => {
-    setRulesArray([
-      ...rulesArray,
-      {
-        propertyName: "",
-        actionPropertyName: "",
-        newValue: "",
-        comparison: "",
-        operatorValue: ""
-      }
-    ]);
-  }, [setRulesArray, rulesArray]);
+    const newRule = {
+      propertyName: "",
+      actionPropertyName: "",
+      newValue: "",
+      comparison: "",
+      operatorValue: ""
+    };
+
+    addRules({
+      shapeId: selectedShapeId,
+      rules: [...rulesArray, newRule]
+    });
+  }, [rulesArray, selectedShapeId, addRules]);
 
   return (
     <div ref={event} className="eventsWrapper">
+      selectedShapeId: {selectedShapeId}
       <h2>Event:</h2>
       <select ref={eventTypes}>
         <option value="collision">collision</option>
@@ -107,20 +71,15 @@ const EventForm = () => {
         <option value="double click">double click</option>
         <option value="hover">hover</option>
       </select>
-
       {rulesArray &&
         rulesArray.map((rule, index) => (
           <Rule
             key={Math.random()}
             index={index}
             rule={rule}
-            setRulesArray={setRulesArray}
             applyRules={applyRules}
-            updateRule={updateRule}
-            deleteRule={deleteRule}
           />
         ))}
-
       <button onClick={addRule}>Add rule</button>
       <br />
       <button onClick={applyRules}>Apply rules</button>
@@ -128,4 +87,16 @@ const EventForm = () => {
   );
 };
 
-export default EventForm;
+const mapDispatchToProps = dispatch => {
+  return {
+    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
+  };
+};
+
+const mapStateToProps = ({ rules, selectedShape }) => {
+  return {
+    rules,
+    selectedShapeId: selectedShape
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(EventForm);

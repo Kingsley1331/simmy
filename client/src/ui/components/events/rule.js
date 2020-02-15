@@ -1,7 +1,16 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
+import { connect } from "react-redux";
 
-const Rule = ({ index, rule, setRulesArray, updateRule, deleteRule }) => {
-  console.log({ index, rule, setRulesArray });
+const Rule = ({
+  index,
+  rule,
+  deleteRule,
+  rules,
+  selectedShapeId,
+  addRules,
+  applyRules
+}) => {
+  console.log({ index, rule, rules, selectedShapeId });
   const properties = useRef({});
   const newPropValue = useRef({});
   const comparisonValue = useRef({});
@@ -23,64 +32,57 @@ const Rule = ({ index, rule, setRulesArray, updateRule, deleteRule }) => {
     ["!==", "not equal"]
   ];
 
-  const [propertyName, setPropertyName] = useState();
-  const [actionPropertyName, setActionPropertyName] = useState();
-  const [newValue, setNewValue] = useState();
-  const [comparison, setComparison] = useState();
-  const [operatorValue, setOperatorValue] = useState();
-
-  const updateRules = useCallback(() => {
-    const propertyName = properties.current.value;
-    const actionPropertyName = actionProperty.current.value;
-    const newValue = newPropValue.current.value;
-    const comparison = comparisonValue.current.value;
-    const operatorValue = operator.current.value;
-
-    const newRule = {
-      propertyName,
-      actionPropertyName,
-      newValue,
-      comparison,
-      operatorValue
-    };
-
-    updateRule(newRule, index);
-  }, [properties, actionProperty, newPropValue, comparisonValue, operator]);
-
-  const Delete = useCallback(() => {
+  const Delete = e => {
     const deleteThisRule = window.confirm(
       "Are you sure you want to delete this rule"
     );
     if (deleteThisRule) {
-      deleteRule(index);
-    }
-  }, [setRulesArray]);
+      rules[selectedShapeId].splice(index, 1);
 
-  const updatePropertyName = useCallback(
-    e => {
-      console.log("value", e.target.value);
-      setPropertyName(e.target.value);
-      updateRules();
-    },
-    [setPropertyName, updateRules]
-  );
+      addRules({
+        shapeId: selectedShapeId,
+        rules: [...rules[selectedShapeId]]
+      });
+      applyRules();
+    }
+  };
+
+  const updatePropertyName = e => {
+    rules[selectedShapeId][index].propertyName = e.target.value;
+    addRules({
+      shapeId: selectedShapeId,
+      rules: [...rules[selectedShapeId]]
+    });
+  };
 
   const updateActionPropertyName = e => {
-    setActionPropertyName(e.target.value);
-    updateRules();
+    rules[selectedShapeId][index].actionPropertyName = e.target.value;
+    addRules({
+      shapeId: selectedShapeId,
+      rules: [...rules[selectedShapeId]]
+    });
   };
   const updateOperator = e => {
-    setOperatorValue(e.target.value);
-    updateRules();
+    rules[selectedShapeId][index].operatorValue = e.target.value;
+    addRules({
+      shapeId: selectedShapeId,
+      rules: [...rules[selectedShapeId]]
+    });
   };
   const updateComparisonValue = e => {
-    setComparison(e.target.value);
-    updateRules();
+    rules[selectedShapeId][index].comparison = e.target.value;
+    addRules({
+      shapeId: selectedShapeId,
+      rules: [...rules[selectedShapeId]]
+    });
   };
   const updateNewPropValue = e => {
     console.log("BLURRING!!!!");
-    setNewValue(e.target.value);
-    updateRules();
+    rules[selectedShapeId][index].newValue = e.target.value;
+    addRules({
+      shapeId: selectedShapeId,
+      rules: [...rules[selectedShapeId]]
+    });
   };
 
   return (
@@ -124,12 +126,6 @@ const Rule = ({ index, rule, setRulesArray, updateRule, deleteRule }) => {
         {rule.comparison}
         {comparisonValue.current.value}
       </div>
-      {/* rule: {rule.propertyName}
-      <br></br>
-      ref: {properties.current.value}
-      <br></br>
-      rulesArray: {rulesArray[index].propertyName}
-      <br></br> */}
       <div>
         <h3>Action:</h3>
         Property name:&nbsp; &nbsp;
@@ -146,7 +142,6 @@ const Rule = ({ index, rule, setRulesArray, updateRule, deleteRule }) => {
         </select>
         &nbsp; &nbsp; New value:{" "}
         <input
-          // autofocus
           key={index}
           onBlur={updateNewPropValue}
           // onChange={updateNewPropValue}
@@ -158,4 +153,17 @@ const Rule = ({ index, rule, setRulesArray, updateRule, deleteRule }) => {
   );
 };
 
-export default Rule;
+const mapDispatchToProps = dispatch => {
+  return {
+    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
+  };
+};
+
+const mapStateToProps = ({ rules, selectedShape }) => {
+  return {
+    rules,
+    selectedShapeId: selectedShape
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rule);

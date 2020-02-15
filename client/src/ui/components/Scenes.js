@@ -26,10 +26,6 @@ import animate from "../../engine/utils/animation";
 
 let canvas;
 class Scenes extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     // Scene.shapes = this.props.scene.shapes;
     /** TODO: move functions into single index file and import **/
@@ -39,7 +35,7 @@ class Scenes extends Component {
     mouseDown(canvas);
     mouseMove(canvas);
     mouseUp(canvas);
-    doubleClick(canvas);
+    doubleClick(canvas, this.props.selectShape);
     click(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(this.props.scene).length) {
@@ -50,10 +46,7 @@ class Scenes extends Component {
 
   componentWillUnmount() {
     clearShapes();
-    this.props.dispatch({
-      type: "GET_SCENE",
-      payload: {}
-    });
+    this.props.getScene();
   }
 
   render() {
@@ -74,4 +67,17 @@ const mapStateToProps = ({ buttons, scene }) => {
   };
 };
 
-export default connect(mapStateToProps)(Scenes);
+const mapDispatchToProps = dispatch => {
+  return {
+    selectShape: shapeId => {
+      // dispatch({ type: "SELECTED_SHAPE", shapeId });
+      dispatch({ type: "SELECT_SHAPE", payload: shapeId });
+    },
+    getScene: () => {
+      dispatch({ type: "GET_SCENE", payload: {} });
+    }
+  };
+};
+
+// export default connect(mapStateToProps)(Scenes);
+export default connect(mapStateToProps, mapDispatchToProps)(Scenes);

@@ -28,7 +28,7 @@ export const click = element => {
   );
 };
 
-export const doubleClick = element => {
+export const doubleClick = (element, selectShape) => {
   element.addEventListener(
     "dblclick",
     evt => {
@@ -37,7 +37,9 @@ export const doubleClick = element => {
       forEachShape(function(i) {
         selectShapeIndex = detectShape(i);
         if (selectShapeIndex) {
-          Scene.selectedShape = Scene.shapes[selectShapeIndex].id;
+          const selectedShapeId = Scene.shapes[selectShapeIndex].id;
+          Scene.selectedShape = selectedShapeId;
+          selectShape(selectedShapeId);
         }
       }, false);
     },
