@@ -11,11 +11,6 @@ const Rule = ({
   applyRules
 }) => {
   console.log({ index, rule, rules, selectedShapeId });
-  const properties = useRef({});
-  const newPropValue = useRef({});
-  const comparisonValue = useRef({});
-  const operator = useRef({});
-  const actionProperty = useRef({});
 
   const propertiesArray = [
     "none",
@@ -47,38 +42,8 @@ const Rule = ({
     }
   };
 
-  const updatePropertyName = e => {
-    rules[selectedShapeId][index].propertyName = e.target.value;
-    addRules({
-      shapeId: selectedShapeId,
-      rules: [...rules[selectedShapeId]]
-    });
-  };
-
-  const updateActionPropertyName = e => {
-    rules[selectedShapeId][index].actionPropertyName = e.target.value;
-    addRules({
-      shapeId: selectedShapeId,
-      rules: [...rules[selectedShapeId]]
-    });
-  };
-  const updateOperator = e => {
-    rules[selectedShapeId][index].operatorValue = e.target.value;
-    addRules({
-      shapeId: selectedShapeId,
-      rules: [...rules[selectedShapeId]]
-    });
-  };
-  const updateComparisonValue = e => {
-    rules[selectedShapeId][index].comparison = e.target.value;
-    addRules({
-      shapeId: selectedShapeId,
-      rules: [...rules[selectedShapeId]]
-    });
-  };
-  const updateNewPropValue = e => {
-    console.log("BLURRING!!!!");
-    rules[selectedShapeId][index].newValue = e.target.value;
+  const updateRules = valueName => e => {
+    rules[selectedShapeId][index][valueName] = e.target.value;
     addRules({
       shapeId: selectedShapeId,
       rules: [...rules[selectedShapeId]]
@@ -93,10 +58,9 @@ const Rule = ({
         <h3>Condition:</h3>
         Property name:&nbsp; &nbsp;
         <select
-          onChange={updatePropertyName}
+          onChange={updateRules("propertyName")}
           defaultValue={rule.propertyName}
           className="propertyName"
-          ref={properties}
         >
           {propertiesArray.map(property => (
             <option key={property} value={property}>
@@ -107,8 +71,7 @@ const Rule = ({
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select
           defaultValue={rule.operatorValue}
-          onChange={updateOperator}
-          ref={operator}
+          onChange={updateRules("operatorValue")}
         >
           {operatorsArray.map(property => (
             <option key={property[1]} value={property[0]}>
@@ -118,21 +81,17 @@ const Rule = ({
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input
-          onBlur={updateComparisonValue}
-          // onChange={updateComparisonValue}
+          onBlur={updateRules("comparison")}
+          // onChange={{updateRules("comparison")}
           defaultValue={rule.comparison}
-          ref={comparisonValue}
         />
-        {rule.comparison}
-        {comparisonValue.current.value}
       </div>
       <div>
         <h3>Action:</h3>
         Property name:&nbsp; &nbsp;
         <select
           defaultValue={rule.actionPropertyName}
-          onChange={updateActionPropertyName}
-          ref={actionProperty}
+          onChange={updateRules("actionPropertyName")}
         >
           {propertiesArray.map(property => (
             <option key={property} value={property}>
@@ -143,10 +102,9 @@ const Rule = ({
         &nbsp; &nbsp; New value:{" "}
         <input
           key={index}
-          onBlur={updateNewPropValue}
-          // onChange={updateNewPropValue}
+          onBlur={updateRules("newValue")}
+          // onChange={updateRules("newValue")}
           defaultValue={rule.newValue}
-          ref={newPropValue}
         />
       </div>
     </div>
