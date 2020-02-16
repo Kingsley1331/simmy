@@ -35,6 +35,7 @@ export const draw = canvas => {
     }
 
     var fillColour = ShapesController.getProperty(i, "fillColour");
+    var strokeStyle = ShapesController.getProperty(i, "strokeStyle");
     var lineWidth = ShapesController.getProperty(i, "linewidth");
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var vertices = ShapesController.getProperty(i, "vertices");
@@ -46,6 +47,7 @@ export const draw = canvas => {
       shadowOffsetY: shadowOffsetY,
       shadowBlur: shadowBlur,
       fillStyle: fillColour,
+      strokeStyle: strokeStyle,
       lineWidth: lineWidth
     };
     /*if (

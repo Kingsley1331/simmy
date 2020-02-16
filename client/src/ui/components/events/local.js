@@ -18,7 +18,7 @@ const EventForm = ({
   console.log("rulesArray", rulesArray);
   const propertyMap = {
     fillColour: "fillColour",
-    lineColour: "lineColour",
+    lineColour: "strokeStyle",
     linewidth: "linewidth",
     "centreOfMass.x": "centreOfMass.x",
     "centreOfMass.y": "centreOfMass.y",

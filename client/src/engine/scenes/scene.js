@@ -65,7 +65,7 @@ export function updateScene(scene) {
           Scene.shapes[i].dragging = scene.shapes[i].dragging;
           Scene.shapes[i].fillColour = scene.shapes[i].fillColour;
           Scene.shapes[i].id = scene.shapes[i].id;
-          Scene.shapes[i].lineColour = scene.shapes[i].lineColour;
+          Scene.shapes[i].strokeStyle = scene.shapes[i].strokeStyle;
           Scene.shapes[i].linewidth = scene.shapes[i].linewidth;
           Scene.shapes[i].onShape = scene.shapes[i].onShape;
           Scene.shapes[i].selected = scene.shapes[i].selected;

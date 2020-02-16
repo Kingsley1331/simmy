@@ -17,7 +17,8 @@ const Rule = ({
     "velocity.x",
     "velocity.y",
     "fillColour",
-    "linewidth"
+    "linewidth",
+    "lineColour"
   ];
   const operatorsArray = [
     ["", "none"],
