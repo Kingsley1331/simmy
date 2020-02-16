@@ -183,7 +183,11 @@ export const shapeSelection = {
 };
 
 export const shapes = {
-  arrowHead: [{ x: -2.5, y: 0 }, { x: 2.5, y: 0 }, { x: 0, y: 5 }]
+  arrowHead: [
+    { x: -2.5, y: 0 },
+    { x: 2.5, y: 0 },
+    { x: 0, y: 5 }
+  ]
 };
 
 //TODO: add settings to Scene object
@@ -253,6 +257,8 @@ export function Shape(centre, vertices) {
   this.colliding = false;
   this.onShape = false;
   this.dragging = false;
+  this.onClick = false;
+  // this.onDoubleClick = false;
   this.selected = false;
   this.events = {
     local: {
@@ -276,6 +282,18 @@ export function Shape(centre, vertices) {
           //   action: { propertyName: "fillColour", newValue: "green" }
           // }
         ]
+      },
+      // doubleClick: {
+      //   rules: []
+      // },
+      click: {
+        rules: []
+      },
+      drag: {
+        rules: []
+      },
+      hover: {
+        rules: []
       }
     },
     global: {
@@ -329,31 +347,24 @@ export function Shape(centre, vertices) {
             const actionPropName = action.propertyName;
             const propertyValue = getObjectValueFromString(this, propertyName);
             bool = evaluateComparison(propertyValue, comparisonValue, operator);
-            if (this.colliding && bool) {
+            bool = event === "collision" ? this.colliding && bool : bool;
+            bool = event === "hover" ? this.onShape && bool : bool;
+            bool = event === "drag" ? this.dragging && bool : bool;
+            bool = event === "click" ? this.onClick && bool : bool;
+            if (this.onClick) {
+              console.log(
+                "CLICK******************************************************************"
+              );
+            }
+            if (bool) {
               setObjectValueFromString(this, actionPropName, action.newValue);
             }
           }
         }
       }
     }
+    // this.onClick = false;
   };
-
-  // this.checkLocalEvents = function() {
-  //   const localEvents = this.events.local;
-  //   if (localEvents.subscribed) {
-  //     for (let event in localEvents) {
-  //       if (event !== "subscribed") {
-  //         const rules = localEvents[event].rules;
-  //         const length = rules.length;
-  //         for (let i = 0; i < length; i++) {
-  //           if (rules[i].condition(this)) {
-  //             rules[i].action(this);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // };
 
   this.checkGlobalEvents = function(stop) {
     const globalEvents = Scene.currentEvents;

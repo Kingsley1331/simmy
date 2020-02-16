@@ -10,15 +10,13 @@ export const ruleReducer = (state = {}, action) => {
 };
 export const rulesReducer = (state = {}, action) => {
   const { type, payload } = action;
+  const { shapeId, eventType, rules } = payload || {};
+
   switch (type) {
     case "ADD_RULES":
       state = { ...state };
-      state[payload.shapeId] = payload.rules;
-      console.log("%cA SINGLE RULE", "color:blue; font-weight:bold;");
-      break;
-    case "UPDATE_RULES":
-      state = { ...state };
-      state[payload.shapeId] = payload.rules;
+      state[eventType] = {};
+      state[eventType][shapeId] = rules;
       console.log("%cA SINGLE RULE", "color:blue; font-weight:bold;");
       break;
     default:

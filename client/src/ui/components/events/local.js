@@ -3,11 +3,19 @@ import { connect } from "react-redux";
 import Scene from "../../../engine/scenes/scene";
 import Rule from "./rule";
 
-const EventForm = ({ selectedShapeId, addRules, rules }) => {
-  const eventTypes = useRef(null);
+const EventForm = ({
+  selectedShapeId,
+  selectEvent,
+  addRules,
+  rules,
+  eventType
+}) => {
+  // const eventTypes = useRef(null);
   const event = useRef(null);
-  const rulesArray = rules[selectedShapeId] || [];
-
+  // debugger;
+  const eventTypeObject = rules[eventType] || {};
+  const rulesArray = eventTypeObject[selectedShapeId] || [];
+  console.log("rulesArray", rulesArray);
   const propertyMap = {
     fillColour: "fillColour",
     lineColour: "lineColour",
@@ -18,8 +26,20 @@ const EventForm = ({ selectedShapeId, addRules, rules }) => {
     "velocity.y": "physics.velocity.y"
   };
 
+  const eventMap = {
+    collision: "collision",
+    drag: "drag",
+    hover: "hover",
+    click: "click",
+    "double click": "doubleClick"
+  };
+
+  const handleEventChange = e => {
+    selectEvent(eventMap[e.target.value]);
+  };
+
   const applyRules = () => {
-    const eventType = eventTypes.current.value;
+    // const eventType = eventTypes.current.value;
 
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
@@ -55,20 +75,24 @@ const EventForm = ({ selectedShapeId, addRules, rules }) => {
     };
 
     addRules({
+      eventType,
       shapeId: selectedShapeId,
       rules: [...rulesArray, newRule]
     });
   }, [rulesArray, selectedShapeId, addRules]);
 
   return (
-    <div ref={event} className="eventsWrapper">
+    <div className="eventsWrapper">
+      {/* <div ref={event} className="eventsWrapper"> */}
       selectedShapeId: {selectedShapeId}
       <h2>Event:</h2>
-      <select ref={eventTypes}>
+      <select onChange={handleEventChange}>
+        {/* <select ref={eventTypes} onChange={handleEventChange}> */}
+        <option value="">none</option>
         <option value="collision">collision</option>
         <option value="drag">drag</option>
         <option value="click">click</option>
-        <option value="double click">double click</option>
+        {/* <option value="double click">double click</option> */}
         <option value="hover">hover</option>
       </select>
       {rulesArray &&
@@ -89,12 +113,15 @@ const EventForm = ({ selectedShapeId, addRules, rules }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
+    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules }),
+    selectEvent: eventType =>
+      dispatch({ type: "SELECT_EVENT", payload: eventType })
   };
 };
 
-const mapStateToProps = ({ rules, selectedShape }) => {
+const mapStateToProps = ({ event, rules, selectedShape }) => {
   return {
+    eventType: event,
     rules,
     selectedShapeId: selectedShape
   };

@@ -21,8 +21,16 @@ export const click = element => {
   element.addEventListener(
     "click",
     evt => {
+      let clickedShapeIndex;
       Scene.currentEvents.click = true;
       console.log("receiving click :)");
+      forEachShape(function(i) {
+        clickedShapeIndex = detectShape(i);
+        if (clickedShapeIndex) {
+          Scene.shapes[clickedShapeIndex].onClick = true;
+          console.log("clicked shape", Scene.shapes[clickedShapeIndex]);
+        }
+      }, false);
     },
     false
   );

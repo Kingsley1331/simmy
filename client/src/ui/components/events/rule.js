@@ -1,14 +1,14 @@
-import React, { useRef, useCallback } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 const Rule = ({
   index,
   rule,
-  deleteRule,
   rules,
   selectedShapeId,
   addRules,
-  applyRules
+  applyRules,
+  eventType
 }) => {
   console.log({ index, rule, rules, selectedShapeId });
 
@@ -27,27 +27,28 @@ const Rule = ({
     ["!==", "not equal"]
   ];
 
+  const resetRules = () => {
+    addRules({
+      eventType,
+      shapeId: selectedShapeId,
+      rules: [...rules[[eventType]][selectedShapeId]]
+    });
+  };
+
   const Delete = e => {
     const deleteThisRule = window.confirm(
       "Are you sure you want to delete this rule"
     );
     if (deleteThisRule) {
-      rules[selectedShapeId].splice(index, 1);
-
-      addRules({
-        shapeId: selectedShapeId,
-        rules: [...rules[selectedShapeId]]
-      });
+      rules[eventType][selectedShapeId].splice(index, 1);
+      resetRules();
       applyRules();
     }
   };
 
   const updateRules = valueName => e => {
-    rules[selectedShapeId][index][valueName] = e.target.value;
-    addRules({
-      shapeId: selectedShapeId,
-      rules: [...rules[selectedShapeId]]
-    });
+    rules[eventType][selectedShapeId][index][valueName] = e.target.value;
+    resetRules();
   };
 
   return (
@@ -117,8 +118,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = ({ rules, selectedShape }) => {
+const mapStateToProps = ({ event, rules, selectedShape }) => {
   return {
+    eventType: event,
     rules,
     selectedShapeId: selectedShape
   };

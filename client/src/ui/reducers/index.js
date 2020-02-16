@@ -5,6 +5,7 @@ import { rulesReducer } from "./rules";
 import authReducer from "./authReducer";
 import buttonReducer from "./button";
 import selectedShapeReducer from "./selectedShape";
+import eventTypeReducer from "./eventType";
 
 const reducer = combineReducers({
   users: userReducer,
@@ -13,7 +14,8 @@ const reducer = combineReducers({
   auth: authReducer,
   buttons: buttonReducer,
   rules: rulesReducer,
-  selectedShape: selectedShapeReducer
+  selectedShape: selectedShapeReducer,
+  event: eventTypeReducer
 });
 
 export default reducer;
