@@ -2,7 +2,7 @@ import Scene from "../scenes/scene";
 import ShapesController from "./ShapesController";
 import getMousePos from "../utils/position";
 import { throwVelocity } from "../utils/throw";
-import { evaluateComparison } from "../utils/maths/operators";
+import { calculateBoolean } from "../utils/maths/operators";
 import {
   getObjectValueFromString,
   setObjectValueFromString
@@ -271,11 +271,36 @@ export function Shape(centre, vertices) {
                 propertyName: "physics.velocity.x",
                 operator: ">",
                 comparisonValue: "0"
+              },
+              {
+                propertyName: "fillColour",
+                operator: "===",
+                comparisonValue: "green"
               }
             ],
+            logicalOperators: ["AND"],
             actions: [
               { propertyName: "fillColour", newValue: "red" },
               { propertyName: "linewidth", newValue: 0.1 }
+            ]
+          },
+          {
+            conditions: [
+              {
+                propertyName: "physics.velocity.x",
+                operator: ">",
+                comparisonValue: "0"
+              },
+              {
+                propertyName: "fillColour",
+                operator: "===",
+                comparisonValue: "green"
+              }
+            ],
+            logicalOperators: ["NOT"],
+            actions: [
+              { propertyName: "fillColour", newValue: "green" },
+              { propertyName: "linewidth", newValue: 20 }
             ]
           },
           {
@@ -286,31 +311,10 @@ export function Shape(centre, vertices) {
                 comparisonValue: "0"
               }
             ],
-            actions: [
-              { propertyName: "fillColour", newValue: "green" },
-              { propertyName: "linewidth", newValue: 20 }
-            ]
+            logicalOperators: [],
+            actions: [{ propertyName: "fillColour", newValue: "yellow" }]
           }
         ]
-
-        // rules: [
-        //   {
-        //     condition: {
-        //       propertyName: "physics.velocity.x",
-        //       operator: ">",
-        //       comparisonValue: "0"
-        //     },
-        //     action: { propertyName: "fillColour", newValue: "red" }
-        //   },
-        //   {
-        //     condition: {
-        //       propertyName: "physics.velocity.x",
-        //       operator: "<",
-        //       comparisonValue: "0"
-        //     },
-        //     action: { propertyName: "fillColour", newValue: "green" }
-        //   }
-        // ]
       },
       // doubleClick: {
       //   rules: []
@@ -364,28 +368,40 @@ export function Shape(centre, vertices) {
         if (event !== "subscribed") {
           const rules = localEvents[event].rules;
           const length = rules.length;
+          const propertyValueCache = {};
 
           for (let i = 0; i < length; i++) {
             let bool = false;
             const rule = rules[i];
 
-            const { conditions, actions } = rule;
+            const { conditions, actions, logicalOperators } = rule;
             const numOfConditions = conditions.length;
 
             for (let j = 0; j < numOfConditions; j++) {
-              const condition = conditions[0];
+              const condition = conditions[j];
+              let logicalOperator =
+                numOfConditions > 1 ? logicalOperators[j - 1] : "";
               const propertyName = condition.propertyName;
               const comparisonValue = condition.comparisonValue;
               const operator = condition.operator;
-              const propertyValue = getObjectValueFromString(
-                this,
-                propertyName
-              );
-              bool = evaluateComparison(
+              const propertyValue =
+                propertyName in propertyValueCache
+                  ? propertyValueCache[propertyName]
+                  : getObjectValueFromString(this, propertyName);
+
+              propertyValueCache[propertyName] = propertyValue;
+
+              const newBool = calculateBoolean(
                 propertyValue,
-                comparisonValue,
-                operator
+                operator,
+                comparisonValue
               );
+              if (j === 0) {
+                bool = newBool;
+              } else {
+                bool = calculateBoolean(bool, logicalOperator, newBool);
+              }
+
               bool = event === "collision" ? this.colliding && bool : bool;
               bool = event === "hover" ? this.onShape && bool : bool;
               bool = event === "drag" ? this.dragging && bool : bool;
@@ -406,44 +422,6 @@ export function Shape(centre, vertices) {
     }
     // this.onClick = false;
   };
-  // this.checkLocalEvents = function() {
-  //   const localEvents = this.events.local;
-
-  //   if (localEvents.subscribed) {
-  //     for (let event in localEvents) {
-  //       if (event !== "subscribed") {
-  //         const rules = localEvents[event].rules;
-  //         const length = rules.length;
-
-  //         for (let i = 0; i < length; i++) {
-  //           let bool = false;
-  //           const rule = rules[i];
-  //           const condition = rule.condition;
-  //           const action = rule.action;
-  //           const propertyName = condition.propertyName;
-  //           const comparisonValue = condition.comparisonValue;
-  //           const operator = condition.operator;
-  //           const actionPropName = action.propertyName;
-  //           const propertyValue = getObjectValueFromString(this, propertyName);
-  //           bool = evaluateComparison(propertyValue, comparisonValue, operator);
-  //           bool = event === "collision" ? this.colliding && bool : bool;
-  //           bool = event === "hover" ? this.onShape && bool : bool;
-  //           bool = event === "drag" ? this.dragging && bool : bool;
-  //           bool = event === "click" ? this.onClick && bool : bool;
-  //           if (this.onClick) {
-  //             console.log(
-  //               "CLICK******************************************************************"
-  //             );
-  //           }
-  //           if (bool) {
-  //             setObjectValueFromString(this, actionPropName, action.newValue);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   // this.onClick = false;
-  // };
 
   this.checkGlobalEvents = function(stop) {
     const globalEvents = Scene.currentEvents;
