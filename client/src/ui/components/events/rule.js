@@ -29,6 +29,7 @@ const Rule = ({
   ];
 
   const resetRules = () => {
+    console.log("rules8", rules);
     addRules({
       eventType,
       shapeId: selectedShapeId,
@@ -47,8 +48,10 @@ const Rule = ({
     }
   };
 
-  const updateRules = valueName => e => {
-    rules[eventType][selectedShapeId][index][valueName] = e.target.value;
+  const updateRules = (valueName, type, typeIndex) => e => {
+    rules[eventType][selectedShapeId][index][type][typeIndex][valueName] =
+      e.target.value;
+    // rules[eventType][selectedShapeId][index][valueName] = e.target.value;
     resetRules();
   };
 
@@ -60,8 +63,9 @@ const Rule = ({
         <h3>Condition:</h3>
         Property name:&nbsp; &nbsp;
         <select
-          onChange={updateRules("propertyName")}
-          defaultValue={rule.propertyName}
+          onChange={updateRules("propertyName", "conditions", 0)}
+          defaultValue={rule.conditions[0].propertyName}
+          // defaultValue={rule.propertyName}
           className="propertyName"
         >
           {propertiesArray.map(property => (
@@ -72,8 +76,9 @@ const Rule = ({
         </select>
         &nbsp; &nbsp; operator &nbsp; &nbsp;
         <select
-          defaultValue={rule.operatorValue}
-          onChange={updateRules("operatorValue")}
+          defaultValue={rule.conditions[0].operatorValue}
+          // defaultValue={rule.operatorValue}
+          onChange={updateRules("operatorValue", "conditions", 0)}
         >
           {operatorsArray.map(property => (
             <option key={property[1]} value={property[0]}>
@@ -83,17 +88,18 @@ const Rule = ({
         </select>
         &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
         <input
-          onBlur={updateRules("comparison")}
-          // onChange={{updateRules("comparison")}
-          defaultValue={rule.comparison}
+          onBlur={updateRules("comparison", "conditions", 0)}
+          defaultValue={rule.conditions[0].comparison}
+          // defaultValue={rule.comparison}
         />
       </div>
       <div>
         <h3>Action:</h3>
         Property name:&nbsp; &nbsp;
         <select
-          defaultValue={rule.actionPropertyName}
-          onChange={updateRules("actionPropertyName")}
+          defaultValue={rule.actions[0].actionPropertyName}
+          // defaultValue={rule.actionPropertyName}
+          onChange={updateRules("actionPropertyName", "actions", 0)}
         >
           {propertiesArray.map(property => (
             <option key={property} value={property}>
@@ -104,9 +110,9 @@ const Rule = ({
         &nbsp; &nbsp; New value:{" "}
         <input
           key={index}
-          onBlur={updateRules("newValue")}
-          // onChange={updateRules("newValue")}
-          defaultValue={rule.newValue}
+          onBlur={updateRules("newValue", "actions", 0)}
+          defaultValue={rule.actions[0].newValue}
+          // defaultValue={rule.newValue}
         />
       </div>
     </div>

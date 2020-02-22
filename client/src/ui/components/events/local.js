@@ -11,7 +11,7 @@ const EventForm = ({
   eventType
 }) => {
   // const eventTypes = useRef(null);
-  const event = useRef(null);
+  // const event = useRef(null);
   // debugger;
   const eventTypeObject = rules[eventType] || {};
   const rulesArray = eventTypeObject[selectedShapeId] || [];
@@ -50,15 +50,22 @@ const EventForm = ({
     }
     for (let i = 0; i < numOfRules; i++) {
       let rule = {};
-      rule.condition = {
-        propertyName: propertyMap[rulesArray[i].propertyName],
-        operator: rulesArray[i].operatorValue,
-        comparisonValue: rulesArray[i].comparison
+      rule.conditions = [];
+      rule.actions = [];
+      // Conditions loop
+      const condition = {
+        propertyName: propertyMap[rulesArray[i].conditions[0].propertyName],
+        operator: rulesArray[i].conditions[0].operatorValue,
+        comparisonValue: rulesArray[i].conditions[0].comparison
       };
-      rule.action = {
-        propertyName: propertyMap[rulesArray[i].actionPropertyName],
-        newValue: rulesArray[i].newValue
+      rule.conditions.push(condition);
+      // Actions loop
+      const action = {
+        propertyName: propertyMap[rulesArray[i].actions[0].actionPropertyName],
+        newValue: rulesArray[i].actions[0].newValue
       };
+      rule.actions.push(action);
+
       if (shape) {
         shape.events.local[eventType].rules.push(rule);
       }
@@ -67,12 +74,17 @@ const EventForm = ({
 
   const addRule = useCallback(() => {
     const newRule = {
-      propertyName: "",
-      actionPropertyName: "",
-      newValue: "",
-      comparison: "",
-      operatorValue: ""
+      conditions: [{ propertyName: "", actionPropertyName: "", newValue: "" }],
+      actions: [{ comparison: "", operatorValue: "" }],
+      logicalOperators: []
     };
+    // const newRule = {
+    //   propertyName: "",
+    //   actionPropertyName: "",
+    //   newValue: "",
+    //   comparison: "",
+    //   operatorValue: ""
+    // };
 
     addRules({
       eventType,

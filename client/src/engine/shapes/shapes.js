@@ -265,55 +265,55 @@ export function Shape(centre, vertices) {
       subscribed: true,
       collision: {
         rules: [
-          {
-            conditions: [
-              {
-                propertyName: "physics.velocity.x",
-                operator: ">",
-                comparisonValue: "0"
-              },
-              {
-                propertyName: "fillColour",
-                operator: "===",
-                comparisonValue: "green"
-              }
-            ],
-            logicalOperators: ["AND"],
-            actions: [
-              { propertyName: "fillColour", newValue: "red" },
-              { propertyName: "linewidth", newValue: 0.1 }
-            ]
-          },
-          {
-            conditions: [
-              {
-                propertyName: "physics.velocity.x",
-                operator: ">",
-                comparisonValue: "0"
-              },
-              {
-                propertyName: "fillColour",
-                operator: "===",
-                comparisonValue: "green"
-              }
-            ],
-            logicalOperators: ["NOT"],
-            actions: [
-              { propertyName: "fillColour", newValue: "green" },
-              { propertyName: "linewidth", newValue: 20 }
-            ]
-          },
-          {
-            conditions: [
-              {
-                propertyName: "physics.velocity.x",
-                operator: "<",
-                comparisonValue: "0"
-              }
-            ],
-            logicalOperators: [],
-            actions: [{ propertyName: "fillColour", newValue: "yellow" }]
-          }
+          // {
+          //   conditions: [
+          //     {
+          //       propertyName: "physics.velocity.x",
+          //       operator: ">",
+          //       comparisonValue: "0"
+          //     },
+          //     {
+          //       propertyName: "fillColour",
+          //       operator: "===",
+          //       comparisonValue: "green"
+          //     }
+          //   ],
+          //   logicalOperators: ["AND"],
+          //   actions: [
+          //     { propertyName: "fillColour", newValue: "red" },
+          //     { propertyName: "linewidth", newValue: 0.1 }
+          //   ]
+          // },
+          // {
+          //   conditions: [
+          //     {
+          //       propertyName: "physics.velocity.x",
+          //       operator: ">",
+          //       comparisonValue: "0"
+          //     },
+          //     {
+          //       propertyName: "fillColour",
+          //       operator: "===",
+          //       comparisonValue: "green"
+          //     }
+          //   ],
+          //   logicalOperators: ["NOT"],
+          //   actions: [
+          //     { propertyName: "fillColour", newValue: "green" },
+          //     { propertyName: "linewidth", newValue: 20 }
+          //   ]
+          // },
+          // {
+          //   conditions: [
+          //     {
+          //       propertyName: "physics.velocity.x",
+          //       operator: "<",
+          //       comparisonValue: "0"
+          //     }
+          //   ],
+          //   logicalOperators: [],
+          //   actions: [{ propertyName: "fillColour", newValue: "yellow" }]
+          // }
         ]
       },
       // doubleClick: {
