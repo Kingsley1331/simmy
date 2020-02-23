@@ -29,7 +29,6 @@ const Rule = ({
   ];
 
   const resetRules = () => {
-    console.log("rules8", rules);
     addRules({
       eventType,
       shapeId: selectedShapeId,
@@ -43,6 +42,30 @@ const Rule = ({
     );
     if (deleteThisRule) {
       rules[eventType][selectedShapeId].splice(index, 1);
+      resetRules();
+      applyRules();
+    }
+  };
+
+  const deleteAction = actionIndex => {
+    const deleteThisAction = window.confirm(
+      "Are you sure you want to delete this action"
+    );
+    if (deleteThisAction) {
+      rules[eventType][selectedShapeId][index].actions.splice(actionIndex, 1);
+      resetRules();
+      applyRules();
+    }
+  };
+  const deleteCondition = conditionIndex => {
+    const deleteThisCondition = window.confirm(
+      "Are you sure you want to delete this condition"
+    );
+    if (deleteThisCondition) {
+      rules[eventType][selectedShapeId][index].conditions.splice(
+        conditionIndex,
+        1
+      );
       resetRules();
       applyRules();
     }
@@ -67,6 +90,7 @@ const Rule = ({
     });
     resetRules();
   };
+
   const addCondition = () => {
     rules[eventType][selectedShapeId][index].conditions.push({
       propertyName: "",
@@ -80,6 +104,7 @@ const Rule = ({
   const conditions = rule.conditions;
   const numOfConditions = conditions.length;
   const actions = rule.actions;
+  const numOfActions = actions.length;
 
   return (
     <div className="rule">
@@ -87,13 +112,12 @@ const Rule = ({
       <h2>Rule:</h2>
       <div>
         <h3>Conditions:</h3>
-        {conditions.map((condition, index) => (
+        {conditions.map((condition, idx) => (
           <div>
             Property name:&nbsp; &nbsp;
             <select
-              onChange={updateRules("propertyName", "conditions", index)}
+              onChange={updateRules("propertyName", "conditions", idx)}
               defaultValue={condition.propertyName}
-              // defaultValue={rule.propertyName}
               className="propertyName"
             >
               {propertiesArray.map(property => (
@@ -105,8 +129,7 @@ const Rule = ({
             &nbsp; &nbsp; operator &nbsp; &nbsp;
             <select
               defaultValue={condition.operatorValue}
-              // defaultValue={rule.operatorValue}
-              onChange={updateRules("operatorValue", "conditions", index)}
+              onChange={updateRules("operatorValue", "conditions", idx)}
             >
               {operatorsArray.map(property => (
                 <option key={property[1]} value={property[0]}>
@@ -116,17 +139,17 @@ const Rule = ({
             </select>
             &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
             <input
-              onBlur={updateRules("comparison", "conditions", index)}
+              onBlur={updateRules("comparison", "conditions", idx)}
               defaultValue={condition.comparison}
-              // defaultValue={rule.comparison}
             />
+            <button onClick={() => deleteCondition(idx)}>X</button>
             <br></br>
             <br></br>
-            {index + 1 < numOfConditions && (
+            {idx + 1 < numOfConditions && (
               <div>
                 <select
-                  defaultValue={rule.logicalOperators[index]}
-                  onChange={e => updateLogicalOperator(e, index)}
+                  defaultValue={rule.logicalOperators[idx]}
+                  onChange={e => updateLogicalOperator(e, idx)}
                 >
                   <option value="OR">OR</option>
                   <option value="AND">AND</option>
@@ -142,13 +165,13 @@ const Rule = ({
       <button onClick={addCondition}>Add condition</button>
       <div>
         <h3>Actions:</h3>
-        {actions.map((action, index) => {
+        {actions.map((action, idx) => {
           return (
             <div>
               Property name:&nbsp; &nbsp;
               <select
                 defaultValue={action.actionPropertyName}
-                onChange={updateRules("actionPropertyName", "actions", index)}
+                onChange={updateRules("actionPropertyName", "actions", idx)}
               >
                 {propertiesArray.map(property => (
                   <option key={property} value={property}>
@@ -158,10 +181,13 @@ const Rule = ({
               </select>
               &nbsp; &nbsp; New value:{" "}
               <input
-                key={index}
-                onBlur={updateRules("newValue", "actions", index)}
+                key={idx}
+                onBlur={updateRules("newValue", "actions", idx)}
                 defaultValue={action.newValue}
               />
+              {numOfActions > 1 && (
+                <button onClick={() => deleteAction(idx)}>X</button>
+              )}
             </div>
           );
         })}
