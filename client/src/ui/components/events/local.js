@@ -82,7 +82,7 @@ const EventForm = ({
 
   const addRule = useCallback(() => {
     const newRule = {
-      conditions: [{ propertyName: "", actionPropertyName: "", newValue: "" }],
+      conditions: [],
       actions: [{ comparison: "", operatorValue: "" }],
       logicalOperators: ["OR"]
     };

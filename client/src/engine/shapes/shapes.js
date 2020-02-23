@@ -408,6 +408,21 @@ export function Shape(centre, vertices) {
               bool = event === "click" ? this.onClick && bool : bool;
             }
 
+            if (!numOfConditions) {
+              if (event === "collision" && this.colliding) {
+                bool = true;
+              }
+              if (event === "hover" && this.onShape) {
+                bool = true;
+              }
+              if (event === "drag" && this.dragging) {
+                bool = true;
+              }
+              if (event === "click" && this.onClick) {
+                bool = true;
+              }
+            }
+
             const numOfActions = actions.length;
             if (bool) {
               for (let k = 0; k < numOfActions; k++) {
