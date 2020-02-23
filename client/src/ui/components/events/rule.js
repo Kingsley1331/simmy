@@ -55,6 +55,11 @@ const Rule = ({
     resetRules();
   };
 
+  const conditions = rule.conditions;
+  const numOfConditions = conditions.length;
+  const actions = rule.actions;
+  const numOfActions = actions.length;
+
   return (
     <div className="rule">
       <button onClick={Delete}>delete this rule</button>
@@ -139,46 +144,29 @@ const Rule = ({
       <div>
         <h3>Actions:</h3>
         {/******************************************************************************** ACTION 1 */}
-        Property name:&nbsp; &nbsp;
-        <select
-          defaultValue={rule.actions[0].actionPropertyName}
-          // defaultValue={rule.actionPropertyName}
-          onChange={updateRules("actionPropertyName", "actions", 0)}
-        >
-          {propertiesArray.map(property => (
-            <option key={property} value={property}>
-              {property}
-            </option>
-          ))}
-        </select>
-        &nbsp; &nbsp; New value:{" "}
-        <input
-          key={index}
-          onBlur={updateRules("newValue", "actions", 0)}
-          defaultValue={rule.actions[0].newValue}
-          // defaultValue={rule.newValue}
-        />
-        <br></br>
-        {/******************************************************************************** ACTION 1 */}
-        Property name:&nbsp; &nbsp;
-        <select
-          defaultValue={rule.actions[1].actionPropertyName}
-          // defaultValue={rule.actionPropertyName}
-          onChange={updateRules("actionPropertyName", "actions", 1)}
-        >
-          {propertiesArray.map(property => (
-            <option key={property} value={property}>
-              {property}
-            </option>
-          ))}
-        </select>
-        &nbsp; &nbsp; New value:{" "}
-        <input
-          key={index + 1}
-          onBlur={updateRules("newValue", "actions", 1)}
-          defaultValue={rule.actions[1].newValue}
-          // defaultValue={rule.newValue}
-        />
+        {actions.map((action, index) => {
+          return (
+            <div>
+              Property name:&nbsp; &nbsp;
+              <select
+                defaultValue={action.actionPropertyName}
+                onChange={updateRules("actionPropertyName", "actions", index)}
+              >
+                {propertiesArray.map(property => (
+                  <option key={property} value={property}>
+                    {property}
+                  </option>
+                ))}
+              </select>
+              &nbsp; &nbsp; New value:{" "}
+              <input
+                key={index}
+                onBlur={updateRules("newValue", "actions", index)}
+                defaultValue={action.newValue}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
