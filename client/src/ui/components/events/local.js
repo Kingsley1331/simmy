@@ -10,9 +10,6 @@ const EventForm = ({
   rules,
   eventType
 }) => {
-  // const eventTypes = useRef(null);
-  // const event = useRef(null);
-  // debugger;
   const eventTypeObject = rules[eventType] || {};
   const rulesArray = eventTypeObject[selectedShapeId] || [];
   console.log("rulesArray", rulesArray);
@@ -39,11 +36,8 @@ const EventForm = ({
   };
 
   const applyRules = () => {
-    // const eventType = eventTypes.current.value;
-
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
-
     const numOfRules = rulesArray.length;
     if (shape) {
       shape.events.local[eventType].rules = [];
@@ -53,37 +47,32 @@ const EventForm = ({
       rule.conditions = [];
       rule.actions = [];
       rule.logicalOperators = [];
+      const numOfConditions = rulesArray[i].conditions.length;
+      const numOfActions = rulesArray[i].actions.length;
+      const numOfLogicalOperators = rulesArray[i].logicalOperators.length;
       // Conditions loop
-      const condition = {
-        propertyName: propertyMap[rulesArray[i].conditions[0].propertyName],
-        operator: rulesArray[i].conditions[0].operatorValue,
-        comparisonValue: rulesArray[i].conditions[0].comparison
-      };
-      rule.conditions.push(condition);
-
-      const condition2 = {
-        propertyName: propertyMap[rulesArray[i].conditions[1].propertyName],
-        operator: rulesArray[i].conditions[1].operatorValue,
-        comparisonValue: rulesArray[i].conditions[1].comparison
-      };
-      rule.conditions.push(condition2);
+      for (let j = 0; j < numOfConditions; j++) {
+        const condition = {
+          propertyName: propertyMap[rulesArray[i].conditions[j].propertyName],
+          operator: rulesArray[i].conditions[j].operatorValue,
+          comparisonValue: rulesArray[i].conditions[j].comparison
+        };
+        rule.conditions.push(condition);
+      }
       // Actions loop
-      const action = {
-        propertyName: propertyMap[rulesArray[i].actions[0].actionPropertyName],
-        newValue: rulesArray[i].actions[0].newValue
-      };
-      rule.actions.push(action);
-
-      const action2 = {
-        propertyName: propertyMap[rulesArray[i].actions[1].actionPropertyName],
-        newValue: rulesArray[i].actions[1].newValue
-      };
-      rule.actions.push(action2);
-
+      for (let k = 0; k < numOfActions; k++) {
+        const action = {
+          propertyName:
+            propertyMap[rulesArray[i].actions[k].actionPropertyName],
+          newValue: rulesArray[i].actions[k].newValue
+        };
+        rule.actions.push(action);
+      }
       // LogicalOperators loop
-      const logicalOperator = rulesArray[i].logicalOperators[0];
-      rule.logicalOperators.push(logicalOperator);
-
+      for (let n = 0; n < numOfLogicalOperators; n++) {
+        const logicalOperator = rulesArray[i].logicalOperators[n];
+        rule.logicalOperators.push(logicalOperator);
+      }
       if (shape) {
         shape.events.local[eventType].rules.push(rule);
       }
@@ -93,14 +82,8 @@ const EventForm = ({
 
   const addRule = useCallback(() => {
     const newRule = {
-      conditions: [
-        { propertyName: "", actionPropertyName: "", newValue: "" },
-        { propertyName: "", actionPropertyName: "", newValue: "" }
-      ],
-      actions: [
-        { comparison: "", operatorValue: "" },
-        { comparison: "", operatorValue: "" }
-      ],
+      conditions: [{ propertyName: "", actionPropertyName: "", newValue: "" }],
+      actions: [{ comparison: "", operatorValue: "" }],
       logicalOperators: ["OR"]
     };
 
@@ -113,16 +96,13 @@ const EventForm = ({
 
   return (
     <div className="eventsWrapper">
-      {/* <div ref={event} className="eventsWrapper"> */}
       selectedShapeId: {selectedShapeId}
       <h2>Event:</h2>
       <select onChange={handleEventChange}>
-        {/* <select ref={eventTypes} onChange={handleEventChange}> */}
         <option value="">none</option>
         <option value="collision">collision</option>
         <option value="drag">drag</option>
         <option value="click">click</option>
-        {/* <option value="double click">double click</option> */}
         <option value="hover">hover</option>
       </select>
       {rulesArray &&

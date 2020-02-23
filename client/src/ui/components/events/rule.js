@@ -87,7 +87,6 @@ const Rule = ({
       <h2>Rule:</h2>
       <div>
         <h3>Conditions:</h3>
-        {/******************************************************************************** CONDITION 1 */}
         {conditions.map((condition, index) => (
           <div>
             Property name:&nbsp; &nbsp;
@@ -143,7 +142,6 @@ const Rule = ({
       <button onClick={addCondition}>Add condition</button>
       <div>
         <h3>Actions:</h3>
-        {/******************************************************************************** ACTION 1 */}
         {actions.map((action, index) => {
           return (
             <div>
