@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import Scene from "../../../engine/scenes/scene";
 import Rule from "./rule";
@@ -52,6 +52,7 @@ const EventForm = ({
       let rule = {};
       rule.conditions = [];
       rule.actions = [];
+      rule.logicalOperators = [];
       // Conditions loop
       const condition = {
         propertyName: propertyMap[rulesArray[i].conditions[0].propertyName],
@@ -59,6 +60,13 @@ const EventForm = ({
         comparisonValue: rulesArray[i].conditions[0].comparison
       };
       rule.conditions.push(condition);
+
+      const condition2 = {
+        propertyName: propertyMap[rulesArray[i].conditions[1].propertyName],
+        operator: rulesArray[i].conditions[1].operatorValue,
+        comparisonValue: rulesArray[i].conditions[1].comparison
+      };
+      rule.conditions.push(condition2);
       // Actions loop
       const action = {
         propertyName: propertyMap[rulesArray[i].actions[0].actionPropertyName],
@@ -66,25 +74,35 @@ const EventForm = ({
       };
       rule.actions.push(action);
 
+      const action2 = {
+        propertyName: propertyMap[rulesArray[i].actions[1].actionPropertyName],
+        newValue: rulesArray[i].actions[1].newValue
+      };
+      rule.actions.push(action2);
+
+      // LogicalOperators loop
+      const logicalOperator = rulesArray[i].logicalOperators[0];
+      rule.logicalOperators.push(logicalOperator);
+
       if (shape) {
         shape.events.local[eventType].rules.push(rule);
       }
     }
+    console.log("RULES", shape.events.local[eventType].rules);
   };
 
   const addRule = useCallback(() => {
     const newRule = {
-      conditions: [{ propertyName: "", actionPropertyName: "", newValue: "" }],
-      actions: [{ comparison: "", operatorValue: "" }],
-      logicalOperators: []
+      conditions: [
+        { propertyName: "", actionPropertyName: "", newValue: "" },
+        { propertyName: "", actionPropertyName: "", newValue: "" }
+      ],
+      actions: [
+        { comparison: "", operatorValue: "" },
+        { comparison: "", operatorValue: "" }
+      ],
+      logicalOperators: ["OR"]
     };
-    // const newRule = {
-    //   propertyName: "",
-    //   actionPropertyName: "",
-    //   newValue: "",
-    //   comparison: "",
-    //   operatorValue: ""
-    // };
 
     addRules({
       eventType,

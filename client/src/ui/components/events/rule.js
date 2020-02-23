@@ -60,7 +60,8 @@ const Rule = ({
       <button onClick={Delete}>delete this rule</button>
       <h2>Rule:</h2>
       <div>
-        <h3>Condition:</h3>
+        <h3>Conditions:</h3>
+        {/******************************************************************************** CONDITION 1 */}
         Property name:&nbsp; &nbsp;
         <select
           onChange={updateRules("propertyName", "conditions", 0)}
@@ -92,9 +93,52 @@ const Rule = ({
           defaultValue={rule.conditions[0].comparison}
           // defaultValue={rule.comparison}
         />
+        <br></br>
+        <br></br>
+        <select defaultValue={rule.logicalOperators[0]}>
+          <option value="OR">OR</option>
+          <option value="AND">AND</option>
+          <option value="NOT">NOT</option>
+        </select>
+        <br></br>
+        <br></br>
+        {/******************************************************************************** CONDITION 2 */}
+        Property name:&nbsp; &nbsp;
+        <select
+          onChange={updateRules("propertyName", "conditions", 1)}
+          defaultValue={rule.conditions[1].propertyName}
+          // defaultValue={rule.propertyName}
+          className="propertyName"
+        >
+          {propertiesArray.map(property => (
+            <option key={property} value={property}>
+              {property}
+            </option>
+          ))}
+        </select>
+        &nbsp; &nbsp; operator &nbsp; &nbsp;
+        <select
+          defaultValue={rule.conditions[1].operatorValue}
+          // defaultValue={rule.operatorValue}
+          onChange={updateRules("operatorValue", "conditions", 1)}
+        >
+          {operatorsArray.map(property => (
+            <option key={property[1]} value={property[0]}>
+              {property[1]}
+            </option>
+          ))}
+        </select>
+        &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
+        <input
+          onBlur={updateRules("comparison", "conditions", 1)}
+          defaultValue={rule.conditions[1].comparison}
+          // defaultValue={rule.comparison}
+        />
       </div>
+
       <div>
-        <h3>Action:</h3>
+        <h3>Actions:</h3>
+        {/******************************************************************************** ACTION 1 */}
         Property name:&nbsp; &nbsp;
         <select
           defaultValue={rule.actions[0].actionPropertyName}
@@ -112,6 +156,27 @@ const Rule = ({
           key={index}
           onBlur={updateRules("newValue", "actions", 0)}
           defaultValue={rule.actions[0].newValue}
+          // defaultValue={rule.newValue}
+        />
+        <br></br>
+        {/******************************************************************************** ACTION 1 */}
+        Property name:&nbsp; &nbsp;
+        <select
+          defaultValue={rule.actions[1].actionPropertyName}
+          // defaultValue={rule.actionPropertyName}
+          onChange={updateRules("actionPropertyName", "actions", 1)}
+        >
+          {propertiesArray.map(property => (
+            <option key={property} value={property}>
+              {property}
+            </option>
+          ))}
+        </select>
+        &nbsp; &nbsp; New value:{" "}
+        <input
+          key={index + 1}
+          onBlur={updateRules("newValue", "actions", 1)}
+          defaultValue={rule.actions[1].newValue}
           // defaultValue={rule.newValue}
         />
       </div>
