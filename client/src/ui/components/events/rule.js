@@ -51,14 +51,19 @@ const Rule = ({
   const updateRules = (valueName, type, typeIndex) => e => {
     rules[eventType][selectedShapeId][index][type][typeIndex][valueName] =
       e.target.value;
-    // rules[eventType][selectedShapeId][index][valueName] = e.target.value;
+    resetRules();
+  };
+  const addAction = () => {
+    rules[eventType][selectedShapeId][index].actions.push({
+      comparison: "",
+      operatorValue: ""
+    });
     resetRules();
   };
 
   const conditions = rule.conditions;
   const numOfConditions = conditions.length;
   const actions = rule.actions;
-  const numOfActions = actions.length;
 
   return (
     <div className="rule">
@@ -167,6 +172,7 @@ const Rule = ({
             </div>
           );
         })}
+        <button onClick={addAction}>Add action</button>
       </div>
     </div>
   );
