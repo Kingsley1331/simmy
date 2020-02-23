@@ -167,7 +167,7 @@ const Rule = ({
         <h3>Actions:</h3>
         {actions.map((action, idx) => {
           return (
-            <div>
+            <div key={idx}>
               Property name:&nbsp; &nbsp;
               <select
                 defaultValue={action.actionPropertyName}
