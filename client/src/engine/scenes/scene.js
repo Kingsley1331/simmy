@@ -1,5 +1,6 @@
 // import createWalls from "../shapes/walls";
 // import { clearShapes } from "../../engine/shapes/shapes";
+import checkLocalEvents from "../utils/checkLocalEvents";
 
 let Scene = {
   name: "",
@@ -73,6 +74,7 @@ export function updateScene(scene) {
           Scene.shapes[i].type = scene.shapes[i].type;
           Scene.shapes[i].collisionData = scene.shapes[i].collisionData || {};
           Scene.shapes[i].events = scene.shapes[i].events || {};
+          Scene.shapes[i].checkLocalEvents = checkLocalEvents;
 
           if (scene.shapes[i].type === "fixed") {
             Scene.shapes[i].physics.mass = Infinity;
