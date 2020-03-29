@@ -54,15 +54,15 @@ const EventForm = ({
       for (let j = 0; j < numOfConditions; j++) {
         const condition = {
           propertyName: propertyMap[rulesArray[i].conditions[j].propertyName],
-          operator: rulesArray[i].conditions[j].operatorValue,
-          comparisonValue: rulesArray[i].conditions[j].comparison
+          operator: rulesArray[i].conditions[j].operator,
+          comparisonValue: rulesArray[i].conditions[j].comparisonValue
         };
         rule.conditions.push(condition);
       }
       // Actions loop
       for (let k = 0; k < numOfActions; k++) {
         const action = {
-          propertyName:
+          actionPropertyName:
             propertyMap[rulesArray[i].actions[k].actionPropertyName],
           newValue: rulesArray[i].actions[k].newValue
         };

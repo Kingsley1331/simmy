@@ -281,8 +281,8 @@ export function Shape(centre, vertices) {
           //   ],
           //   logicalOperators: ["AND"],
           //   actions: [
-          //     { propertyName: "fillColour", newValue: "red" },
-          //     { propertyName: "linewidth", newValue: 0.1 }
+          //     { actionPropertyName: "fillColour", newValue: "red" },
+          //     { actionPropertyName: "linewidth", newValue: 0.1 }
           //   ]
           // },
           // {
@@ -300,8 +300,8 @@ export function Shape(centre, vertices) {
           //   ],
           //   logicalOperators: ["NOT"],
           //   actions: [
-          //     { propertyName: "fillColour", newValue: "green" },
-          //     { propertyName: "linewidth", newValue: 20 }
+          //     { actionPropertyName: "fillColour", newValue: "green" },
+          //     { actionPropertyName: "linewidth", newValue: 20 }
           //   ]
           // },
           // {
@@ -313,7 +313,7 @@ export function Shape(centre, vertices) {
           //     }
           //   ],
           //   logicalOperators: [],
-          //   actions: [{ propertyName: "fillColour", newValue: "yellow" }]
+          //   actions: [{ actionPropertyName: "fillColour", newValue: "yellow" }]
           // }
         ]
       },

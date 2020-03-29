@@ -85,8 +85,8 @@ const Rule = ({
 
   const addAction = () => {
     rules[eventType][selectedShapeId][index].actions.push({
-      comparison: "",
-      operatorValue: ""
+      comparisonValue: "",
+      operator: ""
     });
     resetRules();
   };
@@ -128,8 +128,8 @@ const Rule = ({
             </select>
             &nbsp; &nbsp; operator &nbsp; &nbsp;
             <select
-              defaultValue={condition.operatorValue}
-              onChange={updateRules("operatorValue", "conditions", idx)}
+              defaultValue={condition.operator}
+              onChange={updateRules("operator", "conditions", idx)}
             >
               {operatorsArray.map(property => (
                 <option key={property[1]} value={property[0]}>
@@ -139,8 +139,8 @@ const Rule = ({
             </select>
             &nbsp; &nbsp; comparison value:&nbsp; &nbsp;
             <input
-              onBlur={updateRules("comparison", "conditions", idx)}
-              defaultValue={condition.comparison}
+              onBlur={updateRules("comparisonValue", "conditions", idx)}
+              defaultValue={condition.comparisonValue}
             />
             <button onClick={() => deleteCondition(idx)}>X</button>
             <br></br>

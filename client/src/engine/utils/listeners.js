@@ -15,6 +15,7 @@ import { applyMotion } from "../physics/motion";
 import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import Vector from "./maths/Vector";
+import { retrieveLocalRules } from "./eventRules";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -36,7 +37,7 @@ export const click = element => {
   );
 };
 
-export const doubleClick = (element, selectShape) => {
+export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
   element.addEventListener(
     "dblclick",
     evt => {
@@ -46,8 +47,20 @@ export const doubleClick = (element, selectShape) => {
         selectShapeIndex = detectShape(i);
         if (selectShapeIndex) {
           const selectedShapeId = Scene.shapes[selectShapeIndex].id;
+          const selectedShapeRules =
+            Scene.shapes[selectShapeIndex].events.local;
+          console.log("selectedEvent", selectedEvent);
+          const rules = retrieveLocalRules(
+            {},
+            selectedShapeRules,
+            selectedShapeId,
+            selectedEvent
+          );
+          console.log("rules", rules);
+          // console.log("selectedShape", Scene.shapes[selectShapeIndex]);
           Scene.selectedShape = selectedShapeId;
           selectShape(selectedShapeId);
+          addRules(rules);
         }
       }, false);
     },

@@ -35,13 +35,29 @@ class Scenes extends Component {
     mouseDown(canvas);
     mouseMove(canvas);
     mouseUp(canvas);
-    doubleClick(canvas, this.props.selectShape);
+    doubleClick(
+      canvas,
+      this.props.selectShape,
+      this.props.addRules,
+      this.props.selectedEvent
+    );
     click(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(this.props.scene).length) {
       createWalls();
     }
     updateScene(this.props.scene);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedEvent !== this.props.selectedEvent) {
+      doubleClick(
+        canvas,
+        this.props.selectShape,
+        this.props.addRules,
+        this.props.selectedEvent
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -60,10 +76,12 @@ class Scenes extends Component {
   }
 }
 
-const mapStateToProps = ({ buttons, scene }) => {
+const mapStateToProps = ({ buttons, scene, event }) => {
+  console.log("event", event);
   return {
     buttons,
-    scene
+    scene,
+    selectedEvent: event
   };
 };
 
@@ -75,7 +93,8 @@ const mapDispatchToProps = dispatch => {
     },
     getScene: () => {
       dispatch({ type: "GET_SCENE", payload: {} });
-    }
+    },
+    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
   };
 };
 

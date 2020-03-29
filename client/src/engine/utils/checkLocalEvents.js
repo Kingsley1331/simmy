@@ -67,9 +67,13 @@ const checkLocalEvents = function() {
           const numOfActions = actions.length;
           if (bool) {
             for (let k = 0; k < numOfActions; k++) {
-              let actionPropName = actions[k].propertyName;
+              let actionPropertyName = actions[k].actionPropertyName;
               let action = actions[k];
-              setObjectValueFromString(this, actionPropName, action.newValue);
+              setObjectValueFromString(
+                this,
+                actionPropertyName,
+                action.newValue
+              );
             }
           }
         }
