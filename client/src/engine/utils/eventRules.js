@@ -18,38 +18,30 @@ const fixPropertyName = rules => {
         action.actionPropertyName = actionPropertyName.replace("physics.", "");
       }
     }
-    console.log("rules after", rules);
   }
   return rules;
 };
 
-export const retrieveLocalRules = (
-  currentRules,
-  newRules,
-  shapeId,
-  selectedEvent
-) => {
+export const retrieveLocalRules = (newRules, shapeId) => {
+  let Rules = {};
   let selectedRules;
+  const rulesForRedux = {};
   for (let eventType in newRules) {
-    if (eventType !== "subscribed" && eventType === selectedEvent) {
+    if (eventType !== "subscribed") {
       const { rules } = newRules[eventType];
-      //   console.log("eventType", eventType);
-      //   console.log("rules1", rules);
-      if (!currentRules[eventType]) {
-        currentRules[eventType] = {};
+      if (!Rules[eventType]) {
+        Rules[eventType] = {};
       }
-      if (!currentRules[eventType][shapeId]) {
-        currentRules[eventType][shapeId] = rules;
+      if (!Rules[eventType][shapeId]) {
+        Rules[eventType][shapeId] = rules;
         selectedRules = rules;
       }
+
+      rulesForRedux[eventType] = {
+        [shapeId]: [...fixPropertyName(selectedRules)]
+      };
     }
   }
 
-  const rulesForRedux = {
-    eventType: selectedEvent,
-    shapeId,
-    rules: fixPropertyName(selectedRules)
-    // rules: selectedRules
-  };
   return rulesForRedux;
 };

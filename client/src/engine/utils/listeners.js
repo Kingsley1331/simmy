@@ -45,19 +45,11 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
       Scene.currentEvents.doubleClick = true;
       forEachShape(function(i) {
         selectShapeIndex = detectShape(i);
-        if (selectShapeIndex) {
+        if (selectShapeIndex && selectedEvent) {
           const selectedShapeId = Scene.shapes[selectShapeIndex].id;
           const selectedShapeRules =
             Scene.shapes[selectShapeIndex].events.local;
-          console.log("selectedEvent", selectedEvent);
-          const rules = retrieveLocalRules(
-            {},
-            selectedShapeRules,
-            selectedShapeId,
-            selectedEvent
-          );
-          console.log("rules", rules);
-          // console.log("selectedShape", Scene.shapes[selectShapeIndex]);
+          const rules = retrieveLocalRules(selectedShapeRules, selectedShapeId);
           Scene.selectedShape = selectedShapeId;
           selectShape(selectedShapeId);
           addRules(rules);

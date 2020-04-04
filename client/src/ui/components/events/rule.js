@@ -30,9 +30,9 @@ const Rule = ({
 
   const resetRules = () => {
     addRules({
-      eventType,
-      shapeId: selectedShapeId,
-      rules: [...rules[[eventType]][selectedShapeId]]
+      [eventType]: {
+        [selectedShapeId]: [...rules[[eventType]][selectedShapeId]]
+      }
     });
   };
 

@@ -88,9 +88,9 @@ const EventForm = ({
     };
 
     addRules({
-      eventType,
-      shapeId: selectedShapeId,
-      rules: [...rulesArray, newRule]
+      [eventType]: {
+        [selectedShapeId]: [...rulesArray, newRule]
+      }
     });
   }, [rulesArray, selectedShapeId, addRules]);
 
