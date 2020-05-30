@@ -1,6 +1,7 @@
 // import createWalls from "../shapes/walls";
 // import { clearShapes } from "../../engine/shapes/shapes";
 import checkLocalEvents from "../utils/checkLocalEvents";
+import checkGlobalEvents from "../utils/checkglobalEvents";
 
 let Scene = {
   name: "",
@@ -22,20 +23,43 @@ let Scene = {
   },
   currentEvents: { click: false, doubleClick: false, collision: false },
   events: {
-    doubleClick: {
+    collision: {
       rules: [
         {
-          condition: () => true,
-          action: shape => {
-            shape.fillColour = "white";
-          }
+          conditions: [
+            {
+              propertyName: "physics.velocity.x",
+              operator: ">",
+              comparisonValue: "0"
+            },
+            {
+              propertyName: "fillColour",
+              operator: "===",
+              comparisonValue: "green"
+            }
+          ],
+          logicalOperators: ["OR"],
+          actions: [
+            { actionPropertyName: "fillColour", newValue: "yellow" },
+            { actionPropertyName: "linewidth", newValue: 0.1 }
+          ]
         }
       ]
     },
+    // doubleClick: {
+    //   rules: [
+    //     {
+    //       condition: () => true,
+    //       action: shape => {
+    //         shape.fillColour = "white";
+    //       }
+    //     }
+    //   ]
+    // },
     click: {
       rules: []
     },
-    collision: {
+    doubleClick: {
       rules: []
     }
   },
@@ -93,6 +117,7 @@ export function updateScene(scene) {
           Scene.shapes[i].collisionData = scene.shapes[i].collisionData || {};
           Scene.shapes[i].events = scene.shapes[i].events || {};
           Scene.shapes[i].checkLocalEvents = checkLocalEvents;
+          Scene.shapes[i].checkGlobalEvents = checkGlobalEvents;
 
           if (scene.shapes[i].type === "fixed") {
             Scene.shapes[i].physics.mass = Infinity;

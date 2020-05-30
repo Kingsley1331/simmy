@@ -4,6 +4,7 @@ import getMousePos from "../utils/position";
 import { throwVelocity } from "../utils/throw";
 import { calculateBoolean } from "../utils/maths/operators";
 import checkLocalEvents from "../utils/checkLocalEvents";
+import checkGlobalEvents from "../utils/checkglobalEvents";
 import {
   getObjectValueFromString,
   setObjectValueFromString
@@ -337,30 +338,7 @@ export function Shape(centre, vertices) {
   this.tags = [];
 
   this.checkLocalEvents = checkLocalEvents;
-
-  this.checkGlobalEvents = function(stop) {
-    const globalEvents = Scene.currentEvents;
-    if (this.events.global.subscribed) {
-      for (let event in globalEvents) {
-        const numOfClickActions = Scene.events[event].rules.length;
-        const clickActions = Scene.events[event].rules;
-        if (globalEvents[event] && numOfClickActions) {
-          for (let j = 0; j < numOfClickActions; j++) {
-            if (clickActions[j].condition()) {
-              clickActions[j].action(this);
-            }
-          }
-        }
-      }
-    }
-    if (stop) {
-      Scene.currentEvents = {
-        click: false,
-        doubleClick: false,
-        collision: false
-      };
-    }
-  };
+  this.checkGlobalEvents = stop => checkGlobalEvents(stop, this);
 }
 
 export function createShape(centreOfMass, vertices) {
