@@ -331,32 +331,7 @@ export function Shape(centre, vertices) {
       }
     },
     global: {
-      subscribed: true,
-      collision: {
-        rules: []
-      },
-      doubleClick: {
-        rules: [
-          {
-            condition: () => true,
-            action: () => {
-              this.fillColour = "black";
-            }
-          }
-        ]
-      },
-      click: {
-        rules: [
-          // {
-          //   condition: () => this.onShape,
-          //   action: () => {
-          //     console.log("id", this.id);
-          //     this.selected = true;
-          //     Scene.selectedShape = this.id;
-          //   }
-          // }
-        ]
-      }
+      subscribed: true
     }
   };
   this.tags = [];
@@ -367,12 +342,12 @@ export function Shape(centre, vertices) {
     const globalEvents = Scene.currentEvents;
     if (this.events.global.subscribed) {
       for (let event in globalEvents) {
-        const numOfClickActions = this.events.global[event].rules.length;
-        const clickActions = this.events.global[event].rules;
+        const numOfClickActions = Scene.events[event].rules.length;
+        const clickActions = Scene.events[event].rules;
         if (globalEvents[event] && numOfClickActions) {
           for (let j = 0; j < numOfClickActions; j++) {
             if (clickActions[j].condition()) {
-              clickActions[j].action();
+              clickActions[j].action(this);
             }
           }
         }

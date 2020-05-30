@@ -37,7 +37,7 @@ export default function animate() {
       applyMotion(i, timeStep);
       applyForces(i);
       ShapesController.checkLocalEvents(i);
-      // ShapesController.checkGlobalEvents(i, i === numShapes - 1);
+      ShapesController.checkGlobalEvents(i, i === numShapes - 1);
     });
     /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
     collisionDetector();

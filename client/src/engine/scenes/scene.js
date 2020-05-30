@@ -21,6 +21,24 @@ let Scene = {
     restitution: 1
   },
   currentEvents: { click: false, doubleClick: false, collision: false },
+  events: {
+    doubleClick: {
+      rules: [
+        {
+          condition: () => true,
+          action: shape => {
+            shape.fillColour = "white";
+          }
+        }
+      ]
+    },
+    click: {
+      rules: []
+    },
+    collision: {
+      rules: []
+    }
+  },
   selectedShape: ""
 };
 
