@@ -85,17 +85,17 @@ const Rule = ({
 
   const addAction = () => {
     rules[eventType][selectedShapeId][index].actions.push({
-      comparisonValue: "",
-      operator: ""
+      actionPropertyName: "",
+      newValue: ""
     });
     resetRules();
   };
 
   const addCondition = () => {
     rules[eventType][selectedShapeId][index].conditions.push({
-      propertyName: "",
-      actionPropertyName: "",
-      newValue: ""
+      comparisonValue: "",
+      operator: "",
+      propertyName: ""
     });
     rules[eventType][selectedShapeId][index].logicalOperators.push("OR");
     resetRules();
