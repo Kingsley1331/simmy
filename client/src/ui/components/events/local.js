@@ -2,13 +2,15 @@ import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import Scene from "../../../engine/scenes/scene";
 import Rule from "./rule";
+import { addRulesAction, selectEventAction } from "../../actions/events";
 
 const EventForm = ({
   selectedShapeId,
   selectEvent,
   addRules,
   rules,
-  eventType
+  eventType,
+  type
 }) => {
   const eventTypeObject = rules[eventType] || {};
   const rulesArray = eventTypeObject[selectedShapeId] || [];
@@ -121,12 +123,9 @@ const EventForm = ({
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules }),
-    selectEvent: eventType =>
-      dispatch({ type: "SELECT_EVENT", payload: eventType })
-  };
+const mapDispatchToProps = {
+  addRules: addRulesAction,
+  selectEvent: selectEventAction
 };
 
 const mapStateToProps = ({ event, rules, selectedShape }) => {
