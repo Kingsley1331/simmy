@@ -60,8 +60,54 @@ const EventForm = ({
       selectGlobalEvent(eventMap[e.target.value]);
     }
   };
+  /** TODO: refactor to use combine applyLocalRules and applyGlobalRules in one function applyGlobalRules applyRules   **/
+  const applyGlobalRules = () => {
+    // const selectedShape = Scene.selectedShape;
+    // const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
+    const numOfRules = rulesArray.length;
+    // if (shape) {
+    //   shape.events.local[eventType].rules = [];
+    // }
+    for (let i = 0; i < numOfRules; i++) {
+      let rule = {};
+      rule.conditions = [];
+      rule.actions = [];
+      rule.logicalOperators = [];
+      const numOfConditions = rulesArray[i].conditions.length;
+      const numOfActions = rulesArray[i].actions.length;
+      const numOfLogicalOperators = rulesArray[i].logicalOperators.length;
+      // Conditions loop
+      for (let j = 0; j < numOfConditions; j++) {
+        const condition = {
+          propertyName: propertyMap[rulesArray[i].conditions[j].propertyName],
+          operator: rulesArray[i].conditions[j].operator,
+          comparisonValue: rulesArray[i].conditions[j].comparisonValue
+        };
+        rule.conditions.push(condition);
+      }
+      // Actions loop
+      for (let k = 0; k < numOfActions; k++) {
+        const action = {
+          actionPropertyName:
+            propertyMap[rulesArray[i].actions[k].actionPropertyName],
+          newValue: rulesArray[i].actions[k].newValue
+        };
+        rule.actions.push(action);
+      }
+      // LogicalOperators loop
+      for (let n = 0; n < numOfLogicalOperators; n++) {
+        const logicalOperator = rulesArray[i].logicalOperators[n];
+        rule.logicalOperators.push(logicalOperator);
+      }
 
-  const applyRules = () => {
+      Scene.events[globalEventType].rules.push(rule);
+      // if (shape) {
+      //   shape.events.local[eventType].rules.push(rule);
+      // }
+    }
+    console.log("RULES", Scene.events[globalEventType].rules);
+  };
+  const applyLocalRules = () => {
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
     const numOfRules = rulesArray.length;
@@ -105,6 +151,14 @@ const EventForm = ({
     }
     console.log("RULES", shape.events.local[eventType].rules);
   };
+
+  let applyRules;
+  if (type === "local") {
+    applyRules = applyLocalRules;
+  }
+  if (type === "global") {
+    applyRules = applyGlobalRules;
+  }
 
   const addRule = useCallback(() => {
     const newRule = {

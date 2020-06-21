@@ -32,6 +32,7 @@ const Rule = ({
     ["!==", "not equal"]
   ];
 
+  /** TODO: refactor to avoid checking 'type' in each function by storing rules[eventType][selectedShapeId] and globalRules[globalEventType] in variable **/
   const resetRules = () => {
     if (type === "local") {
       addRules({
