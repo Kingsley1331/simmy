@@ -5,10 +5,14 @@ const Rule = ({
   index,
   rule,
   rules,
+  globalRules,
+  type,
   selectedShapeId,
   addRules,
+  addGlobalRules,
   applyRules,
-  eventType
+  eventType,
+  globalEventType
 }) => {
   console.log({ index, rule, rules, selectedShapeId });
 
@@ -29,11 +33,18 @@ const Rule = ({
   ];
 
   const resetRules = () => {
-    addRules({
-      [eventType]: {
-        [selectedShapeId]: [...rules[[eventType]][selectedShapeId]]
-      }
-    });
+    if (type === "local") {
+      addRules({
+        [eventType]: {
+          [selectedShapeId]: [...rules[[eventType]][selectedShapeId]]
+        }
+      });
+    }
+    if (type === "global") {
+      addGlobalRules({
+        [globalEventType]: [...globalRules[[globalEventType]]]
+      });
+    }
   };
 
   const Delete = e => {
@@ -41,7 +52,12 @@ const Rule = ({
       "Are you sure you want to delete this rule"
     );
     if (deleteThisRule) {
-      rules[eventType][selectedShapeId].splice(index, 1);
+      if (type === "local") {
+        rules[eventType][selectedShapeId].splice(index, 1);
+      }
+      if (type === "global") {
+        globalRules[globalEventType].splice(index, 1);
+      }
       resetRules();
       applyRules();
     }
@@ -52,7 +68,12 @@ const Rule = ({
       "Are you sure you want to delete this action"
     );
     if (deleteThisAction) {
-      rules[eventType][selectedShapeId][index].actions.splice(actionIndex, 1);
+      if (type === "local") {
+        rules[eventType][selectedShapeId][index].actions.splice(actionIndex, 1);
+      }
+      if (type === "global") {
+        globalRules[globalEventType][index].actions.splice(actionIndex, 1);
+      }
       resetRules();
       applyRules();
     }
@@ -62,42 +83,80 @@ const Rule = ({
       "Are you sure you want to delete this condition"
     );
     if (deleteThisCondition) {
-      rules[eventType][selectedShapeId][index].conditions.splice(
-        conditionIndex,
-        1
-      );
+      if (type === "local") {
+        rules[eventType][selectedShapeId][index].conditions.splice(
+          conditionIndex,
+          1
+        );
+      }
+      if (type === "global") {
+        globalRules[globalEventType][index].conditions.splice(
+          conditionIndex,
+          1
+        );
+      }
       resetRules();
       applyRules();
     }
   };
 
-  const updateRules = (valueName, type, typeIndex) => e => {
-    rules[eventType][selectedShapeId][index][type][typeIndex][valueName] =
-      e.target.value;
+  const updateRules = (valueName, role, typeIndex) => e => {
+    if (type === "local") {
+      rules[eventType][selectedShapeId][index][role][typeIndex][valueName] =
+        e.target.value;
+    }
+    if (type === "global") {
+      globalRules[globalEventType][index][role][typeIndex][valueName] =
+        e.target.value;
+    }
     resetRules();
   };
 
   const updateLogicalOperator = (e, operatorIndex) => {
-    rules[eventType][selectedShapeId][index].logicalOperators[operatorIndex] =
-      e.target.value;
+    if (type === "local") {
+      rules[eventType][selectedShapeId][index].logicalOperators[operatorIndex] =
+        e.target.value;
+    }
+    if (type === "global") {
+      globalRules[globalEventType][index].logicalOperators[operatorIndex] =
+        e.target.value;
+    }
     resetRules();
   };
 
   const addAction = () => {
-    rules[eventType][selectedShapeId][index].actions.push({
-      actionPropertyName: "",
-      newValue: ""
-    });
+    if (type === "local") {
+      rules[eventType][selectedShapeId][index].actions.push({
+        actionPropertyName: "",
+        newValue: ""
+      });
+    }
+    if (type === "global") {
+      globalRules[globalEventType][index].actions.push({
+        actionPropertyName: "",
+        newValue: ""
+      });
+    }
     resetRules();
   };
 
   const addCondition = () => {
-    rules[eventType][selectedShapeId][index].conditions.push({
-      comparisonValue: "",
-      operator: "",
-      propertyName: ""
-    });
-    rules[eventType][selectedShapeId][index].logicalOperators.push("OR");
+    if (type === "local") {
+      rules[eventType][selectedShapeId][index].conditions.push({
+        comparisonValue: "",
+        operator: "",
+        propertyName: ""
+      });
+      rules[eventType][selectedShapeId][index].logicalOperators.push("OR");
+    }
+    if (type === "global") {
+      globalRules[globalEventType][index].conditions.push({
+        comparisonValue: "",
+        operator: "",
+        propertyName: ""
+      });
+      globalRules[globalEventType][index].logicalOperators.push("OR");
+    }
     resetRules();
   };
 
@@ -199,15 +258,25 @@ const Rule = ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
+    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules }),
+    addGlobalRules: rules =>
+      dispatch({ type: "ADD_GLOBAL_RULES", payload: rules })
   };
 };
 
-const mapStateToProps = ({ event, rules, selectedShape }) => {
+const mapStateToProps = ({
+  event,
+  rules,
+  selectedShape,
+  globalRules,
+  globalEvent
+}) => {
   return {
     eventType: event,
+    globalEventType: globalEvent,
     rules,
-    selectedShapeId: selectedShape
+    selectedShapeId: selectedShape,
+    globalRules
   };
 };
 

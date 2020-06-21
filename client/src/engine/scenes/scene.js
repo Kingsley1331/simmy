@@ -25,25 +25,25 @@ let Scene = {
   events: {
     collision: {
       rules: [
-        // {
-        //   conditions: [
-        //     {
-        //       propertyName: "physics.velocity.x",
-        //       operator: ">",
-        //       comparisonValue: "0"
-        //     },
-        //     {
-        //       propertyName: "fillColour",
-        //       operator: "===",
-        //       comparisonValue: "green"
-        //     }
-        //   ],
-        //   logicalOperators: ["OR"],
-        //   actions: [
-        //     { actionPropertyName: "fillColour", newValue: "yellow" },
-        //     { actionPropertyName: "linewidth", newValue: 0.1 }
-        //   ]
-        // }
+        //   {
+        //     conditions: [
+        //       {
+        //         propertyName: "physics.velocity.x",
+        //         operator: ">",
+        //         comparisonValue: "0",
+        //       },
+        //       {
+        //         propertyName: "fillColour",
+        //         operator: "===",
+        //         comparisonValue: "green",
+        //       },
+        //     ],
+        //     logicalOperators: ["OR"],
+        //     actions: [
+        //       { actionPropertyName: "fillColour", newValue: "yellow" },
+        //       { actionPropertyName: "linewidth", newValue: 0.1 },
+        //     ],
+        //   },
       ]
     },
     // doubleClick: {

@@ -19,3 +19,14 @@ export const rulesReducer = (state = {}, action) => {
   }
   return state;
 };
+
+export const globalRulesReducer = (state = {}, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "ADD_GLOBAL_RULES":
+      state = { ...state, ...payload };
+      break;
+    default:
+  }
+  return state;
+};

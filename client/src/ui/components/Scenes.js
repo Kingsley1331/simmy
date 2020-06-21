@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
-import EventsForm from "./events/local";
+import EventForm from "./events/local";
 import { draw } from "../../engine/scenes/draw";
 import Scene, { updateScene } from "../../engine/scenes/scene";
 import {
@@ -70,15 +70,14 @@ class Scenes extends Component {
       <div className="scenesWrapper">
         <Buttons />
         <canvas id="canvas" width="1000" height="600" />
-        <EventsForm />
-        <EventsForm type="global" />
+        <EventForm type="local" />
+        <EventForm type="global" />
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ buttons, scene, event }) => {
-  console.log("event", event);
   return {
     buttons,
     scene,

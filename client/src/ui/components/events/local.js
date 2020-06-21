@@ -2,18 +2,37 @@ import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import Scene from "../../../engine/scenes/scene";
 import Rule from "./rule";
-import { addRulesAction, selectEventAction } from "../../actions/events";
+import {
+  addRulesAction,
+  addGlobalRulesAction,
+  selectEventAction,
+  selectGlobalEventAction
+} from "../../actions/events";
 
 const EventForm = ({
   selectedShapeId,
   selectEvent,
+  selectGlobalEvent,
   addRules,
+  addGlobalRules,
   rules,
+  globalRules,
   eventType,
+  globalEventType,
   type
 }) => {
-  const eventTypeObject = rules[eventType] || {};
-  const rulesArray = eventTypeObject[selectedShapeId] || [];
+  let eventTypeObject;
+  let rulesArray;
+
+  console.log("rules", rules);
+  if (type === "local") {
+    eventTypeObject = rules[eventType] || {};
+    rulesArray = eventTypeObject[selectedShapeId] || [];
+  }
+  if (type === "global") {
+    rulesArray = globalRules[globalEventType] || [];
+  }
+
   console.log("rulesArray", rulesArray);
   const propertyMap = {
     fillColour: "fillColour",
@@ -34,7 +53,12 @@ const EventForm = ({
   };
 
   const handleEventChange = e => {
-    selectEvent(eventMap[e.target.value]);
+    if (type === "local") {
+      selectEvent(eventMap[e.target.value]);
+    }
+    if (type === "global") {
+      selectGlobalEvent(eventMap[e.target.value]);
+    }
   };
 
   const applyRules = () => {
@@ -88,17 +112,24 @@ const EventForm = ({
       actions: [{ actionPropertyName: "", newValue: "" }],
       logicalOperators: []
     };
-
-    addRules({
-      [eventType]: {
-        [selectedShapeId]: [...rulesArray, newRule]
-      }
-    });
+    if (type === "local") {
+      addRules({
+        [eventType]: {
+          [selectedShapeId]: [...rulesArray, newRule]
+        }
+      });
+    }
+    if (type === "global") {
+      addGlobalRules({
+        [globalEventType]: [...rulesArray, newRule]
+      });
+    }
   }, [rulesArray, selectedShapeId, addRules]);
 
   return (
     <div className="eventsWrapper">
-      selectedShapeId: {selectedShapeId}
+      {type === "local" && `selectedShapeId: ${selectedShapeId}`}
+
       <h2>Event:</h2>
       <select onChange={handleEventChange}>
         <option value="">none</option>
@@ -114,6 +145,7 @@ const EventForm = ({
             index={index}
             rule={rule}
             applyRules={applyRules}
+            type={type}
           />
         ))}
       <button onClick={addRule}>Add rule</button>
@@ -125,14 +157,24 @@ const EventForm = ({
 
 const mapDispatchToProps = {
   addRules: addRulesAction,
-  selectEvent: selectEventAction
+  addGlobalRules: addGlobalRulesAction,
+  selectEvent: selectEventAction,
+  selectGlobalEvent: selectGlobalEventAction
 };
 
-const mapStateToProps = ({ event, rules, selectedShape }) => {
+const mapStateToProps = ({
+  event,
+  rules,
+  selectedShape,
+  globalEvent,
+  globalRules
+}) => {
   return {
     eventType: event,
+    globalEventType: globalEvent,
     rules,
-    selectedShapeId: selectedShape
+    selectedShapeId: selectedShape,
+    globalRules
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(EventForm);

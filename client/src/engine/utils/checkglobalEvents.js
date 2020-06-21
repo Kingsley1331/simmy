@@ -2,10 +2,10 @@ import Scene from "../scenes/scene";
 import { calculateBoolean } from "./maths/operators";
 import { getObjectValueFromString, setObjectValueFromString } from "./objects";
 
-const checkGlobalEvents = function(stop, shape) {
+const checkGlobalEvents = function(stop) {
   const globalEvents = Scene.currentEvents;
 
-  if (shape.events.global.subscribed) {
+  if (this.events.global.subscribed) {
     for (let event in globalEvents) {
       //   if (event !== "subscribed") {
       const rules = Scene.events[event].rules;
@@ -29,7 +29,7 @@ const checkGlobalEvents = function(stop, shape) {
           const propertyValue =
             propertyName in propertyValueCache
               ? propertyValueCache[propertyName]
-              : getObjectValueFromString(shape, propertyName);
+              : getObjectValueFromString(this, propertyName);
 
           propertyValueCache[propertyName] = propertyValue;
 
@@ -44,23 +44,23 @@ const checkGlobalEvents = function(stop, shape) {
             bool = calculateBoolean(bool, logicalOperator, newBool);
           }
 
-          bool = event === "collision" ? shape.colliding && bool : bool;
-          bool = event === "hover" ? shape.onShape && bool : bool;
-          bool = event === "drag" ? shape.dragging && bool : bool;
-          bool = event === "click" ? shape.onClick && bool : bool;
+          bool = event === "collision" ? this.colliding && bool : bool;
+          bool = event === "hover" ? this.onShape && bool : bool;
+          bool = event === "drag" ? this.dragging && bool : bool;
+          bool = event === "click" ? this.onClick && bool : bool;
         }
 
         if (!numOfConditions) {
-          if (event === "collision" && shape.colliding) {
+          if (event === "collision" && this.colliding) {
             bool = true;
           }
-          if (event === "hover" && shape.onShape) {
+          if (event === "hover" && this.onShape) {
             bool = true;
           }
-          if (event === "drag" && shape.dragging) {
+          if (event === "drag" && this.dragging) {
             bool = true;
           }
-          if (event === "click" && shape.onClick) {
+          if (event === "click" && this.onClick) {
             bool = true;
           }
         }
@@ -70,11 +70,7 @@ const checkGlobalEvents = function(stop, shape) {
           for (let k = 0; k < numOfActions; k++) {
             let actionPropertyName = actions[k].actionPropertyName;
             let action = actions[k];
-            setObjectValueFromString(
-              shape,
-              actionPropertyName,
-              action.newValue
-            );
+            setObjectValueFromString(this, actionPropertyName, action.newValue);
           }
         }
       }
@@ -89,30 +85,6 @@ const checkGlobalEvents = function(stop, shape) {
     };
   }
   // this.onClick = false;
-};
-
-const checkGlobalEvents1 = function(stop, shape) {
-  const globalEvents = Scene.currentEvents;
-  if (shape.events.global.subscribed) {
-    for (let event in globalEvents) {
-      const numOfClickActions = Scene.events[event].rules.length;
-      const clickActions = Scene.events[event].rules;
-      if (globalEvents[event] && numOfClickActions) {
-        for (let j = 0; j < numOfClickActions; j++) {
-          if (clickActions[j].condition()) {
-            clickActions[j].action(shape);
-          }
-        }
-      }
-    }
-  }
-  if (stop) {
-    Scene.currentEvents = {
-      click: false,
-      doubleClick: false,
-      collision: false
-    };
-  }
 };
 
 export default checkGlobalEvents;

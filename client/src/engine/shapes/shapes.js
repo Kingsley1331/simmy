@@ -338,7 +338,7 @@ export function Shape(centre, vertices) {
   this.tags = [];
 
   this.checkLocalEvents = checkLocalEvents;
-  this.checkGlobalEvents = stop => checkGlobalEvents(stop, this);
+  this.checkGlobalEvents = checkGlobalEvents;
 }
 
 export function createShape(centreOfMass, vertices) {
