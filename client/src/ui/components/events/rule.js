@@ -79,6 +79,7 @@ const Rule = ({
       applyRules();
     }
   };
+
   const deleteCondition = conditionIndex => {
     const deleteThisCondition = window.confirm(
       "Are you sure you want to delete this condition"

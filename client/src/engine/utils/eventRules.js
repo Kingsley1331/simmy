@@ -45,3 +45,23 @@ export const retrieveLocalRules = (newRules, shapeId) => {
 
   return rulesForRedux;
 };
+
+export const retrieveGlobalRules = newRules => {
+  let Rules = {};
+  let selectedRules;
+  const rulesForRedux = {};
+  for (let eventType in newRules) {
+    const { rules } = newRules[eventType];
+    if (!Rules[eventType]) {
+      Rules[eventType] = {};
+    }
+    if (Rules[eventType]) {
+      Rules[eventType] = rules;
+      selectedRules = rules;
+    }
+    rulesForRedux[eventType] = [...fixPropertyName(selectedRules)];
+    console.log("Rules", [...fixPropertyName(selectedRules)]);
+  }
+
+  return rulesForRedux;
+};

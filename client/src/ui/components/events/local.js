@@ -9,6 +9,8 @@ import {
   selectGlobalEventAction
 } from "../../actions/events";
 
+import { retrieveGlobalRules } from "../../../engine/utils/eventRules";
+
 const EventForm = ({
   selectedShapeId,
   selectEvent,
@@ -58,16 +60,17 @@ const EventForm = ({
     }
     if (type === "global") {
       selectGlobalEvent(eventMap[e.target.value]);
+      const globalRules = Scene.events;
+      console.log("globalRules", globalRules);
+      const rules = retrieveGlobalRules(globalRules);
+      console.log("RULES", rules);
+      addGlobalRules(rules);
     }
   };
   /** TODO: refactor to use combine applyLocalRules and applyGlobalRules in one function applyGlobalRules applyRules   **/
   const applyGlobalRules = () => {
-    // const selectedShape = Scene.selectedShape;
-    // const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
     const numOfRules = rulesArray.length;
-    // if (shape) {
-    //   shape.events.local[eventType].rules = [];
-    // }
+    Scene.events[globalEventType].rules = [];
     for (let i = 0; i < numOfRules; i++) {
       let rule = {};
       rule.conditions = [];
@@ -107,6 +110,7 @@ const EventForm = ({
     }
     console.log("RULES", Scene.events[globalEventType].rules);
   };
+
   const applyLocalRules = () => {
     const selectedShape = Scene.selectedShape;
     const shape = Scene.shapes.filter(shape => shape.id === selectedShape)[0];
