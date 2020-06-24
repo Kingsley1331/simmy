@@ -195,6 +195,7 @@ const EventForm = ({
         <option value="drag">drag</option>
         <option value="click">click</option>
         <option value="hover">hover</option>
+        <option value="double click">double click</option>
       </select>
       {rulesArray &&
         rulesArray.map((rule, index) => (

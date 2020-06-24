@@ -43,7 +43,9 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
     evt => {
       let selectShapeIndex;
       Scene.currentEvents.doubleClick = true;
+      // let numShapes = Scene.shapes.length;
       forEachShape(function(i) {
+        // ShapesController.checkGlobalEvents(i, i === numShapes - 1);
         selectShapeIndex = detectShape(i);
         if (selectShapeIndex && selectedEvent) {
           const selectedShapeId = Scene.shapes[selectShapeIndex].id;

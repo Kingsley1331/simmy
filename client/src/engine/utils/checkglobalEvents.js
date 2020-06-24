@@ -7,6 +7,7 @@ const checkGlobalEvents = function(stop) {
 
   if (this.events.global.subscribed) {
     for (let event in globalEvents) {
+      const isEventHappening = globalEvents[event];
       //   if (event !== "subscribed") {
       const rules = Scene.events[event].rules;
       const length = rules.length;
@@ -48,6 +49,7 @@ const checkGlobalEvents = function(stop) {
           bool = event === "hover" ? this.onShape && bool : bool;
           bool = event === "drag" ? this.dragging && bool : bool;
           bool = event === "click" ? this.onClick && bool : bool;
+          bool = event === "doubleClick" ? this.doubleClick && bool : bool;
         }
 
         if (!numOfConditions) {
@@ -60,9 +62,18 @@ const checkGlobalEvents = function(stop) {
           if (event === "drag" && this.dragging) {
             bool = true;
           }
-          if (event === "click" && this.onClick) {
+          if (event === "click" && isEventHappening) {
             bool = true;
           }
+          if (event === "doubleClick" && isEventHappening) {
+            bool = true;
+          }
+          // if (event === "click" && this.onClick) {
+          //   bool = true;
+          // }
+          // if (event === "doubleClick" && this.doubleClick) {
+          //   bool = true;
+          // }
         }
 
         const numOfActions = actions.length;
@@ -81,7 +92,9 @@ const checkGlobalEvents = function(stop) {
     Scene.currentEvents = {
       click: false,
       doubleClick: false,
-      collision: false
+      collision: false,
+      hover: false,
+      drag: false
     };
   }
   // this.onClick = false;

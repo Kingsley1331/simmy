@@ -21,7 +21,13 @@ let Scene = {
     display: true,
     restitution: 1
   },
-  currentEvents: { click: false, doubleClick: false, collision: false },
+  currentEvents: {
+    click: false,
+    doubleClick: false,
+    collision: false,
+    hover: false,
+    drag: false
+  },
   events: {
     collision: {
       rules: [
@@ -60,6 +66,12 @@ let Scene = {
       rules: []
     },
     doubleClick: {
+      rules: []
+    },
+    hover: {
+      rules: []
+    },
+    drag: {
       rules: []
     }
   },

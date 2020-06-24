@@ -260,6 +260,7 @@ export function Shape(centre, vertices) {
   this.onShape = false;
   this.dragging = false;
   this.onClick = false;
+  this.doubleClick = false;
   // this.onDoubleClick = false;
   this.selected = false;
   this.events = {
