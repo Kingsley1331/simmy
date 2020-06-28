@@ -2,13 +2,33 @@ import Scene from "../scenes/scene";
 import { calculateBoolean } from "./maths/operators";
 import { getObjectValueFromString, setObjectValueFromString } from "./objects";
 
+const eventNameMap = {
+  click: "click",
+  doubleClick: "doubleClick",
+  collision: "colliding",
+  hover: "onShape",
+  drag: "dragging"
+};
+
 const checkGlobalEvents = function(stop) {
+  const ruleType = "oneToOne";
+  // const ruleType = 'oneToMany';
+
+  /** Successfully tested */
+  // const ruleType = "manyToOne";
+  // const ruleType = "canvas";
+  // const ruleType = "manyToMany";
+
   const globalEvents = Scene.currentEvents;
 
   if (this.events.global.subscribed) {
     for (let event in globalEvents) {
       const isEventHappening = globalEvents[event];
       //   if (event !== "subscribed") {
+
+      // if (event === "collision" && isEventHappening) {
+      //   console.log("******************************" + event);
+      // }
       const rules = Scene.events[event].rules;
       const length = rules.length;
       const propertyValueCache = {};
@@ -44,14 +64,18 @@ const checkGlobalEvents = function(stop) {
           } else {
             bool = calculateBoolean(bool, logicalOperator, newBool);
           }
-
-          bool = event === "collision" ? this.colliding && bool : bool;
-          bool = event === "hover" ? this.onShape && bool : bool;
-          bool = event === "drag" ? this.dragging && bool : bool;
-          bool = event === "click" ? this.onClick && bool : bool;
-          bool = event === "doubleClick" ? this.doubleClick && bool : bool;
+          /** TODO: bool is true by default, this leads to bugs */
+          if (ruleType === "manyToOne" || ruleType === "oneToOne") {
+            bool = event === "collision" ? this.colliding && bool : bool;
+            bool = event === "hover" ? this.onShape && bool : bool;
+            bool = event === "drag" ? this.dragging && bool : bool;
+            bool = event === "click" ? this.onClick && bool : bool;
+            bool = event === "doubleClick" ? this.doubleClick && bool : bool;
+          }
+          if (ruleType === "canvas" || ruleType === "manyToMany") {
+            bool = isEventHappening && bool;
+          }
         }
-
         if (!numOfConditions) {
           if (event === "collision" && this.colliding) {
             bool = true;
@@ -68,12 +92,23 @@ const checkGlobalEvents = function(stop) {
           if (event === "doubleClick" && isEventHappening) {
             bool = true;
           }
-          // if (event === "click" && this.onClick) {
-          //   bool = true;
-          // }
-          // if (event === "doubleClick" && this.doubleClick) {
-          //   bool = true;
-          // }
+
+          if (ruleType !== "manyToOne" && ruleType !== "oneToOne") {
+            if (this.onShape && isEventHappening) {
+              bool = true;
+            }
+          }
+          if (ruleType === "manyToMany") {
+            if (isEventHappening) {
+              bool = true;
+            }
+          }
+
+          if (ruleType === "canvas") {
+            if (isEventHappening) {
+              bool = true;
+            }
+          }
         }
 
         const numOfActions = actions.length;

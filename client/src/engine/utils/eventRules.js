@@ -15,7 +15,13 @@ const fixPropertyName = rules => {
       for (let k = 0; k < numOfActions; k++) {
         const action = actions[k];
         const { actionPropertyName } = action;
-        action.actionPropertyName = actionPropertyName.replace("physics.", "");
+
+        if (actionPropertyName) {
+          action.actionPropertyName = actionPropertyName.replace(
+            "physics.",
+            ""
+          );
+        }
       }
     }
   }

@@ -3,6 +3,12 @@ import { getObjectValueFromString, setObjectValueFromString } from "./objects";
 
 const checkLocalEvents = function() {
   const localEvents = this.events.local;
+  /** TODO: if event names are the same as the property for the same event
+   * then the code below becomes possible
+   *
+   * const isEventHappening = this[event];
+   * e.g if onShape is changed to hover
+   */
 
   if (localEvents.subscribed) {
     for (let event in localEvents) {

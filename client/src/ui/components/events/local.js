@@ -151,9 +151,9 @@ const EventForm = ({
       }
       if (shape) {
         shape.events.local[eventType].rules.push(rule);
+        console.log("RULES", shape.events.local[eventType].rules);
       }
     }
-    console.log("RULES", shape.events.local[eventType].rules);
   };
 
   let applyRules;
