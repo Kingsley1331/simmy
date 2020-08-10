@@ -29,6 +29,40 @@ let Scene = {
     drag: false
   },
   events: {
+    local: {
+      5: {
+        collision: {
+          rules: [
+            {
+              conditions: [
+                // {
+                //   propertyName: "physics.velocity.x",
+                //   operator: ">",
+                //   comparisonValue: "0",
+                // },
+              ],
+              logicalOperators: [],
+              actions: [
+                { actionPropertyName: "fillColour", newValue: "yellow" },
+                { actionPropertyName: "linewidth", newValue: 0.1 }
+              ]
+            }
+          ]
+        },
+        click: {
+          rules: []
+        },
+        doubleClick: {
+          rules: []
+        },
+        hover: {
+          rules: []
+        },
+        drag: {
+          rules: []
+        }
+      }
+    },
     collision: {
       rules: [
         //   {

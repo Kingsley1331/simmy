@@ -186,8 +186,8 @@ const EventForm = ({
 
   return (
     <div className="eventsWrapper">
-      {type === "local" && `selectedShapeId: ${selectedShapeId}`}
-
+      selectedShapeId: {selectedShapeId}
+      {/* {type === "local" && `selectedShapeId: ${selectedShapeId}`} */}
       <h2>Event:</h2>
       <select onChange={handleEventChange}>
         <option value="">none</option>

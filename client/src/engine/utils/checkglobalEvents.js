@@ -10,8 +10,25 @@ const eventNameMap = {
   drag: "dragging"
 };
 
-const checkGlobalEvents = function(stop) {
+const checkGlobalEvents = function(stop /* , ruleType*/) {
+  // const ruleType = "manyToOne";
   const ruleType = "oneToOne";
+  const shapeId = this.id;
+  const localRules = Scene.events.local[shapeId] || {};
+
+  const ruleCategory =
+    ruleType === "oneToOne" || ruleType === "oneToMany" ? "local" : "global";
+
+  const globalEvents = Scene.currentEvents;
+  const localEvents = Scene.currentEvents; /*TEMP*/
+  // const localEvents = this.events.local;
+  const eventObject = this.events;
+  const events = ruleCategory === "global" ? Scene.currentEvents : localEvents;
+  const subscribed =
+    ruleCategory === "global"
+      ? eventObject.global.subscribed
+      : eventObject.local.subscribed;
+
   // const ruleType = 'oneToMany';
 
   /** Successfully tested */
@@ -19,17 +36,28 @@ const checkGlobalEvents = function(stop) {
   // const ruleType = "canvas";
   // const ruleType = "manyToMany";
 
-  const globalEvents = Scene.currentEvents;
-
-  if (this.events.global.subscribed) {
-    for (let event in globalEvents) {
+  if (subscribed) {
+    for (let event in events) {
+      const hasLocalRulesForEvent = !!Object.keys(localRules).length;
       const isEventHappening = globalEvents[event];
-      //   if (event !== "subscribed") {
+      // const isEventHappening =
+      //   ruleCategory === "global"
+      //     ? globalEvents[event]
+      //     : this[eventNameMap[event]];
 
-      // if (event === "collision" && isEventHappening) {
-      //   console.log("******************************" + event);
-      // }
-      const rules = Scene.events[event].rules;
+      const rules =
+        ruleCategory === "global"
+          ? Scene.events[event].rules
+          : hasLocalRulesForEvent
+          ? localRules[event].rules
+          : {};
+
+      // const rules =
+      //   ruleCategory === "global"
+      //     ? Scene.events[event].rules
+      //     : localEvents[event].rules;
+
+      /** START SHARED */
       const length = rules.length;
       const propertyValueCache = {};
 
@@ -64,6 +92,8 @@ const checkGlobalEvents = function(stop) {
           } else {
             bool = calculateBoolean(bool, logicalOperator, newBool);
           }
+          /** END SHARED */
+
           /** TODO: bool is true by default, this leads to bugs */
           if (ruleType === "manyToOne" || ruleType === "oneToOne") {
             bool = event === "collision" ? this.colliding && bool : bool;
@@ -72,8 +102,15 @@ const checkGlobalEvents = function(stop) {
             bool = event === "click" ? this.onClick && bool : bool;
             bool = event === "doubleClick" ? this.doubleClick && bool : bool;
           }
-          if (ruleType === "canvas" || ruleType === "manyToMany") {
+          if (
+            ruleType === "canvas" ||
+            ruleType === "manyToMany" ||
+            ruleType === "oneToMany"
+          ) {
             bool = isEventHappening && bool;
+          }
+          if (ruleType === "oneToOne") {
+            bool = hasLocalRulesForEvent && bool;
           }
         }
         if (!numOfConditions) {
@@ -120,7 +157,6 @@ const checkGlobalEvents = function(stop) {
           }
         }
       }
-      //   }
     }
   }
   if (stop) {
