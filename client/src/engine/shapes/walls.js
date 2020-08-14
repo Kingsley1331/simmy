@@ -8,8 +8,8 @@ export function createWalls() {
   leftWall.physics.momentOfInertia = Infinity;
   leftWall.physics.momentOfInertiaCOM = Infinity;
   leftWall.type = "fixed";
-  leftWall.events.global.subscribed = false;
-  leftWall.events.local.subscribed = false;
+  leftWall.events.subscribed = false;
+  leftWall.events.subscribed = false;
 
   const rightWall = createShape(
     { x: 1018, y: 297 },
@@ -20,8 +20,8 @@ export function createWalls() {
   rightWall.physics.momentOfInertia = Infinity;
   rightWall.physics.momentOfInertiaCOM = Infinity;
   rightWall.type = "fixed";
-  rightWall.events.global.subscribed = false;
-  rightWall.events.local.subscribed = false;
+  rightWall.events.subscribed = false;
+  rightWall.events.subscribed = false;
 
   const bottomWall = createShape(
     { x: 500, y: 619 },
@@ -32,8 +32,8 @@ export function createWalls() {
   bottomWall.physics.momentOfInertia = Infinity;
   bottomWall.physics.momentOfInertiaCOM = Infinity;
   bottomWall.type = "fixed";
-  bottomWall.events.global.subscribed = false;
-  bottomWall.events.local.subscribed = false;
+  bottomWall.events.subscribed = false;
+  bottomWall.events.subscribed = false;
 
   const topWall = createShape(
     { x: 500, y: -20 },
@@ -44,8 +44,8 @@ export function createWalls() {
   topWall.physics.momentOfInertia = Infinity;
   topWall.physics.momentOfInertiaCOM = Infinity;
   topWall.type = "fixed";
-  topWall.events.global.subscribed = false;
-  topWall.events.local.subscribed = false;
+  topWall.events.subscribed = false;
+  topWall.events.subscribed = false;
   // const box = createShape({x: 350, y: 300}, shapeSelection.box);
 
   // const hexagon = createShape({x: 465, y: 250}, shapeSelection.hexagon);

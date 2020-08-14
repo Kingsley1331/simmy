@@ -1,7 +1,6 @@
 // import createWalls from "../shapes/walls";
 // import { clearShapes } from "../../engine/shapes/shapes";
-import checkLocalEvents from "../utils/checkLocalEvents";
-import checkGlobalEvents from "../utils/checkglobalEvents";
+import checkEvents from "../utils/checkEvents";
 
 let Scene = {
   name: "",
@@ -22,94 +21,137 @@ let Scene = {
     restitution: 1
   },
   currentEvents: {
+    /**Change name from currentEvents to eventTypes */
     click: false,
     doubleClick: false,
     collision: false,
     hover: false,
     drag: false
   },
-  events: {
-    local: {
-      5: {
-        collision: {
-          rules: [
-            {
-              conditions: [
-                // {
-                //   propertyName: "physics.velocity.x",
-                //   operator: ">",
-                //   comparisonValue: "0",
-                // },
-              ],
-              logicalOperators: [],
-              actions: [
-                { actionPropertyName: "fillColour", newValue: "yellow" },
-                { actionPropertyName: "linewidth", newValue: 0.1 }
-              ]
-            }
-          ]
-        },
-        click: {
-          rules: []
-        },
-        doubleClick: {
-          rules: []
-        },
-        hover: {
-          rules: []
-        },
-        drag: {
-          rules: []
-        }
-      }
-    },
-    collision: {
-      rules: [
-        //   {
-        //     conditions: [
-        //       {
-        //         propertyName: "physics.velocity.x",
-        //         operator: ">",
-        //         comparisonValue: "0",
-        //       },
-        //       {
-        //         propertyName: "fillColour",
-        //         operator: "===",
-        //         comparisonValue: "green",
-        //       },
-        //     ],
-        //     logicalOperators: ["OR"],
-        //     actions: [
-        //       { actionPropertyName: "fillColour", newValue: "yellow" },
-        //       { actionPropertyName: "linewidth", newValue: 0.1 },
-        //     ],
-        //   },
+
+  rules: [
+    {
+      shapeId: 4,
+      eventType: "collision",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "yellow" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
       ]
     },
-    // doubleClick: {
-    //   rules: [
-    //     {
-    //       condition: () => true,
-    //       action: shape => {
-    //         shape.fillColour = "white";
-    //       }
-    //     }
-    //   ]
-    // },
-    click: {
-      rules: []
+    {
+      shapeId: 5,
+      eventType: "collision",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "yellow" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
     },
-    doubleClick: {
-      rules: []
+    {
+      shapeId: 4,
+      eventType: "collision",
+      ruleType: "oneToOne",
+      conditions: [
+        {
+          propertyName: "physics.velocity.x",
+          operator: "<", // right wall
+          comparisonValue: "0"
+        }
+      ],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "white" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
     },
-    hover: {
-      rules: []
-    },
-    drag: {
-      rules: []
+    {
+      eventType: "collision",
+      ruleType: "manyToOne",
+      conditions: [
+        {
+          propertyName: "physics.velocity.x",
+          operator: ">", // left wall
+          comparisonValue: "0"
+        },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "yellow"
+        }
+      ],
+      logicalOperators: ["AND"],
+      actions: [{ actionPropertyName: "fillColour", newValue: "red" }]
     }
-  },
-  selectedShape: ""
+    // {
+    //   eventType: "collision",
+    //   ruleType: "manyToOne",
+    //   conditions: [],
+    //   logicalOperators: [],
+    //   actions: [{ actionPropertyName: "fillColour", newValue: "transparent" }],
+    // },
+    /* {
+      shapeId: 5,
+      eventType: "drag",
+      ruleType: "oneToMany",
+      self: {
+        conditions: [
+          {
+            propertyName: "fillColour",
+            operator: "===",
+            comparisonValue: "red",
+          },
+        ],
+        logicalOperators: [],
+      },
+      others: {
+        conditions: [
+          {
+            propertyName: "fillColour",
+            operator: "!==",
+            comparisonValue: "red",
+          },
+        ],
+        logicalOperators: [],
+      },
+
+      actions: [{ actionPropertyName: "fillColour", newValue: "transparent" }],
+    },
+    {
+      eventType: "collision",
+      ruleType: "manyToMany",
+      self: {
+        conditions: [
+          {
+            propertyName: "fillColour",
+            operator: "===",
+            comparisonValue: "transparent",
+          },
+        ],
+        logicalOperators: [],
+      },
+      others: {
+        conditions: [
+          {
+            propertyName: "fillColour",
+            operator: "===",
+            comparisonValue: "transparent",
+          },
+        ],
+        logicalOperators: [],
+      },
+
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "black" },
+        { actionPropertyName: "strokeStyle", newValue: "yellow" },
+        { actionPropertyName: "linewidth", newValue: "20" },
+      ],
+    },*/
+  ]
 };
 
 export function updateSelected(state, Scene) {
@@ -162,8 +204,7 @@ export function updateScene(scene) {
           Scene.shapes[i].type = scene.shapes[i].type;
           Scene.shapes[i].collisionData = scene.shapes[i].collisionData || {};
           Scene.shapes[i].events = scene.shapes[i].events || {};
-          Scene.shapes[i].checkLocalEvents = checkLocalEvents;
-          Scene.shapes[i].checkGlobalEvents = checkGlobalEvents;
+          Scene.shapes[i].checkEvents = checkEvents;
 
           if (scene.shapes[i].type === "fixed") {
             Scene.shapes[i].physics.mass = Infinity;

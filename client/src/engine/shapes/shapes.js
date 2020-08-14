@@ -3,8 +3,7 @@ import ShapesController from "./ShapesController";
 import getMousePos from "../utils/position";
 import { throwVelocity } from "../utils/throw";
 import { calculateBoolean } from "../utils/maths/operators";
-import checkLocalEvents from "../utils/checkLocalEvents";
-import checkGlobalEvents from "../utils/checkglobalEvents";
+import checkEvents from "../utils/checkEvents";
 import {
   getObjectValueFromString,
   setObjectValueFromString
@@ -264,87 +263,15 @@ export function Shape(centre, vertices) {
   // this.onDoubleClick = false;
   this.selected = false;
   this.events = {
-    local: {
-      subscribed: true,
-      collision: {
-        rules: [
-          // {
-          //   conditions: [
-          //     {
-          //       propertyName: "physics.velocity.x",
-          //       operator: ">",
-          //       comparisonValue: "0"
-          //     },
-          //     {
-          //       propertyName: "fillColour",
-          //       operator: "===",
-          //       comparisonValue: "green"
-          //     }
-          //   ],
-          //   logicalOperators: ["AND"],
-          //   actions: [
-          //     { actionPropertyName: "fillColour", newValue: "red" },
-          //     { actionPropertyName: "linewidth", newValue: 0.1 }
-          //   ]
-          // },
-          // {
-          //   conditions: [
-          //     {
-          //       propertyName: "physics.velocity.x",
-          //       operator: ">",
-          //       comparisonValue: "0"
-          //     },
-          //     {
-          //       propertyName: "fillColour",
-          //       operator: "===",
-          //       comparisonValue: "green"
-          //     }
-          //   ],
-          //   logicalOperators: ["NOT"],
-          //   actions: [
-          //     { actionPropertyName: "fillColour", newValue: "green" },
-          //     { actionPropertyName: "linewidth", newValue: 20 }
-          //   ]
-          // },
-          // {
-          //   conditions: [
-          //     {
-          //       propertyName: "physics.velocity.x",
-          //       operator: "<",
-          //       comparisonValue: "0"
-          //     }
-          //   ],
-          //   logicalOperators: [],
-          //   actions: [{ actionPropertyName: "fillColour", newValue: "yellow" }]
-          // }
-        ]
-      },
-      // doubleClick: {
-      //   rules: []
-      // },
-      click: {
-        rules: []
-      },
-      drag: {
-        rules: []
-      },
-      hover: {
-        rules: []
-      }
-    },
-    global: {
-      subscribed: true
-    }
+    subscribed: true
   };
   this.tags = [];
-
-  this.checkLocalEvents = checkLocalEvents;
-  this.checkGlobalEvents = checkGlobalEvents;
+  this.checkEvents = checkEvents;
 }
 
 export function createShape(centreOfMass, vertices) {
   // let id = 1000000 * Math.ceil(Math.random());
-  let id = Scene.shapes.length + 1;
+  let id = Scene.shapes.length;
   var shape = new Shape(centreOfMass, vertices);
   shape.id = id;
   Scene.shapes.push(shape);

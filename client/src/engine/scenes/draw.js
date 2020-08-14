@@ -103,7 +103,7 @@ export const draw = canvas => {
       }
       screenWriter(
         bufferCtx,
-        Number(ShapesController.getProperty(i, "id")) - 1,
+        Number(ShapesController.getProperty(i, "id")),
         idPos
       );
       screenWriter(bufferCtx, Math.round(Scene.time / 100) / 10, {

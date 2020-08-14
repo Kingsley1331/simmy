@@ -3,12 +3,8 @@ var ShapesController = (function() {
   console.log("ShapesController SCENE", Scene);
   var shapes = Scene.shapes;
 
-  function checkLocalEvents(shapeIndex) {
-    shapes[shapeIndex].checkLocalEvents();
-  }
-
-  function checkGlobalEvents(shapeIndex, stop) {
-    shapes[shapeIndex].checkGlobalEvents(stop);
+  function checkEvents(shapeIndex, stop) {
+    shapes[shapeIndex].checkEvents(stop);
   }
 
   function getCentreOfMass(shapeIndex) {
@@ -70,8 +66,7 @@ var ShapesController = (function() {
   }
 
   return {
-    checkLocalEvents,
-    checkGlobalEvents,
+    checkEvents,
     getCentreOfMass,
     getTouchPoint,
     getProperty,

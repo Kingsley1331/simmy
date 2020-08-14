@@ -41,9 +41,7 @@ export default function animate() {
       if (ShapesController.getProperty(i, "colliding")) {
         Scene.currentEvents.collision = true;
       }
-
-      ShapesController.checkLocalEvents(i);
-      ShapesController.checkGlobalEvents(i, i === numShapes - 1);
+      ShapesController.checkEvents(i, i === numShapes - 1);
     });
     /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
     collisionDetector();
