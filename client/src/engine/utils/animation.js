@@ -32,14 +32,16 @@ export default function animate() {
   let shapes = Scene.shapes;
   let numShapes = shapes.length;
   if (Scene.selected === "play") {
-    // Scene.currentEvents.collision === false;
     forEachShape(function(i) {
       // applyMotion(i, tDelta);
       applyMotion(i, timeStep);
       applyForces(i);
 
       if (ShapesController.getProperty(i, "colliding")) {
-        Scene.currentEvents.collision = true;
+        Scene.currentEvents.collision = {
+          state: true,
+          id: ShapesController.getProperty(i, "id")
+        };
       }
       ShapesController.checkEvents(i, i === numShapes - 1);
     });

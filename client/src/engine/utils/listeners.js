@@ -23,7 +23,7 @@ export const click = element => {
     "click",
     evt => {
       let clickedShapeIndex;
-      Scene.currentEvents.click = true;
+      Scene.currentEvents.click.state = true;
       console.log("receiving click :)");
       forEachShape(function(i) {
         clickedShapeIndex = detectShape(i);
@@ -42,7 +42,7 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
     "dblclick",
     evt => {
       let selectShapeIndex;
-      Scene.currentEvents.doubleClick = true;
+      Scene.currentEvents.doubleClick.state = true;
       forEachShape(function(i) {
         selectShapeIndex = detectShape(i);
         if (selectShapeIndex && selectedEvent) {
@@ -63,7 +63,7 @@ export const mouseDown = element => {
   element.addEventListener(
     "mousedown",
     evt => {
-      // Scene.currentEvents.click = true;
+      // Scene.currentEvents.click.state = true;
       if (Scene.selected === "step") {
         Scene.time += timeStep;
         forEachShape(function(i) {
