@@ -82,7 +82,6 @@ const checkEvents = function(stop) {
     const numOfCurrentEvents = currentEvents.length;
 
     const numOfRules = rules.length;
-    let propertyValueCache = {};
 
     for (let n = 0; n < numOfCurrentEvents; n++) {
       let eventBeingChecked = currentEvents[n];
@@ -190,6 +189,7 @@ const checkEvents = function(stop) {
       hover: { state: false, id: "" },
       drag: { state: false, id: "" }
     };
+    Scene.propertyValueCache = {};
   }
   // this.onClick = false;
 };
