@@ -224,8 +224,8 @@ export function Shape(centre, vertices) {
   var references = referenceVectors(centre, vertices);
   this.id;
   this.type = "";
-  this.fillColour = "red";
-  // this.fillColour = "#6495ED";
+  // this.fillColour = "red";
+  this.fillColour = "#6495ED";
   this.strokeStyle = "black";
   this.linewidth = 0.7;
   this.centreOfMass = centreOfMass;

@@ -15,6 +15,7 @@ export default function collisionDetector() {
   forEachShape(function(i) {
     ShapesController.setProperty(i, "colliding", false);
   });
+  Scene.propertyValueCache = {};
   let aCollisions = {};
   let bCollisions = {};
   forEachShape(function(i) {

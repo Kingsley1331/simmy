@@ -20,6 +20,7 @@ let Scene = {
     display: true,
     restitution: 1
   },
+  propertyValueCache: {},
   currentEvents: {
     /**Change name from currentEvents to eventTypes */
     click: { state: false, id: "" },
@@ -119,30 +120,26 @@ let Scene = {
         { actionPropertyName: "linewidth", newValue: 0.7 },
         { actionPropertyName: "fillColour", newValue: "transparent" }
       ]
-    }
+    },
     /*{
       eventType: "collision",
       ruleType: "manyToMany",
-      self: {
-        conditions: [
-          {
-            propertyName: "fillColour",
-            operator: "===",
-            comparisonValue: "transparent",
-          },
-        ],
-        logicalOperators: [],
-      },
-      others: {
-        conditions: [
-          {
-            propertyName: "fillColour",
-            operator: "===",
-            comparisonValue: "transparent",
-          },
-        ],
-        logicalOperators: [],
-      },
+      selfConditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "transparent",
+        },
+      ],
+      selfLogicalOperators: [],
+      conditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "red",
+        },
+      ],
+      logicalOperators: [],
 
       actions: [
         { actionPropertyName: "fillColour", newValue: "black" },
@@ -150,6 +147,24 @@ let Scene = {
         { actionPropertyName: "linewidth", newValue: "20" },
       ],
     },*/
+    {
+      eventType: "collision",
+      ruleType: "canvas",
+      conditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "red"
+        }
+      ],
+      logicalOperators: [],
+
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "black" },
+        { actionPropertyName: "strokeStyle", newValue: "yellow" },
+        { actionPropertyName: "linewidth", newValue: "20" }
+      ]
+    }
   ]
 };
 
@@ -217,3 +232,10 @@ export function updateScene(scene) {
 }
 
 export default Scene;
+
+/**
+ * All events are also canvas events, in this sense the ruleType canvas is redundant
+ * Rules are going to be ranked according to specificity with more specific rules taken precedence
+ * this means canvas rules will always be overidden by other rules whenever there is a clash
+ * to achieve this canvas rules will always be moved to the top of the array
+ */
