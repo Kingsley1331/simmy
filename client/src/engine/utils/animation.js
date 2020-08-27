@@ -43,6 +43,18 @@ export default function animate() {
           id: ShapesController.getProperty(i, "id")
         };
       }
+      // if (ShapesController.getProperty(i, "onShape")) {
+      //   Scene.currentEvents.hover = {
+      //     state: true,
+      //     id: ShapesController.getProperty(i, "id"),
+      //   };
+      // }
+      // if (ShapesController.getProperty(i, "dragging")) {
+      //   Scene.currentEvents.drag = {
+      //     state: true,
+      //     id: ShapesController.getProperty(i, "id"),
+      //   };
+      // }
       ShapesController.checkEvents(i, i === numShapes - 1);
     });
     /** TODO check if collisionDetector can be moved inside the forEachShape callback **/

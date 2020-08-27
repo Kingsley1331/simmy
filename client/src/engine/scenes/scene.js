@@ -53,6 +53,39 @@ let Scene = {
         { actionPropertyName: "linewidth", newValue: 0.7 }
       ]
     },
+    {
+      shapeId: 5,
+      eventType: "click",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "violet" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
+      shapeId: 5,
+      eventType: "doubleClick",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "white" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
+      shapeId: 6,
+      eventType: "drag",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "purple" },
+        { actionPropertyName: "linewidth", newValue: 0.7 }
+      ]
+    },
     /*{
       shapeId: 4,
       eventType: "collision",

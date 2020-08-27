@@ -57,6 +57,12 @@ const evaluateCondtions = (
     if (eventBeingChecked === "drag" && self.dragging) {
       bool = true;
     }
+    if (eventBeingChecked === "click" && self.onShape) {
+      bool = true;
+    }
+    if (eventBeingChecked === "doubleClick" && self.doubleClick) {
+      bool = true;
+    }
   }
 
   if (rule.ruleType === "oneToOne") {
@@ -85,6 +91,7 @@ const checkEvents = function(stop) {
 
     for (let n = 0; n < numOfCurrentEvents; n++) {
       let eventBeingChecked = currentEvents[n];
+
       const triggerShapeId = Scene.currentEvents[eventBeingChecked].id;
 
       for (let i = 0; i < numOfRules; i++) {
