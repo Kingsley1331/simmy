@@ -127,7 +127,9 @@ const checkEvents = function(stop) {
       let partnerId;
 
       const triggerShapeIds = Scene.currentEvents[eventBeingChecked].ids;
-
+      if (eventBeingChecked === "click") {
+        console.log("triggerShapeIds", triggerShapeIds);
+      }
       const interactingPairs =
         Scene.currentEvents[eventBeingChecked].pairs || [];
       const numOfInteractingPairs = interactingPairs.length;
@@ -158,8 +160,12 @@ const checkEvents = function(stop) {
             }
           }
         }
-        console.log("===================================partnerId", partnerId);
-
+        if (rule.applyToPartner) {
+          console.log(
+            "===================================partnerId",
+            partnerId
+          );
+        }
         let {
           conditions,
           actions,
@@ -274,7 +280,8 @@ const checkEvents = function(stop) {
     };
     Scene.propertyValueCache = {};
   }
-  // this.onClick = false;
+  this.onClick = false;
+  this.doubleClick = false;
 };
 
 export default checkEvents;
