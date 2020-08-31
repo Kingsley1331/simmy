@@ -23,13 +23,11 @@ export const click = element => {
     "click",
     evt => {
       let clickedShapeIndex;
-      Scene.currentEvents.click.state = true;
-      console.log("receiving click :)");
       forEachShape(function(i) {
         clickedShapeIndex = detectShape(i);
         if (clickedShapeIndex) {
+          Scene.currentEvents.click.state = true;
           Scene.shapes[clickedShapeIndex].onClick = true;
-          // console.log("clicked shape", Scene.shapes[clickedShapeIndex]);
           Scene.currentEvents.click.ids.push(clickedShapeIndex);
         }
       }, false);
@@ -43,11 +41,12 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
     "dblclick",
     evt => {
       let selectShapeIndex;
-      Scene.currentEvents.doubleClick.state = true;
+
       forEachShape(function(i) {
         selectShapeIndex = detectShape(i);
         // Scene.currentEvents.doubleClick.id = selectShapeIndex;
         if (selectShapeIndex) {
+          Scene.currentEvents.doubleClick.state = true;
           Scene.shapes[selectShapeIndex].doubleClick = true;
           Scene.currentEvents.doubleClick.ids.push(selectShapeIndex);
         }
