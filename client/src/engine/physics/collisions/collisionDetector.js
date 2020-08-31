@@ -45,6 +45,10 @@ export default function collisionDetector() {
               ShapesController.setProperty(i, "colliding", true);
               ShapesController.setProperty(k, "colliding", true);
 
+              const shapeAId = ShapesController.getProperty(i, "id");
+              const shapeBId = ShapesController.getProperty(k, "id");
+
+              Scene.currentEvents.collision.pairs.push([shapeBId, shapeAId]);
               collidingShape = k;
 
               /*** After vertex checks all other shapes ***/

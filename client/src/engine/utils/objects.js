@@ -21,7 +21,6 @@ export function setObjectValueFromString(object, prop, newValue) {
     targetObj = getObjectValueFromString(object, propString);
   }
   targetObj[targetProp] = newValue;
-  console.log("targetObj", targetObj);
 }
 
 // export function setObjectValueFromString(object, prop, newValue) {

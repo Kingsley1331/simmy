@@ -36,25 +36,19 @@ export default function animate() {
       // applyMotion(i, tDelta);
       applyMotion(i, timeStep);
       applyForces(i);
-
+      const shapeId = ShapesController.getProperty(i, "id");
       if (ShapesController.getProperty(i, "colliding")) {
-        Scene.currentEvents.collision = {
-          state: true,
-          id: ShapesController.getProperty(i, "id")
-        };
+        Scene.currentEvents.collision.state = true;
+        Scene.currentEvents.collision.ids.push(shapeId);
       }
-      // if (ShapesController.getProperty(i, "onShape")) {
-      //   Scene.currentEvents.hover = {
-      //     state: true,
-      //     id: ShapesController.getProperty(i, "id"),
-      //   };
-      // }
-      // if (ShapesController.getProperty(i, "dragging")) {
-      //   Scene.currentEvents.drag = {
-      //     state: true,
-      //     id: ShapesController.getProperty(i, "id"),
-      //   };
-      // }
+      if (ShapesController.getProperty(i, "onShape")) {
+        Scene.currentEvents.hover.state = true;
+        Scene.currentEvents.hover.ids.push(shapeId);
+      }
+      if (ShapesController.getProperty(i, "dragging")) {
+        Scene.currentEvents.drag.state = true;
+        Scene.currentEvents.drag.ids.push(shapeId);
+      }
       ShapesController.checkEvents(i, i === numShapes - 1);
     });
     /** TODO check if collisionDetector can be moved inside the forEachShape callback **/

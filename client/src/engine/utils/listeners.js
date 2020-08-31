@@ -29,8 +29,8 @@ export const click = element => {
         clickedShapeIndex = detectShape(i);
         if (clickedShapeIndex) {
           Scene.shapes[clickedShapeIndex].onClick = true;
-          console.log("clicked shape", Scene.shapes[clickedShapeIndex]);
-          Scene.currentEvents.click.id = clickedShapeIndex;
+          // console.log("clicked shape", Scene.shapes[clickedShapeIndex]);
+          Scene.currentEvents.click.ids.push(clickedShapeIndex);
         }
       }, false);
     },
@@ -46,10 +46,10 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
       Scene.currentEvents.doubleClick.state = true;
       forEachShape(function(i) {
         selectShapeIndex = detectShape(i);
-        Scene.currentEvents.doubleClick.id = selectShapeIndex;
+        // Scene.currentEvents.doubleClick.id = selectShapeIndex;
         if (selectShapeIndex) {
           Scene.shapes[selectShapeIndex].doubleClick = true;
-          Scene.currentEvents.doubleClick.id = selectShapeIndex;
+          Scene.currentEvents.doubleClick.ids.push(selectShapeIndex);
         }
         if (selectShapeIndex && selectedEvent) {
           const selectedShapeId = Scene.shapes[selectShapeIndex].id;
