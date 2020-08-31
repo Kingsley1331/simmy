@@ -19,7 +19,8 @@ const scenesSchema = Schema({
   time: Number,
   timeStep: Number,
   currentEvents: Object,
-  events: Object
+  events: Object,
+  rules: Array
 });
 
 module.exports = mongoose.model("Scenes", scenesSchema);

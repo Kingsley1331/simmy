@@ -32,13 +32,24 @@ let Scene = {
 
   rules: [
     {
-      shapeId: 4,
+      shapeId: 6,
       eventType: "hover",
       ruleType: "oneToOne",
       conditions: [],
       logicalOperators: [],
       actions: [
         { actionPropertyName: "fillColour", newValue: "yellow" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
+      shapeId: 4,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
         { actionPropertyName: "linewidth", newValue: 0.1 }
       ]
     },
@@ -53,25 +64,58 @@ let Scene = {
         { actionPropertyName: "linewidth", newValue: 0.1 }
       ]
     },
-    // {
-    //   shapeId: 5,
-    //   eventType: "collision",
-    //   ruleType: "oneToOne",
-    //   conditions: [
-    //     {
-    //       propertyName: "fillColour",
-    //       operator: "===",
-    //       comparisonValue: "yellow",
-    //     },
-    //   ],
-    //   logicalOperators: [],
-    //   actions: [
-    //     { actionPropertyName: "fillColour", newValue: "red" },
-    //     { actionPropertyName: "linewidth", newValue: 0.1 },
-    //   ],
-    // },
+    {
+      shapeId: 7,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
+      shapeId: 8,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
     /*{
-      shapeId: 4,
+      shapeId: 5,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "yellow" },
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
+    },
+  {
+      shapeId: 5,
+      eventType: "collision",
+      ruleType: "oneToOne",
+      conditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "lightgreen",
+        },
+      ],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "white" },
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
+    },*/
+    /* {
+      shapeId: 5,
       eventType: "collision",
       ruleType: "oneToMany",
       selfConditions: [
@@ -108,11 +152,11 @@ let Scene = {
       ],
       selfLogicalOperators: [],
       conditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "red"
-        }
+        // {
+        //   propertyName: "fillColour",
+        //   operator: "===",
+        //   comparisonValue: "red",
+        // },
       ],
       logicalOperators: [],
 
@@ -241,7 +285,10 @@ let Scene = {
     //   ruleType: "manyToOne",
     //   conditions: [],
     //   logicalOperators: [],
-    //   actions: [{ actionPropertyName: "fillColour", newValue: "transparent" }],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "transparent" },
+    //     { actionPropertyName: "linewidth", newValue: 0.1 },
+    //   ],
     // },
     /*{
       shapeId: 4,

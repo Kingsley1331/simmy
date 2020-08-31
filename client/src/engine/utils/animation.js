@@ -36,6 +36,11 @@ export default function animate() {
       // applyMotion(i, tDelta);
       applyMotion(i, timeStep);
       applyForces(i);
+    });
+    /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
+    collisionDetector();
+
+    forEachShape(function(i) {
       const shapeId = ShapesController.getProperty(i, "id");
       if (ShapesController.getProperty(i, "colliding")) {
         Scene.currentEvents.collision.state = true;
@@ -49,10 +54,14 @@ export default function animate() {
         Scene.currentEvents.drag.state = true;
         Scene.currentEvents.drag.ids.push(shapeId);
       }
+    });
+    /** Note: Its important that checkEvents runs after collisionDetector and the Scene.currentEvents
+      settings, because it needs all of those setting to be complete before it runs
+     */
+    forEachShape(function(i) {
       ShapesController.checkEvents(i, i === numShapes - 1);
     });
-    /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
-    collisionDetector();
+
     Scene.time += timeStep;
   }
   if (canvas) {

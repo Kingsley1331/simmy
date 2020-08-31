@@ -205,7 +205,7 @@ export default function collisionDetector() {
               }
               break innerShapes;
             } else if (k === lastShapeIndex) {
-              // check if current shape is the last shape tob checked
+              // check if current shape is the last shape to be checked
               verticesA[vertIndexA].collidingShape = null;
               ShapesController.setProperty(i, "vertices", verticesA);
             }

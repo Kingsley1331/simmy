@@ -27,13 +27,6 @@ const evaluteMultipleShapes = (
         isCheckingReiverShape
       ) || triggerShapesBool;
   }
-  // if (/*shapes.some((shape1) => shape1.id === 4) && */ id === 5) {
-  //   console.log(
-  //     "===================================triggerShapesBool",
-  //     triggerShapesBool
-  //   );
-  //   console.log("===================================shapes", shapes);
-  // }
   return triggerShapesBool;
 };
 
@@ -99,11 +92,6 @@ const evaluateCondtions = (
     }
     if (eventBeingChecked === "doubleClick" && shape.doubleClick) {
       bool = true;
-    }
-
-    if (shape.id === 4) {
-      console.log("===================================bool2", bool);
-      // console.log("===================================shape", shape);
     }
     if (isCheckingReiverShape) {
       bool = true;
@@ -215,53 +203,29 @@ const checkEvents = function(stop) {
         if (currentEventType === eventBeingChecked) {
           if (selfConditions && selfLogicalOperators) {
             bool = evaluteMultipleShapes(
-              shapes,
+              shapes /** Trigger shapes are checked */,
               selfConditions,
               selfLogicalOperators,
               ruleType,
               eventBeingChecked,
               rule
             );
-            if (this.id === 5) {
-              console.log("===================================bool1", bool);
-              console.log(
-                "===================================triggerShapeIds",
-                triggerShapeIds,
-                this.id
-              );
-            }
+
             /** Make sure to check the the conditions of the receiver shape */
-            shapes =
-              ruleType === "oneToMany" && this.id !== rule.shapeId
-                ? [this]
-                : shapes;
+
             if (ruleType === "oneToMany") {
               /**Only apply rule if the trigger shape contains the rule */
               bool = triggerShapeIds.some(id => id === rule.shapeId) && bool;
             }
 
-            /** Make sure to check the the conditions of the receiver shape */
-            shapes =
-              ruleType === "manyToMany" &&
-              !triggerShapeIds.some(id => id === this.id)
-                ? [this]
-                : shapes;
-
             if (rule.applyToPartner) {
               shapes = partnerShape;
             }
 
-            if (this.id === 5) {
-              console.log("===================================bool3", bool);
-              console.log(
-                "===================================triggerShapeIds",
-                triggerShapeIds
-              );
-            }
             /** Set bool = true if at least one of the trigger shapes satifisfies the rule conditions */
             bool =
               evaluteMultipleShapes(
-                shapes,
+                [this],
                 conditions,
                 logicalOperators,
                 ruleType,
@@ -269,13 +233,6 @@ const checkEvents = function(stop) {
                 rule,
                 true
               ) && bool;
-            if (this.id === 5) {
-              console.log("===================================bool4", bool);
-              console.log(
-                "===================================triggerShapeIds",
-                triggerShapeIds
-              );
-            }
           } else {
             bool = evaluteMultipleShapes(
               shapes,
