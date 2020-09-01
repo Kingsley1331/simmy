@@ -3,7 +3,7 @@ import { rotateShape } from "../utils/maths/Vector";
 
 export function createWalls() {
   const leftWall = createShape({ x: -19, y: 297 }, shapeSelection.verticalWall);
-  leftWall.fillColour = "red";
+  leftWall.fillColour = "transparent";
   leftWall.physics.mass = Infinity;
   leftWall.physics.momentOfInertia = Infinity;
   leftWall.physics.momentOfInertiaCOM = Infinity;
@@ -15,7 +15,7 @@ export function createWalls() {
     { x: 1018, y: 297 },
     shapeSelection.verticalWall
   );
-  rightWall.fillColour = "red";
+  rightWall.fillColour = "transparent";
   rightWall.physics.mass = Infinity;
   rightWall.physics.momentOfInertia = Infinity;
   rightWall.physics.momentOfInertiaCOM = Infinity;
@@ -27,7 +27,7 @@ export function createWalls() {
     { x: 500, y: 619 },
     shapeSelection.horizontalWall
   );
-  bottomWall.fillColour = "red";
+  bottomWall.fillColour = "transparent";
   bottomWall.physics.mass = Infinity;
   bottomWall.physics.momentOfInertia = Infinity;
   bottomWall.physics.momentOfInertiaCOM = Infinity;
@@ -39,7 +39,7 @@ export function createWalls() {
     { x: 500, y: -20 },
     shapeSelection.horizontalWall
   );
-  topWall.fillColour = "red";
+  topWall.fillColour = "transparent";
   topWall.physics.mass = Infinity;
   topWall.physics.momentOfInertia = Infinity;
   topWall.physics.momentOfInertiaCOM = Infinity;

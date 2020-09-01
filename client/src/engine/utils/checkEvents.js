@@ -98,8 +98,31 @@ const evaluateCondtions = (
     }
   }
 
-  if (rule.ruleType === "oneToOne") {
-    bool = shape.id === rule.shapeId && bool;
+  if (rule.ruleType === "oneToOne" && !rule.applyToPartner) {
+    bool =
+      shape.id === rule.shapeId &&
+      bool; /** IDEA: doing the same thing as CODE:123 */
+  }
+
+  if (
+    (rule.ruleType === "oneToOne" && rule.applyToPartner) ||
+    (rule.ruleType === "manyToOne" && rule.applyToPartner)
+  ) {
+    if (eventBeingChecked === "collision") {
+      bool = shape.colliding && bool;
+    }
+    if (eventBeingChecked === "hover") {
+      bool = shape.onShape && bool;
+    }
+    if (eventBeingChecked === "drag") {
+      bool = shape.dragging && bool;
+    }
+    if (eventBeingChecked === "click") {
+      bool = shape.onShape && bool;
+    }
+    if (eventBeingChecked === "doubleClick") {
+      bool = shape.doubleClick && bool;
+    }
   }
   return bool;
 };
@@ -127,20 +150,11 @@ const checkEvents = function(stop) {
       let partnerId;
 
       const triggerShapeIds = Scene.currentEvents[eventBeingChecked].ids;
-      if (eventBeingChecked === "click") {
-        console.log("triggerShapeIds", triggerShapeIds);
-      }
+
       const interactingPairs =
         Scene.currentEvents[eventBeingChecked].pairs || [];
       const numOfInteractingPairs = interactingPairs.length;
       const hasInteractingPairs = !!numOfInteractingPairs;
-
-      if (hasInteractingPairs) {
-        console.log(
-          "===================================interactingPairs",
-          interactingPairs
-        );
-      }
 
       for (let i = 0; i < numOfRules; i++) {
         let bool = false;
@@ -160,12 +174,7 @@ const checkEvents = function(stop) {
             }
           }
         }
-        if (rule.applyToPartner) {
-          console.log(
-            "===================================partnerId",
-            partnerId
-          );
-        }
+
         let {
           conditions,
           actions,
@@ -220,6 +229,7 @@ const checkEvents = function(stop) {
             /** Make sure to check the the conditions of the receiver shape */
 
             if (ruleType === "oneToMany") {
+              /**CODE:123 */
               /**Only apply rule if the trigger shape contains the rule */
               bool = triggerShapeIds.some(id => id === rule.shapeId) && bool;
             }
@@ -238,7 +248,8 @@ const checkEvents = function(stop) {
                 eventBeingChecked,
                 rule,
                 true
-              ) && bool;
+              ) &&
+              bool; /**IDEA: If no conditions don't call evaluteMultipleShapes */
           } else {
             bool = evaluteMultipleShapes(
               shapes,
