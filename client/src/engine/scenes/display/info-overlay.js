@@ -10,13 +10,8 @@ import {
   drawArrow
 } from "./drawing/drawings";
 
-export const displayInfo = (
-  shapeIndex,
-  bufferCtx,
-  centreOfMass,
-  vertices,
-  boundingRect
-) => {
+export const displayInfo = (shapeIndex, bufferCtx, centreOfMass, vertices) => {
+  const boundingRect = ShapesController.getProperty(shapeIndex, "boundingRect");
   const centreOfRotation = ShapesController.getProperty(
     shapeIndex,
     "centreOfRotation"

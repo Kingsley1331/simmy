@@ -19,7 +19,6 @@ export const draw = canvas => {
 
   forEachShape(i => {
     var onShape = ShapesController.getProperty(i, "onShape");
-    // var type = ShapesController.getProperty(i, "type");
     //bufferCtx.save();
     if (onShape) {
       var shadowColor = (shadowColor = "rgba( 9, 9, 9, 0.3)");
@@ -45,11 +44,10 @@ export const draw = canvas => {
       lineWidth: lineWidth
     };
 
-    var boundingRect = ShapesController.getProperty(i, "boundingRect");
     drawShape(bufferCtx, vertices, centreOfMass, config);
 
     if (Scene.settings.display) {
-      displayInfo(i, bufferCtx, centreOfMass, vertices, boundingRect);
+      displayInfo(i, bufferCtx, centreOfMass, vertices);
     }
   });
   if (shapeSelection[Scene.selected] && !Scene.cursorOnshape) {
