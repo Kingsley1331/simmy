@@ -28,7 +28,7 @@ class App extends Component {
             <Route path="/users" component={Users} />
             <Route path="/demos" component={Demos} />
             <Route path="/about" component={About} />
-            <Route path="/scenes" component={Scenes} />
+            <Route path="/_scenes" component={Scenes} />
             <Route path="/Profile" component={Profile} />
           </div>
         </BrowserRouter>
@@ -37,7 +37,4 @@ class App extends Component {
   }
 }
 
-export default connect(
-  null,
-  actions
-)(App);
+export default connect(null, actions)(App);

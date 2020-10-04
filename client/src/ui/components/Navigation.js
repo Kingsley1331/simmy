@@ -41,7 +41,7 @@ class Navigation extends Component {
           <Link to="/demos">Demos</Link>
         </li>
         <li>
-          <Link to="/scenes">Scenes</Link>
+          <Link to="/_scenes">Scenes</Link>
         </li>
         <li>
           <Link to="/profile">Profile</Link>

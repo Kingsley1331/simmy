@@ -15,7 +15,7 @@ class Profile extends Component {
   fetchScene = sceneId => {
     const { fetchScene, history } = this.props;
     fetchScene(sceneId);
-    setTimeout(() => history.replace("/scenes"), 1500);
+    setTimeout(() => history.replace("/_scenes"), 1500);
   };
 
   deleteScene = sceneId => {

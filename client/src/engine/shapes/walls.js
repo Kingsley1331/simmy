@@ -80,6 +80,7 @@ export function createWalls() {
   // bar6.physics.velocity.x = -0.005;
 
   /* ----------------------------------------------------------------------- */
+  /*** Multiple object collisions ***/
   // const bar7 = createShape({ x: 430, y: 300 }, shapeSelection.bar);
   // const square = createShape({ x: 570, y: 200 }, shapeSelection.square);
   // const square2 = createShape({ x: 570, y: 400 }, shapeSelection.square);
@@ -102,17 +103,19 @@ export function createWalls() {
   // hexagon.physics.velocity.x = -0.1;
 
   /* ----------------------------------------------------------------------- */
+  /*** Newton's Cradle */
   // const circle = createShape({ x: 470, y: 300 }, shapeSelection.circle);
   // const circle2 = createShape({ x: 510, y: 300 }, shapeSelection.circle);
   // const circle3 = createShape({ x: 550, y: 300 }, shapeSelection.circle);
   // const circle4 = createShape({ x: 650, y: 300 }, shapeSelection.circle);
-  // circle.type = 'circle'
-  // circle2.type = 'circle'
-  // circle3.type = 'circle'
-  // circle4.type = 'circle'
+  // circle.type = "circle";
+  // circle2.type = "circle";
+  // circle3.type = "circle";
+  // circle4.type = "circle";
   // circle4.physics.velocity.x = -0.05;
 
   /* ----------------------------------------------------------------------- */
+  /*** Box within a Box */
   // const box = createShape({ x: 500, y: 300 }, shapeSelection.box);
   // const square = createShape({ x: 500, y: 302 }, shapeSelection.square);
   // rotateShape({ x: 500, y: 302 }, Math.PI / 4, 5);
@@ -120,41 +123,41 @@ export function createWalls() {
   // square.physics.velocity.y = -0.05;
 
   /* ----------------------------------------------------------------------- */
+  /*** Two Arrows */
   // const arrow = createShape({ x: 500, y: 250 }, shapeSelection.arrow);
   // const arrow2 = createShape({ x: 416, y: 250 }, shapeSelection.arrow);
   // arrow2.physics.velocity.x = 0.03;
 
   /* ----------------------------------------------------------------------- */
+  /*** Flying Arrows */
 
-  // const arrowVelocity = 0.4;
-  // const bar = createShape({ x: 20, y: 252 }, shapeSelection.bar);
-  //   /**Temporary squares*/
+  const arrowVelocity = 0.4;
+  /** Temporary squares*/
   // const square = createShape({ x: 528, y: 272 }, shapeSelection.square);
   // const square2 = createShape({ x: 528, y: 428 }, shapeSelection.square);
-  // bar.physics.velocity.x = -0.01;
 
   //   /**Temporary commenting */
-  // const arrow3 = createShape({ x: /*500*/545, y: 300 }, shapeSelection.arrow);
-  // const arrow5 = createShape({ x: /*500*/545, y: 350 }, shapeSelection.arrow);
-  // const arrow7 = createShape({ x: /*500*/545, y: 400 }, shapeSelection.arrow);
+  const circle = createShape({ x: /*500*/ 545, y: 100 }, shapeSelection.circle);
+  circle.type = "circle";
+  const arrow3 = createShape({ x: /*500*/ 545, y: 300 }, shapeSelection.arrow);
+  // const arrow5 = createShape({ x: /*500*/ 545, y: 350 }, shapeSelection.arrow);
+  // const arrow7 = createShape({ x: /*500*/ 545, y: 400 }, shapeSelection.arrow);
 
-  // const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
+  const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
   // const arrow6 = createShape({ x: 416, y: 350 }, shapeSelection.arrow);
   // const arrow8 = createShape({ x: 416, y: 400 }, shapeSelection.arrow);
 
-  // arrow4.physics.velocity.x = arrowVelocity;
+  arrow4.physics.velocity.x = arrowVelocity;
   // arrow6.physics.velocity.x = arrowVelocity;
   // arrow8.physics.velocity.x = arrowVelocity;
 
-  // arrow3.physics.velocity.x = -arrowVelocity;
+  arrow3.physics.velocity.x = -arrowVelocity;
   // arrow5.physics.velocity.x = -arrowVelocity;
   // arrow7.physics.velocity.x = -arrowVelocity;
 
-  // /**Temporary */
-  // const bar1 = createShape({ x: 480, y: 346 }, shapeSelection.bar);
-
   /* ----------------------------------------------------------------------- */
   // Step 32 wrong colliding sides chosen
+  /*** Step 31 */
   // const bar = createShape({ x: 600, y: 252 }, shapeSelection.bar);
   // const bar2 = createShape({ x: 300, y: 252 }, shapeSelection.bar);
   // rotateShape({ x: 570, y: 252 }, Math.PI / 4, 4);
