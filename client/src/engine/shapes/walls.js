@@ -137,8 +137,6 @@ export function createWalls() {
   // const square2 = createShape({ x: 528, y: 428 }, shapeSelection.square);
 
   //   /**Temporary commenting */
-  const circle = createShape({ x: /*500*/ 545, y: 100 }, shapeSelection.circle);
-  circle.type = "circle";
   const arrow3 = createShape({ x: /*500*/ 545, y: 300 }, shapeSelection.arrow);
   // const arrow5 = createShape({ x: /*500*/ 545, y: 350 }, shapeSelection.arrow);
   // const arrow7 = createShape({ x: /*500*/ 545, y: 400 }, shapeSelection.arrow);

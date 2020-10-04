@@ -90,7 +90,10 @@ export const mouseDown = element => {
         typeof shapeSelection[Scene.selected] === "object" &&
         !Scene.cursorOnshape
       ) {
-        createShape(mousePos, shapeSelection[Scene.selected]);
+        const shape = createShape(mousePos, shapeSelection[Scene.selected]);
+        if (Scene.selected === "circle") {
+          shape.type = "circle";
+        }
       }
     },
     false
