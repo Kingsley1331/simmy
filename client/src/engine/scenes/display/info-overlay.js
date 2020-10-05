@@ -1,4 +1,5 @@
 import ShapesController from "../../shapes/ShapesController";
+import { shapeSelection } from "../../shapes/shapes";
 import { shapes } from "../../shapes/shapes";
 import Scene from "../scene";
 import Vector from "../../utils/maths/Vector";
@@ -10,7 +11,12 @@ import {
   drawArrow
 } from "./drawing/drawings";
 
-export const displayInfo = (shapeIndex, bufferCtx, centreOfMass, vertices) => {
+export const displayShapeInfo = (
+  shapeIndex,
+  bufferCtx,
+  centreOfMass,
+  vertices
+) => {
   const boundingRect = ShapesController.getProperty(shapeIndex, "boundingRect");
   const centreOfRotation = ShapesController.getProperty(
     shapeIndex,
@@ -101,16 +107,6 @@ export const displayInfo = (shapeIndex, bufferCtx, centreOfMass, vertices) => {
     }
   );
 
-  screenWriter(bufferCtx, Math.round(Scene.time / 100) / 10, {
-    x: 950,
-    y: 20
-  });
-
-  screenWriter(bufferCtx, Scene.time / Scene.timeStep, {
-    x: 900,
-    y: 20
-  });
-
   // drawDot(bufferCtx, 3, centreOfMass, 'black');
   // drawDot(bufferCtx, 3, boundingRectCentre, 'red');
   // drawDot(bufferCtx,3, centreOfRotation, 'green');
@@ -160,4 +156,31 @@ export const displayInfo = (shapeIndex, bufferCtx, centreOfMass, vertices) => {
     // drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
     // drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
   }
+};
+
+export const displaySceneInfo = bufferCtx => {
+  let mousePos = Scene.mousePos;
+  if (shapeSelection[Scene.selected] && !Scene.cursorOnshape) {
+    // (hoveringOnShape <= 0) means not hovering on shape
+    drawShape(bufferCtx, shapeSelection[Scene.selected], mousePos, {
+      globalAlpha: 0.15,
+      fillStyle: "blue",
+      lineWidth: 0.000001
+    });
+  }
+  screenWriter(
+    bufferCtx,
+    "x:" + Math.round(mousePos.x) + ",  " + "y:" + Math.round(mousePos.y),
+    { x: 10, y: 20 }
+  );
+
+  screenWriter(bufferCtx, Math.round(Scene.time / 100) / 10, {
+    x: 950,
+    y: 20
+  });
+
+  screenWriter(bufferCtx, Scene.time / Scene.timeStep, {
+    x: 900,
+    y: 20
+  });
 };
