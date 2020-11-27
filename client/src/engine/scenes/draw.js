@@ -17,7 +17,6 @@ export const draw = canvas => {
 
   forEachShape(i => {
     var onShape = ShapesController.getProperty(i, "onShape");
-    //bufferCtx.save();
     if (onShape) {
       var shadowColor = (shadowColor = "rgba( 9, 9, 9, 0.3)");
       var shadowOffsetX = (shadowOffsetX = 10);
@@ -31,7 +30,6 @@ export const draw = canvas => {
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var vertices = ShapesController.getProperty(i, "vertices");
 
-    /** TODO: store config globally in Scene**/
     var config = {
       shadowColor: shadowColor,
       shadowOffsetX: shadowOffsetX,
@@ -50,7 +48,6 @@ export const draw = canvas => {
   });
 
   displaySceneInfo(bufferCtx);
-  //TODO: do this only once rather than in every frame
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas, 0, 0, width, height);
 };

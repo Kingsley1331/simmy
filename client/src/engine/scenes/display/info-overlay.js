@@ -11,17 +11,31 @@ import {
   drawArrow
 } from "./drawing/drawings";
 
+import displayConfig from "../../scenes/display/config";
+
+const { scene, shape } = displayConfig;
+
 export const displayShapeInfo = (
   shapeIndex,
   bufferCtx,
   centreOfMass,
   vertices
 ) => {
+  const {
+    id,
+    collidinSide,
+    collisionPoint: collidingPoint,
+    boundingRect: rect,
+    normal,
+    collisionPointVA,
+    collisionPointVB
+  } = shape;
   const boundingRect = ShapesController.getProperty(shapeIndex, "boundingRect");
   const centreOfRotation = ShapesController.getProperty(
     shapeIndex,
     "centreOfRotation"
   );
+
   const type = ShapesController.getProperty(shapeIndex, "type");
   var collisionDataB = ShapesController.getProperty(
     shapeIndex,
@@ -66,19 +80,23 @@ export const displayShapeInfo = (
   }
 
   if (collisionDataB.collisionPoint) {
-    drawDot(
-      bufferCtx,
-      4,
-      {
-        x: collisionPoint.x,
-        y: collisionPoint.y
-      },
-      "red"
-    );
-    drawLine(bufferCtx, collisionDataB.side[0], collisionDataB.side[1], {
-      strokeStyle: "red",
-      lineWidth: 2
-    });
+    if (collidingPoint) {
+      drawDot(
+        bufferCtx,
+        4,
+        {
+          x: collisionPoint.x,
+          y: collisionPoint.y
+        },
+        "red"
+      );
+    }
+    if (collidinSide) {
+      drawLine(bufferCtx, collisionDataB.side[0], collisionDataB.side[1], {
+        strokeStyle: "red",
+        lineWidth: 2
+      });
+    }
   }
 
   if (type === "circle") {
@@ -93,19 +111,22 @@ export const displayShapeInfo = (
     );
   }
 
-  drawShape(bufferCtx, rectVertices, centreOfMass, {
-    lineWidth: 0.5,
-    fillStyle: "transparent"
-  });
-
-  screenWriter(
-    bufferCtx,
-    Number(ShapesController.getProperty(shapeIndex, "id")),
-    {
-      x: centreOfMass.x - 4,
-      y: centreOfMass.y - 5
-    }
-  );
+  if (rect) {
+    drawShape(bufferCtx, rectVertices, centreOfMass, {
+      lineWidth: 0.5,
+      fillStyle: "transparent"
+    });
+  }
+  if (id) {
+    screenWriter(
+      bufferCtx,
+      Number(ShapesController.getProperty(shapeIndex, "id")),
+      {
+        x: centreOfMass.x - 4,
+        y: centreOfMass.y - 5
+      }
+    );
+  }
 
   // drawDot(bufferCtx, 3, centreOfMass, 'black');
   // drawDot(bufferCtx, 3, boundingRectCentre, 'red');
@@ -123,35 +144,41 @@ export const displayShapeInfo = (
           y: unitNormal.y
         }).scalProd(50);
 
-    drawArrow(
-      bufferCtx,
-      arrowHead,
-      [
-        {
-          x: collisionDataB.side[0].x + sideVector.x / 2,
-          y: collisionDataB.side[0].y + sideVector.y / 2
-        },
-        unitNormal
-      ],
-      { fillStyle: "purple", strokeStyle: "purple" },
-      30
-    );
+    if (normal) {
+      drawArrow(
+        bufferCtx,
+        arrowHead,
+        [
+          {
+            x: collisionDataB.side[0].x + sideVector.x / 2,
+            y: collisionDataB.side[0].y + sideVector.y / 2
+          },
+          unitNormal
+        ],
+        { fillStyle: "purple", strokeStyle: "purple" },
+        30
+      );
+    }
 
-    drawArrow(
-      bufferCtx,
-      arrowHead,
-      [collisionPoint, collisionPointVelocityA],
-      { fillStyle: "blue", strokeStyle: "blue" },
-      30
-    );
+    if (collisionPointVA) {
+      drawArrow(
+        bufferCtx,
+        arrowHead,
+        [collisionPoint, collisionPointVelocityA],
+        { fillStyle: "blue", strokeStyle: "blue" },
+        30
+      );
+    }
 
-    drawArrow(
-      bufferCtx,
-      arrowHead,
-      [collisionPoint, collisionPointVelocityB],
-      { fillStyle: "green", strokeStyle: "green" },
-      60
-    );
+    if (collisionPointVB) {
+      drawArrow(
+        bufferCtx,
+        arrowHead,
+        [collisionPoint, collisionPointVelocityB],
+        { fillStyle: "green", strokeStyle: "green" },
+        60
+      );
+    }
     // drawArrow(bufferCtx, arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
     // drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
     // drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);
@@ -160,6 +187,7 @@ export const displayShapeInfo = (
 
 export const displaySceneInfo = bufferCtx => {
   let mousePos = Scene.mousePos;
+  const { time, steps, mousePos: cursorPos } = scene;
   if (shapeSelection[Scene.selected] && !Scene.cursorOnshape) {
     // (hoveringOnShape <= 0) means not hovering on shape
     drawShape(bufferCtx, shapeSelection[Scene.selected], mousePos, {
@@ -168,19 +196,26 @@ export const displaySceneInfo = bufferCtx => {
       lineWidth: 0.000001
     });
   }
-  screenWriter(
-    bufferCtx,
-    "x:" + Math.round(mousePos.x) + ",  " + "y:" + Math.round(mousePos.y),
-    { x: 10, y: 20 }
-  );
+  //TODO: do this only once rather than in every frame
+  if (cursorPos) {
+    screenWriter(
+      bufferCtx,
+      "x:" + Math.round(mousePos.x) + ",  " + "y:" + Math.round(mousePos.y),
+      { x: 10, y: 20 }
+    );
+  }
 
-  screenWriter(bufferCtx, Math.round(Scene.time / 100) / 10, {
-    x: 950,
-    y: 20
-  });
+  if (time) {
+    screenWriter(bufferCtx, Math.round(Scene.time / 100) / 10, {
+      x: 950,
+      y: 20
+    });
+  }
 
-  screenWriter(bufferCtx, Scene.time / Scene.timeStep, {
-    x: 900,
-    y: 20
-  });
+  if (steps) {
+    screenWriter(bufferCtx, Scene.time / Scene.timeStep, {
+      x: 900,
+      y: 20
+    });
+  }
 };
