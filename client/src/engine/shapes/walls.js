@@ -131,25 +131,25 @@ export function createWalls() {
   /* ----------------------------------------------------------------------- */
   /*** Flying Arrows */
 
-  const arrowVelocity = 0.4;
+  // const arrowVelocity = 0.4;
   /** Temporary squares*/
   // const square = createShape({ x: 528, y: 272 }, shapeSelection.square);
   // const square2 = createShape({ x: 528, y: 428 }, shapeSelection.square);
 
   //   /**Temporary commenting */
-  const arrow3 = createShape({ x: /*500*/ 545, y: 300 }, shapeSelection.arrow);
+  // const arrow3 = createShape({ x: /*500*/ 545, y: 300 }, shapeSelection.arrow);
   // const arrow5 = createShape({ x: /*500*/ 545, y: 350 }, shapeSelection.arrow);
   // const arrow7 = createShape({ x: /*500*/ 545, y: 400 }, shapeSelection.arrow);
 
-  const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
+  // const arrow4 = createShape({ x: 416, y: 300 }, shapeSelection.arrow);
   // const arrow6 = createShape({ x: 416, y: 350 }, shapeSelection.arrow);
   // const arrow8 = createShape({ x: 416, y: 400 }, shapeSelection.arrow);
 
-  arrow4.physics.velocity.x = arrowVelocity;
+  // arrow4.physics.velocity.x = arrowVelocity;
   // arrow6.physics.velocity.x = arrowVelocity;
   // arrow8.physics.velocity.x = arrowVelocity;
 
-  arrow3.physics.velocity.x = -arrowVelocity;
+  // arrow3.physics.velocity.x = -arrowVelocity;
   // arrow5.physics.velocity.x = -arrowVelocity;
   // arrow7.physics.velocity.x = -arrowVelocity;
 
