@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
-import EventForm from "./events/local";
+// import EventForm from "./events/local";
+import EventForm from "./events/EventForm";
 import { draw } from "../../engine/scenes/draw";
 import Scene, { updateScene } from "../../engine/scenes/scene";
 import {
@@ -70,8 +71,9 @@ class Scenes extends Component {
       <div className="scenesWrapper">
         <Buttons />
         <canvas id="canvas" width="1000" height="600" />
-        <EventForm type="local" />
-        <EventForm type="global" />
+        {/* <EventForm type="local" />
+        <EventForm type="global" /> */}
+        <EventForm />
       </div>
     );
   }

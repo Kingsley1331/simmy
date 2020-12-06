@@ -53,28 +53,17 @@ let Scene = {
     //     { actionPropertyName: "linewidth", newValue: 0.1 }
     //   ]
     // },
-    {
-      shapeId: 5,
-      eventType: "hover",
-      ruleType: "oneToOne",
-      conditions: [],
-      logicalOperators: [],
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
-    },
-    {
-      shapeId: 6,
-      eventType: "hover",
-      ruleType: "oneToOne",
-      conditions: [],
-      logicalOperators: [],
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "yellow" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
-    },
+    // {
+    //   shapeId: 6,
+    //   eventType: "hover",
+    //   ruleType: "oneToOne",
+    //   conditions: [],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "yellow" },
+    //     { actionPropertyName: "linewidth", newValue: 0.1 }
+    //   ]
+    // },
     // {
     //   shapeId: 5,
     //   eventType: "hover",
@@ -203,10 +192,19 @@ let Scene = {
       ],
     },*/
     {
-      // shapeId: 5,
+      shapeId: 5,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
       eventType: "collision",
       ruleType: "manyToOne",
-      // ruleType: "oneToMany",
       selfConditions: [
         {
           propertyName: "fillColour",
@@ -215,13 +213,7 @@ let Scene = {
         }
       ],
       selfLogicalOperators: [],
-      conditions: [
-        // {
-        //   propertyName: "fillColour",
-        //   operator: "===",
-        //   comparisonValue: "yellow",
-        // },
-      ],
+      conditions: [],
       logicalOperators: [],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
@@ -229,6 +221,16 @@ let Scene = {
       ],
       applyToPartner: true
     }
+    // {
+    //   eventType: "click",
+    //   ruleType: "manyToOne",
+    //   conditions: [],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "transparent" },
+    //     { actionPropertyName: "linewidth", newValue: 0.7 },
+    //   ],
+    // },
     /* {
       shapeId: 5,
       eventType: "collision",

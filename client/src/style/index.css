@@ -64,11 +64,12 @@ li a:hover:not(.active) {
 }
 
 canvas {
-  position: absolute;
-  top: 70px;
+  position: relative;
+  top: 10px;
   left: 60px;
   border: 1px solid black;
 }
+
 .buttons {
   position: absolute;
   top: 60px;
@@ -225,4 +226,45 @@ canvas {
   padding: 10px;
   margin-top: 15px;
   border: 1px solid;
+}
+
+.event-form {
+  padding: 10px;
+  position: relative;
+  top: 20px;
+  border: 1px solid;
+  width: 800px;
+  margin-bottom: 50px;
+}
+
+.button-holder {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-holder,
+.form-types,
+.form-condition,
+.form-action,
+.form-logical_operator,
+.form-condition-group {
+  margin-bottom: 20px;
+}
+
+.event-form select,
+input {
+  margin-right: 20px;
+}
+
+.event-form label {
+  margin-right: 2px;
+}
+
+.form-condition-group {
+  border: 1px solid blue;
+}
+
+.form-condition h4 {
+  width: fit-content;
+  margin: 10px auto;
 }
