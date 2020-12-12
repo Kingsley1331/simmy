@@ -50,14 +50,14 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
           Scene.shapes[selectShapeIndex].doubleClick = true;
           Scene.currentEvents.doubleClick.ids.push(selectShapeIndex);
         }
-        if (selectShapeIndex && selectedEvent) {
+        if (selectShapeIndex /*&& selectedEvent*/) {
           const selectedShapeId = Scene.shapes[selectShapeIndex].id;
-          const selectedShapeRules =
-            Scene.shapes[selectShapeIndex].events.local;
-          const rules = retrieveLocalRules(selectedShapeRules, selectedShapeId);
+          // const selectedShapeRules =
+          //   Scene.shapes[selectShapeIndex].events.local;
+          // const rules = retrieveLocalRules(selectedShapeRules, selectedShapeId);
           Scene.selectedShape = selectedShapeId;
           selectShape(selectedShapeId);
-          addRules(rules);
+          // addRules(rules);
         }
       }, false);
     },
