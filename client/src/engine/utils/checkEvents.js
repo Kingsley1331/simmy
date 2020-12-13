@@ -27,6 +27,13 @@ const evaluteMultipleShapes = (
         isCheckingReiverShape
       ) || triggerShapesBool;
   }
+  if (shapes.length) {
+    console.log("**************************************shapes", shapes);
+    console.log(
+      "**************************************triggerShapesBool",
+      triggerShapesBool
+    );
+  }
   return triggerShapesBool;
 };
 
@@ -67,7 +74,7 @@ const evaluateCondtions = (
     }
 
     /** TODO: bool is true by default, this leads to bugs */
-
+    /** CODE:001 */
     if (ruleType === "manyToOne" || ruleType === "oneToOne") {
       bool = eventBeingChecked === "collision" ? shape.colliding && bool : bool;
       bool = eventBeingChecked === "hover" ? shape.onShape && bool : bool;
@@ -77,7 +84,9 @@ const evaluateCondtions = (
         eventBeingChecked === "doubleClick" ? shape.doubleClick && bool : bool;
     }
   }
+
   if (!numOfConditions) {
+    /**TODO: Simplify */
     if (eventBeingChecked === "collision" && shape.colliding) {
       bool = true;
     }
@@ -93,21 +102,26 @@ const evaluateCondtions = (
     if (eventBeingChecked === "doubleClick" && shape.doubleClick) {
       bool = true;
     }
-    if (isCheckingReiverShape) {
+    if (
+      isCheckingReiverShape &&
+      !(ruleType === "oneToPartner" || ruleType === "manyToPartner")
+    ) {
       bool = true;
     }
   }
 
-  if (rule.ruleType === "oneToOne" && !rule.applyToPartner) {
+  if (rule.ruleType === "oneToOne") {
     bool =
       shape.id === rule.shapeId &&
-      bool; /** IDEA: doing the same thing as CODE:123 */
+      bool; /** NOTE: check if its doing the same thing as CODE:123 */
   }
 
-  if (
-    (rule.ruleType === "oneToOne" && rule.applyToPartner) ||
-    (rule.ruleType === "manyToOne" && rule.applyToPartner)
-  ) {
+  if (!isCheckingReiverShape && rule.ruleType === "oneToPartner") {
+    bool = shape.id === rule.shapeId && bool;
+  }
+
+  /** NOTE:This looks a repition of CODE:001 */
+  if (rule.ruleType === "oneToOne" || rule.ruleType === "manyToOne") {
     if (eventBeingChecked === "collision") {
       bool = shape.colliding && bool;
     }
@@ -124,6 +138,7 @@ const evaluateCondtions = (
       bool = shape.doubleClick && bool;
     }
   }
+
   return bool;
 };
 
@@ -162,9 +177,13 @@ const checkEvents = function(stop) {
         const ruleType = rule.ruleType; // use destructuring
         const currentEventType = rule.eventType; // use destructuring
         let shapes = [this];
-        let partnerShape = {};
+        let partnerShape = []; /** NOTE: change name to partnerShapes */
 
-        if (hasInteractingPairs && rule.applyToPartner) {
+        if (
+          hasInteractingPairs &&
+          (ruleType === "oneToPartner" || ruleType === "manyToPartner")
+        ) {
+          // if (hasInteractingPairs && rule.applyToPartner) {
           for (let i = 0; i < numOfInteractingPairs; i++) {
             if (interactingPairs[i][0] === this.id) {
               partnerId = interactingPairs[i][1];
@@ -195,21 +214,36 @@ const checkEvents = function(stop) {
           );
         }
 
-        if (ruleType === "oneToOne" && rule.applyToPartner) {
+        if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
           /**Check the self conditions of the trigger shape */
           shapes = Scene.shapes.filter(
             currentShape => currentShape.id === rule.shapeId
           );
         }
 
-        // if (ruleType === "manyToMany" && rule.applyToPartner) {
-        if (ruleType === "manyToOne" && rule.applyToPartner) {
+        // if (ruleType === "manyToOne" && rule.applyToPartner) {
+        //   /**Check the self conditions of the trigger shape */
+        //   shapes = Scene.shapes.filter((currentShape) =>
+        //     triggerShapeIds.some((id) => currentShape.id === id)
+        //   );
+        // }
+        // if (partnerId && rule.applyToPartner) {
+        //   /**Check the self conditions of the trigger shape */
+        //   partnerShape = Scene.shapes.filter(
+        //     (currentShape) => currentShape.id === partnerId
+        //   );
+        // }
+
+        if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
           /**Check the self conditions of the trigger shape */
           shapes = Scene.shapes.filter(currentShape =>
             triggerShapeIds.some(id => currentShape.id === id)
           );
         }
-        if (partnerId && rule.applyToPartner) {
+        if (
+          partnerId &&
+          (ruleType === "oneToPartner" || ruleType === "manyToPartner")
+        ) {
           /**Check the self conditions of the trigger shape */
           partnerShape = Scene.shapes.filter(
             currentShape => currentShape.id === partnerId
@@ -226,7 +260,7 @@ const checkEvents = function(stop) {
               eventBeingChecked,
               rule
             );
-
+            console.log("************************************bool1", bool);
             /** Make sure to check the the conditions of the receiver shape */
 
             if (ruleType === "oneToMany") {
@@ -235,8 +269,13 @@ const checkEvents = function(stop) {
               bool = triggerShapeIds.some(id => id === rule.shapeId) && bool;
             }
 
-            if (rule.applyToPartner) {
+            if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
+              // if (rule.applyToPartner) {
               shapes = partnerShape;
+              console.log(
+                "************************************partnerShape",
+                shapes.map(shape => shape.id)
+              );
             }
 
             /** Set bool = true if at least one of the trigger shapes satifisfies the rule conditions */
@@ -250,7 +289,8 @@ const checkEvents = function(stop) {
                 rule,
                 true
               ) &&
-              bool; /**IDEA: If no conditions don't call evaluteMultipleShapes */
+              bool; /**NOTE: If no conditions don't call evaluteMultipleShapes */
+            console.log("************************************bool2", bool);
           } else {
             bool = evaluteMultipleShapes(
               shapes,

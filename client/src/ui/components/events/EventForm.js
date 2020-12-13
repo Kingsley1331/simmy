@@ -96,6 +96,8 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
             <option value="manyToOne">manyToOne</option>
             <option value="oneToMany">oneToMany</option>
             <option value="manyToMany">manyToMany</option>
+            <option value="oneToPartner">oneToPartner</option>
+            <option value="manyToPartner">manyToPartner</option>
           </select>
         </div>
         <h3>Conditions</h3>

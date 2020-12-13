@@ -32,7 +32,7 @@ let Scene = {
 
   rules: [
     {
-      shapeId: 5,
+      shapeId: 4,
       eventType: "hover",
       ruleType: "oneToOne",
       conditions: [],
@@ -43,9 +43,9 @@ let Scene = {
       ]
     },
     {
+      shapeId: 4,
       eventType: "collision",
-      // ruleType: "manyToMany",
-      ruleType: "manyToOne",
+      ruleType: "oneToPartner",
       selfConditions: [
         {
           propertyName: "fillColour",
@@ -59,9 +59,45 @@ let Scene = {
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
         { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
+      eventType: "collision",
+      ruleType: "manyToPartner",
+      selfConditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "red"
+        }
       ],
-      applyToPartner: true
+      selfLogicalOperators: [],
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
     }
+    // {
+    //   eventType: "collision",
+    //   ruleType: "manyToOne",
+    //   selfConditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "red",
+    //     },
+    //   ],
+    //   selfLogicalOperators: [],
+    //   conditions: [],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "blue" },
+    //     { actionPropertyName: "linewidth", newValue: 0.1 },
+    //   ],
+    //   applyToPartner: true,
+    // },
     // {
     //   shapeId: 5,
     //   eventType: "collision",
@@ -156,59 +192,59 @@ let Scene = {
         { actionPropertyName: "linewidth", newValue: 0.1 },
       ],
     },*/
-    /*{
-      shapeId: 5,
-      eventType: "click",
-      ruleType: "oneToMany",
-      selfConditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "yellow",
-        },
-      ],
-      selfLogicalOperators: [],
-      conditions: [
-        // {
-        //   propertyName: "fillColour",
-        //   operator: "===",
-        //   comparisonValue: "#6495ED",
-        // },
-      ],
-      logicalOperators: [],
+    // {
+    //   shapeId: 4,
+    //   eventType: "collision",
+    //   ruleType: "oneToMany",
+    //   selfConditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "red",
+    //     },
+    //   ],
+    //   selfLogicalOperators: [],
+    //   conditions: [
+    //     // {
+    //     //   propertyName: "fillColour",
+    //     //   operator: "===",
+    //     //   comparisonValue: "#6495ED",
+    //     // },
+    //   ],
+    //   logicalOperators: [],
 
-      actions: [
-        { actionPropertyName: "linewidth", newValue: 0.7 },
-        { actionPropertyName: "fillColour", newValue: "transparent" },
-      ],
-    },
-    {
-      eventType: "click",
-      ruleType: "manyToMany",
-      selfConditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "yellow"
-        }
-      ],
-      selfLogicalOperators: [],
-      conditions: [
-        // {
-        //   propertyName: "fillColour",
-        //   operator: "===",
-        //   comparisonValue: "red",
-        // },
-      ],
-      logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "linewidth", newValue: 0.7 },
+    //     { actionPropertyName: "fillColour", newValue: "transparent" },
+    //   ],
+    // },
+    // {
+    //   eventType: "collision",
+    //   ruleType: "manyToMany",
+    //   selfConditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "red",
+    //     },
+    //   ],
+    //   selfLogicalOperators: [],
+    //   conditions: [
+    //     // {
+    //     //   propertyName: "fillColour",
+    //     //   operator: "===",
+    //     //   comparisonValue: "red",
+    //     // },
+    //   ],
+    //   logicalOperators: [],
 
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "black" },
-        { actionPropertyName: "strokeStyle", newValue: "yellow" },
-        { actionPropertyName: "linewidth", newValue: "20" }
-      ]
-    }
-*/
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "black" },
+    //     { actionPropertyName: "strokeStyle", newValue: "white" },
+    //     { actionPropertyName: "linewidth", newValue: "20" },
+    //   ],
+    // },
+
     /**END OF TESTS */
     /* {
       shapeId: 4,
