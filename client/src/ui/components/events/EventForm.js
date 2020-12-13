@@ -45,12 +45,20 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
     console.log({ rule });
   };
   const { register, handleSubmit, errors, control } = useForm();
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: emitter_fields,
+    append: emitter_append,
+    remove: emitter_remove
+  } = useFieldArray({
     control,
     name: "emmitter_conditions"
   });
 
-  const { fields: fields2, append: append2, remove: remove2 } = useFieldArray({
+  const {
+    fields: receiver_fields,
+    append: receiver_append,
+    remove: receiver_remove
+  } = useFieldArray({
     control,
     name: "receiver_conditions"
   });
@@ -93,7 +101,7 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
         <h3>Conditions</h3>
         <div className="form-condition-group">
           <h4>Emitter</h4>
-          {fields.map(({ id }, index) => (
+          {emitter_fields.map(({ id }, index) => (
             <div key={id}>
               <div className="form-condition">
                 <label>Property name:</label>
@@ -123,7 +131,7 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
                   ref={register()}
                   name={`emmitter_conditions[${index}].comparison`}
                 ></input>
-                <button type="button" onClick={() => remove(index)}>
+                <button type="button" onClick={() => emitter_remove(index)}>
                   delete
                 </button>
               </div>
@@ -139,13 +147,13 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
               </div>
             </div>
           ))}
-          <button type="button" onClick={() => append({})}>
+          <button type="button" onClick={() => emitter_append({})}>
             Add condition
           </button>
         </div>
         <div className="form-condition-group">
           <h4>Receiver</h4>
-          {fields2.map(({ id }, index) => (
+          {receiver_fields.map(({ id }, index) => (
             <div key={id}>
               <div className="form-condition">
                 <label>Property name:</label>
@@ -175,7 +183,7 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
                   ref={register()}
                   name={`receiver_conditions[${index}].comparison`}
                 ></input>
-                <button type="button" onClick={() => remove2(index)}>
+                <button type="button" onClick={() => receiver_remove(index)}>
                   delete
                 </button>
               </div>
@@ -191,34 +199,42 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
               </div>
             </div>
           ))}
-          <button type="button" onClick={() => append2({})}>
+          <button type="button" onClick={() => receiver_append({})}>
             Add condition
           </button>
         </div>
         <h3>Actions</h3>
-        <div className="form-action">
-          <label>Property name:</label>{" "}
-          <select>
-            {Object.entries(propertyMap).map(prop => (
-              <option value={prop[0]}>{prop[1]}</option>
-            ))}
-          </select>
-          <label>New Value:</label> <input></input>
-          <button>delete</button>
-        </div>
-        <div className="form-action">
-          <label>Property name:</label>{" "}
-          <select>
-            {Object.entries(propertyMap).map(prop => (
-              <option value={prop[0]}>{prop[1]}</option>
-            ))}
-          </select>
-          <label>New Value:</label> <input></input>
-          <button>delete</button>
-        </div>
-        <label>Apply to partner</label> <input type="checkbox"></input> <br />
+        {action_fields.map(({ id }, index) => (
+          <div key={id}>
+            <div className="form-action">
+              <label>Property name:</label>
+              <select ref={register()} name={`actions[${index}].property_name`}>
+                {Object.entries(propertyMap).map(prop => (
+                  <option key={prop[0]} value={prop[0]}>
+                    {prop[1]}
+                  </option>
+                ))}
+              </select>
+              <label>New Value:</label>
+              <input
+                ref={register()}
+                name={`actions[${index}].new_value`}
+              ></input>
+              <button onClick={() => action_remove(index)}>delete</button>
+            </div>
+          </div>
+        ))}
+        <label>Apply to partner</label>
+        <input
+          ref={register()}
+          name={`apply_to_partner`}
+          type="checkbox"
+        ></input>
         <br />
-        <button>Add Action</button>
+        <br />
+        <button type="button" onClick={() => action_append({})}>
+          Add Action
+        </button>
         <input type="submit" />
       </form>
     </div>

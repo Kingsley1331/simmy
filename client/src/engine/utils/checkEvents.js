@@ -202,6 +202,7 @@ const checkEvents = function(stop) {
           );
         }
 
+        // if (ruleType === "manyToMany" && rule.applyToPartner) {
         if (ruleType === "manyToOne" && rule.applyToPartner) {
           /**Check the self conditions of the trigger shape */
           shapes = Scene.shapes.filter(currentShape =>

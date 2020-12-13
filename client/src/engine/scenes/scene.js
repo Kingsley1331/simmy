@@ -31,6 +31,37 @@ let Scene = {
   },
 
   rules: [
+    {
+      shapeId: 5,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    },
+    {
+      eventType: "collision",
+      // ruleType: "manyToMany",
+      ruleType: "manyToOne",
+      selfConditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "red"
+        }
+      ],
+      selfLogicalOperators: [],
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ],
+      applyToPartner: true
+    }
     // {
     //   shapeId: 5,
     //   eventType: "collision",
@@ -179,7 +210,6 @@ let Scene = {
     }
 */
     /**END OF TESTS */
-
     /* {
       shapeId: 4,
       eventType: "hover",
@@ -191,36 +221,6 @@ let Scene = {
         { actionPropertyName: "linewidth", newValue: 0.1 },
       ],
     },*/
-    {
-      shapeId: 5,
-      eventType: "hover",
-      ruleType: "oneToOne",
-      conditions: [],
-      logicalOperators: [],
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
-    },
-    {
-      eventType: "collision",
-      ruleType: "manyToOne",
-      selfConditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "red"
-        }
-      ],
-      selfLogicalOperators: [],
-      conditions: [],
-      logicalOperators: [],
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ],
-      applyToPartner: true
-    }
     // {
     //   eventType: "click",
     //   ruleType: "manyToOne",
