@@ -33,9 +33,15 @@ const data = [
     emmitter_conditions: [
       {
         property_name: "lineColour",
-        operator: ">",
+        operator: "===",
         comparison: "yellow",
         logical_operator: "OR"
+      },
+      {
+        property_name: "linewidth",
+        operator: "<",
+        comparison: "red",
+        logical_operator: "AND"
       }
     ],
     receiver_conditions: [
@@ -51,7 +57,7 @@ const data = [
   {
     event_type: "click",
     rule_type: "manyToPartner",
-    apply_to_partner: false,
+    apply_to_partner: true,
     emmitter_conditions: [
       {
         property_name: "fillColour",

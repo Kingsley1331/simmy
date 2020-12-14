@@ -47,14 +47,60 @@ const EventForm = ({
   eventType,
   selectEvent
 }) => {
+  // {
+  //   event_type: "hover",
+  //   rule_type: "oneToPartner",
+  //   apply_to_partner: false,
+  //   emmitter_conditions: [
+  //     {
+  //       property_name: "lineColour",
+  //       operator: ">",
+  //       comparison: "yellow",
+  //       logical_operator: "OR",
+  //     },
+  //   ],
+  //   receiver_conditions: [
+  //     {
+  //       property_name: "lineColour",
+  //       operator: "===",
+  //       comparison: "blue",
+  //       logical_operator: "OR",
+  //     },
+  //   ],
+  //   actions: [{ property_name: "velocity.y", new_value: "24" }],
+  // },
+
   console.log({ rule });
   const onSubmit = ruleData => {
     console.log(JSON.stringify(ruleData));
     // console.log({ ruleData });
     // setRules((rules) => [...rules, { id }]);
   };
+  const {
+    event_type,
+    rule_type,
+    apply_to_partner,
+    emmitter_conditions,
+    receiver_conditions,
+    actions
+  } = rule;
+  console.log({
+    event_type,
+    rule_type,
+    apply_to_partner,
+    emmitter_conditions,
+    receiver_conditions,
+    actions
+  });
   const { register, handleSubmit, errors, control } = useForm({
-    defaultValues: rule
+    defaultValues: {
+      event_type,
+      rule_type,
+      apply_to_partner,
+      emmitter_conditions: [...emmitter_conditions],
+      receiver_conditions: [...receiver_conditions],
+      actions: [...actions]
+    }
     // defaultValues: {
     //   event_type: "click",
     // },
@@ -117,13 +163,14 @@ const EventForm = ({
         <h3>Conditions</h3>
         <div className="form-condition-group">
           <h4>Emitter</h4>
-          {emitter_fields.map(({ id }, index) => (
-            <div key={id}>
+          {emitter_fields.map((field, index) => (
+            <div key={field.id}>
               <div className="form-condition">
                 <label>Property name:</label>
                 <select
                   ref={register()}
                   name={`emmitter_conditions[${index}].property_name`}
+                  defaultValue={field.property_name}
                 >
                   {Object.entries(propertyMap).map(prop => (
                     <option key={prop[0]} value={prop[0]}>
@@ -135,6 +182,7 @@ const EventForm = ({
                 <select
                   ref={register()}
                   name={`emmitter_conditions[${index}].operator`}
+                  defaultValue={field.operator}
                 >
                   {operatorsArray.map(operator => (
                     <option key={operator[0]} value={operator[0]}>
@@ -146,6 +194,7 @@ const EventForm = ({
                 <input
                   ref={register()}
                   name={`emmitter_conditions[${index}].comparison`}
+                  defaultValue={field.comparison}
                 ></input>
                 <button type="button" onClick={() => emitter_remove(index)}>
                   delete
@@ -155,6 +204,7 @@ const EventForm = ({
                 <select
                   ref={register()}
                   name={`emmitter_conditions[${index}].logical_operator`}
+                  defaultValue={field.logical_operator}
                 >
                   <option value="OR">OR</option>
                   <option value="AND">AND</option>
@@ -169,13 +219,14 @@ const EventForm = ({
         </div>
         <div className="form-condition-group">
           <h4>Receiver</h4>
-          {receiver_fields.map(({ id }, index) => (
-            <div key={id}>
+          {receiver_fields.map((field, index) => (
+            <div key={field.id}>
               <div className="form-condition">
                 <label>Property name:</label>
                 <select
                   ref={register()}
                   name={`receiver_conditions[${index}].property_name`}
+                  defaultValue={field.property_name}
                 >
                   {Object.entries(propertyMap).map(prop => (
                     <option key={prop[0]} value={prop[0]}>
@@ -187,6 +238,7 @@ const EventForm = ({
                 <select
                   ref={register()}
                   name={`receiver_conditions[${index}].operator`}
+                  defaultValue={field.operator}
                 >
                   {operatorsArray.map(operator => (
                     <option key={operator[0]} value={operator[0]}>
@@ -198,6 +250,7 @@ const EventForm = ({
                 <input
                   ref={register()}
                   name={`receiver_conditions[${index}].comparison`}
+                  defaultValue={field.comparison}
                 ></input>
                 <button type="button" onClick={() => receiver_remove(index)}>
                   delete
@@ -207,6 +260,7 @@ const EventForm = ({
                 <select
                   ref={register()}
                   name={`receiver_conditions[${index}].logical_operator`}
+                  defaultValue={field.logical_operator}
                 >
                   <option value="OR">OR</option>
                   <option value="AND">AND</option>
@@ -220,11 +274,15 @@ const EventForm = ({
           </button>
         </div>
         <h3>Actions</h3>
-        {action_fields.map(({ id }, index) => (
-          <div key={id}>
+        {action_fields.map((field, index) => (
+          <div key={field.id}>
             <div className="form-action">
               <label>Property name:</label>
-              <select ref={register()} name={`actions[${index}].property_name`}>
+              <select
+                ref={register()}
+                name={`actions[${index}].property_name`}
+                defaultValue={field.property_name}
+              >
                 {Object.entries(propertyMap).map(prop => (
                   <option key={prop[0]} value={prop[0]}>
                     {prop[1]}
@@ -235,6 +293,7 @@ const EventForm = ({
               <input
                 ref={register()}
                 name={`actions[${index}].new_value`}
+                defaultValue={field.new_value}
               ></input>
               <button onClick={() => action_remove(index)}>delete</button>
             </div>
