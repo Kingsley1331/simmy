@@ -40,11 +40,25 @@ const operatorsArray = [
   ["!==", "not equal"]
 ];
 
-const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
-  const onSubmit = rule => {
-    console.log({ rule });
+const EventForm = ({
+  rule,
+  setRules,
+  selectedShapeId,
+  eventType,
+  selectEvent
+}) => {
+  console.log({ rule });
+  const onSubmit = ruleData => {
+    console.log(JSON.stringify(ruleData));
+    // console.log({ ruleData });
+    // setRules((rules) => [...rules, { id }]);
   };
-  const { register, handleSubmit, errors, control } = useForm();
+  const { register, handleSubmit, errors, control } = useForm({
+    defaultValues: rule
+    // defaultValues: {
+    //   event_type: "click",
+    // },
+  });
   const {
     fields: emitter_fields,
     append: emitter_append,
@@ -172,7 +186,7 @@ const EventForm = ({ selectedShapeId, eventType, selectEvent }) => {
                 <label>Operator:</label>
                 <select
                   ref={register()}
-                  name={`emmitter_conditions[${index}].operator`}
+                  name={`receiver_conditions[${index}].operator`}
                 >
                   {operatorsArray.map(operator => (
                     <option key={operator[0]} value={operator[0]}>

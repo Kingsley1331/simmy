@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
 // import EventForm from "./events/local";
@@ -25,9 +25,63 @@ import {
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
 
+const data = [
+  {
+    event_type: "hover",
+    rule_type: "oneToPartner",
+    apply_to_partner: false,
+    emmitter_conditions: [
+      {
+        property_name: "lineColour",
+        operator: ">",
+        comparison: "yellow",
+        logical_operator: "OR"
+      }
+    ],
+    receiver_conditions: [
+      {
+        property_name: "lineColour",
+        operator: "===",
+        comparison: "blue",
+        logical_operator: "OR"
+      }
+    ],
+    actions: [{ property_name: "velocity.y", new_value: "24" }]
+  },
+  {
+    event_type: "click",
+    rule_type: "manyToPartner",
+    apply_to_partner: false,
+    emmitter_conditions: [
+      {
+        property_name: "fillColour",
+        operator: "<",
+        comparison: "blue",
+        logical_operator: "AND"
+      }
+    ],
+    receiver_conditions: [
+      {
+        property_name: "linewidth",
+        operator: "===",
+        comparison: "4",
+        logical_operator: "NOT"
+      }
+    ],
+    actions: [{ property_name: "velocity.x", new_value: "25" }]
+  }
+];
+
 let canvas;
-class Scenes extends Component {
-  componentDidMount() {
+const Scenes = ({ selectShape, addRules, selectedEvent, scene, getScene }) => {
+  const [rules, setRules] = useState(data);
+
+  const addRule = () => {
+    const id = new Date().getTime();
+    setRules(rulesArray => [...rulesArray, { id }]);
+  };
+
+  useEffect(() => {
     // Scene.shapes = this.props.scene.shapes;
     /** TODO: move functions into single index file and import **/
 
@@ -36,48 +90,37 @@ class Scenes extends Component {
     mouseDown(canvas);
     mouseMove(canvas);
     mouseUp(canvas);
-    doubleClick(
-      canvas,
-      this.props.selectShape,
-      this.props.addRules,
-      this.props.selectedEvent
-    );
+    doubleClick(canvas, selectShape, addRules, selectedEvent);
     click(canvas);
     reCentre(shapeSelection);
-    if (!Object.keys(this.props.scene).length) {
+    if (!Object.keys(scene).length) {
       createWalls();
     }
-    updateScene(this.props.scene);
-  }
+    updateScene(scene);
+  }, [selectShape, addRules, selectedEvent]);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.selectedEvent !== this.props.selectedEvent) {
-      doubleClick(
-        canvas,
-        this.props.selectShape,
-        this.props.addRules,
-        this.props.selectedEvent
-      );
-    }
-  }
+  useEffect(() => {
+    doubleClick(canvas, selectShape, addRules, selectedEvent);
+  }, [selectedEvent, selectShape, addRules]);
 
-  componentWillUnmount() {
-    clearShapes();
-    this.props.getScene();
-  }
-
-  render() {
-    return (
-      <div className="scenesWrapper">
-        <Buttons />
-        <canvas id="canvas" width="1000" height="600" />
-        {/* <EventForm type="local" />
-        <EventForm type="global" /> */}
-        <EventForm />
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    return () => {
+      clearShapes();
+      getScene();
+    };
+  }, [clearShapes, getScene]);
+  console.log({ rules });
+  return (
+    <div className="scenesWrapper">
+      <Buttons />
+      <canvas id="canvas" width="1000" height="600" />
+      {rules.map(rule => (
+        <EventForm key={rule.id} rule={rule} setRules={setRules} />
+      ))}
+      <button onClick={addRule}>Add rule</button>
+    </div>
+  );
+};
 
 const mapStateToProps = ({ buttons, scene, event }) => {
   return {
