@@ -27,6 +27,7 @@ import animate from "../../engine/utils/animation";
 
 const data = [
   {
+    id: 4548567128,
     event_type: "hover",
     rule_type: "oneToPartner",
     apply_to_partner: false,
@@ -55,6 +56,7 @@ const data = [
     actions: [{ property_name: "velocity.y", new_value: "24" }]
   },
   {
+    id: 4548567895,
     event_type: "click",
     rule_type: "manyToPartner",
     apply_to_partner: true,
@@ -75,6 +77,29 @@ const data = [
       }
     ],
     actions: [{ property_name: "velocity.x", new_value: "25" }]
+  },
+  {
+    id: 4544586785,
+    event_type: "drag",
+    rule_type: "oneToPartner",
+    apply_to_partner: true,
+    emmitter_conditions: [
+      {
+        property_name: "fillColour",
+        operator: "<",
+        comparison: "pink",
+        logical_operator: "AND"
+      }
+    ],
+    receiver_conditions: [
+      {
+        property_name: "linewidth",
+        operator: "===",
+        comparison: "82",
+        logical_operator: "NOT"
+      }
+    ],
+    actions: [{ property_name: "velocity.x", new_value: "256" }]
   }
 ];
 
@@ -85,6 +110,24 @@ const Scenes = ({ selectShape, addRules, selectedEvent, scene, getScene }) => {
   const addRule = () => {
     const id = new Date().getTime();
     setRules(rulesArray => [...rulesArray, { id }]);
+  };
+
+  const deleteRule = ruleId => {
+    setRules(rulesArray => {
+      const filteredArray = rulesArray.filter(({ id }) => !(id === ruleId));
+      return filteredArray;
+    });
+  };
+
+  const updateRule = rule => {
+    console.log("updateRule", rule);
+    // deleteRule(rule.id);
+    setRules(rulesArray => {
+      const rules = [...rulesArray];
+      const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
+      rules.splice(ruleIndex, 1, rule);
+      return rules;
+    });
   };
 
   useEffect(() => {
@@ -120,8 +163,15 @@ const Scenes = ({ selectShape, addRules, selectedEvent, scene, getScene }) => {
     <div className="scenesWrapper">
       <Buttons />
       <canvas id="canvas" width="1000" height="600" />
-      {rules.map(rule => (
-        <EventForm key={rule.id} rule={rule} setRules={setRules} />
+      {rules.map((rule, index) => (
+        <EventForm
+          key={rule.id}
+          rule={rule}
+          setRules={setRules}
+          deleteRule={deleteRule}
+          updateRule={updateRule}
+          index={index}
+        />
       ))}
       <button onClick={addRule}>Add rule</button>
     </div>

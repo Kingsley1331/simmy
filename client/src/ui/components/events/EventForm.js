@@ -45,65 +45,18 @@ const EventForm = ({
   setRules,
   selectedShapeId,
   eventType,
-  selectEvent
+  selectEvent,
+  deleteRule,
+  updateRule,
+  index
 }) => {
-  // {
-  //   event_type: "hover",
-  //   rule_type: "oneToPartner",
-  //   apply_to_partner: false,
-  //   emmitter_conditions: [
-  //     {
-  //       property_name: "lineColour",
-  //       operator: ">",
-  //       comparison: "yellow",
-  //       logical_operator: "OR",
-  //     },
-  //   ],
-  //   receiver_conditions: [
-  //     {
-  //       property_name: "lineColour",
-  //       operator: "===",
-  //       comparison: "blue",
-  //       logical_operator: "OR",
-  //     },
-  //   ],
-  //   actions: [{ property_name: "velocity.y", new_value: "24" }],
-  // },
-
-  console.log({ rule });
   const onSubmit = ruleData => {
-    console.log(JSON.stringify(ruleData));
-    // console.log({ ruleData });
-    // setRules((rules) => [...rules, { id }]);
+    console.log({ ruleData });
+    updateRule({ ...ruleData, id: rule.id });
   };
-  const {
-    event_type,
-    rule_type,
-    apply_to_partner,
-    emmitter_conditions,
-    receiver_conditions,
-    actions
-  } = rule;
-  console.log({
-    event_type,
-    rule_type,
-    apply_to_partner,
-    emmitter_conditions,
-    receiver_conditions,
-    actions
-  });
+
   const { register, handleSubmit, errors, control } = useForm({
-    defaultValues: {
-      event_type,
-      rule_type,
-      apply_to_partner,
-      emmitter_conditions: [...emmitter_conditions],
-      receiver_conditions: [...receiver_conditions],
-      actions: [...actions]
-    }
-    // defaultValues: {
-    //   event_type: "click",
-    // },
+    defaultValues: rule
   });
   const {
     fields: emitter_fields,
@@ -131,12 +84,14 @@ const EventForm = ({
     control,
     name: "actions"
   });
-
+  console.log({ rule });
   return (
     <div className="event-form_wrapper">
       <form className="event-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="button-holder">
-          <button className="event-button">Delete rule</button>
+          <button className="event-button" onClick={() => deleteRule(rule.id)}>
+            Delete rule
+          </button>
           <button className="event-button">Edit rule</button>
         </div>
         selectedShapeId: {selectedShapeId}
