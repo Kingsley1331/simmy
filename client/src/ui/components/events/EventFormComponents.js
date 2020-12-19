@@ -88,8 +88,8 @@ export const Action = ({ fields, actionName, append, remove, register }) => {
               defaultValue={field.actionPropertyName}
             >
               {Object.entries(propertyMap).map(prop => (
-                <option key={prop[0]} value={prop[0]}>
-                  {prop[1]}
+                <option key={prop[0]} value={prop[1]}>
+                  {prop[0]}
                 </option>
               ))}
             </select>

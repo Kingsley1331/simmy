@@ -18,11 +18,13 @@ const EventForm = ({
   eventType,
   selectEvent,
   deleteRule,
-  updateRule
+  updateRule,
+  applyRule
 }) => {
   const onSubmit = ruleData => {
     console.log({ ruleData });
     updateRule({ ...ruleData, id: rule.id });
+    applyRule({ ...ruleData, id: rule.id });
   };
 
   const { register, handleSubmit, watch, errors, control } = useForm({
@@ -42,7 +44,7 @@ const EventForm = ({
     remove: emitterRemove
   } = useFieldArray({
     control,
-    name: "emmitterConditions"
+    name: "emitterConditions"
   });
 
   const {
@@ -112,7 +114,7 @@ const EventForm = ({
             <Condition
               title="Emitter"
               fields={emitterFields}
-              conditionType="emmitterConditions"
+              conditionType="emitterConditions"
               append={emitterAppend}
               remove={emitterRemove}
               register={register}

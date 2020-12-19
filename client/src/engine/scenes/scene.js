@@ -46,14 +46,14 @@ let Scene = {
       shapeId: 4,
       eventType: "collision",
       ruleType: "oneToPartner",
-      selfConditions: [
+      emitterConditions: [
         {
           propertyName: "fillColour",
           operator: "===",
           comparisonValue: "red",
         },
       ],
-      selfLogicalOperators: [],
+      emitterLogicalOperators: [],
       conditions: [],
       logicalOperators: [],
       actions: [
@@ -64,14 +64,14 @@ let Scene = {
     {
       eventType: "collision",
       ruleType: "manyToPartner",
-      selfConditions: [
+      emitterConditions: [
         {
           propertyName: "fillColour",
           operator: "===",
           comparisonValue: "red",
         },
       ],
-      selfLogicalOperators: [],
+      emitterLogicalOperators: [],
       conditions: [],
       logicalOperators: [],
       actions: [
@@ -82,14 +82,14 @@ let Scene = {
     // {
     //   eventType: "collision",
     //   ruleType: "manyToOne",
-    //   selfConditions: [
+    //   emitterConditions: [
     //     {
     //       propertyName: "fillColour",
     //       operator: "===",
     //       comparisonValue: "red",
     //     },
     //   ],
-    //   selfLogicalOperators: [],
+    //   emitterLogicalOperators: [],
     //   conditions: [],
     //   logicalOperators: [],
     //   actions: [
@@ -196,14 +196,14 @@ let Scene = {
     //   shapeId: 4,
     //   eventType: "collision",
     //   ruleType: "oneToMany",
-    //   selfConditions: [
+    //   emitterConditions: [
     //     {
     //       propertyName: "fillColour",
     //       operator: "===",
     //       comparisonValue: "red",
     //     },
     //   ],
-    //   selfLogicalOperators: [],
+    //   emitterLogicalOperators: [],
     //   conditions: [
     //     // {
     //     //   propertyName: "fillColour",
@@ -220,14 +220,14 @@ let Scene = {
     // {
     //   eventType: "collision",
     //   ruleType: "manyToMany",
-    //   selfConditions: [
+    //   emitterConditions: [
     //     {
     //       propertyName: "fillColour",
     //       operator: "===",
     //       comparisonValue: "red",
     //     },
     //   ],
-    //   selfLogicalOperators: [],
+    //   emitterLogicalOperators: [],
     //   conditions: [
     //     // {
     //     //   propertyName: "fillColour",
@@ -353,73 +353,81 @@ let Scene = {
     //     { actionPropertyName: "linewidth", newValue: 0.7 },
     //   ],
     // },
-    /*{
+    // {
+    //   shapeId: 4,
+    //   eventType: "collision",
+    //   ruleType: "oneToMany",
+    //   emitterConditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "yellow",
+    //     },
+    //   ],
+    //   emitterLogicalOperators: [],
+    //   conditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "#6495ED",
+    //     },
+    //   ],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "linewidth", newValue: 0.7 },
+    //     { actionPropertyName: "fillColour", newValue: "transparent" },
+    //   ],
+    // },
+    // {
+    //   eventType: "collision",
+    //   ruleType: "canvas",
+    //   conditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "red",
+    //     },
+    //   ],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "black" },
+    //     { actionPropertyName: "strokeStyle", newValue: "yellow" },
+    //     { actionPropertyName: "linewidth", newValue: "20" },
+    //   ],
+    // },
+    /* {
       shapeId: 4,
+      eventType: "hover",
+      ruleType: "oneToOne",
+      conditions: [],
+      logicalOperators: [],
+      actions: [
+        { actionPropertyName: "fillColour", newValue: "red" },
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
+    },
+    {
       eventType: "collision",
-      ruleType: "oneToMany",
-      selfConditions: [
+      ruleType: "manyToMany",
+      emitterConditions: [
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "yellow",
+          comparisonValue: "red",
         },
       ],
-      selfLogicalOperators: [],
-      conditions: [
+      emitterLogicalOperators: [],
+      receiverConditions: [
         {
           propertyName: "fillColour",
           operator: "===",
           comparisonValue: "#6495ED",
         },
       ],
-      logicalOperators: [],
-
+      receiverLogicalOperators: [],
       actions: [
-        { actionPropertyName: "linewidth", newValue: 0.7 },
-        { actionPropertyName: "fillColour", newValue: "transparent" },
-      ],
-    },
-    {
-      eventType: "collision",
-      ruleType: "manyToMany",
-      selfConditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "transparent",
-        },
-      ],
-      selfLogicalOperators: [],
-      conditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "red",
-        },
-      ],
-      logicalOperators: [],
-
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "black" },
-        { actionPropertyName: "strokeStyle", newValue: "yellow" },
-        { actionPropertyName: "linewidth", newValue: "20" },
-      ],
-    },
-    {
-      eventType: "collision",
-      ruleType: "canvas",
-      conditions: [
-        {
-          propertyName: "fillColour",
-          operator: "===",
-          comparisonValue: "red",
-        },
-      ],
-      logicalOperators: [],
-
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "black" },
-        { actionPropertyName: "strokeStyle", newValue: "yellow" },
+        { actionPropertyName: "fillColour", newValue: "yellow" },
+        { actionPropertyName: "strokeStyle", newValue: "blue" },
         { actionPropertyName: "linewidth", newValue: "20" },
       ],
     },*/

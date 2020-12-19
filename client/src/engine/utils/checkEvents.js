@@ -196,10 +196,12 @@ const checkEvents = function(stop) {
 
         let {
           conditions,
-          actions,
           logicalOperators,
-          selfConditions,
-          selfLogicalOperators
+          emitterConditions,
+          emitterLogicalOperators,
+          receiverConditions,
+          receiverLogicalOperators,
+          actions
         } = rule;
         if (ruleType === "oneToMany") {
           /**Check the self conditions of the trigger shape */
@@ -251,11 +253,12 @@ const checkEvents = function(stop) {
         }
 
         if (currentEventType === eventBeingChecked) {
-          if (selfConditions && selfLogicalOperators) {
+          /**TODO: Find a better way of identifying complex conditions*/
+          if (emitterConditions && emitterLogicalOperators) {
             bool = evaluteMultipleShapes(
               shapes /** Trigger shapes are checked */,
-              selfConditions,
-              selfLogicalOperators,
+              emitterConditions,
+              emitterLogicalOperators,
               ruleType,
               eventBeingChecked,
               rule
@@ -282,8 +285,8 @@ const checkEvents = function(stop) {
             bool =
               evaluteMultipleShapes(
                 [this],
-                conditions,
-                logicalOperators,
+                receiverConditions,
+                receiverLogicalOperators,
                 ruleType,
                 eventBeingChecked,
                 rule,

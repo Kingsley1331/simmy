@@ -25,7 +25,8 @@ import {
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
 
-const data = [
+const data = [];
+/*const data = [
   {
     id: 4548569872,
     eventType: "hover",
@@ -52,7 +53,7 @@ const data = [
     id: 4548567128,
     eventType: "hover",
     ruleType: "oneToPartner",
-    emmitterConditions: [
+    emitterConditions: [
       {
         propertyName: "lineColour",
         operator: "===",
@@ -79,7 +80,7 @@ const data = [
     id: 4548567895,
     eventType: "click",
     ruleType: "manyToPartner",
-    emmitterConditions: [
+    emitterConditions: [
       {
         propertyName: "fillColour",
         operator: "<",
@@ -99,7 +100,7 @@ const data = [
     id: 4544586785,
     eventType: "drag",
     ruleType: "oneToPartner",
-    emmitterConditions: [
+    emitterConditions: [
       {
         propertyName: "fillColour",
         operator: "<",
@@ -115,11 +116,70 @@ const data = [
     ],
     actions: [{ actionPropertyName: "velocity.x", newValue: "256" }]
   }
-];
+];*/
 
 let canvas;
-const Scenes = ({ selectShape, addRules, selectedEvent, scene, getScene }) => {
+const Scenes = ({
+  selectShape,
+  selectedShapeId,
+  addRules,
+  selectedEvent,
+  scene,
+  getScene
+}) => {
   const [rules, setRules] = useState(data);
+
+  const applyRule = ruleData => {
+    const logicalOperatorArray = [];
+    const emitterLogicalOperatorArray = [];
+    const receiverLogicalOperatorArray = [];
+    const areConditionsSimple =
+      ruleData.ruleType === "oneToOne" || ruleData.ruleType === "manyToOne";
+    const triggeredFromOneShape =
+      ruleData.ruleType === "oneToOne" || ruleData.ruleType === "oneToMany";
+    let rule = { ...ruleData };
+    for (let prop in ruleData) {
+      if (
+        prop === "conditions" ||
+        prop === "emitterConditions" ||
+        prop === "receiverConditions"
+      ) {
+        const conditions = ruleData[prop];
+        const numOfCondtions = conditions.length;
+        // if (numOfCondtions === 0) {
+        //   ruleData[prop] = [];
+        // }
+        for (let i = 0; i < numOfCondtions; i++) {
+          const { logicalOperator } = conditions[i];
+          if (prop === "conditions" && logicalOperator) {
+            logicalOperatorArray.push(logicalOperator);
+          }
+          if (prop === "emitterConditions" && logicalOperator) {
+            emitterLogicalOperatorArray.push(logicalOperator);
+          }
+          if (prop === "receiverConditions" && logicalOperator) {
+            receiverLogicalOperatorArray.push(logicalOperator);
+          }
+        }
+      }
+    }
+    if (areConditionsSimple) {
+      rule.logicalOperators = logicalOperatorArray;
+      rule.conditions = rule.conditions || [];
+    } else {
+      console.log(
+        "**************************************************************************************false"
+      );
+      rule.emitterLogicalOperators = emitterLogicalOperatorArray;
+      rule.receiverLogicalOperators = receiverLogicalOperatorArray;
+    }
+    if (triggeredFromOneShape) {
+      rule.shapeId = selectedShapeId;
+    }
+    console.log("New Rule", rule);
+    console.log("areConditionsSimple", areConditionsSimple);
+    Scene.rules.push(rule);
+  };
 
   const addRule = () => {
     const id = new Date().getTime();
@@ -184,18 +244,22 @@ const Scenes = ({ selectShape, addRules, selectedEvent, scene, getScene }) => {
           setRules={setRules}
           deleteRule={deleteRule}
           updateRule={updateRule}
+          applyRule={applyRule}
         />
       ))}
-      <button onClick={addRule}>Add rule</button>
+      <button className="add_rule" onClick={addRule}>
+        Add rule
+      </button>
     </div>
   );
 };
 
-const mapStateToProps = ({ buttons, scene, event }) => {
+const mapStateToProps = ({ buttons, scene, event, selectedShape }) => {
   return {
     buttons,
     scene,
-    selectedEvent: event
+    selectedEvent: event,
+    selectedShapeId: selectedShape
   };
 };
 

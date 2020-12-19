@@ -261,10 +261,15 @@ input {
 }
 
 .form-condition-group {
-  border: 1px solid blue;
+  background-color: rgb(230, 230, 240);
 }
 
 .form-condition h4 {
   width: fit-content;
   margin: 10px auto;
+}
+
+.add_rule {
+  position: relative;
+  top: 50px;
 }
