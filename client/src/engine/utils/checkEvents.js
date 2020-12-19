@@ -27,13 +27,13 @@ const evaluteMultipleShapes = (
         isCheckingReiverShape
       ) || triggerShapesBool;
   }
-  if (shapes.length) {
-    console.log("**************************************shapes", shapes);
-    console.log(
-      "**************************************triggerShapesBool",
-      triggerShapesBool
-    );
-  }
+  // if (shapes.length) {
+  //   console.log("**************************************shapes", shapes);
+  //   console.log(
+  //     "**************************************triggerShapesBool",
+  //     triggerShapesBool
+  //   );
+  // }
   return triggerShapesBool;
 };
 

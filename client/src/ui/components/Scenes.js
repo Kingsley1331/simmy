@@ -146,9 +146,7 @@ const Scenes = ({
       ) {
         const conditions = ruleData[prop];
         const numOfCondtions = conditions.length;
-        // if (numOfCondtions === 0) {
-        //   ruleData[prop] = [];
-        // }
+
         for (let i = 0; i < numOfCondtions; i++) {
           const { logicalOperator } = conditions[i];
           if (prop === "conditions" && logicalOperator) {
@@ -167,17 +165,16 @@ const Scenes = ({
       rule.logicalOperators = logicalOperatorArray;
       rule.conditions = rule.conditions || [];
     } else {
-      console.log(
-        "**************************************************************************************false"
-      );
       rule.emitterLogicalOperators = emitterLogicalOperatorArray;
       rule.receiverLogicalOperators = receiverLogicalOperatorArray;
+      rule.emitterConditions = rule.emitterConditions || [];
+      rule.receiverConditions = rule.receiverConditions || [];
     }
     if (triggeredFromOneShape) {
       rule.shapeId = selectedShapeId;
     }
     console.log("New Rule", rule);
-    console.log("areConditionsSimple", areConditionsSimple);
+
     Scene.rules.push(rule);
   };
 
