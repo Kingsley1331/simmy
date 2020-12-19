@@ -27,79 +27,93 @@ import animate from "../../engine/utils/animation";
 
 const data = [
   {
-    id: 4548567128,
-    event_type: "hover",
-    rule_type: "oneToPartner",
-    apply_to_partner: false,
-    emmitter_conditions: [
+    id: 4548569872,
+    eventType: "hover",
+    ruleType: "oneToOne",
+    conditions: [
       {
-        property_name: "lineColour",
+        propertyName: "lineColour",
         operator: "===",
-        comparison: "yellow",
-        logical_operator: "OR"
+        comparisonValue: "aqua blue"
       },
       {
-        property_name: "linewidth",
+        propertyName: "linewidth",
         operator: "<",
-        comparison: "red",
-        logical_operator: "AND"
+        comparisonValue: "red",
+        logicalOperator: "AND"
       }
     ],
-    receiver_conditions: [
+    actions: [
+      { actionPropertyName: "velocity.y", newValue: "24" },
+      { actionPropertyName: "velocity.x", newValue: "256" }
+    ]
+  },
+  {
+    id: 4548567128,
+    eventType: "hover",
+    ruleType: "oneToPartner",
+    emmitterConditions: [
       {
-        property_name: "lineColour",
+        propertyName: "lineColour",
         operator: "===",
-        comparison: "blue",
-        logical_operator: "OR"
+        comparisonValue: "yellow"
+      },
+      {
+        propertyName: "linewidth",
+        operator: "<",
+        comparisonValue: "red",
+        logicalOperator: "AND"
       }
     ],
-    actions: [{ property_name: "velocity.y", new_value: "24" }]
+    receiverConditions: [
+      {
+        propertyName: "lineColour",
+        operator: "===",
+        comparisonValue: "blue",
+        logicalOperator: "OR"
+      }
+    ],
+    actions: [{ actionPropertyName: "velocity.y", newValue: "24" }]
   },
   {
     id: 4548567895,
-    event_type: "click",
-    rule_type: "manyToPartner",
-    apply_to_partner: true,
-    emmitter_conditions: [
+    eventType: "click",
+    ruleType: "manyToPartner",
+    emmitterConditions: [
       {
-        property_name: "fillColour",
+        propertyName: "fillColour",
         operator: "<",
-        comparison: "blue",
-        logical_operator: "AND"
+        comparisonValue: "blue"
       }
     ],
-    receiver_conditions: [
+    receiverConditions: [
       {
-        property_name: "linewidth",
+        propertyName: "linewidth",
         operator: "===",
-        comparison: "4",
-        logical_operator: "NOT"
+        comparisonValue: "4"
       }
     ],
-    actions: [{ property_name: "velocity.x", new_value: "25" }]
+    actions: [{ actionPropertyName: "velocity.x", newValue: "25" }]
   },
   {
     id: 4544586785,
-    event_type: "drag",
-    rule_type: "oneToPartner",
-    apply_to_partner: true,
-    emmitter_conditions: [
+    eventType: "drag",
+    ruleType: "oneToPartner",
+    emmitterConditions: [
       {
-        property_name: "fillColour",
+        propertyName: "fillColour",
         operator: "<",
-        comparison: "pink",
-        logical_operator: "AND"
+        comparisonValue: "pink"
       }
     ],
-    receiver_conditions: [
+    receiverConditions: [
       {
-        property_name: "linewidth",
+        propertyName: "linewidth",
         operator: "===",
-        comparison: "82",
-        logical_operator: "NOT"
+        comparisonValue: "82"
       }
     ],
-    actions: [{ property_name: "velocity.x", new_value: "256" }]
+    actions: [{ actionPropertyName: "velocity.x", newValue: "256" }]
   }
 ];
 
@@ -170,7 +184,6 @@ const Scenes = ({ selectShape, addRules, selectedEvent, scene, getScene }) => {
           setRules={setRules}
           deleteRule={deleteRule}
           updateRule={updateRule}
-          index={index}
         />
       ))}
       <button onClick={addRule}>Add rule</button>

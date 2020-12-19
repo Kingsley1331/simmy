@@ -31,7 +31,7 @@ let Scene = {
   },
 
   rules: [
-    {
+    /*{
       shapeId: 4,
       eventType: "hover",
       ruleType: "oneToOne",
@@ -39,8 +39,8 @@ let Scene = {
       logicalOperators: [],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
     },
     {
       shapeId: 4,
@@ -50,16 +50,16 @@ let Scene = {
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "red"
-        }
+          comparisonValue: "red",
+        },
       ],
       selfLogicalOperators: [],
       conditions: [],
       logicalOperators: [],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
     },
     {
       eventType: "collision",
@@ -68,17 +68,17 @@ let Scene = {
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "red"
-        }
+          comparisonValue: "red",
+        },
       ],
       selfLogicalOperators: [],
       conditions: [],
       logicalOperators: [],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
-    }
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
+    },*/
     // {
     //   eventType: "collision",
     //   ruleType: "manyToOne",
@@ -212,7 +212,6 @@ let Scene = {
     //     // },
     //   ],
     //   logicalOperators: [],
-
     //   actions: [
     //     { actionPropertyName: "linewidth", newValue: 0.7 },
     //     { actionPropertyName: "fillColour", newValue: "transparent" },
@@ -237,14 +236,12 @@ let Scene = {
     //     // },
     //   ],
     //   logicalOperators: [],
-
     //   actions: [
     //     { actionPropertyName: "fillColour", newValue: "black" },
     //     { actionPropertyName: "strokeStyle", newValue: "white" },
     //     { actionPropertyName: "linewidth", newValue: "20" },
     //   ],
     // },
-
     /**END OF TESTS */
     /* {
       shapeId: 4,
