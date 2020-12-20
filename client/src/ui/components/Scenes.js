@@ -120,7 +120,7 @@ const data = [];
 ];*/
 
 let canvas;
-
+/**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
 const convertSceneRulesToFormRules = rules => {
   const convertedRules = [];
   const numOfRules = rules.length;
@@ -167,7 +167,7 @@ const Scenes = ({
   getScene
 }) => {
   const [rules, setRules] = useState(convertSceneRulesToFormRules(Scene.rules));
-
+  /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
   const applyRule = ruleData => {
     const logicalOperatorArray = [];
     const emitterLogicalOperatorArray = [];
