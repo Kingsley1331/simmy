@@ -31,54 +31,129 @@ let Scene = {
   },
 
   rules: [
-    /*{
+    {
+      id: 4548569872,
       shapeId: 4,
       eventType: "hover",
       ruleType: "oneToOne",
-      conditions: [],
-      logicalOperators: [],
-      actions: [
-        { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 },
-      ],
-    },
-    {
-      shapeId: 4,
-      eventType: "collision",
-      ruleType: "oneToPartner",
-      emitterConditions: [
+      conditions: [
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "red",
+          comparisonValue: "blue"
         },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "orange"
+        },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "red"
+        }
       ],
-      emitterLogicalOperators: [],
-      conditions: [],
-      logicalOperators: [],
+      logicalOperators: ["OR", "AND"],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 },
-      ],
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
     },
     {
+      id: 4548567128,
       eventType: "collision",
       ruleType: "manyToPartner",
       emitterConditions: [
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "red",
+          comparisonValue: "em_blue"
         },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "em_orange"
+        },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "em_red"
+        }
       ],
-      emitterLogicalOperators: [],
-      conditions: [],
-      logicalOperators: [],
+      emitterLogicalOperators: ["NOT", "AND"],
+      receiverConditions: [
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "re_blue"
+        },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "re_orange"
+        },
+        {
+          propertyName: "fillColour",
+          operator: "===",
+          comparisonValue: "re_red"
+        }
+      ],
+      receiverLogicalOperators: ["NOT", "OR"],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 },
-      ],
-    },*/
+        { actionPropertyName: "linewidth", newValue: 0.1 }
+      ]
+    }
+    // {
+    //   id: 4548569872,
+    //   shapeId: 4,
+    //   eventType: "hover",
+    //   ruleType: "oneToOne",
+    //   conditions: [],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "red" },
+    //     { actionPropertyName: "linewidth", newValue: 0.1 },
+    //   ],
+    // },
+    // {
+    //   id: 4548567128,
+    //   eventType: "collision",
+    //   ruleType: "manyToPartner",
+    //   emitterConditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "red",
+    //     },
+    //   ],
+    //   emitterLogicalOperators: [],
+    //   receiverConditions: [],
+    //   receiverLogicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "red" },
+    //     { actionPropertyName: "linewidth", newValue: 0.1 },
+    //   ],
+    // },
+    // {
+    //   shapeId: 4,
+    //   eventType: "collision",
+    //   ruleType: "oneToPartner",
+    //   emitterConditions: [
+    //     {
+    //       propertyName: "fillColour",
+    //       operator: "===",
+    //       comparisonValue: "red",
+    //     },
+    //   ],
+    //   emitterLogicalOperators: [],
+    //   conditions: [],
+    //   logicalOperators: [],
+    //   actions: [
+    //     { actionPropertyName: "fillColour", newValue: "red" },
+    //     { actionPropertyName: "linewidth", newValue: 0.1 },
+    //   ],
+    // },
     // {
     //   eventType: "collision",
     //   ruleType: "manyToOne",

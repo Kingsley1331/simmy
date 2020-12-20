@@ -24,6 +24,7 @@ import {
 } from "../../engine/utils/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
+import { Condition } from "./events/EventFormComponents";
 
 const data = [];
 /*const data = [
@@ -119,6 +120,44 @@ const data = [];
 ];*/
 
 let canvas;
+
+const convertSceneRulesToFormRules = rules => {
+  const convertedRules = [];
+  const numOfRules = rules.length;
+  for (let i = 0; i < numOfRules; i++) {
+    const rule = rules[i];
+    const convertedRule = { ...rule };
+    const conditionTypeList = [
+      ["conditions", "logicalOperators"],
+      ["emitterConditions", "emitterLogicalOperators"],
+      ["receiverConditions", "receiverLogicalOperators"]
+    ];
+    const numOfConditionTypes = conditionTypeList.length;
+    for (let j = 0; j < numOfConditionTypes; j++) {
+      const conditionType = conditionTypeList[j][0];
+      const operatorType = conditionTypeList[j][1];
+
+      if (convertedRule[conditionType]) {
+        const operators = convertedRule[operatorType];
+        const conditions = convertedRule[conditionType];
+        const convertedConditions = conditions.map((condition, idx) => {
+          const newCondition = {
+            ...condition
+          };
+          if (idx > 0) {
+            newCondition.logicalOperator = operators[idx - 1];
+          }
+          return newCondition;
+        });
+        convertedRule[conditionType] = convertedConditions;
+        delete convertedRule[operatorType];
+      }
+    }
+    convertedRules.push(convertedRule);
+  }
+  return convertedRules;
+};
+
 const Scenes = ({
   selectShape,
   selectedShapeId,
@@ -127,7 +166,7 @@ const Scenes = ({
   scene,
   getScene
 }) => {
-  const [rules, setRules] = useState(data);
+  const [rules, setRules] = useState(convertSceneRulesToFormRules(Scene.rules));
 
   const applyRule = ruleData => {
     const logicalOperatorArray = [];
@@ -230,6 +269,10 @@ const Scenes = ({
     };
   }, [clearShapes, getScene]);
   console.log({ rules });
+  console.log(
+    "convertSceneRulesToFormRules",
+    convertSceneRulesToFormRules(Scene.rules)
+  );
   return (
     <div className="scenesWrapper">
       <Buttons />
