@@ -31,7 +31,7 @@ let Scene = {
   },
 
   rules: [
-    {
+    /*{
       id: 4548569872,
       shapeId: 4,
       eventType: "hover",
@@ -103,7 +103,7 @@ let Scene = {
         { actionPropertyName: "fillColour", newValue: "red" },
         { actionPropertyName: "linewidth", newValue: 0.1 }
       ]
-    }
+    }*/
     // {
     //   id: 4548569872,
     //   shapeId: 4,
