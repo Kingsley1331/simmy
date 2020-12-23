@@ -1,9 +1,9 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const mongoose = require('mongoose');
-const keys = require('../config/keys');
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const mongoose = require("mongoose");
+const keys = require("../config/keys");
 
-const User = mongoose.model('users');
+const User = mongoose.model("users");
 
 // the user id is stuffed into a cookie
 passport.serializeUser((user, done) => {
@@ -24,21 +24,21 @@ passport.deserializeUser((id, done) => {
 passport.use(
   new GoogleStrategy(
     {
-    clientID: keys.googleClientID,
-    clientSecret: keys.googleClientSecret,
-    callbackURL: '/auth/google/callback',
-    proxy: true
+      clientID: keys.googleClientID,
+      clientSecret: keys.googleClientSecret,
+      callbackURL: "/auth/google/callback",
+      proxy: true
     },
     (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id })
-      .then((existingUser) => {
-        if(existingUser) {
+      User.findOne({ googleId: profile.id }).then(existingUser => {
+        if (existingUser) {
           done(null, existingUser); //first argument is an error
         } else {
-          new User({ googleId: profile.id }).save()
-          .then(user => done(null, user));
+          new User({ googleId: profile.id })
+            .save()
+            .then(user => done(null, user));
         }
-      })
+      });
     }
   )
 );
