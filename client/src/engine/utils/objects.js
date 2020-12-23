@@ -21,7 +21,7 @@ export function setObjectValueFromString(object, prop, newValue) {
     targetObj = getObjectValueFromString(object, propString);
   }
   targetObj[targetProp] = newValue;
-  /**BUG:STRING VALUES */
+  /**NOTE: STRING VALUES */
   if (targetProp === "x" || targetProp === "y") {
     targetObj[targetProp] = Number(newValue);
   }
