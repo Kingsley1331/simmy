@@ -31,7 +31,7 @@ let Scene = {
   },
 
   rules: [
-    /*{
+    /* {
       id: 4548569872,
       shapeId: 4,
       eventType: "hover",
@@ -40,24 +40,24 @@ let Scene = {
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "blue"
+          comparisonValue: "blue",
         },
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "orange"
+          comparisonValue: "orange",
         },
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "red"
-        }
+          comparisonValue: "red",
+        },
       ],
       logicalOperators: ["OR", "AND"],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
     },
     {
       id: 4548567128,
@@ -67,43 +67,43 @@ let Scene = {
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "em_blue"
+          comparisonValue: "em_blue",
         },
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "em_orange"
+          comparisonValue: "em_orange",
         },
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "em_red"
-        }
+          comparisonValue: "em_red",
+        },
       ],
       emitterLogicalOperators: ["NOT", "AND"],
       receiverConditions: [
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "re_blue"
+          comparisonValue: "re_blue",
         },
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "re_orange"
+          comparisonValue: "re_orange",
         },
         {
           propertyName: "fillColour",
           operator: "===",
-          comparisonValue: "re_red"
-        }
+          comparisonValue: "re_red",
+        },
       ],
       receiverLogicalOperators: ["NOT", "OR"],
       actions: [
         { actionPropertyName: "fillColour", newValue: "red" },
-        { actionPropertyName: "linewidth", newValue: 0.1 }
-      ]
-    }*/
+        { actionPropertyName: "linewidth", newValue: 0.1 },
+      ],
+    },*/
     // {
     //   id: 4548569872,
     //   shapeId: 4,

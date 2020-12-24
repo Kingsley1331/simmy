@@ -122,6 +122,7 @@ const data = [];
 let canvas;
 /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
 const convertSceneRulesToFormRules = rules => {
+  console.log("convertSceneRulesToFormRules", rules);
   const convertedRules = [];
   const numOfRules = rules.length;
   for (let i = 0; i < numOfRules; i++) {
@@ -166,7 +167,14 @@ const Scenes = ({
   scene,
   getScene
 }) => {
-  const [rules, setRules] = useState(convertSceneRulesToFormRules(Scene.rules));
+  const [rules, setRules] = useState([]);
+
+  useEffect(() => {
+    if (!rules.length) {
+      setRules(convertSceneRulesToFormRules(Scene.rules));
+    }
+  }, []);
+
   /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
   const applyRule = ruleData => {
     const logicalOperatorArray = [];
@@ -214,7 +222,13 @@ const Scenes = ({
     }
     console.log("New Rule", rule);
 
-    Scene.rules.push(rule);
+    const rules = [...Scene.rules];
+    const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
+    if (ruleIndex === -1) {
+      Scene.rules.push(rule);
+    } else {
+      Scene.rules.splice(ruleIndex, 1, rule);
+    }
   };
 
   const addRule = () => {
@@ -269,10 +283,10 @@ const Scenes = ({
     };
   }, [clearShapes, getScene]);
   console.log({ rules });
-  console.log(
-    "convertSceneRulesToFormRules",
-    convertSceneRulesToFormRules(Scene.rules)
-  );
+  // console.log(
+  //   "convertSceneRulesToFormRules",
+  //   convertSceneRulesToFormRules(Scene.rules)
+  // );
   return (
     <div className="scenesWrapper">
       <Buttons />
