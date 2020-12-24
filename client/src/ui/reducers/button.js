@@ -1,22 +1,20 @@
+import Scene from "../../engine/scenes/scene";
+
 const buttonReducer = (state = shapeSelection, action) => {
   switch (action.type) {
     case "SELECT":
-      return selectShape(action.payload, shapeSelection);
+      return selectShape(action.payload, shapeSelection, state);
     default:
       return shapeSelection;
   }
 };
 
-function selectShape(selected = "", shapes) {
+function selectShape(selected = "", shapes, state) {
   var newShapes = {};
   for (let shape in shapes) {
-    newShapes[shape] = shape;
-    if (shape === selected) {
-      newShapes[shape] = true;
-    } else {
-      newShapes[shape] = false;
-    }
+    newShapes[shape] = false;
   }
+  newShapes[selected] = !state[selected];
   return newShapes;
 }
 
@@ -25,7 +23,6 @@ const shapeSelection = {
   update: false,
   play: false,
   step: false,
-  none: true,
   square: false,
   triangle: false,
   pentagon: false,
@@ -36,7 +33,6 @@ const shapeSelection = {
   star: false,
   tShape: false,
   bar: false,
-  concave: false,
   box: false,
   _delete: false
 };

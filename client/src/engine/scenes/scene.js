@@ -512,6 +512,7 @@ let Scene = {
 export function updateSelected(state, Scene) {
   let selectedShape;
   const buttons = state.buttons;
+  Scene.selected = "";
   for (let button in buttons) {
     if (buttons[button]) {
       selectedShape = button;

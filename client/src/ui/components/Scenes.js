@@ -245,7 +245,7 @@ const Scenes = ({
 
   const updateRule = rule => {
     console.log("updateRule", rule);
-    // deleteRule(rule.id);
+
     setRules(rulesArray => {
       const rules = [...rulesArray];
       const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
@@ -284,10 +284,7 @@ const Scenes = ({
     };
   }, [clearShapes, getScene]);
   console.log({ rules });
-  // console.log(
-  //   "convertSceneRulesToFormRules",
-  //   convertSceneRulesToFormRules(Scene.rules)
-  // );
+
   return (
     <div className="scenesWrapper">
       <Buttons />
