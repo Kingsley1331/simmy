@@ -24,7 +24,6 @@ const EventForm = ({
   const onSubmit = ruleData => {
     console.log({ ruleData });
     updateRule({ ...ruleData, id: rule.id });
-    applyRule({ ...ruleData, id: rule.id });
   };
 
   const { register, handleSubmit, watch, errors, control } = useForm({

@@ -252,6 +252,7 @@ const Scenes = ({
       rules.splice(ruleIndex, 1, rule);
       return rules;
     });
+    applyRule(rule);
   };
 
   useEffect(() => {
