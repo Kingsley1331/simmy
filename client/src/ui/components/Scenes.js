@@ -287,8 +287,10 @@ const Scenes = ({
 
   return (
     <div className="scenesWrapper">
-      <Buttons />
-      <canvas id="canvas" width="1000" height="600" />
+      <div className="canvasWrapper">
+        <Buttons />
+        <canvas id="canvas" width="1000" height="600" />
+      </div>
       {rules.map((rule, index) => (
         <EventForm
           key={rule.id}

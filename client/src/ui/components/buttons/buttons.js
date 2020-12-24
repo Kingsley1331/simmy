@@ -45,13 +45,18 @@ export const save = () => {
 
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
   return (
-    <img
-      className={selected ? "selected" : ""}
-      alt={alt}
-      id={id}
-      src={src}
-      width={width}
+    <div
+      className={`image_wrapper ${selected ? "selected" : ""}`}
       onClick={selectShape}
-    />
+    >
+      {/* <div className="image_wrapper"> */}
+      <img
+        // className={selected ? "selected" : ""}
+        alt={alt}
+        id={id}
+        src={src}
+        width={width}
+      />
+    </div>
   );
 };
