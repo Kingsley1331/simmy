@@ -6,7 +6,8 @@ import {
   shapeSelection,
   forEachShape,
   prepareToMoveShape,
-  releaseShape
+  releaseShape,
+  createShapeFromPolyline
 } from "../shapes/shapes";
 import ShapesController from "../shapes/ShapesController";
 import { draw } from "../scenes/draw";
@@ -63,6 +64,7 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
           // addRules(rules);
         }
       }, false);
+      createShapeFromPolyline();
     },
     false
   );

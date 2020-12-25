@@ -12,7 +12,7 @@ import { findMass } from "../physics/mass/mass";
 import referenceVectors from "../physics/collisions/referenceVectors";
 import { findMomentOfInertiaCOM } from "../physics/mass/momentOfInertia";
 import { magnitude } from "../utils/maths/Vector";
-import reCentre from "./reCentre";
+import reCentre, { reCentreVertices } from "./reCentre";
 import findBoundingRect from "./findBoundingRect";
 
 export const shapeSelection = {
@@ -264,6 +264,21 @@ export function createShape(centreOfMass, vertices) {
   Scene.shapes.push(shape);
   return shape;
 }
+
+export function createShapeFromPolyline() {
+  const { polyLineVertices, selected } = Scene;
+  if (polyLineVertices.length > 2 && selected === "polyline") {
+    const boundingRect = findBoundingRect(polyLineVertices);
+    const mass = findMass({ x: 0, y: 0 }, polyLineVertices, boundingRect);
+    const centreOfMass = mass.centreOfMass;
+
+    reCentreVertices(polyLineVertices, centreOfMass);
+
+    createShape(centreOfMass, polyLineVertices);
+    Scene.polyLineVertices = [];
+  }
+}
+
 // order=true => FORWARD, order=false => REVERSE
 export function forEachShape(callback, order) {
   var shapes = Scene.shapes;

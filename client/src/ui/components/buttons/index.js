@@ -10,6 +10,7 @@ const Buttons = ({ buttons, selectShape }) => {
     <div className="buttons">
       {BUTTONS.map(({ name, width = "25", onClick = () => {} }) => (
         <ImgButton
+          key={name}
           alt={`${name} button`}
           id={name}
           src={`images/${name}.png`}

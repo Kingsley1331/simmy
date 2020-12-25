@@ -128,7 +128,7 @@ export const displayShapeInfo = (
     );
   }
 
-  // drawDot(bufferCtx, 3, centreOfMass, 'black');
+  drawDot(bufferCtx, 3, centreOfMass, "black");
   // drawDot(bufferCtx, 3, boundingRectCentre, 'red');
   // drawDot(bufferCtx,3, centreOfRotation, 'green');
 
