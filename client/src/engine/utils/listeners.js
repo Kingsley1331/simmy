@@ -32,7 +32,7 @@ export const click = element => {
           Scene.currentEvents.click.ids.push(clickedShapeIndex);
         }
       }, false);
-      if (Scene.selected === "polyline") {
+      if (Scene.selected === "polyline" && !Scene.cursorOnshape) {
         Scene.polyLineVertices.push(Scene.mousePos);
       }
     },
@@ -100,7 +100,7 @@ export const mouseDown = element => {
           shape.type = "circle";
         }
       }
-      if (Scene.selected === "draw") {
+      if (Scene.selected === "draw" && !Scene.cursorOnshape) {
         Scene.isDrawing = true;
       }
     },
@@ -110,17 +110,19 @@ export const mouseDown = element => {
 
 export const mouseMove = element => {
   element.addEventListener("mousemove", function(evt) {
-    let mousePos = getMousePos(evt, element);
-    if (Scene.selected === "play") {
+    const { selected, isDrawing, shapes, polyLineVertices, mousePos } = Scene;
+    getMousePos(evt, element);
+    if (selected === "play") {
       makeThrowArray();
     }
     forEachShape(function(i) {
       detectShape(i);
     }, false);
     /**** TODO: consider using ShapesController to get shape properties ****/
-    Scene.cursorOnshape = Scene.shapes.some(shape => shape.onShape);
-    if (Scene.selected === "draw" && Scene.isDrawing) {
-      Scene.polyLineVertices.push(Scene.mousePos);
+    const cursorOnshape = shapes.some(shape => shape.onShape);
+    Scene.cursorOnshape = cursorOnshape;
+    if (selected === "draw" && isDrawing && !cursorOnshape) {
+      polyLineVertices.push(mousePos);
     }
   });
 };
