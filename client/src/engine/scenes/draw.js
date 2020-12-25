@@ -1,7 +1,7 @@
 import { forEachShape } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
-import { drawShape } from "./display/drawing/drawings";
+import { drawShape, drawPolyline } from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
 
 // export const canvas = document.getElementById("canvas");
@@ -46,7 +46,19 @@ export const draw = canvas => {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);
     }
   });
-
+  if (Scene.selected) {
+    drawPolyline(
+      bufferCtx,
+      [...Scene.polyLineVertices, Scene.mousePos],
+      {
+        strokeStyle: "black",
+        lineWidth: 1,
+        globalAlpha: 0.15,
+        fillStyle: "blue"
+      },
+      true
+    );
+  }
   displaySceneInfo(bufferCtx);
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas, 0, 0, width, height);

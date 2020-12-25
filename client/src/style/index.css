@@ -76,11 +76,12 @@ canvas {
 
 .buttons {
   width: fit-content;
-  border: 0.5px solid blue;
+  border: 0.5px solid lightgray;
   display: grid;
   grid-template-columns: 50px 50px;
   gap: 10px;
   margin-right: 20px;
+  box-shadow: 5px 2px 15px 0px rgba(0, 0, 0, 0.3);
 }
 
 .image_wrapper {

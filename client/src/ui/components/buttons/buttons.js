@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Scene from "../../../../src/engine/scenes/scene";
 
 export const update = () => {
@@ -42,21 +42,32 @@ export const save = () => {
       });
   }
 };
-
+export const BUTTONS = [
+  { name: "play" },
+  { name: "step" },
+  { name: "square" },
+  { name: "triangle" },
+  { name: "pentagon" },
+  { name: "hexagon" },
+  { name: "circle" },
+  { name: "plus" },
+  { name: "arrow" },
+  { name: "star" },
+  { name: "tShape" },
+  { name: "bar", width: "10" },
+  { name: "box" },
+  { name: "_delete" },
+  { name: "save", onClick: update },
+  { name: "update", onClick: save },
+  { name: "polyline" }
+];
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
   return (
     <div
       className={`image_wrapper ${selected ? "selected" : ""}`}
       onClick={selectShape}
     >
-      {/* <div className="image_wrapper"> */}
-      <img
-        // className={selected ? "selected" : ""}
-        alt={alt}
-        id={id}
-        src={src}
-        width={width}
-      />
+      <img alt={alt} id={id} src={src} width={width} />
     </div>
   );
 };

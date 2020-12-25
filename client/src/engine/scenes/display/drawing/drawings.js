@@ -30,6 +30,34 @@ export function drawShape(context, vertices, centreOfMass, config) {
   context.restore();
 }
 
+export const drawPolyline = (context, vertices, config, open = false) => {
+  var numOfPoints = vertices.length;
+  if (numOfPoints) {
+    const startingPoint = {
+      x: vertices[0].x,
+      y: vertices[0].y
+    };
+    context.beginPath();
+    context.moveTo(startingPoint.x, startingPoint.y);
+    for (let i = 1; i < numOfPoints; i++) {
+      let x = vertices[i].x;
+      let y = vertices[i].y;
+      context.lineTo(x, y);
+    }
+
+    context.save();
+    for (let prop in config) {
+      context[prop] = config[prop];
+    }
+    if (!open) {
+      context.closePath();
+      context.fill();
+    }
+    context.stroke();
+    context.restore();
+  }
+};
+
 export function drawDot(context, radius, centre, colour) {
   context.save();
   context.fillStyle = colour;
