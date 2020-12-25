@@ -31,7 +31,9 @@ export const click = element => {
           Scene.currentEvents.click.ids.push(clickedShapeIndex);
         }
       }, false);
-      Scene.polyLineVertices.push(Scene.mousePos);
+      if (Scene.selected === "polyline") {
+        Scene.polyLineVertices.push(Scene.mousePos);
+      }
     },
     false
   );

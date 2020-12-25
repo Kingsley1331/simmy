@@ -46,7 +46,7 @@ export const draw = canvas => {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);
     }
   });
-  if (Scene.selected) {
+  if (Scene.selected === "polyline") {
     drawPolyline(
       bufferCtx,
       [...Scene.polyLineVertices, Scene.mousePos],
