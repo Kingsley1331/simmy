@@ -100,6 +100,9 @@ export const mouseDown = element => {
           shape.type = "circle";
         }
       }
+      if (Scene.selected === "draw") {
+        Scene.isDrawing = true;
+      }
     },
     false
   );
@@ -116,6 +119,9 @@ export const mouseMove = element => {
     }, false);
     /**** TODO: consider using ShapesController to get shape properties ****/
     Scene.cursorOnshape = Scene.shapes.some(shape => shape.onShape);
+    if (Scene.selected === "draw" && Scene.isDrawing) {
+      Scene.polyLineVertices.push(Scene.mousePos);
+    }
   });
 };
 
@@ -127,6 +133,10 @@ export const mouseUp = element => {
         releaseShape(i);
       });
       Scene.throwArray = [];
+      if (Scene.selected === "draw") {
+        Scene.isDrawing = false;
+        createShapeFromPolyline();
+      }
     },
     false
   );

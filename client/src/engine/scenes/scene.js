@@ -21,6 +21,7 @@ let Scene = {
     // { x: 300, y: 300 },
     // { x: 250, y: 300 },
   ],
+  isDrawing: false,
   timeStep: 16,
   time: 0,
   settings: {

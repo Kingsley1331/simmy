@@ -59,7 +59,8 @@ export const BUTTONS = [
   { name: "_delete" },
   { name: "save", onClick: update },
   { name: "update", onClick: save },
-  { name: "polyline" }
+  { name: "polyline", onClick: () => (Scene.polyLineVertices = []) },
+  { name: "draw", onClick: () => (Scene.polyLineVertices = []) }
 ];
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
   return (

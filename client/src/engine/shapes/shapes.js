@@ -267,7 +267,8 @@ export function createShape(centreOfMass, vertices) {
 
 export function createShapeFromPolyline() {
   const { polyLineVertices, selected } = Scene;
-  if (polyLineVertices.length > 2 && selected === "polyline") {
+  const usingPolylines = selected === "polyline" || selected === "draw";
+  if (polyLineVertices.length > 2 && usingPolylines) {
     const boundingRect = findBoundingRect(polyLineVertices);
     const mass = findMass({ x: 0, y: 0 }, polyLineVertices, boundingRect);
     const centreOfMass = mass.centreOfMass;
