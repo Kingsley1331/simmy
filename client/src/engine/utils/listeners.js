@@ -88,9 +88,12 @@ export const mouseDown = element => {
       // Scene.currentEvents.click.state = true;
 
       const {
+        vertices,
         isCursorOnFirstPoint,
         isCursorOnLastPoint,
-        removeLastVertex
+        setLastPoint,
+        removeLastVertex,
+        lastPointRadius
       } = PolylineInterface();
       if (Scene.selected === "step") {
         Scene.time += timeStep;

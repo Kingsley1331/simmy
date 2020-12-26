@@ -72,7 +72,11 @@ export function drawLine(context, start, end, config) {
   // context.strokeStyle = 'red';
   // context.lineWidth = 2;
   for (var prop in config) {
-    context[prop] = config[prop];
+    if (typeof context[prop] === "function") {
+      context[prop](config[prop]);
+    } else {
+      context[prop] = config[prop];
+    }
   }
   context.beginPath();
   context.moveTo(start.x, start.y);

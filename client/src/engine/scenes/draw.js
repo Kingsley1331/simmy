@@ -1,7 +1,12 @@
 import { forEachShape, PolylineInterface } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
-import { drawShape, drawPolyline, drawDot } from "./display/drawing/drawings";
+import {
+  drawShape,
+  drawPolyline,
+  drawDot,
+  drawLine
+} from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
 import { magnitude } from "../../engine/utils/maths/Vector";
 
@@ -68,26 +73,32 @@ export const draw = canvas => {
     const lastPoint = polyLineVertices[numOfPolyLineVertices - 1] || [];
     const firstPointColour = isCursorOnFirstPoint ? "red" : "blue";
     const lastPointColour = isCursorOnLastPoint ? "green" : "black";
-    const firstPointDotSize = isCursorOnFirstPoint ? 5 : 2;
-    const lastPointDotSize = isCursorOnLastPoint ? 5 : 1;
+    const firstPointDotSize = isCursorOnFirstPoint ? 5 : 4;
+    const lastPointDotSize = isCursorOnLastPoint ? 5 : 2;
 
     drawDot(bufferCtx, firstPointDotSize, firstPoint, firstPointColour);
     drawDot(bufferCtx, lastPointDotSize, lastPoint, lastPointColour);
     for (let v = 0; v < numOfPolyLineVertices; v++) {
       const point = polyLineVertices[v];
-      drawDot(bufferCtx, 1, point, "black");
+      drawDot(bufferCtx, 2, point, "black");
     }
     drawPolyline(
       bufferCtx,
-      [...polyLineVertices, mousePos],
+      [...polyLineVertices],
+      // [...polyLineVertices, mousePos],
       {
         strokeStyle: "black",
         lineWidth: 1,
-        globalAlpha: 0.15,
+        globalAlpha: 0.3,
         fillStyle: "blue"
       },
       true
     );
+    drawLine(bufferCtx, lastPoint, mousePos, {
+      lineWidth: 1,
+      globalAlpha: 0.5,
+      setLineDash: [5, 5]
+    });
   }
   displaySceneInfo(bufferCtx);
   Scene.context.buffer = bufferCtx;
