@@ -26,7 +26,11 @@ export const click = element => {
     "click",
     evt => {
       let clickedShapeIndex;
-      const { addVertex, isCursorOnFirstPoint } = PolylineInterface();
+      const {
+        addVertex,
+        isCursorOnFirstPoint,
+        isCursorOnLastPoint
+      } = PolylineInterface();
       forEachShape(function(i) {
         clickedShapeIndex = detectShape(i);
         if (clickedShapeIndex) {
@@ -38,7 +42,8 @@ export const click = element => {
       if (
         Scene.selected === "polyline" &&
         !Scene.cursorOnshape &&
-        !isCursorOnFirstPoint
+        !isCursorOnFirstPoint &&
+        !isCursorOnLastPoint
       ) {
         addVertex(Scene.mousePos);
       }
@@ -82,7 +87,11 @@ export const mouseDown = element => {
     evt => {
       // Scene.currentEvents.click.state = true;
 
-      const { isCursorOnFirstPoint } = PolylineInterface();
+      const {
+        isCursorOnFirstPoint,
+        isCursorOnLastPoint,
+        removeLastVertex
+      } = PolylineInterface();
       if (Scene.selected === "step") {
         Scene.time += timeStep;
         forEachShape(function(i) {
@@ -114,6 +123,9 @@ export const mouseDown = element => {
       }
       if (Scene.selected === "polyline" && isCursorOnFirstPoint) {
         createShapeFromPolyline();
+      }
+      if (isCursorOnLastPoint) {
+        removeLastVertex();
       }
     },
     false
@@ -156,6 +168,18 @@ export const mouseMove = element => {
       setFirstPoint(true);
     } else {
       setFirstPoint(false);
+    }
+    /** detect hovering over last polyline vertex */
+    const lastPoint = vertices[numOfVertices - 1] || [];
+    const distanceVector2 = {
+      x: lastPoint.x - mousePos.x,
+      y: lastPoint.y - mousePos.y
+    };
+    const cursorDotDistance2 = magnitude(distanceVector2);
+    if (cursorDotDistance2 <= lastPointRadius) {
+      setLastPoint(true);
+    } else {
+      setLastPoint(false);
     }
   });
 };

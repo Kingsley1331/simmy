@@ -18,7 +18,7 @@ let Scene = {
   polyline: {
     vertices: [],
     firstPoint: { radius: 5, isCursorOnPoint: false },
-    lastPoint: { radius: 2, isCursorOnPoint: false }
+    lastPoint: { radius: 5, isCursorOnPoint: false }
   },
   isDrawing: false,
   timeStep: 16,

@@ -61,12 +61,22 @@ export const draw = canvas => {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);
     }
   });
+
+  const numOfPolyLineVertices = polyLineVertices.length;
   if (selected === "polyline" || selected === "draw") {
     const firstPoint = polyLineVertices[0] || [];
-    const dotColour = isCursorOnFirstPoint ? "red" : "blue";
-    const dotSize = isCursorOnFirstPoint ? 5 : 2;
+    const lastPoint = polyLineVertices[numOfPolyLineVertices - 1] || [];
+    const firstPointColour = isCursorOnFirstPoint ? "red" : "blue";
+    const lastPointColour = isCursorOnLastPoint ? "green" : "black";
+    const firstPointDotSize = isCursorOnFirstPoint ? 5 : 2;
+    const lastPointDotSize = isCursorOnLastPoint ? 5 : 1;
 
-    drawDot(bufferCtx, dotSize, firstPoint, dotColour);
+    drawDot(bufferCtx, firstPointDotSize, firstPoint, firstPointColour);
+    drawDot(bufferCtx, lastPointDotSize, lastPoint, lastPointColour);
+    for (let v = 0; v < numOfPolyLineVertices; v++) {
+      const point = polyLineVertices[v];
+      drawDot(bufferCtx, 1, point, "black");
+    }
     drawPolyline(
       bufferCtx,
       [...polyLineVertices, mousePos],
