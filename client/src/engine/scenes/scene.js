@@ -14,13 +14,12 @@ let Scene = {
   cursorOnshape: false,
   selected: "none",
   throwArray: [],
-  polyLineVertices: [
-    // { x: 250, y: 250 },
-    // { x: 350, y: 250 },
-    // { x: 350, y: 350 },
-    // { x: 300, y: 300 },
-    // { x: 250, y: 300 },
-  ],
+  polyLineVertices: [],
+  polyline: {
+    vertices: [],
+    firstPoint: { radius: 5, isCursorOnPoint: false },
+    lastPoint: { radius: 2, isCursorOnPoint: false }
+  },
   isDrawing: false,
   timeStep: 16,
   time: 0,

@@ -17,6 +17,8 @@ import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import Vector from "./maths/Vector";
 import { retrieveLocalRules } from "./eventRules";
+import { PolylineInterface } from "../../engine/shapes/shapes";
+import { magnitude } from "../../engine/utils/maths/Vector";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -24,6 +26,7 @@ export const click = element => {
     "click",
     evt => {
       let clickedShapeIndex;
+      const { addVertex, isCursorOnFirstPoint } = PolylineInterface();
       forEachShape(function(i) {
         clickedShapeIndex = detectShape(i);
         if (clickedShapeIndex) {
@@ -32,8 +35,12 @@ export const click = element => {
           Scene.currentEvents.click.ids.push(clickedShapeIndex);
         }
       }, false);
-      if (Scene.selected === "polyline" && !Scene.cursorOnshape) {
-        Scene.polyLineVertices.push(Scene.mousePos);
+      if (
+        Scene.selected === "polyline" &&
+        !Scene.cursorOnshape &&
+        !isCursorOnFirstPoint
+      ) {
+        addVertex(Scene.mousePos);
       }
     },
     false
@@ -74,6 +81,8 @@ export const mouseDown = element => {
     "mousedown",
     evt => {
       // Scene.currentEvents.click.state = true;
+
+      const { isCursorOnFirstPoint } = PolylineInterface();
       if (Scene.selected === "step") {
         Scene.time += timeStep;
         forEachShape(function(i) {
@@ -103,6 +112,9 @@ export const mouseDown = element => {
       if (Scene.selected === "draw" && !Scene.cursorOnshape) {
         Scene.isDrawing = true;
       }
+      if (Scene.selected === "polyline" && isCursorOnFirstPoint) {
+        createShapeFromPolyline();
+      }
     },
     false
   );
@@ -110,7 +122,16 @@ export const mouseDown = element => {
 
 export const mouseMove = element => {
   element.addEventListener("mousemove", function(evt) {
-    const { selected, isDrawing, shapes, polyLineVertices, mousePos } = Scene;
+    const { selected, isDrawing, shapes, mousePos } = Scene;
+
+    const {
+      vertices,
+      firstPointRadius,
+      lastPointRadius,
+      setFirstPoint,
+      setLastPoint
+    } = PolylineInterface();
+
     getMousePos(evt, element);
     if (selected === "play") {
       makeThrowArray();
@@ -122,7 +143,19 @@ export const mouseMove = element => {
     const cursorOnshape = shapes.some(shape => shape.onShape);
     Scene.cursorOnshape = cursorOnshape;
     if (selected === "draw" && isDrawing && !cursorOnshape) {
-      polyLineVertices.push(mousePos);
+      vertices.push(mousePos);
+    } /** detect hovering over first polyline vertex */
+    const numOfVertices = vertices.length;
+    const firstPoint = vertices[0] || [];
+    const distanceVector = {
+      x: firstPoint.x - mousePos.x,
+      y: firstPoint.y - mousePos.y
+    };
+    const cursorDotDistance = magnitude(distanceVector);
+    if (cursorDotDistance <= firstPointRadius && numOfVertices > 2) {
+      setFirstPoint(true);
+    } else {
+      setFirstPoint(false);
     }
   });
 };

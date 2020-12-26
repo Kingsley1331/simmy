@@ -64,7 +64,6 @@ export function drawDot(context, radius, centre, colour) {
   context.beginPath();
   context.arc(centre.x, centre.y, radius, 0, 2 * Math.PI);
   context.fill();
-  //context.stroke();
   context.restore();
 }
 

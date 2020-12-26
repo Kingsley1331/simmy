@@ -265,18 +265,56 @@ export function createShape(centreOfMass, vertices) {
   return shape;
 }
 
+export const PolylineInterface = () => {
+  const vertices = Scene.polyline.vertices;
+  const numOfVertices = vertices.length;
+  const isCursorOnFirstPoint = Scene.polyline.firstPoint.isCursorOnPoint;
+  const isCursorOnLastPoint = Scene.polyline.lastPoint.isCursorOnPoint;
+  const firstPointRadius = Scene.polyline.firstPoint.radius;
+  const lastPointRadius = Scene.polyline.lastPoint.radius;
+  const resetVertices = () => {
+    Scene.polyline.vertices = [];
+  };
+  const addVertex = vertex => {
+    vertices.push(vertex);
+  };
+  const removeLastVertex = () => {
+    Scene.polyline.vertices.splice(numOfVertices - 1, 1);
+  };
+  const setFirstPoint = bool => {
+    Scene.polyline.firstPoint.isCursorOnPoint = bool;
+  };
+  const setLastPoint = bool => {
+    Scene.polyline.lastPoint.isCursorOnPoint = bool;
+  };
+
+  return {
+    vertices,
+    isCursorOnFirstPoint,
+    isCursorOnLastPoint,
+    firstPointRadius,
+    lastPointRadius,
+    resetVertices,
+    addVertex,
+    removeLastVertex,
+    setFirstPoint,
+    setLastPoint
+  };
+};
+
 export function createShapeFromPolyline() {
-  const { polyLineVertices, selected } = Scene;
+  const { selected } = Scene;
+  const { vertices, resetVertices } = PolylineInterface();
+
   const usingPolylines = selected === "polyline" || selected === "draw";
-  if (polyLineVertices.length > 2 && usingPolylines) {
-    const boundingRect = findBoundingRect(polyLineVertices);
-    const mass = findMass({ x: 0, y: 0 }, polyLineVertices, boundingRect);
+  if (vertices.length > 2 && usingPolylines) {
+    const boundingRect = findBoundingRect(vertices);
+    const mass = findMass({ x: 0, y: 0 }, vertices, boundingRect);
     const centreOfMass = mass.centreOfMass;
 
-    reCentreVertices(polyLineVertices, centreOfMass);
-
-    createShape(centreOfMass, polyLineVertices);
-    Scene.polyLineVertices = [];
+    reCentreVertices(vertices, centreOfMass);
+    createShape(centreOfMass, vertices);
+    resetVertices();
   }
 }
 

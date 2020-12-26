@@ -1,18 +1,33 @@
-import { forEachShape } from "../shapes/shapes";
+import { forEachShape, PolylineInterface } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
-import { drawShape, drawPolyline } from "./display/drawing/drawings";
+import { drawShape, drawPolyline, drawDot } from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
+import { magnitude } from "../../engine/utils/maths/Vector";
 
-// export const canvas = document.getElementById("canvas");
+// export const canvas = document.getE/lementById("canvas");
+
 export const draw = canvas => {
+  const {
+    backgroundColour,
+    mousePos,
+    selected,
+    settings: { display }
+  } = Scene;
+
+  const {
+    vertices: polyLineVertices,
+    isCursorOnFirstPoint,
+    isCursorOnLastPoint
+  } = PolylineInterface();
+
   var context = canvas.getContext("2d");
   /** TODO: store buffer canvas globally in Scene to make it less expensive **/
   const bufferCanvas = document.createElement("canvas");
   const bufferCtx = bufferCanvas.getContext("2d");
   let width = (bufferCtx.canvas.width = context.canvas.width);
   let height = (bufferCtx.canvas.height = context.canvas.height);
-  bufferCtx.fillStyle = Scene.backgroundColour;
+  bufferCtx.fillStyle = backgroundColour;
   bufferCtx.fillRect(0, 0, width, height);
 
   forEachShape(i => {
@@ -42,14 +57,19 @@ export const draw = canvas => {
 
     drawShape(bufferCtx, vertices, centreOfMass, config);
 
-    if (Scene.settings.display) {
+    if (display) {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);
     }
   });
-  if (Scene.selected === "polyline" || Scene.selected === "draw") {
+  if (selected === "polyline" || selected === "draw") {
+    const firstPoint = polyLineVertices[0] || [];
+    const dotColour = isCursorOnFirstPoint ? "red" : "blue";
+    const dotSize = isCursorOnFirstPoint ? 5 : 2;
+
+    drawDot(bufferCtx, dotSize, firstPoint, dotColour);
     drawPolyline(
       bufferCtx,
-      [...Scene.polyLineVertices, Scene.mousePos],
+      [...polyLineVertices, mousePos],
       {
         strokeStyle: "black",
         lineWidth: 1,
