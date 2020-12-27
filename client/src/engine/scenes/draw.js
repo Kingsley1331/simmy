@@ -68,6 +68,20 @@ export const draw = canvas => {
 
   const numOfPolyLineVertices = polyLineVertices.length;
   if (selected === "polyline" || selected === "draw") {
+    drawDot(bufferCtx, 2, mousePos, "black");
+    drawPolyline(
+      bufferCtx,
+      [...polyLineVertices],
+      {
+        strokeStyle: "black",
+        lineWidth: 1,
+        globalAlpha: 0.3,
+        fillStyle: "blue"
+      },
+      true
+    );
+  }
+  if (selected === "polyline") {
     const firstPoint = polyLineVertices[0] || [];
     const lastPoint = polyLineVertices[numOfPolyLineVertices - 1] || [];
     const firstPointColour = isCursorOnFirstPoint ? "red" : "blue";
@@ -93,17 +107,6 @@ export const draw = canvas => {
 
     drawDot(bufferCtx, 2, mousePos, "black");
 
-    drawPolyline(
-      bufferCtx,
-      [...polyLineVertices],
-      {
-        strokeStyle: "black",
-        lineWidth: 1,
-        globalAlpha: 0.3,
-        fillStyle: "blue"
-      },
-      true
-    );
     drawLine(bufferCtx, lastPoint, mousePos, {
       lineWidth: 1,
       globalAlpha: 0.5,
@@ -112,6 +115,7 @@ export const draw = canvas => {
     drawDot(bufferCtx, firstPointDotSize, firstPoint, firstPointColour);
     drawDot(bufferCtx, lastPointDotSize, lastPoint, lastPointColour);
   }
+
   displaySceneInfo(bufferCtx);
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas, 0, 0, width, height);

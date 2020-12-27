@@ -266,12 +266,13 @@ export function createShape(centreOfMass, vertices) {
 }
 
 export const PolylineInterface = () => {
-  const vertices = Scene.polyline.vertices;
+  const { vertices, firstPoint, lastPoint } = Scene.polyline;
+
   const numOfVertices = vertices.length;
-  const isCursorOnFirstPoint = Scene.polyline.firstPoint.isCursorOnPoint;
-  const isCursorOnLastPoint = Scene.polyline.lastPoint.isCursorOnPoint;
-  const firstPointRadius = Scene.polyline.firstPoint.radius;
-  const lastPointRadius = Scene.polyline.lastPoint.radius;
+  const isCursorOnFirstPoint = firstPoint.isCursorOnPoint;
+  const isCursorOnLastPoint = lastPoint.isCursorOnPoint;
+  const firstPointRadius = firstPoint.radius;
+  const lastPointRadius = lastPoint.radius;
   const resetVertices = () => {
     Scene.polyline.vertices = [];
   };
@@ -279,13 +280,13 @@ export const PolylineInterface = () => {
     vertices.push(vertex);
   };
   const removeLastVertex = () => {
-    Scene.polyline.vertices.splice(numOfVertices - 1, 1);
+    vertices.splice(numOfVertices - 1, 1);
   };
   const setFirstPoint = bool => {
-    Scene.polyline.firstPoint.isCursorOnPoint = bool;
+    firstPoint.isCursorOnPoint = bool;
   };
   const setLastPoint = bool => {
-    Scene.polyline.lastPoint.isCursorOnPoint = bool;
+    lastPoint.isCursorOnPoint = bool;
   };
 
   return {
@@ -301,6 +302,45 @@ export const PolylineInterface = () => {
     setLastPoint
   };
 };
+// export const PolylineInterface = () => {
+
+//   const {vertices} = Scene.polyline;
+
+//   const vertices = Scene.polyline.vertices;
+//   const numOfVertices = vertices.length;
+//   const isCursorOnFirstPoint = Scene.polyline.firstPoint.isCursorOnPoint;
+//   const isCursorOnLastPoint = Scene.polyline.lastPoint.isCursorOnPoint;
+//   const firstPointRadius = Scene.polyline.firstPoint.radius;
+//   const lastPointRadius = Scene.polyline.lastPoint.radius;
+//   const resetVertices = () => {
+//     Scene.polyline.vertices = [];
+//   };
+//   const addVertex = vertex => {
+//     vertices.push(vertex);
+//   };
+//   const removeLastVertex = () => {
+//     Scene.polyline.vertices.splice(numOfVertices - 1, 1);
+//   };
+//   const setFirstPoint = bool => {
+//     Scene.polyline.firstPoint.isCursorOnPoint = bool;
+//   };
+//   const setLastPoint = bool => {
+//     Scene.polyline.lastPoint.isCursorOnPoint = bool;
+//   };
+
+//   return {
+//     vertices,
+//     isCursorOnFirstPoint,
+//     isCursorOnLastPoint,
+//     firstPointRadius,
+//     lastPointRadius,
+//     resetVertices,
+//     addVertex,
+//     removeLastVertex,
+//     setFirstPoint,
+//     setLastPoint
+//   };
+// };
 
 export function createShapeFromPolyline() {
   const { selected } = Scene;
