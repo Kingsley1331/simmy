@@ -26,11 +26,6 @@ export const click = element => {
     "click",
     evt => {
       let clickedShapeIndex;
-      const {
-        addVertex,
-        isCursorOnFirstPoint,
-        isCursorOnLastPoint
-      } = PolylineInterface();
       forEachShape(function(i) {
         clickedShapeIndex = detectShape(i);
         if (clickedShapeIndex) {
@@ -39,14 +34,6 @@ export const click = element => {
           Scene.currentEvents.click.ids.push(clickedShapeIndex);
         }
       }, false);
-      if (
-        Scene.selected === "polyline" &&
-        !Scene.cursorOnshape &&
-        !isCursorOnFirstPoint &&
-        !isCursorOnLastPoint
-      ) {
-        addVertex(Scene.mousePos);
-      }
     },
     false
   );
@@ -86,14 +73,12 @@ export const mouseDown = element => {
     "mousedown",
     evt => {
       // Scene.currentEvents.click.state = true;
-
       const {
-        vertices,
         isCursorOnFirstPoint,
         isCursorOnLastPoint,
         setLastPoint,
         removeLastVertex,
-        lastPointRadius
+        addVertex
       } = PolylineInterface();
       if (Scene.selected === "step") {
         Scene.time += timeStep;
@@ -129,6 +114,16 @@ export const mouseDown = element => {
       }
       if (isCursorOnLastPoint) {
         removeLastVertex();
+        setLastPoint(false);
+      }
+
+      if (
+        Scene.selected === "polyline" &&
+        !Scene.cursorOnshape &&
+        !isCursorOnFirstPoint &&
+        !isCursorOnLastPoint
+      ) {
+        addVertex(Scene.mousePos);
       }
     },
     false
@@ -198,6 +193,20 @@ export const mouseUp = element => {
       if (Scene.selected === "draw") {
         Scene.isDrawing = false;
         createShapeFromPolyline();
+      }
+    },
+    false
+  );
+};
+
+export const rightClick = element => {
+  element.addEventListener(
+    "contextmenu",
+    function(evt) {
+      const { resetVertices } = PolylineInterface();
+      if (Scene.selected === "polyline") {
+        evt.preventDefault();
+        resetVertices();
       }
     },
     false

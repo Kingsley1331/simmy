@@ -28,7 +28,10 @@ export const displayShapeInfo = (
     boundingRect: rect,
     normal,
     collisionPointVA,
-    collisionPointVB
+    collisionPointVB,
+    showCentreOfMass,
+    showCentreOfRotation,
+    showBoundingRectCentre
   } = shape;
   const boundingRect = ShapesController.getProperty(shapeIndex, "boundingRect");
   const centreOfRotation = ShapesController.getProperty(
@@ -127,10 +130,15 @@ export const displayShapeInfo = (
       }
     );
   }
-
-  drawDot(bufferCtx, 3, centreOfMass, "black");
-  // drawDot(bufferCtx, 3, boundingRectCentre, 'red');
-  // drawDot(bufferCtx,3, centreOfRotation, 'green');
+  if (showCentreOfMass) {
+    drawDot(bufferCtx, 3, centreOfMass, "black");
+  }
+  if (showBoundingRectCentre) {
+    drawDot(bufferCtx, 3, boundingRectCentre, "red");
+  }
+  if (showCentreOfRotation) {
+    drawDot(bufferCtx, 3, centreOfRotation, "green");
+  }
 
   let unitNormal = collisionDataB.unitNormal;
   const sideVector = collisionDataB.sideVector;
@@ -179,6 +187,7 @@ export const displayShapeInfo = (
         60
       );
     }
+
     // drawArrow(bufferCtx, arrowHead, [collisionDataB.side[0], sideVector], {fillStyle: 'blue', strokeStyle: 'blue'});
     // drawArrow(bufferCtx, arrowHead, [{x: vertices[0].x + centreOfMass.x, y: vertices[0].y + centreOfMass.y}, referenceSideVector], {fillStyle: 'red', strokeStyle: 'red'});
     // drawArrow(bufferCtx, arrowHead, [referenceLocation, referenceUnitNormal], {fillStyle: 'black', strokeStyle: 'black'}, 30);

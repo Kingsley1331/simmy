@@ -8,7 +8,6 @@ import {
   drawLine
 } from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
-import { magnitude } from "../../engine/utils/maths/Vector";
 
 // export const canvas = document.getE/lementById("canvas");
 
@@ -72,20 +71,31 @@ export const draw = canvas => {
     const firstPoint = polyLineVertices[0] || [];
     const lastPoint = polyLineVertices[numOfPolyLineVertices - 1] || [];
     const firstPointColour = isCursorOnFirstPoint ? "red" : "blue";
-    const lastPointColour = isCursorOnLastPoint ? "green" : "black";
+    const lastPointColour = isCursorOnLastPoint
+      ? "green"
+      : numOfPolyLineVertices > 1
+      ? "black"
+      : "blue";
+
     const firstPointDotSize = isCursorOnFirstPoint ? 5 : 4;
     const lastPointDotSize = isCursorOnLastPoint ? 5 : 2;
 
-    drawDot(bufferCtx, firstPointDotSize, firstPoint, firstPointColour);
-    drawDot(bufferCtx, lastPointDotSize, lastPoint, lastPointColour);
     for (let v = 0; v < numOfPolyLineVertices; v++) {
       const point = polyLineVertices[v];
-      drawDot(bufferCtx, 2, point, "black");
+      const shouldDisplayPoint = !(
+        (v === numOfPolyLineVertices - 1 && isCursorOnLastPoint) ||
+        v === 0
+      );
+      if (shouldDisplayPoint) {
+        drawDot(bufferCtx, 2, point, "black");
+      }
     }
+
+    drawDot(bufferCtx, 2, mousePos, "black");
+
     drawPolyline(
       bufferCtx,
       [...polyLineVertices],
-      // [...polyLineVertices, mousePos],
       {
         strokeStyle: "black",
         lineWidth: 1,
@@ -99,6 +109,8 @@ export const draw = canvas => {
       globalAlpha: 0.5,
       setLineDash: [5, 5]
     });
+    drawDot(bufferCtx, firstPointDotSize, firstPoint, firstPointColour);
+    drawDot(bufferCtx, lastPointDotSize, lastPoint, lastPointColour);
   }
   displaySceneInfo(bufferCtx);
   Scene.context.buffer = bufferCtx;

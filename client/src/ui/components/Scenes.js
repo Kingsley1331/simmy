@@ -20,7 +20,8 @@ import {
   mouseMove,
   mouseUp,
   doubleClick,
-  click
+  click,
+  rightClick
 } from "../../engine/utils/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
@@ -266,6 +267,7 @@ const Scenes = ({
     mouseUp(canvas);
     doubleClick(canvas, selectShape, addRules, selectedEvent);
     click(canvas);
+    rightClick(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(scene).length) {
       createWalls();
