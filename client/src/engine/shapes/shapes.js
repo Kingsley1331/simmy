@@ -302,45 +302,65 @@ export const PolylineInterface = () => {
     setLastPoint
   };
 };
-// export const PolylineInterface = () => {
 
-//   const {vertices} = Scene.polyline;
+export const CloneInterface = idx => {
+  const { clone } = Scene;
+  const vertices = idx
+    ? ShapesController.getProperty(idx, "vertices")
+    : clone.vertices;
+  const strokeStyle = idx
+    ? ShapesController.getProperty(idx, "strokeStyle")
+    : clone.strokeStyle;
+  const linewidth = idx
+    ? ShapesController.getProperty(idx, "linewidth")
+    : clone.linewidth;
+  const fillColour = idx
+    ? ShapesController.getProperty(idx, "fillColour")
+    : clone.fillColour;
+  const setClonedShapeId = () => {
+    Scene.clone.clonedShapeId = idx;
+  };
 
-//   const vertices = Scene.polyline.vertices;
-//   const numOfVertices = vertices.length;
-//   const isCursorOnFirstPoint = Scene.polyline.firstPoint.isCursorOnPoint;
-//   const isCursorOnLastPoint = Scene.polyline.lastPoint.isCursorOnPoint;
-//   const firstPointRadius = Scene.polyline.firstPoint.radius;
-//   const lastPointRadius = Scene.polyline.lastPoint.radius;
-//   const resetVertices = () => {
-//     Scene.polyline.vertices = [];
-//   };
-//   const addVertex = vertex => {
-//     vertices.push(vertex);
-//   };
-//   const removeLastVertex = () => {
-//     Scene.polyline.vertices.splice(numOfVertices - 1, 1);
-//   };
-//   const setFirstPoint = bool => {
-//     Scene.polyline.firstPoint.isCursorOnPoint = bool;
-//   };
-//   const setLastPoint = bool => {
-//     Scene.polyline.lastPoint.isCursorOnPoint = bool;
-//   };
+  const setClonedShapeVertices = () => {
+    Scene.clone.vertices = vertices;
+  };
+  const setClonedShapeLinewidth = () => {
+    Scene.clone.linewidth = linewidth;
+  };
+  const setClonedShapeColour = () => {
+    Scene.clone.fillColour = fillColour;
+  };
 
-//   return {
-//     vertices,
-//     isCursorOnFirstPoint,
-//     isCursorOnLastPoint,
-//     firstPointRadius,
-//     lastPointRadius,
-//     resetVertices,
-//     addVertex,
-//     removeLastVertex,
-//     setFirstPoint,
-//     setLastPoint
-//   };
-// };
+  const getClonedShapeId = () => Scene.clone.clonedShapeId;
+  const getClonedShapeVertices = () => Scene.clone.vertices;
+  const getClonedShapeLinewidth = () => Scene.clone.linewidth;
+  const getClonedShapeColour = () => Scene.clone.fillColour;
+  const resetClone = () => {
+    Scene.clone = {
+      clonedShapeId: "",
+      vertices: [],
+      strokeStyle: "",
+      linewidth: 0,
+      fillColour: ""
+    };
+  };
+
+  return {
+    vertices,
+    strokeStyle,
+    linewidth,
+    fillColour,
+    setClonedShapeId,
+    setClonedShapeVertices,
+    setClonedShapeLinewidth,
+    setClonedShapeColour,
+    getClonedShapeId,
+    getClonedShapeVertices,
+    getClonedShapeLinewidth,
+    getClonedShapeColour,
+    resetClone
+  };
+};
 
 export function createShapeFromPolyline() {
   const { selected } = Scene;

@@ -1,4 +1,8 @@
-import { forEachShape, PolylineInterface } from "../shapes/shapes";
+import {
+  forEachShape,
+  PolylineInterface,
+  CloneInterface
+} from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
 import {
@@ -114,6 +118,20 @@ export const draw = canvas => {
     });
     drawDot(bufferCtx, firstPointDotSize, firstPoint, firstPointColour);
     drawDot(bufferCtx, lastPointDotSize, lastPoint, lastPointColour);
+  }
+
+  if (selected === "clone") {
+    const { getClonedShapeVertices } = CloneInterface();
+    const clonedVertices = getClonedShapeVertices();
+
+    if (clonedVertices.length) {
+      drawShape(bufferCtx, clonedVertices, mousePos, {
+        strokeStyle: "black",
+        lineWidth: 1,
+        globalAlpha: 0.3,
+        fillStyle: "blue"
+      });
+    }
   }
 
   displaySceneInfo(bufferCtx);

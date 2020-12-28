@@ -17,7 +17,7 @@ import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import Vector from "./maths/Vector";
 import { retrieveLocalRules } from "./eventRules";
-import { PolylineInterface } from "../../engine/shapes/shapes";
+import { PolylineInterface, CloneInterface } from "../../engine/shapes/shapes";
 import { magnitude } from "../../engine/utils/maths/Vector";
 
 const timeStep = Scene.timeStep;
@@ -125,6 +125,43 @@ export const mouseDown = element => {
       ) {
         addVertex(Scene.mousePos);
       }
+      if (Scene.selected === "clone" && evt.which === 1) {
+        forEachShape(function(idx) {
+          const onShape = ShapesController.getProperty(idx, "onShape");
+          if (onShape) {
+            const {
+              setClonedShapeId,
+              setClonedShapeLinewidth,
+              setClonedShapeColour,
+              setClonedShapeVertices
+            } = CloneInterface(idx);
+            setClonedShapeId();
+            setClonedShapeLinewidth();
+            setClonedShapeColour();
+            setClonedShapeVertices();
+          }
+        });
+        const {
+          getClonedShapeId,
+          getClonedShapeVertices,
+          getClonedShapeLinewidth,
+          getClonedShapeColour
+        } = CloneInterface();
+        const cloneShapeId = getClonedShapeId();
+        if (cloneShapeId) {
+          const onClonedShape = ShapesController.getProperty(
+            cloneShapeId,
+            "onShape"
+          );
+          const vertices = getClonedShapeVertices();
+          const linewidth = getClonedShapeLinewidth();
+          const fillColour = getClonedShapeColour();
+          console.log({ cloneShapeId, vertices, linewidth, fillColour });
+          if (!onClonedShape) {
+            createShape(mousePos, vertices);
+          }
+        }
+      }
     },
     false
   );
@@ -203,10 +240,15 @@ export const rightClick = element => {
   element.addEventListener(
     "contextmenu",
     function(evt) {
-      const { resetVertices } = PolylineInterface();
       if (Scene.selected === "polyline") {
+        const { resetVertices } = PolylineInterface();
         evt.preventDefault();
         resetVertices();
+      }
+      if (Scene.selected === "clone") {
+        const { resetClone } = CloneInterface();
+        evt.preventDefault();
+        resetClone();
       }
     },
     false

@@ -14,11 +14,17 @@ let Scene = {
   cursorOnshape: false,
   selected: "none",
   throwArray: [],
-  polyLineVertices: [],
   polyline: {
     vertices: [],
     firstPoint: { radius: 5, isCursorOnPoint: false },
     lastPoint: { radius: 5, isCursorOnPoint: false }
+  },
+  clone: {
+    clonedShapeId: "",
+    vertices: [],
+    strokeStyle: "",
+    linewidth: 0,
+    fillColour: ""
   },
   isDrawing: false,
   timeStep: 16,

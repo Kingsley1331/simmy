@@ -1,5 +1,6 @@
 import React from "react";
 import Scene from "../../../../src/engine/scenes/scene";
+import { CloneInterface } from "../../../engine/shapes/shapes";
 
 export const update = () => {
   const name = prompt("Please enter a name for the scene", Scene.name);
@@ -60,7 +61,9 @@ export const BUTTONS = [
   { name: "save", onClick: update },
   { name: "update", onClick: save },
   { name: "polyline", onClick: () => (Scene.polyline.vertices = []) },
-  { name: "draw", onClick: () => (Scene.polyline.vertices = []) }
+  { name: "draw", onClick: () => (Scene.polyline.vertices = []) },
+  { name: "clone", onClick: CloneInterface().resetClone },
+  { name: "reshape" }
 ];
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
   return (
