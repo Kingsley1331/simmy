@@ -7,6 +7,7 @@ export function createWalls() {
   leftWall.physics.mass = Infinity;
   leftWall.physics.momentOfInertia = Infinity;
   leftWall.physics.momentOfInertiaCOM = Infinity;
+  leftWall.physics.acceleration = { x: 0, y: 0 };
   leftWall.type = "fixed";
   leftWall.events.subscribed = false;
   leftWall.events.subscribed = false;
@@ -19,6 +20,7 @@ export function createWalls() {
   rightWall.physics.mass = Infinity;
   rightWall.physics.momentOfInertia = Infinity;
   rightWall.physics.momentOfInertiaCOM = Infinity;
+  rightWall.physics.acceleration = { x: 0, y: 0 };
   rightWall.type = "fixed";
   rightWall.events.subscribed = false;
   rightWall.events.subscribed = false;
@@ -31,6 +33,7 @@ export function createWalls() {
   bottomWall.physics.mass = Infinity;
   bottomWall.physics.momentOfInertia = Infinity;
   bottomWall.physics.momentOfInertiaCOM = Infinity;
+  bottomWall.physics.acceleration = { x: 0, y: 0 };
   bottomWall.type = "fixed";
   bottomWall.events.subscribed = false;
   bottomWall.events.subscribed = false;
@@ -43,6 +46,7 @@ export function createWalls() {
   topWall.physics.mass = Infinity;
   topWall.physics.momentOfInertia = Infinity;
   topWall.physics.momentOfInertiaCOM = Infinity;
+  topWall.physics.acceleration = { x: 0, y: 0 };
   topWall.type = "fixed";
   topWall.events.subscribed = false;
   topWall.events.subscribed = false;

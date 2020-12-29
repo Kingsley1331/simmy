@@ -26,6 +26,11 @@ let Scene = {
     linewidth: 0,
     fillColour: ""
   },
+  reshape: {
+    currentVertex: null,
+    selectedShapeId: "",
+    isVertexBeingDragged: false
+  },
   isDrawing: false,
   timeStep: 16,
   time: 0,

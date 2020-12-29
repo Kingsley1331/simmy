@@ -1,5 +1,4 @@
 import Vector, { rotateShape } from "../../../utils/maths/Vector";
-
 export function screenWriter(context, text, position) {
   context.save();
   context.fillStyle = "black";
@@ -8,26 +7,33 @@ export function screenWriter(context, text, position) {
   context.restore();
 }
 
-export function drawShape(context, vertices, centreOfMass, config) {
-  var num = vertices.length;
-  var x0 = vertices[0].x + centreOfMass.x;
-  var y0 = vertices[0].y + centreOfMass.y;
+export function drawShape(
+  context,
+  vertices,
+  centreOfMass,
+  config,
+  callback = () => {}
+) {
+  const numOfVertices = vertices.length;
+  const x0 = vertices[0].x + centreOfMass.x;
+  const y0 = vertices[0].y + centreOfMass.y;
 
   context.beginPath();
   context.moveTo(x0, y0);
-  for (var j = 1; j < num; j++) {
-    var x = vertices[j].x + centreOfMass.x;
-    var y = vertices[j].y + centreOfMass.y;
+  for (let j = 1; j < numOfVertices; j++) {
+    const x = vertices[j].x + centreOfMass.x;
+    const y = vertices[j].y + centreOfMass.y;
     context.lineTo(x, y);
   }
   context.save();
-  for (var prop in config) {
+  for (let prop in config) {
     context[prop] = config[prop];
   }
   context.closePath();
   context.stroke();
   context.fill();
   context.restore();
+  callback(vertices);
 }
 
 export const drawPolyline = (context, vertices, config, open = false) => {

@@ -1,7 +1,8 @@
 import {
   forEachShape,
   PolylineInterface,
-  CloneInterface
+  CloneInterface,
+  reshapeInterface
 } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
@@ -9,7 +10,8 @@ import {
   drawShape,
   drawPolyline,
   drawDot,
-  drawLine
+  drawLine,
+  screenWriter
 } from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
 
@@ -40,6 +42,7 @@ export const draw = canvas => {
 
   forEachShape(i => {
     var onShape = ShapesController.getProperty(i, "onShape");
+    var shapeId = ShapesController.getProperty(i, "id");
     if (onShape) {
       var shadowColor = (shadowColor = "rgba( 9, 9, 9, 0.3)");
       var shadowOffsetX = (shadowOffsetX = 10);
@@ -63,7 +66,26 @@ export const draw = canvas => {
       lineWidth: lineWidth
     };
 
-    drawShape(bufferCtx, vertices, centreOfMass, config);
+    drawShape(bufferCtx, vertices, centreOfMass, config, points => {
+      if (Scene.selected === "reshape") {
+        const { getVertexIndex, getSelectedShapeId } = reshapeInterface();
+        const selectedShapeId = getSelectedShapeId();
+        if (selectedShapeId && selectedShapeId === shapeId) {
+          const numOfVertices = points.length;
+          for (let v = 0; v < numOfVertices; v++) {
+            let dotSize = 2;
+            const x = points[v].x + centreOfMass.x;
+            const y = points[v].y + centreOfMass.y;
+            const vertex = getVertexIndex();
+            if (vertex === v) {
+              dotSize = 4;
+            }
+            drawDot(bufferCtx, dotSize, { x, y }, "black");
+            screenWriter(bufferCtx, v, { x: x + 4, y: y - 4 });
+          }
+        }
+      }
+    });
 
     if (display) {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);

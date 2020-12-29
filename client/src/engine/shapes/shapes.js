@@ -362,6 +362,30 @@ export const CloneInterface = idx => {
   };
 };
 
+export const reshapeInterface = () => {
+  const setVertex = vertex => {
+    Scene.reshape.currentVertex = vertex;
+  };
+  const selectShape = id => {
+    Scene.reshape.selectedShapeId = id;
+  };
+  const setIsVertexBeingDragged = bool => {
+    Scene.reshape.isVertexBeingDragged = bool;
+  };
+  const getVertexIndex = () => Scene.reshape.currentVertex;
+  const getSelectedShapeId = () => Scene.reshape.selectedShapeId;
+  const getIsVertexBeingDragged = () => Scene.reshape.isVertexBeingDragged;
+
+  return {
+    setVertex,
+    getVertexIndex,
+    selectShape,
+    getSelectedShapeId,
+    getIsVertexBeingDragged,
+    setIsVertexBeingDragged
+  };
+};
+
 export function createShapeFromPolyline() {
   const { selected } = Scene;
   const { vertices, resetVertices } = PolylineInterface();
@@ -470,7 +494,12 @@ export function isPointInShape(centreOfMass, vertices, point) {
 }
 
 export function prepareToMoveShape(i) {
-  if (ShapesController.getProperty(i, "onShape")) {
+  const { getSelectedShapeId } = reshapeInterface();
+  const shapeId = ShapesController.getProperty(i, "id");
+  const isShapeMovable =
+    shapeId !== getSelectedShapeId() || Scene.selected !== "reshape";
+
+  if (ShapesController.getProperty(i, "onShape") && isShapeMovable) {
     let mousePos = Scene.mousePos;
     if (Scene.selected === "play") {
       ShapesController.setProperty(i, "velocity", { x: 0, y: 0 }, true);

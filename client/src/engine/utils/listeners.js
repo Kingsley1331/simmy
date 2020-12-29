@@ -1,4 +1,4 @@
-import getMousePos from "./position";
+import getMousePos, { calculateDistanceFromCursor } from "./position";
 import { makeThrowArray } from "./throw";
 import {
   detectShape,
@@ -17,7 +17,11 @@ import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import Vector from "./maths/Vector";
 import { retrieveLocalRules } from "./eventRules";
-import { PolylineInterface, CloneInterface } from "../../engine/shapes/shapes";
+import {
+  PolylineInterface,
+  CloneInterface,
+  reshapeInterface
+} from "../../engine/shapes/shapes";
 import { magnitude } from "../../engine/utils/maths/Vector";
 
 const timeStep = Scene.timeStep;
@@ -101,7 +105,14 @@ export const mouseDown = element => {
         typeof shapeSelection[Scene.selected] === "object" &&
         !Scene.cursorOnshape
       ) {
-        const shape = createShape(mousePos, shapeSelection[Scene.selected]);
+        const uniqueShapeVertices = shapeSelection[Scene.selected].map(
+          vertex => ({
+            x: vertex.x,
+            y: vertex.y
+          })
+        );
+
+        const shape = createShape(mousePos, uniqueShapeVertices);
         if (Scene.selected === "circle") {
           shape.type = "circle";
         }
@@ -141,12 +152,7 @@ export const mouseDown = element => {
             setClonedShapeVertices();
           }
         });
-        const {
-          getClonedShapeId,
-          getClonedShapeVertices,
-          getClonedShapeLinewidth,
-          getClonedShapeColour
-        } = CloneInterface();
+        const { getClonedShapeId, getClonedShapeVertices } = CloneInterface();
         const cloneShapeId = getClonedShapeId();
         if (cloneShapeId) {
           const onClonedShape = ShapesController.getProperty(
@@ -154,12 +160,27 @@ export const mouseDown = element => {
             "onShape"
           );
           const vertices = getClonedShapeVertices();
-          const linewidth = getClonedShapeLinewidth();
-          const fillColour = getClonedShapeColour();
-          console.log({ cloneShapeId, vertices, linewidth, fillColour });
+
           if (!onClonedShape) {
             createShape(mousePos, vertices);
           }
+        }
+      }
+      if (Scene.selected === "reshape") {
+        const {
+          selectShape,
+          setIsVertexBeingDragged,
+          getVertexIndex
+        } = reshapeInterface();
+        forEachShape(function(idx) {
+          const onShape = ShapesController.getProperty(idx, "onShape");
+          if (onShape) {
+            const shapeId = ShapesController.getProperty(idx, "id");
+            selectShape(shapeId);
+          }
+        });
+        if (getVertexIndex() !== null) {
+          setIsVertexBeingDragged(true);
         }
       }
     },
@@ -216,6 +237,58 @@ export const mouseMove = element => {
     } else {
       setLastPoint(false);
     }
+
+    if (selected === "reshape") {
+      const {
+        getVertexIndex,
+        setVertex,
+        getSelectedShapeId,
+        getIsVertexBeingDragged
+      } = reshapeInterface();
+      const selectedShapeId = getSelectedShapeId();
+      const selectedShape = Scene.shapes.filter(
+        shape => shape.id === selectedShapeId
+      )[0];
+
+      setVertex(null);
+      forEachShape(function(idx) {
+        // const shapeId = ShapesController.getProperty(idx, "id");
+        // const onShape = ShapesController.getProperty(idx, "onShape");
+        if (idx === selectedShapeId) {
+          const centreOfMass = selectedShape.centreOfMass;
+          const vertices = selectedShape.vertices.map(vertex => ({
+            x: vertex.x,
+            y: vertex.y
+          }));
+
+          const numOfVertices = vertices.length;
+          for (let v = 0; v < numOfVertices; v++) {
+            const vertex = vertices[v];
+            const { x, y } = vertex;
+            const distanceFromCursor = calculateDistanceFromCursor(
+              {
+                x: x + centreOfMass.x,
+                y: y + centreOfMass.y
+              },
+              mousePos
+            );
+
+            if (distanceFromCursor < 10) {
+              setVertex(v);
+            }
+          }
+          if (getIsVertexBeingDragged()) {
+            const vertexIndex = getVertexIndex();
+            if (selectedShape.vertices[vertexIndex]) {
+              selectedShape.vertices[vertexIndex].x =
+                mousePos.x - centreOfMass.x;
+              selectedShape.vertices[vertexIndex].y =
+                mousePos.y - centreOfMass.y;
+            }
+          }
+        }
+      }, false);
+    }
   });
 };
 
@@ -230,6 +303,10 @@ export const mouseUp = element => {
       if (Scene.selected === "draw") {
         Scene.isDrawing = false;
         createShapeFromPolyline();
+      }
+      if (Scene.selected === "reshape") {
+        const { setIsVertexBeingDragged } = reshapeInterface();
+        setIsVertexBeingDragged(false);
       }
     },
     false
