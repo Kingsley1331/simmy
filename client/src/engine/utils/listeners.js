@@ -249,8 +249,9 @@ export const mouseMove = element => {
       const selectedShape = Scene.shapes.filter(
         shape => shape.id === selectedShapeId
       )[0];
-
-      setVertex(null);
+      if (!getIsVertexBeingDragged()) {
+        setVertex(null);
+      }
       forEachShape(function(idx) {
         // const shapeId = ShapesController.getProperty(idx, "id");
         // const onShape = ShapesController.getProperty(idx, "onShape");
