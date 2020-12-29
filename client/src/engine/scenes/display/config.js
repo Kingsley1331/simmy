@@ -10,7 +10,7 @@ const displayConfig = {
     collisionPointVB: false,
     showCentreOfMass: true,
     showCentreOfRotation: false,
-    showBoundingRectCentre: false
+    showBoundingRectCentre: true
   }
 };
 

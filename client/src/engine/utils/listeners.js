@@ -23,6 +23,9 @@ import {
   reshapeInterface
 } from "../../engine/shapes/shapes";
 import { magnitude } from "../../engine/utils/maths/Vector";
+import findBoundingRect from "../shapes/findBoundingRect";
+import { findMass } from "../physics/mass/mass";
+import { findMomentOfInertiaCOM } from "../physics/mass/momentOfInertia";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -159,7 +162,10 @@ export const mouseDown = element => {
             cloneShapeId,
             "onShape"
           );
-          const vertices = getClonedShapeVertices();
+          const vertices = getClonedShapeVertices().map(vertex => ({
+            x: vertex.x,
+            y: vertex.y
+          }));
 
           if (!onClonedShape) {
             createShape(mousePos, vertices);
@@ -306,8 +312,40 @@ export const mouseUp = element => {
         createShapeFromPolyline();
       }
       if (Scene.selected === "reshape") {
-        const { setIsVertexBeingDragged } = reshapeInterface();
+        const {
+          setIsVertexBeingDragged,
+          getSelectedShapeId
+        } = reshapeInterface();
         setIsVertexBeingDragged(false);
+        const selectedShapeId = getSelectedShapeId();
+        const selectedShape = Scene.shapes.filter(
+          shape => shape.id === selectedShapeId
+        )[0];
+        const { vertices, centreOfMass } = selectedShape;
+        let boundingRect = findBoundingRect(vertices);
+        const massData = findMass(centreOfMass, vertices, boundingRect);
+        const { mass, centreOfMass: newCentreOfMass } = massData;
+        const centreOfMassShift = {
+          x: newCentreOfMass.x - centreOfMass.x,
+          y: newCentreOfMass.y - centreOfMass.y
+        };
+        const shiftedVertices = vertices.map(vertex => ({
+          x: vertex.x - centreOfMassShift.x,
+          y: vertex.y - centreOfMassShift.y
+        }));
+        boundingRect = findBoundingRect(shiftedVertices);
+
+        const momentOfInertiaCOM = findMomentOfInertiaCOM(
+          newCentreOfMass,
+          shiftedVertices,
+          boundingRect
+        );
+        selectedShape.vertices = shiftedVertices;
+        selectedShape.boundingRect = boundingRect;
+        selectedShape.centreOfMass = newCentreOfMass;
+        selectedShape.centreOfRotation = newCentreOfMass;
+        selectedShape.physics.mass = mass;
+        selectedShape.physics.momentOfInertiaCOM = momentOfInertiaCOM;
       }
     },
     false
