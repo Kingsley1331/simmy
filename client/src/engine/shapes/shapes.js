@@ -372,6 +372,7 @@ export const reshapeInterface = () => {
   const setIsVertexBeingDragged = bool => {
     Scene.reshape.isVertexBeingDragged = bool;
   };
+
   const getVertexIndex = () => Scene.reshape.currentVertex;
   const getSelectedShapeId = () => Scene.reshape.selectedShapeId;
   const getIsVertexBeingDragged = () => Scene.reshape.isVertexBeingDragged;
@@ -494,10 +495,9 @@ export function isPointInShape(centreOfMass, vertices, point) {
 }
 
 export function prepareToMoveShape(i) {
-  const { getSelectedShapeId } = reshapeInterface();
-  const shapeId = ShapesController.getProperty(i, "id");
-  const isShapeMovable =
-    shapeId !== getSelectedShapeId() || Scene.selected !== "reshape";
+  const { getVertexIndex } = reshapeInterface();
+
+  const isShapeMovable = !getVertexIndex();
 
   if (ShapesController.getProperty(i, "onShape") && isShapeMovable) {
     let mousePos = Scene.mousePos;

@@ -29,6 +29,7 @@ let Scene = {
   reshape: {
     currentVertex: null,
     selectedShapeId: "",
+    isCursorOnVertex: false,
     isVertexBeingDragged: false
   },
   isDrawing: false,
