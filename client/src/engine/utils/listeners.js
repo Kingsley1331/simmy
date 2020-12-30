@@ -70,7 +70,7 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
           // addRules(rules);
         }
       }, false);
-      createShapeFromPolyline();
+      createShapeFromPolyline(true);
     },
     false
   );

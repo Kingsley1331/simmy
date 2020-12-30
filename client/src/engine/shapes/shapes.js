@@ -387,12 +387,18 @@ export const reshapeInterface = () => {
   };
 };
 
-export function createShapeFromPolyline() {
+export function createShapeFromPolyline(fromDblclick) {
   const { selected } = Scene;
   const { vertices, resetVertices } = PolylineInterface();
+  const numOfVertices = vertices.length;
+
+  if (fromDblclick) {
+    vertices.splice(numOfVertices - 1, 1);
+  }
 
   const usingPolylines = selected === "polyline" || selected === "draw";
-  if (vertices.length > 2 && usingPolylines) {
+
+  if (numOfVertices > 2 && usingPolylines) {
     const boundingRect = findBoundingRect(vertices);
     const mass = findMass({ x: 0, y: 0 }, vertices, boundingRect);
     const centreOfMass = mass.centreOfMass;
@@ -497,7 +503,7 @@ export function isPointInShape(centreOfMass, vertices, point) {
 export function prepareToMoveShape(i) {
   const { getVertexIndex } = reshapeInterface();
 
-  const isShapeMovable = !getVertexIndex();
+  const isShapeMovable = getVertexIndex() === null;
 
   if (ShapesController.getProperty(i, "onShape") && isShapeMovable) {
     let mousePos = Scene.mousePos;
