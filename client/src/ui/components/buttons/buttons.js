@@ -63,7 +63,8 @@ export const BUTTONS = [
   { name: "polyline", onClick: () => (Scene.polyline.vertices = []) },
   { name: "draw", onClick: () => (Scene.polyline.vertices = []) },
   { name: "clone", onClick: CloneInterface().resetClone },
-  { name: "reshape" }
+  { name: "reshape" },
+  { name: "resize" }
 ];
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
   return (

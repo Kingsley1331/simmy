@@ -318,34 +318,36 @@ export const mouseUp = element => {
         } = reshapeInterface();
         setIsVertexBeingDragged(false);
         const selectedShapeId = getSelectedShapeId();
-        const selectedShape = Scene.shapes.filter(
-          shape => shape.id === selectedShapeId
-        )[0];
-        const { vertices, centreOfMass } = selectedShape;
-        let boundingRect = findBoundingRect(vertices);
-        const massData = findMass(centreOfMass, vertices, boundingRect);
-        const { mass, centreOfMass: newCentreOfMass } = massData;
-        const centreOfMassShift = {
-          x: newCentreOfMass.x - centreOfMass.x,
-          y: newCentreOfMass.y - centreOfMass.y
-        };
-        const shiftedVertices = vertices.map(vertex => ({
-          x: vertex.x - centreOfMassShift.x,
-          y: vertex.y - centreOfMassShift.y
-        }));
-        boundingRect = findBoundingRect(shiftedVertices);
+        if (selectedShapeId) {
+          const selectedShape = Scene.shapes.filter(
+            shape => shape.id === selectedShapeId
+          )[0];
+          const { vertices, centreOfMass } = selectedShape;
+          let boundingRect = findBoundingRect(vertices);
+          const massData = findMass(centreOfMass, vertices, boundingRect);
+          const { mass, centreOfMass: newCentreOfMass } = massData;
+          const centreOfMassShift = {
+            x: newCentreOfMass.x - centreOfMass.x,
+            y: newCentreOfMass.y - centreOfMass.y
+          };
+          const shiftedVertices = vertices.map(vertex => ({
+            x: vertex.x - centreOfMassShift.x,
+            y: vertex.y - centreOfMassShift.y
+          }));
+          boundingRect = findBoundingRect(shiftedVertices);
 
-        const momentOfInertiaCOM = findMomentOfInertiaCOM(
-          newCentreOfMass,
-          shiftedVertices,
-          boundingRect
-        );
-        selectedShape.vertices = shiftedVertices;
-        selectedShape.boundingRect = boundingRect;
-        selectedShape.centreOfMass = newCentreOfMass;
-        selectedShape.centreOfRotation = newCentreOfMass;
-        selectedShape.physics.mass = mass;
-        selectedShape.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+          const momentOfInertiaCOM = findMomentOfInertiaCOM(
+            newCentreOfMass,
+            shiftedVertices,
+            boundingRect
+          );
+          selectedShape.vertices = shiftedVertices;
+          selectedShape.boundingRect = boundingRect;
+          selectedShape.centreOfMass = newCentreOfMass;
+          selectedShape.centreOfRotation = newCentreOfMass;
+          selectedShape.physics.mass = mass;
+          selectedShape.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+        }
       }
     },
     false
