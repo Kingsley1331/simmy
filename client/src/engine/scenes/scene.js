@@ -29,8 +29,46 @@ let Scene = {
   reshape: {
     currentVertex: null,
     selectedShapeId: "",
-    isCursorOnVertex: false,
     isVertexBeingDragged: false
+  },
+  resize: {
+    selectedShapeIndex: null,
+    sideLength: 7,
+    resizeBoundingRect: [],
+    resizer: {
+      topLeft: {
+        hovering: false,
+        dragging: false
+      },
+      topMiddle: {
+        hovering: false,
+        dragging: false
+      },
+      topRight: {
+        hovering: false,
+        dragging: false
+      },
+      rightMiddle: {
+        hovering: false,
+        dragging: false
+      },
+      rightBottom: {
+        hovering: false,
+        dragging: false
+      },
+      bottomMiddle: {
+        hovering: false,
+        dragging: false
+      },
+      bottomLeft: {
+        hovering: false,
+        dragging: false
+      },
+      leftMiddle: {
+        hovering: false,
+        dragging: false
+      }
+    }
   },
   isDrawing: false,
   timeStep: 16,

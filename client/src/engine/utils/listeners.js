@@ -20,7 +20,8 @@ import { retrieveLocalRules } from "./eventRules";
 import {
   PolylineInterface,
   CloneInterface,
-  reshapeInterface
+  reshapeInterface,
+  resizeInterface
 } from "../../engine/shapes/shapes";
 import { magnitude } from "../../engine/utils/maths/Vector";
 import findBoundingRect from "../shapes/findBoundingRect";
@@ -75,6 +76,7 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
     false
   );
 };
+
 export const mouseDown = element => {
   element.addEventListener(
     "mousedown",
@@ -189,114 +191,229 @@ export const mouseDown = element => {
           setIsVertexBeingDragged(true);
         }
       }
+      if (Scene.selected === "resize") {
+        forEachShape(function(idx) {
+          const onShape = ShapesController.getProperty(idx, "onShape");
+          if (onShape) {
+            const { selectShape, setResizeBoundingRect } = resizeInterface();
+            selectShape(idx);
+            const boundingRect = ShapesController.getProperty(
+              idx,
+              "boundingRect"
+            );
+            setResizeBoundingRect(boundingRect.vertices);
+          }
+        });
+      }
     },
     false
   );
 };
 
 export const mouseMove = element => {
-  element.addEventListener("mousemove", function(evt) {
-    const { selected, isDrawing, shapes, mousePos } = Scene;
+  element.addEventListener(
+    "mousemove",
+    function(evt) {
+      const { selected, isDrawing, shapes, mousePos } = Scene;
 
-    const {
-      vertices,
-      firstPointRadius,
-      lastPointRadius,
-      setFirstPoint,
-      setLastPoint
-    } = PolylineInterface();
-
-    getMousePos(evt, element);
-    if (selected === "play") {
-      makeThrowArray();
-    }
-    forEachShape(function(i) {
-      detectShape(i);
-    }, false);
-    /**** TODO: consider using ShapesController to get shape properties ****/
-    const cursorOnshape = shapes.some(shape => shape.onShape);
-    Scene.cursorOnshape = cursorOnshape;
-    if (selected === "draw" && isDrawing && !cursorOnshape) {
-      vertices.push(mousePos);
-    } /** detect hovering over first polyline vertex */
-    const numOfVertices = vertices.length;
-    const firstPoint = vertices[0] || [];
-    const distanceVector = {
-      x: firstPoint.x - mousePos.x,
-      y: firstPoint.y - mousePos.y
-    };
-    const cursorDotDistance = magnitude(distanceVector);
-    if (cursorDotDistance <= firstPointRadius && numOfVertices > 2) {
-      setFirstPoint(true);
-    } else {
-      setFirstPoint(false);
-    }
-    /** detect hovering over last polyline vertex */
-    const lastPoint = vertices[numOfVertices - 1] || [];
-    const distanceVector2 = {
-      x: lastPoint.x - mousePos.x,
-      y: lastPoint.y - mousePos.y
-    };
-    const cursorDotDistance2 = magnitude(distanceVector2);
-    if (cursorDotDistance2 <= lastPointRadius) {
-      setLastPoint(true);
-    } else {
-      setLastPoint(false);
-    }
-
-    if (selected === "reshape") {
       const {
-        getVertexIndex,
-        setVertex,
-        getSelectedShapeId,
-        getIsVertexBeingDragged
-      } = reshapeInterface();
-      const selectedShapeId = getSelectedShapeId();
-      const selectedShape = Scene.shapes.filter(
-        shape => shape.id === selectedShapeId
-      )[0];
-      if (!getIsVertexBeingDragged()) {
-        setVertex(null);
+        vertices,
+        firstPointRadius,
+        lastPointRadius,
+        setFirstPoint,
+        setLastPoint
+      } = PolylineInterface();
+
+      getMousePos(evt, element);
+      if (selected === "play") {
+        makeThrowArray();
       }
-      forEachShape(function(idx) {
-        // const shapeId = ShapesController.getProperty(idx, "id");
-        // const onShape = ShapesController.getProperty(idx, "onShape");
-        if (idx === selectedShapeId) {
-          const centreOfMass = selectedShape.centreOfMass;
-          const vertices = selectedShape.vertices.map(vertex => ({
-            x: vertex.x,
-            y: vertex.y
-          }));
+      forEachShape(function(i) {
+        detectShape(i);
+      }, false);
+      /**** TODO: consider using ShapesController to get shape properties ****/
+      const cursorOnshape = shapes.some(shape => shape.onShape);
+      Scene.cursorOnshape = cursorOnshape;
+      if (selected === "draw" && isDrawing && !cursorOnshape) {
+        vertices.push(mousePos);
+      } /** detect hovering over first polyline vertex */
+      const numOfVertices = vertices.length;
+      const firstPoint = vertices[0] || [];
+      const distanceVector = {
+        x: firstPoint.x - mousePos.x,
+        y: firstPoint.y - mousePos.y
+      };
+      const cursorDotDistance = magnitude(distanceVector);
+      if (cursorDotDistance <= firstPointRadius && numOfVertices > 2) {
+        setFirstPoint(true);
+      } else {
+        setFirstPoint(false);
+      }
+      /** detect hovering over last polyline vertex */
+      const lastPoint = vertices[numOfVertices - 1] || [];
+      const distanceVector2 = {
+        x: lastPoint.x - mousePos.x,
+        y: lastPoint.y - mousePos.y
+      };
+      const cursorDotDistance2 = magnitude(distanceVector2);
+      if (cursorDotDistance2 <= lastPointRadius) {
+        setLastPoint(true);
+      } else {
+        setLastPoint(false);
+      }
 
-          const numOfVertices = vertices.length;
-          for (let v = 0; v < numOfVertices; v++) {
-            const vertex = vertices[v];
-            const { x, y } = vertex;
-            const distanceFromCursor = calculateDistanceFromCursor(
-              {
-                x: x + centreOfMass.x,
-                y: y + centreOfMass.y
-              },
-              mousePos
-            );
+      if (selected === "reshape") {
+        const {
+          getVertexIndex,
+          setVertex,
+          getSelectedShapeId,
+          getIsVertexBeingDragged
+        } = reshapeInterface();
+        const selectedShapeId = getSelectedShapeId();
+        const selectedShape = Scene.shapes.filter(
+          shape => shape.id === selectedShapeId
+        )[0];
+        if (!getIsVertexBeingDragged()) {
+          setVertex(null);
+        }
+        forEachShape(function(idx) {
+          // const shapeId = ShapesController.getProperty(idx, "id");
+          // const onShape = ShapesController.getProperty(idx, "onShape");
+          if (idx === selectedShapeId) {
+            const centreOfMass = selectedShape.centreOfMass;
+            const vertices = selectedShape.vertices.map(vertex => ({
+              x: vertex.x,
+              y: vertex.y
+            }));
 
-            if (distanceFromCursor < 10) {
-              setVertex(v);
+            const numOfVertices = vertices.length;
+            for (let v = 0; v < numOfVertices; v++) {
+              const vertex = vertices[v];
+              const { x, y } = vertex;
+              const distanceFromCursor = calculateDistanceFromCursor(
+                {
+                  x: x + centreOfMass.x,
+                  y: y + centreOfMass.y
+                },
+                mousePos
+              );
+
+              if (distanceFromCursor < 10) {
+                setVertex(v);
+              }
+            }
+            if (getIsVertexBeingDragged()) {
+              const vertexIndex = getVertexIndex();
+              if (selectedShape.vertices[vertexIndex]) {
+                selectedShape.vertices[vertexIndex].x =
+                  mousePos.x - centreOfMass.x;
+                selectedShape.vertices[vertexIndex].y =
+                  mousePos.y - centreOfMass.y;
+              }
             }
           }
-          if (getIsVertexBeingDragged()) {
-            const vertexIndex = getVertexIndex();
-            if (selectedShape.vertices[vertexIndex]) {
-              selectedShape.vertices[vertexIndex].x =
-                mousePos.x - centreOfMass.x;
-              selectedShape.vertices[vertexIndex].y =
-                mousePos.y - centreOfMass.y;
+        }, false);
+      }
+
+      if (Scene.selected === "resize") {
+        const {
+          getSelectedShapeIndex,
+          getSelectedSideLength
+        } = resizeInterface();
+        const selectedShapeIndex = getSelectedShapeIndex();
+        if (selectedShapeIndex) {
+          const boundingRect = ShapesController.getProperty(
+            selectedShapeIndex,
+            "boundingRect"
+          );
+
+          const centreOfMass = ShapesController.getCentreOfMass(
+            selectedShapeIndex
+          );
+
+          const { vertices } = boundingRect;
+          const halfLength = getSelectedSideLength() / 2;
+          const resizers = {
+            topLeft: {
+              x: vertices[0].x + centreOfMass.x,
+              y: vertices[0].y + centreOfMass.y
+            },
+            topMiddle: {
+              x: (vertices[0].x + vertices[1].x) / 2 + centreOfMass.x,
+              y: (vertices[0].y + vertices[1].y) / 2 + centreOfMass.y
+            },
+            topRight: {
+              x: vertices[1].x + centreOfMass.x,
+              y: vertices[1].y + centreOfMass.y
+            },
+            rightMiddle: {
+              x: (vertices[1].x + vertices[2].x) / 2 + centreOfMass.x,
+              y: (vertices[1].y + vertices[2].y) / 2 + centreOfMass.y
+            },
+            rightBottom: {
+              x: vertices[2].x + centreOfMass.x,
+              y: vertices[2].y + centreOfMass.y
+            },
+            bottomMiddle: {
+              x: (vertices[2].x + vertices[3].x) / 2 + centreOfMass.x,
+              y: (vertices[2].y + vertices[3].y) / 2 + centreOfMass.y
+            },
+            bottomLeft: {
+              x: vertices[3].x + centreOfMass.x,
+              y: vertices[3].y + centreOfMass.y
+            },
+            leftMiddle: {
+              x: (vertices[3].x + vertices[0].x) / 2 + centreOfMass.x,
+              y: (vertices[3].y + vertices[0].y) / 2 + centreOfMass.y
             }
+          };
+
+          const checkIfCursorIsOnResizer = resizer =>
+            mousePos.x >= resizers[resizer].x - halfLength &&
+            mousePos.x <= resizers[resizer].x + halfLength &&
+            mousePos.y >= resizers[resizer].y - halfLength &&
+            mousePos.y <= resizers[resizer].y + halfLength;
+
+          const onTopLeft = checkIfCursorIsOnResizer("topLeft");
+          const topMiddle = checkIfCursorIsOnResizer("topMiddle");
+          const topRight = checkIfCursorIsOnResizer("topRight");
+          const rightMiddle = checkIfCursorIsOnResizer("rightMiddle");
+          const rightBottom = checkIfCursorIsOnResizer("rightBottom");
+          const bottomMiddle = checkIfCursorIsOnResizer("bottomMiddle");
+          const bottomLeft = checkIfCursorIsOnResizer("bottomLeft");
+          const leftMiddle = checkIfCursorIsOnResizer("leftMiddle");
+
+          const onResizer = () => {};
+
+          if (onTopLeft) {
+            console.log("onTopLeft");
+          }
+          if (topMiddle) {
+            console.log("topMiddle");
+          }
+          if (topRight) {
+            console.log("topRight");
+          }
+          if (rightMiddle) {
+            console.log("rightMiddle");
+          }
+          if (rightBottom) {
+            console.log("rightBottom");
+          }
+          if (bottomMiddle) {
+            console.log("bottomMiddle");
+          }
+          if (bottomLeft) {
+            console.log("bottomLeft");
+          }
+          if (leftMiddle) {
+            console.log("leftMiddle");
           }
         }
-      }, false);
-    }
-  });
+      }
+    },
+    false
+  );
 };
 
 export const mouseUp = element => {

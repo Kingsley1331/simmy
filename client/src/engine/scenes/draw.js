@@ -2,12 +2,14 @@ import {
   forEachShape,
   PolylineInterface,
   CloneInterface,
-  reshapeInterface
+  reshapeInterface,
+  resizeInterface
 } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
 import {
   drawShape,
+  drawSquare,
   drawPolyline,
   drawDot,
   drawLine,
@@ -81,11 +83,158 @@ export const draw = canvas => {
               dotSize = 4;
             }
             drawDot(bufferCtx, dotSize, { x, y }, "black");
-            screenWriter(bufferCtx, v, { x: x + 4, y: y - 4 });
+            screenWriter(bufferCtx, v, {
+              x: x + 4,
+              y: y - 4
+            });
           }
         }
       }
     });
+
+    // centre: {x: 0.5, y: 3}
+    // maxX: 18.5
+    // maxY: 303
+    // minX: -17.5
+    // minY: -297
+    // radius: 300.53951487283666
+    /*
+     vertices:  [
+    {x: -47.54237891737948, y: -49.97079772079772}
+    {x: 47.56327271213587, y: -49.97079772079772}
+    {x: 47.56327271213587, y: 40.48005199794965}
+    {x: -47.54237891737948, y: 40.48005199794965}
+    ]
+*/
+
+    if (Scene.selected === "resize") {
+      const {
+        getSelectedShapeIndex,
+        getSelectedSideLength,
+        getResizeBoundingRect
+      } = resizeInterface();
+      if (getSelectedShapeIndex() === i) {
+        const boundingRect = ShapesController.getProperty(i, "boundingRect");
+        // const { vertices: rectVertices } = boundingRect;
+
+        const rectVertices = getResizeBoundingRect(boundingRect.vertices);
+        const sideLength = getSelectedSideLength();
+        // console.log("boundingRect", boundingRect);
+        drawShape(bufferCtx, rectVertices, centreOfMass, {
+          lineWidth: 0.5,
+          fillStyle: "transparent",
+          setLineDash: [3, 3]
+        });
+
+        /**In clockwise direction */
+        // top left
+        drawSquare(
+          bufferCtx,
+          {
+            x: rectVertices[0].x + centreOfMass.x,
+            y: rectVertices[0].y + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+        // top middle
+        drawSquare(
+          bufferCtx,
+          {
+            x: (rectVertices[0].x + rectVertices[1].x) / 2 + centreOfMass.x,
+            y: (rectVertices[0].y + rectVertices[1].y) / 2 + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+
+        // top right
+        drawSquare(
+          bufferCtx,
+          {
+            x: rectVertices[1].x + centreOfMass.x,
+            y: rectVertices[1].y + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+        // right middle
+
+        drawSquare(
+          bufferCtx,
+          {
+            x: (rectVertices[1].x + rectVertices[2].x) / 2 + centreOfMass.x,
+            y: (rectVertices[1].y + rectVertices[2].y) / 2 + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+        // right bottom
+        drawSquare(
+          bufferCtx,
+          {
+            x: rectVertices[2].x + centreOfMass.x,
+            y: rectVertices[2].y + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+        // bottom middle
+        drawSquare(
+          bufferCtx,
+          {
+            x: (rectVertices[2].x + rectVertices[3].x) / 2 + centreOfMass.x,
+            y: (rectVertices[2].y + rectVertices[3].y) / 2 + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+        // bottom left
+        drawSquare(
+          bufferCtx,
+          {
+            x: rectVertices[3].x + centreOfMass.x,
+            y: rectVertices[3].y + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+        // left middle
+        drawSquare(
+          bufferCtx,
+          {
+            x: (rectVertices[3].x + rectVertices[0].x) / 2 + centreOfMass.x,
+            y: (rectVertices[3].y + rectVertices[0].y) / 2 + centreOfMass.y
+          },
+          sideLength,
+          {
+            lineWidth: 0.5,
+            fillStyle: "white"
+          }
+        );
+      }
+    }
 
     if (display) {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);

@@ -27,7 +27,11 @@ export function drawShape(
   }
   context.save();
   for (let prop in config) {
-    context[prop] = config[prop];
+    if (typeof context[prop] === "function") {
+      context[prop](config[prop]);
+    } else {
+      context[prop] = config[prop];
+    }
   }
   context.closePath();
   context.stroke();
@@ -35,6 +39,18 @@ export function drawShape(
   context.restore();
   callback(vertices);
 }
+
+export const drawSquare = (context, centre, sideLength, config) => {
+  const length = sideLength / 2;
+  const vertices = [
+    { x: -length, y: -length },
+    { x: length, y: -length },
+    { x: length, y: length },
+    { x: -length, y: length }
+  ];
+
+  drawShape(context, vertices, centre, config);
+};
 
 export const drawPolyline = (context, vertices, config, open = false) => {
   var numOfPoints = vertices.length;
@@ -75,8 +91,6 @@ export function drawDot(context, radius, centre, colour) {
 
 export function drawLine(context, start, end, config) {
   context.save();
-  // context.strokeStyle = 'red';
-  // context.lineWidth = 2;
   for (var prop in config) {
     if (typeof context[prop] === "function") {
       context[prop](config[prop]);

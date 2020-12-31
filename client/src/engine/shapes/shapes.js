@@ -387,6 +387,31 @@ export const reshapeInterface = () => {
   };
 };
 
+export const resizeInterface = () => {
+  const selectShape = idx => {
+    Scene.resize.selectedShapeIndex = idx;
+  };
+  const setResizeBoundingRect = vertices => {
+    const resizeVertices = vertices.map(vertex => ({
+      x: vertex.x,
+      y: vertex.y
+    }));
+    Scene.resize.resizeBoundingRect = resizeVertices;
+  };
+
+  const getSelectedShapeIndex = () => Scene.resize.selectedShapeIndex;
+  const getSelectedSideLength = () => Scene.resize.sideLength;
+  const getResizeBoundingRect = () => Scene.resize.resizeBoundingRect;
+
+  return {
+    selectShape,
+    getSelectedShapeIndex,
+    getSelectedSideLength,
+    getResizeBoundingRect,
+    setResizeBoundingRect
+  };
+};
+
 export function createShapeFromPolyline(fromDblclick) {
   const { selected } = Scene;
   const { vertices, resetVertices } = PolylineInterface();
