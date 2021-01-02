@@ -371,10 +371,22 @@ export const mouseMove = element => {
           const referenceVertices = getReferenceVertices();
 
           const { vertices } = boundingRect;
+
           const resizeBoundingRect = getResizeBoundingRect();
           const centreOfMass = ShapesController.getCentreOfMass(
             selectedShapeIndex
           );
+
+          const boundingRectCentre = {
+            x:
+              (vertices[0].x + vertices[1].x) / 2 +
+              boundingRect.centre.x +
+              centreOfMass.x,
+            y:
+              (vertices[1].y + vertices[2].y) / 2 +
+              boundingRect.centre.y +
+              centreOfMass.y
+          };
 
           const halfLength = getSelectedSideLength() / 2;
           const resizers = {
@@ -444,7 +456,8 @@ export const mouseMove = element => {
           const leftMiddle = checkIfCursorIsOnResizer("leftMiddle");
 
           const expand = axis => {
-            const { x, y } = centreOfMass;
+            const { x, y } = boundingRectCentre;
+            // const { x, y } = centreOfMass;
             const resizerDistanceFromCentre = {
               x: mousePos.x - x,
               y: mousePos.y - y
@@ -469,6 +482,7 @@ export const mouseMove = element => {
                   : expansionRatioX)
             }));
 
+            /**NOTE:Repeated code same as above */
             const expandedVertices = referenceVertices.map(vertex => ({
               x: vertex.x * (axis === "y" ? 1 : expansionRatioX),
               y:
