@@ -388,7 +388,7 @@ export const reshapeInterface = () => {
 };
 
 export const resizeInterface = () => {
-  const selectShape = idx => {
+  const selectShape = (idx = null) => {
     Scene.resize.selectedShapeIndex = idx;
   };
   const setResizeBoundingRect = vertices => {
@@ -399,6 +399,32 @@ export const resizeInterface = () => {
     Scene.resize.resizeBoundingRect = resizeVertices;
   };
 
+  const setCurrentResizer = (resizer = null) => {
+    Scene.resize.currentResizer = resizer;
+  };
+
+  const geCurrentResizer = () => Scene.resize.currentResizer;
+
+  const setResizerDraggingState = state => {
+    Scene.resize.dragging = state;
+  };
+
+  const setDraggable = bool => {
+    Scene.resize.draggable = bool;
+  };
+  const getDraggable = () => Scene.resize.draggable;
+
+  const setOnResizer = bool => {
+    Scene.resize.onResizer = bool;
+  };
+  const getOnResizer = () => Scene.resize.onResizer;
+
+  const setReferenceVertices = vertices => {
+    Scene.resize.referenceVertices = vertices;
+  };
+  const getReferenceVertices = () => Scene.resize.referenceVertices;
+
+  const getResizerDraggingState = () => Scene.resize.dragging;
   const getSelectedShapeIndex = () => Scene.resize.selectedShapeIndex;
   const getSelectedSideLength = () => Scene.resize.sideLength;
   const getResizeBoundingRect = () => Scene.resize.resizeBoundingRect;
@@ -408,7 +434,17 @@ export const resizeInterface = () => {
     getSelectedShapeIndex,
     getSelectedSideLength,
     getResizeBoundingRect,
-    setResizeBoundingRect
+    setResizeBoundingRect,
+    setCurrentResizer,
+    setResizerDraggingState,
+    geCurrentResizer,
+    getResizerDraggingState,
+    setDraggable,
+    getDraggable,
+    setOnResizer,
+    getOnResizer,
+    setReferenceVertices,
+    getReferenceVertices
   };
 };
 
@@ -527,8 +563,9 @@ export function isPointInShape(centreOfMass, vertices, point) {
 
 export function prepareToMoveShape(i) {
   const { getVertexIndex } = reshapeInterface();
+  const { getOnResizer } = resizeInterface();
 
-  const isShapeMovable = getVertexIndex() === null;
+  const isShapeMovable = getVertexIndex() === null && !getOnResizer();
 
   if (ShapesController.getProperty(i, "onShape") && isShapeMovable) {
     let mousePos = Scene.mousePos;
@@ -549,3 +586,32 @@ export function prepareToMoveShape(i) {
 export function clearShapes() {
   Scene.shapes = [];
 }
+
+export const updatePhysicsProperties = shapeId => {
+  const selectedShape = Scene.shapes.filter(shape => shape.id === shapeId)[0];
+  const { vertices, centreOfMass } = selectedShape;
+  let boundingRect = findBoundingRect(vertices);
+  const massData = findMass(centreOfMass, vertices, boundingRect);
+  const { mass, centreOfMass: newCentreOfMass } = massData;
+  const centreOfMassShift = {
+    x: newCentreOfMass.x - centreOfMass.x,
+    y: newCentreOfMass.y - centreOfMass.y
+  };
+  const shiftedVertices = vertices.map(vertex => ({
+    x: vertex.x - centreOfMassShift.x,
+    y: vertex.y - centreOfMassShift.y
+  }));
+  boundingRect = findBoundingRect(shiftedVertices);
+
+  const momentOfInertiaCOM = findMomentOfInertiaCOM(
+    newCentreOfMass,
+    shiftedVertices,
+    boundingRect
+  );
+  selectedShape.vertices = shiftedVertices;
+  selectedShape.boundingRect = boundingRect;
+  selectedShape.centreOfMass = newCentreOfMass;
+  selectedShape.centreOfRotation = newCentreOfMass;
+  selectedShape.physics.mass = mass;
+  selectedShape.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+};

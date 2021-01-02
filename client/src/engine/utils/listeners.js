@@ -7,7 +7,8 @@ import {
   forEachShape,
   prepareToMoveShape,
   releaseShape,
-  createShapeFromPolyline
+  createShapeFromPolyline,
+  updatePhysicsProperties
 } from "../shapes/shapes";
 import ShapesController from "../shapes/ShapesController";
 import { draw } from "../scenes/draw";
@@ -192,16 +193,47 @@ export const mouseDown = element => {
         }
       }
       if (Scene.selected === "resize") {
+        const {
+          selectShape,
+          setResizeBoundingRect,
+          setResizerDraggingState,
+          geCurrentResizer,
+          getSelectedShapeIndex,
+          setDraggable,
+          getOnResizer,
+          setReferenceVertices
+        } = resizeInterface();
+
+        const referenceVertices = getSelectedShapeIndex()
+          ? ShapesController.getProperty(
+              getSelectedShapeIndex(),
+              "vertices"
+            ).map(vertex => ({
+              x: vertex.x,
+              y: vertex.y
+            }))
+          : [];
+
         forEachShape(function(idx) {
           const onShape = ShapesController.getProperty(idx, "onShape");
+
           if (onShape) {
-            const { selectShape, setResizeBoundingRect } = resizeInterface();
             selectShape(idx);
             const boundingRect = ShapesController.getProperty(
               idx,
               "boundingRect"
             );
             setResizeBoundingRect(boundingRect.vertices);
+          }
+          const currentResizer = geCurrentResizer();
+
+          if (currentResizer && getSelectedShapeIndex() === idx) {
+            console.log({ currentResizer });
+            setResizerDraggingState(true);
+            setReferenceVertices(referenceVertices);
+            if (getOnResizer()) {
+              setDraggable(true);
+            }
           }
         });
       }
@@ -269,6 +301,7 @@ export const mouseMove = element => {
           getSelectedShapeId,
           getIsVertexBeingDragged
         } = reshapeInterface();
+
         const selectedShapeId = getSelectedShapeId();
         const selectedShape = Scene.shapes.filter(
           shape => shape.id === selectedShapeId
@@ -318,7 +351,15 @@ export const mouseMove = element => {
       if (Scene.selected === "resize") {
         const {
           getSelectedShapeIndex,
-          getSelectedSideLength
+          getSelectedSideLength,
+          setCurrentResizer,
+          geCurrentResizer,
+          getResizeBoundingRect,
+          setResizeBoundingRect,
+          getResizerDraggingState,
+          getDraggable,
+          setOnResizer,
+          getReferenceVertices
         } = resizeInterface();
         const selectedShapeIndex = getSelectedShapeIndex();
         if (selectedShapeIndex) {
@@ -327,44 +368,63 @@ export const mouseMove = element => {
             "boundingRect"
           );
 
+          const referenceVertices = getReferenceVertices();
+
+          const { vertices } = boundingRect;
+          const resizeBoundingRect = getResizeBoundingRect();
           const centreOfMass = ShapesController.getCentreOfMass(
             selectedShapeIndex
           );
 
-          const { vertices } = boundingRect;
           const halfLength = getSelectedSideLength() / 2;
           const resizers = {
             topLeft: {
-              x: vertices[0].x + centreOfMass.x,
-              y: vertices[0].y + centreOfMass.y
+              x: resizeBoundingRect[0].x + centreOfMass.x,
+              y: resizeBoundingRect[0].y + centreOfMass.y
             },
             topMiddle: {
-              x: (vertices[0].x + vertices[1].x) / 2 + centreOfMass.x,
-              y: (vertices[0].y + vertices[1].y) / 2 + centreOfMass.y
+              x:
+                (resizeBoundingRect[0].x + resizeBoundingRect[1].x) / 2 +
+                centreOfMass.x,
+              y:
+                (resizeBoundingRect[0].y + resizeBoundingRect[1].y) / 2 +
+                centreOfMass.y
             },
             topRight: {
-              x: vertices[1].x + centreOfMass.x,
-              y: vertices[1].y + centreOfMass.y
+              x: resizeBoundingRect[1].x + centreOfMass.x,
+              y: resizeBoundingRect[1].y + centreOfMass.y
             },
             rightMiddle: {
-              x: (vertices[1].x + vertices[2].x) / 2 + centreOfMass.x,
-              y: (vertices[1].y + vertices[2].y) / 2 + centreOfMass.y
+              x:
+                (resizeBoundingRect[1].x + resizeBoundingRect[2].x) / 2 +
+                centreOfMass.x,
+              y:
+                (resizeBoundingRect[1].y + resizeBoundingRect[2].y) / 2 +
+                centreOfMass.y
             },
             rightBottom: {
-              x: vertices[2].x + centreOfMass.x,
-              y: vertices[2].y + centreOfMass.y
+              x: resizeBoundingRect[2].x + centreOfMass.x,
+              y: resizeBoundingRect[2].y + centreOfMass.y
             },
             bottomMiddle: {
-              x: (vertices[2].x + vertices[3].x) / 2 + centreOfMass.x,
-              y: (vertices[2].y + vertices[3].y) / 2 + centreOfMass.y
+              x:
+                (resizeBoundingRect[2].x + resizeBoundingRect[3].x) / 2 +
+                centreOfMass.x,
+              y:
+                (resizeBoundingRect[2].y + resizeBoundingRect[3].y) / 2 +
+                centreOfMass.y
             },
             bottomLeft: {
-              x: vertices[3].x + centreOfMass.x,
-              y: vertices[3].y + centreOfMass.y
+              x: resizeBoundingRect[3].x + centreOfMass.x,
+              y: resizeBoundingRect[3].y + centreOfMass.y
             },
             leftMiddle: {
-              x: (vertices[3].x + vertices[0].x) / 2 + centreOfMass.x,
-              y: (vertices[3].y + vertices[0].y) / 2 + centreOfMass.y
+              x:
+                (resizeBoundingRect[3].x + resizeBoundingRect[0].x) / 2 +
+                centreOfMass.x,
+              y:
+                (resizeBoundingRect[3].y + resizeBoundingRect[0].y) / 2 +
+                centreOfMass.y
             }
           };
 
@@ -374,7 +434,7 @@ export const mouseMove = element => {
             mousePos.y >= resizers[resizer].y - halfLength &&
             mousePos.y <= resizers[resizer].y + halfLength;
 
-          const onTopLeft = checkIfCursorIsOnResizer("topLeft");
+          const topLeft = checkIfCursorIsOnResizer("topLeft");
           const topMiddle = checkIfCursorIsOnResizer("topMiddle");
           const topRight = checkIfCursorIsOnResizer("topRight");
           const rightMiddle = checkIfCursorIsOnResizer("rightMiddle");
@@ -383,31 +443,158 @@ export const mouseMove = element => {
           const bottomLeft = checkIfCursorIsOnResizer("bottomLeft");
           const leftMiddle = checkIfCursorIsOnResizer("leftMiddle");
 
-          const onResizer = () => {};
+          const expand = axis => {
+            const { x, y } = centreOfMass;
+            const resizerDistanceFromCentre = {
+              x: mousePos.x - x,
+              y: mousePos.y - y
+            };
 
-          if (onTopLeft) {
-            console.log("onTopLeft");
+            const expansionRatio = {
+              x: resizerDistanceFromCentre.x / vertices[0].x,
+              y: resizerDistanceFromCentre.y / vertices[0].y
+            };
+
+            const expansionRatioX = Math.abs(expansionRatio.x);
+            const expansionRatioY = Math.abs(expansionRatio.y);
+
+            const newResizeBoundingRect = vertices.map(vertex => ({
+              x: vertex.x * (axis === "y" ? 1 : expansionRatioX),
+              y:
+                vertex.y *
+                (axis === "x"
+                  ? 1
+                  : axis === "y"
+                  ? expansionRatioY
+                  : expansionRatioX)
+            }));
+
+            const expandedVertices = referenceVertices.map(vertex => ({
+              x: vertex.x * (axis === "y" ? 1 : expansionRatioX),
+              y:
+                vertex.y *
+                (axis === "x"
+                  ? 1
+                  : axis === "y"
+                  ? expansionRatioY
+                  : expansionRatioX)
+            }));
+
+            ShapesController.setProperty(
+              selectedShapeIndex,
+              "vertices",
+              expandedVertices
+            );
+            setResizeBoundingRect(newResizeBoundingRect);
+          };
+          setOnResizer(false);
+          if (topLeft) {
+            console.log({ topLeft });
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("topLeft");
+            }
+            setOnResizer(true);
           }
+
+          if (getResizerDraggingState() && geCurrentResizer() === "topLeft") {
+            // console.log("draggable", getDraggable());
+            if (getDraggable()) {
+              expand();
+            }
+          }
+
           if (topMiddle) {
-            console.log("topMiddle");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("topMiddle");
+            }
+            setOnResizer(true);
           }
+          if (getResizerDraggingState() && geCurrentResizer() === "topMiddle") {
+            if (getDraggable()) {
+              expand("y");
+            }
+          }
+
           if (topRight) {
-            console.log("topRight");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("topRight");
+            }
+            setOnResizer(true);
+          }
+          if (getResizerDraggingState() && geCurrentResizer() === "topRight") {
+            if (getDraggable()) {
+              expand();
+            }
           }
           if (rightMiddle) {
-            console.log("rightMiddle");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("rightMiddle");
+            }
+            setOnResizer(true);
+          }
+          if (
+            getResizerDraggingState() &&
+            geCurrentResizer() === "rightMiddle"
+          ) {
+            if (getDraggable()) {
+              expand("x");
+            }
           }
           if (rightBottom) {
-            console.log("rightBottom");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("rightBottom");
+            }
+            setOnResizer(true);
+          }
+          if (
+            getResizerDraggingState() &&
+            geCurrentResizer() === "rightBottom"
+          ) {
+            if (getDraggable()) {
+              expand();
+            }
           }
           if (bottomMiddle) {
-            console.log("bottomMiddle");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("bottomMiddle");
+            }
+            setOnResizer(true);
+          }
+          if (
+            getResizerDraggingState() &&
+            geCurrentResizer() === "bottomMiddle"
+          ) {
+            if (getDraggable()) {
+              expand("y");
+            }
           }
           if (bottomLeft) {
-            console.log("bottomLeft");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("bottomLeft");
+            }
+            setOnResizer(true);
+          }
+          if (
+            getResizerDraggingState() &&
+            geCurrentResizer() === "bottomLeft"
+          ) {
+            if (getDraggable()) {
+              expand();
+            }
           }
           if (leftMiddle) {
-            console.log("leftMiddle");
+            if (!getResizerDraggingState()) {
+              setCurrentResizer("leftMiddle");
+            }
+            setOnResizer(true);
+          }
+          if (
+            getResizerDraggingState() &&
+            geCurrentResizer() === "leftMiddle"
+          ) {
+            if (getDraggable()) {
+              expand("x");
+            }
           }
         }
       }
@@ -428,6 +615,7 @@ export const mouseUp = element => {
         Scene.isDrawing = false;
         createShapeFromPolyline();
       }
+
       if (Scene.selected === "reshape") {
         const {
           setIsVertexBeingDragged,
@@ -436,35 +624,29 @@ export const mouseUp = element => {
         setIsVertexBeingDragged(false);
         const selectedShapeId = getSelectedShapeId();
         if (selectedShapeId) {
-          const selectedShape = Scene.shapes.filter(
-            shape => shape.id === selectedShapeId
-          )[0];
-          const { vertices, centreOfMass } = selectedShape;
-          let boundingRect = findBoundingRect(vertices);
-          const massData = findMass(centreOfMass, vertices, boundingRect);
-          const { mass, centreOfMass: newCentreOfMass } = massData;
-          const centreOfMassShift = {
-            x: newCentreOfMass.x - centreOfMass.x,
-            y: newCentreOfMass.y - centreOfMass.y
-          };
-          const shiftedVertices = vertices.map(vertex => ({
-            x: vertex.x - centreOfMassShift.x,
-            y: vertex.y - centreOfMassShift.y
-          }));
-          boundingRect = findBoundingRect(shiftedVertices);
-
-          const momentOfInertiaCOM = findMomentOfInertiaCOM(
-            newCentreOfMass,
-            shiftedVertices,
-            boundingRect
-          );
-          selectedShape.vertices = shiftedVertices;
-          selectedShape.boundingRect = boundingRect;
-          selectedShape.centreOfMass = newCentreOfMass;
-          selectedShape.centreOfRotation = newCentreOfMass;
-          selectedShape.physics.mass = mass;
-          selectedShape.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+          updatePhysicsProperties(selectedShapeId);
         }
+      }
+      if (Scene.selected === "resize") {
+        const {
+          setResizerDraggingState,
+          setCurrentResizer,
+          setDraggable,
+          getSelectedShapeIndex
+        } = resizeInterface();
+
+        const selectedShapeIndex = getSelectedShapeIndex();
+        const selectedShapeId = ShapesController.getProperty(
+          selectedShapeIndex,
+          "id"
+        );
+        if (selectedShapeId) {
+          updatePhysicsProperties(selectedShapeId);
+        }
+
+        setResizerDraggingState(false);
+        setCurrentResizer();
+        setDraggable(false);
       }
     },
     false
