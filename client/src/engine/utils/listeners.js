@@ -228,7 +228,6 @@ export const mouseDown = element => {
           const currentResizer = geCurrentResizer();
 
           if (currentResizer && getSelectedShapeIndex() === idx) {
-            console.log({ currentResizer });
             setResizerDraggingState(true);
             setReferenceVertices(referenceVertices);
             if (getOnResizer()) {
@@ -378,14 +377,13 @@ export const mouseMove = element => {
           );
 
           const boundingRectCentre = {
-            x:
-              (vertices[0].x + vertices[1].x) / 2 +
-              boundingRect.centre.x +
-              centreOfMass.x,
-            y:
-              (vertices[1].y + vertices[2].y) / 2 +
-              boundingRect.centre.y +
-              centreOfMass.y
+            x: (vertices[0].x + vertices[1].x) / 2 + centreOfMass.x,
+            y: (vertices[1].y + vertices[2].y) / 2 + centreOfMass.y
+          };
+
+          const boundingRectSize = {
+            x: Math.abs(vertices[0].x - vertices[1].x) / 2,
+            y: Math.abs(vertices[1].y - vertices[2].y) / 2
           };
 
           const halfLength = getSelectedSideLength() / 2;
@@ -457,15 +455,15 @@ export const mouseMove = element => {
 
           const expand = axis => {
             const { x, y } = boundingRectCentre;
-            // const { x, y } = centreOfMass;
+
             const resizerDistanceFromCentre = {
               x: mousePos.x - x,
               y: mousePos.y - y
             };
 
             const expansionRatio = {
-              x: resizerDistanceFromCentre.x / vertices[0].x,
-              y: resizerDistanceFromCentre.y / vertices[0].y
+              x: resizerDistanceFromCentre.x / boundingRectSize.x,
+              y: resizerDistanceFromCentre.y / boundingRectSize.y
             };
 
             const expansionRatioX = Math.abs(expansionRatio.x);
