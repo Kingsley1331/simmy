@@ -448,6 +448,77 @@ export const resizeInterface = () => {
   };
 };
 
+export const rotateInterface = () => {
+  const getIsDefault = () => Scene.rotate.default.state;
+  const setIsDefault = state => {
+    Scene.rotate.default.state = state;
+  };
+  const resetDefault = state => {
+    Scene.rotate.default.lever = {
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: -50 }
+    };
+  };
+
+  const selectShape = (idx = null) => {
+    Scene.rotate.selectedShapeIndex = idx;
+  };
+
+  const getSelectedShapeIndex = () => Scene.rotate.selectedShapeIndex;
+
+  const getReferenceVertices = () => Scene.rotate.referenceVertices;
+
+  const setReferenceVertices = vertices => {
+    Scene.rotate.referenceVertices = vertices;
+  };
+
+  const setDraggingState = state => {
+    Scene.rotate.dragging = state;
+  };
+
+  const setLeverLength = length => {
+    Scene.rotate.leverLength = length;
+  };
+
+  const getHandleCentre = () => Scene.rotate.handle.centre;
+  const setHandleCentre = centre => {
+    Scene.rotate.handle.centre = centre;
+  };
+  const getOnhandle = () => Scene.rotate.handle.onHandle;
+  const setOnhandle = state => {
+    Scene.rotate.handle.onHandle = state;
+  };
+
+  const getLever = () => Scene.rotate.lever;
+  const setLever = ({ start, end }) => {
+    Scene.rotate.lever = { start, end };
+  };
+
+  const getHandleRadius = () => Scene.rotate.handle.radius;
+
+  const getDraggingState = () => Scene.rotate.dragging;
+
+  return {
+    getIsDefault,
+    setIsDefault,
+    selectShape,
+    setDraggingState,
+    setLeverLength,
+    setLever,
+    // setHandleCentre,
+    setOnhandle,
+    getSelectedShapeIndex,
+    getDraggingState,
+    getHandleRadius,
+    getOnhandle,
+    // getHandleCentre,
+    getLever,
+    resetDefault,
+    getReferenceVertices,
+    setReferenceVertices
+  };
+};
+
 export function createShapeFromPolyline(fromDblclick) {
   const { selected } = Scene;
   const { vertices, resetVertices } = PolylineInterface();

@@ -3,7 +3,8 @@ import {
   PolylineInterface,
   CloneInterface,
   reshapeInterface,
-  resizeInterface
+  resizeInterface,
+  rotateInterface
 } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
@@ -12,6 +13,7 @@ import {
   drawSquare,
   drawPolyline,
   drawDot,
+  drawCircle,
   drawLine,
   screenWriter
 } from "./display/drawing/drawings";
@@ -235,7 +237,56 @@ export const draw = canvas => {
         );
       }
     }
+    if (Scene.selected === "rotate") {
+      const {
+        getSelectedShapeIndex,
+        getHandleRadius,
+        getOnhandle,
+        getLever
+        // getHandleCentre,
+      } = rotateInterface();
 
+      const { radius: mainRadius } = ShapesController.getProperty(
+        i,
+        "boundingRect"
+      );
+
+      if (getSelectedShapeIndex() === i) {
+        const handleRadius = getHandleRadius();
+        const { start, end } = getLever();
+        // const handleCentre = getHandleCentre();
+        const handleColour = getOnhandle() ? "lightgreen" : "white";
+        const leverStart = {
+          x: centreOfMass.x + start.x,
+          y: centreOfMass.y + start.y
+        };
+
+        const leverEnd = {
+          x: centreOfMass.x + end.x,
+          y: centreOfMass.y + end.y
+        };
+
+        const handleCentre = { x: leverEnd.x, y: leverEnd.y };
+
+        drawCircle(bufferCtx, mainRadius, centreOfMass, {
+          lineWidth: 0.5,
+          setLineDash: [3, 3]
+        });
+
+        drawLine(bufferCtx, leverStart, leverEnd, { lineWidth: 0.4 });
+        // drawLine(
+        //   bufferCtx,
+        //   { x: centreOfMass.x, y: centreOfMass.y - mainRadius },
+        //   { x: centreOfMass.x, y: centreOfMass.y - mainRadius - leverLength },
+        //   { lineWidth: 0.4 }
+        // );
+        drawDot(bufferCtx, 10, leverStart, "black");
+        drawCircle(bufferCtx, handleRadius, handleCentre, {
+          lineWidth: 0.5,
+          fillStyle: handleColour
+        });
+      }
+    }
     if (display) {
       displayShapeInfo(i, bufferCtx, centreOfMass, vertices);
     }

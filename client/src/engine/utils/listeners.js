@@ -16,15 +16,15 @@ import Scene from "../scenes/scene";
 import { applyMotion } from "../physics/motion";
 import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
-import Vector from "./maths/Vector";
 import { retrieveLocalRules } from "./eventRules";
 import {
   PolylineInterface,
   CloneInterface,
   reshapeInterface,
-  resizeInterface
+  resizeInterface,
+  rotateInterface
 } from "../../engine/shapes/shapes";
-import { magnitude } from "../../engine/utils/maths/Vector";
+import Vector, { magnitude, rotateVector, rotateShape } from "./maths/Vector";
 import findBoundingRect from "../shapes/findBoundingRect";
 import { findMass } from "../physics/mass/mass";
 import { findMomentOfInertiaCOM } from "../physics/mass/momentOfInertia";
@@ -233,6 +233,71 @@ export const mouseDown = element => {
             if (getOnResizer()) {
               setDraggable(true);
             }
+          }
+        });
+      }
+
+      if (Scene.selected === "rotate") {
+        const {
+          selectShape,
+          getSelectedShapeIndex,
+          getLeverLength,
+          getHandleRadius,
+          getOnhandle,
+          setDraggingState,
+          setLever,
+          getLever,
+          // setHandleCentre,
+          getIsDefault,
+          setIsDefault,
+          setReferenceVertices
+        } = rotateInterface();
+
+        const referenceVertices = getSelectedShapeIndex()
+          ? ShapesController.getProperty(
+              getSelectedShapeIndex(),
+              "vertices"
+            ).map(vertex => ({
+              x: vertex.x,
+              y: vertex.y
+            }))
+          : [];
+
+        forEachShape(function(idx) {
+          const onShape = ShapesController.getProperty(idx, "onShape");
+          const centreOfMass = ShapesController.getCentreOfMass(idx);
+          const { start, end } = getLever();
+          const handleRadius = getHandleRadius();
+          const boundingRect = ShapesController.getProperty(
+            idx,
+            "boundingRect"
+          );
+          const boundingRadius = boundingRect.radius;
+
+          if (onShape) {
+            selectShape(idx);
+            if (getIsDefault()) {
+              console.log("end1", end);
+              const leverStart = {
+                x: 0,
+                y: -boundingRadius
+              };
+              const leverEnd = {
+                x: 0,
+                y: -boundingRadius + end.y
+              };
+              setLever({
+                start: leverStart,
+                end: leverEnd
+              });
+              // setHandleCentre({ x: leverEnd.x, y: leverEnd.y + handleRadius });
+              setIsDefault(false);
+            }
+          }
+          if (getOnhandle()) {
+            // setLever();
+            setDraggingState(true);
+            setReferenceVertices(referenceVertices);
           }
         });
       }
@@ -610,6 +675,110 @@ export const mouseMove = element => {
           }
         }
       }
+
+      if (Scene.selected === "rotate") {
+        const {
+          selectShape,
+          getSelectedShapeIndex,
+          getLever,
+          setLever,
+          getHandleRadius,
+          setOnhandle,
+          // getHandleCentre,
+          // setHandleCentre,
+          getDraggingState,
+          getReferenceVertices
+        } = rotateInterface();
+
+        setOnhandle(false);
+
+        const selectedShapeIndex = getSelectedShapeIndex();
+        if (selectedShapeIndex) {
+          const centreOfMass = ShapesController.getCentreOfMass(
+            selectedShapeIndex
+          );
+
+          const boundingRect = ShapesController.getProperty(
+            selectedShapeIndex,
+            "boundingRect"
+          );
+          const onShape = ShapesController.getProperty(
+            selectedShapeIndex,
+            "onShape"
+          );
+
+          const referenceVertices = getReferenceVertices();
+
+          const { start, end } = getLever();
+          const handleRadius = getHandleRadius();
+
+          const leverEnd = {
+            x: centreOfMass.x + end.x,
+            y: centreOfMass.y + end.y
+          };
+
+          const handleCentre = { x: leverEnd.x, y: leverEnd.y };
+
+          // const boundingRadius = boundingRect.radius;
+
+          const distanceVector = {
+            x: handleCentre.x - mousePos.x,
+            y: handleCentre.y - mousePos.y
+          };
+          const cursorDistanceFromHandle = magnitude(distanceVector);
+
+          if (getDraggingState()) {
+            const endetPointVectorMag = magnitude(end);
+            const startPointVectorMag = magnitude(start);
+            // const startToEndRation = endetPointVectorMag / startPointVectorMag;
+
+            console.log({ endetPointVectorMag });
+
+            const leverStartReferenceVector = new Vector({
+              x: 0,
+              y: startPointVectorMag
+            });
+
+            const leverEndReferenceVector = new Vector({
+              x: 0,
+              y: endetPointVectorMag
+            });
+
+            const centreToCursorVector = new Vector({
+              x: mousePos.x - centreOfMass.x,
+              y: mousePos.y - centreOfMass.y
+            });
+
+            const angle = leverEndReferenceVector.findAngle(
+              centreToCursorVector
+            );
+            const rotatedLeverStartVector = rotateVector(
+              angle,
+              leverStartReferenceVector
+            );
+            const rotatedLeverEndVector = rotateVector(
+              angle,
+              leverEndReferenceVector
+            );
+
+            setLever({
+              start: rotatedLeverStartVector,
+              end: rotatedLeverEndVector
+            });
+
+            rotateShape(
+              centreOfMass,
+              angle,
+              selectedShapeIndex,
+              referenceVertices
+            );
+          }
+
+          if (cursorDistanceFromHandle <= handleRadius) {
+            setOnhandle(true);
+          }
+        }
+      }
     },
     false
   );
@@ -659,6 +828,10 @@ export const mouseUp = element => {
         setResizerDraggingState(false);
         setCurrentResizer();
         setDraggable(false);
+      }
+      if (Scene.selected === "rotate") {
+        const { setDraggingState } = rotateInterface();
+        setDraggingState(false);
       }
     },
     false

@@ -43,6 +43,7 @@ export const save = () => {
       });
   }
 };
+
 export const BUTTONS = [
   { name: "play" },
   { name: "step" },
@@ -64,8 +65,11 @@ export const BUTTONS = [
   { name: "draw", onClick: () => (Scene.polyline.vertices = []) },
   { name: "clone", onClick: CloneInterface().resetClone },
   { name: "reshape" },
-  { name: "resize", onClick: resizeInterface().selectShape }
+  { name: "resize", onClick: resizeInterface().selectShape },
+  { name: "rotate" },
+  { name: "colour" }
 ];
+
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
   return (
     <div

@@ -31,7 +31,7 @@ export function rotateVector(theta, vector) {
   return rotatedVector;
 }
 
-export function rotateShape(centre, theta, index) {
+export function rotateShape(centre, theta, index, referenceVertices) {
   // theta *= -1
   if (Scene.shapes[0]) {
     //var centreOfMass = ShapesController.getProperty(index, 'centreOfMass');
@@ -40,10 +40,18 @@ export function rotateShape(centre, theta, index) {
       typeof index === "number"
         ? ShapesController.getProperty(index, "centreOfMass")
         : centre;
+
     var vertices =
       typeof index === "number"
-        ? ShapesController.getProperty(index, "vertices")
+        ? referenceVertices
+          ? referenceVertices
+          : ShapesController.getProperty(index, "vertices")
         : index;
+
+    // var vertices =
+    //   typeof index === "number"
+    //     ? ShapesController.getProperty(index, "vertices")
+    //     : index;
 
     var rotatedVertices = [];
     var length = vertices.length;

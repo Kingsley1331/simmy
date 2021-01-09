@@ -41,6 +41,18 @@ let Scene = {
     resizeBoundingRect: [],
     referenceVertices: []
   },
+  rotate: {
+    default: {
+      state: true,
+      lever: { start: { x: 0, y: 0 }, end: { x: 0, y: -50 } }
+    },
+    selectedShapeIndex: null,
+    dragging: false,
+    handleColour: "white",
+    lever: { start: { x: 0, y: 0 }, end: { x: 0, y: -50 } },
+    handle: { radius: 10, onHandle: false },
+    referenceVertices: []
+  },
   isDrawing: false,
   timeStep: 16,
   time: 0,

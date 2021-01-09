@@ -89,6 +89,26 @@ export function drawDot(context, radius, centre, colour) {
   context.restore();
 }
 
+export function drawCircle(context, radius, centre, config) {
+  const isFilled = "fillStyle" in config;
+  context.save();
+  for (var prop in config) {
+    if (typeof context[prop] === "function") {
+      context[prop](config[prop]);
+    } else {
+      context[prop] = config[prop];
+    }
+  }
+  context.beginPath();
+  context.arc(centre.x, centre.y, radius, 0, 2 * Math.PI);
+  if (isFilled) {
+    context.fill();
+  } else {
+    context.stroke();
+  }
+  context.restore();
+}
+
 export function drawLine(context, start, end, config) {
   context.save();
   for (var prop in config) {
