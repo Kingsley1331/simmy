@@ -119,14 +119,6 @@ export function rotateShape(centre, theta, index, referenceVertices) {
       y: centre.y + rotateCOM.y
     };
     const rotatedBoundingRect = findBoundingRect(rotatedVertices);
-    const { centre: boundingRectCentre } = rotatedBoundingRect;
-
-    var radius = magnitude({
-      x: boundingRectCentre.x - rotatedBoundingRect.vertices[0].x,
-      y: boundingRectCentre.y - rotatedBoundingRect.vertices[0].y
-    });
-
-    rotatedBoundingRect.radius = radius;
 
     if (typeof index === "number") {
       ShapesController.setProperty(index, "centreOfMass", newCentreOfMass);

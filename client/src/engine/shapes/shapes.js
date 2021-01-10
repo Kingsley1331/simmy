@@ -210,7 +210,6 @@ export function Shape(centre, vertices) {
   var references = referenceVectors(centre, vertices);
   this.id;
   this.type = "";
-  // this.fillColour = "red";
   this.fillColour = "#6495ED";
   this.strokeStyle = "black";
   this.linewidth = 0.7;
@@ -231,15 +230,6 @@ export function Shape(centre, vertices) {
   this.touchPoint = [];
   this.display = [];
   this.boundingRect = boundingRect;
-  var boundingRectCentre = {
-    x: this.boundingRect.centre.x,
-    y: this.boundingRect.centre.y
-  };
-  var radius = magnitude({
-    x: boundingRectCentre.x - this.boundingRect.vertices[0].x,
-    y: boundingRectCentre.y - this.boundingRect.vertices[0].y
-  });
-  this.boundingRect.radius = radius;
   this.collisionData = {};
   this.referenceVectors = references;
   this.colliding = false;

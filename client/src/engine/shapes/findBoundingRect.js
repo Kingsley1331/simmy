@@ -1,11 +1,13 @@
+import { magnitude } from "../utils/maths/Vector";
+
 export default function findBoundingRect(vertices) {
-  var boundingRect = {};
-  var maxX = vertices[0].x;
-  var minX = vertices[0].x;
-  var maxY = vertices[0].y;
-  var minY = vertices[0].y;
-  var length = vertices.length;
-  for (var i = 0; i < length; i++) {
+  let boundingRect = {};
+  let maxX = vertices[0].x;
+  let minX = vertices[0].x;
+  let maxY = vertices[0].y;
+  let minY = vertices[0].y;
+  const length = vertices.length;
+  for (let i = 0; i < length; i++) {
     if (maxX < vertices[i].x) {
       maxX = vertices[i].x;
     }
@@ -35,5 +37,15 @@ export default function findBoundingRect(vertices) {
       { x: minX, y: maxY }
     ]
   };
+
+  const { centre } = boundingRect;
+
+  const radius = magnitude({
+    x: centre.x - boundingRect.vertices[0].x,
+    y: centre.y - boundingRect.vertices[0].y
+  });
+
+  boundingRect.radius = radius;
+
   return boundingRect;
 }
