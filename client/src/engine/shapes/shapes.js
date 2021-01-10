@@ -458,6 +458,13 @@ export const rotateInterface = () => {
 
   const getReferenceVertices = () => Scene.rotate.referenceVertices;
 
+  const getReferenceCentreOfMass = () => Scene.rotate.referenceCentreOfMass;
+
+  const setReferenceCentreOfMass = centre => {
+    // console.log({ centre });
+    Scene.rotate.referenceCentreOfMass = centre;
+  };
+
   const setReferenceVertices = vertices => {
     Scene.rotate.referenceVertices = vertices;
   };
@@ -497,6 +504,7 @@ export const rotateInterface = () => {
     setDraggingState,
     setLeverLength,
     setLever,
+    setReferenceCentreOfMass,
     // setHandleCentre,
     setOnhandle,
     getSelectedShapeIndex,
@@ -507,7 +515,8 @@ export const rotateInterface = () => {
     getLever,
     resetDefault,
     getReferenceVertices,
-    setReferenceVertices
+    setReferenceVertices,
+    getReferenceCentreOfMass
   };
 };
 

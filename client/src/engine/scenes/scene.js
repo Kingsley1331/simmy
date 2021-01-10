@@ -51,7 +51,8 @@ let Scene = {
     handleColour: "white",
     lever: { start: { x: 0, y: 0 }, end: { x: 0, y: -50 } },
     handle: { radius: 10, onHandle: false },
-    referenceVertices: []
+    referenceVertices: [],
+    referenceCentreOfMass: {}
   },
   isDrawing: false,
   timeStep: 16,
