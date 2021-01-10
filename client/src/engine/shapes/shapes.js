@@ -490,7 +490,9 @@ export const rotateInterface = () => {
   };
 
   const getLever = () => Scene.rotate.lever;
-  const setLever = ({ start, end }) => {
+  const setLever = (
+    { start, end } = { start: { x: 0, y: 0 }, end: { x: 0, y: -50 } }
+  ) => {
     Scene.rotate.lever = { start, end };
   };
 

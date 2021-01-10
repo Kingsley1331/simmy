@@ -295,7 +295,6 @@ export const mouseDown = element => {
             }
           }
           if (getOnhandle()) {
-            // setLever();
             setDraggingState(true);
             setReferenceVertices(referenceVertices);
           }
@@ -728,20 +727,18 @@ export const mouseMove = element => {
           const cursorDistanceFromHandle = magnitude(distanceVector);
 
           if (getDraggingState()) {
-            const endetPointVectorMag = magnitude(end);
+            const endPointVectorMag = magnitude(end);
             const startPointVectorMag = magnitude(start);
-            // const startToEndRation = endetPointVectorMag / startPointVectorMag;
-
-            console.log({ endetPointVectorMag });
+            // const startToEndRation = endPointVectorMag / startPointVectorMag;
 
             const leverStartReferenceVector = new Vector({
               x: 0,
-              y: startPointVectorMag
+              y: -startPointVectorMag
             });
 
             const leverEndReferenceVector = new Vector({
               x: 0,
-              y: endetPointVectorMag
+              y: -endPointVectorMag
             });
 
             const centreToCursorVector = new Vector({
@@ -830,8 +827,25 @@ export const mouseUp = element => {
         setDraggable(false);
       }
       if (Scene.selected === "rotate") {
-        const { setDraggingState } = rotateInterface();
+        const {
+          setDraggingState,
+          setLever,
+          getSelectedShapeIndex
+        } = rotateInterface();
         setDraggingState(false);
+        const selectedShapeIndex = getSelectedShapeIndex();
+
+        if (selectedShapeIndex) {
+          const boundingRect = ShapesController.getProperty(
+            selectedShapeIndex,
+            "boundingRect"
+          );
+          const { radius } = boundingRect;
+          setLever({
+            start: { x: 0, y: -radius },
+            end: { x: 0, y: -radius - 50 }
+          });
+        }
       }
     },
     false

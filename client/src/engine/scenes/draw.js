@@ -280,7 +280,7 @@ export const draw = canvas => {
         //   { x: centreOfMass.x, y: centreOfMass.y - mainRadius - leverLength },
         //   { lineWidth: 0.4 }
         // );
-        drawDot(bufferCtx, 10, leverStart, "black");
+        // drawDot(bufferCtx, 10, leverStart, "black");
         drawCircle(bufferCtx, handleRadius, handleCentre, {
           lineWidth: 0.5,
           fillStyle: handleColour
