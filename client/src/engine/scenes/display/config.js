@@ -4,13 +4,13 @@ const displayConfig = {
     id: false,
     collisionPoint: false,
     collidinSide: false,
-    boundingRect: false,
+    boundingRect: true,
     normal: false,
     collisionPointVA: false,
     collisionPointVB: false,
-    showCentreOfMass: false,
+    showCentreOfMass: true,
     showCentreOfRotation: false,
-    showBoundingRectCentre: false
+    showBoundingRectCentre: true
   }
 };
 

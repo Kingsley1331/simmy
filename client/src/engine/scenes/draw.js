@@ -242,8 +242,8 @@ export const draw = canvas => {
         getSelectedShapeIndex,
         getHandleRadius,
         getOnhandle,
-        getLever
-        // getHandleCentre,
+        getLever,
+        getCentreOfRotation
       } = rotateInterface();
 
       const {
@@ -292,6 +292,8 @@ export const draw = canvas => {
             setLineDash: [3, 3]
           }
         );
+
+        drawDot(bufferCtx, 3, getCentreOfRotation(), "blue");
 
         drawLine(bufferCtx, leverStart, leverEnd, { lineWidth: 0.4 });
         // drawLine(

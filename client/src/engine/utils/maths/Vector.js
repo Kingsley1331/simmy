@@ -142,7 +142,7 @@ export function rotateShapeGeneral(
   // debugger;
   // theta *= -1
   if (Scene.shapes[0]) {
-    const centreOfMass = ShapesController.getProperty(index, "centreOfMass");
+    // const centreOfMass = ShapesController.getProperty(index, "centreOfMass");
 
     const vertices = referenceVertices
       ? referenceVertices
@@ -153,7 +153,6 @@ export function rotateShapeGeneral(
         x: vertex.x,
         y: vertex.y
       });
-      console.log("vertex", vertex);
       return rotatedVertex;
     });
 
@@ -161,7 +160,7 @@ export function rotateShapeGeneral(
       x: referenceCentreOfMass.x - centre.x,
       y: referenceCentreOfMass.y - centre.y
     };
-
+    console.log("centreShift", centreShift);
     const rotatedCentreShift = rotateVector(theta, centreShift);
 
     const changeVector = {
@@ -173,7 +172,7 @@ export function rotateShapeGeneral(
       x: referenceCentreOfMass.x + changeVector.x,
       y: referenceCentreOfMass.y + changeVector.y
     };
-    console.log("vertices2", vertices);
+
     const rotatedBoundingRect = findBoundingRect(rotatedVertices);
 
     if (typeof index === "number") {

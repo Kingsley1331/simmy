@@ -468,6 +468,10 @@ export const rotateInterface = () => {
   const setReferenceVertices = vertices => {
     Scene.rotate.referenceVertices = vertices;
   };
+  const setCentreOfRotation = centre => {
+    Scene.rotate.centreOfRotation = centre;
+  };
+  const getCentreOfRotation = () => Scene.rotate.centreOfRotation;
 
   const setDraggingState = state => {
     Scene.rotate.dragging = state;
@@ -477,10 +481,6 @@ export const rotateInterface = () => {
     Scene.rotate.leverLength = length;
   };
 
-  const getHandleCentre = () => Scene.rotate.handle.centre;
-  const setHandleCentre = centre => {
-    Scene.rotate.handle.centre = centre;
-  };
   const getOnhandle = () => Scene.rotate.handle.onHandle;
   const setOnhandle = state => {
     Scene.rotate.handle.onHandle = state;
@@ -505,18 +505,18 @@ export const rotateInterface = () => {
     setLeverLength,
     setLever,
     setReferenceCentreOfMass,
-    // setHandleCentre,
     setOnhandle,
+    setCentreOfRotation,
     getSelectedShapeIndex,
     getDraggingState,
     getHandleRadius,
     getOnhandle,
-    // getHandleCentre,
     getLever,
     resetDefault,
     getReferenceVertices,
     setReferenceVertices,
-    getReferenceCentreOfMass
+    getReferenceCentreOfMass,
+    getCentreOfRotation
   };
 };
 
