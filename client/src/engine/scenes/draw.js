@@ -243,7 +243,9 @@ export const draw = canvas => {
         getHandleRadius,
         getOnhandle,
         getLever,
-        getCentreOfRotation
+        getCentreOfRotation,
+        getReferenceVertices,
+        getReferenceCentreOfMass
       } = rotateInterface();
 
       const {
@@ -303,6 +305,19 @@ export const draw = canvas => {
         //   { lineWidth: 0.4 }
         // );
         // drawDot(bufferCtx, 10, leverStart, "black");
+
+        const initialVertices = getReferenceVertices();
+        const referenceCentreOfMass = getReferenceCentreOfMass();
+
+        if (initialVertices.length) {
+          drawShape(bufferCtx, initialVertices, referenceCentreOfMass, {
+            strokeStyle: "black",
+            lineWidth: 0.1,
+            globalAlpha: 0.2,
+            fillStyle: "grey"
+          });
+        }
+
         drawCircle(bufferCtx, handleRadius, handleCentre, {
           lineWidth: 0.5,
           fillStyle: handleColour

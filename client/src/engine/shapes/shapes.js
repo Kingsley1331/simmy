@@ -497,6 +497,8 @@ export const rotateInterface = () => {
 
   const getDraggingState = () => Scene.rotate.dragging;
 
+  const getDefaultLength = () => Scene.rotate.defaultLength;
+
   return {
     getIsDefault,
     setIsDefault,
@@ -516,7 +518,8 @@ export const rotateInterface = () => {
     getReferenceVertices,
     setReferenceVertices,
     getReferenceCentreOfMass,
-    getCentreOfRotation
+    getCentreOfRotation,
+    getDefaultLength
   };
 };
 
@@ -636,8 +639,10 @@ export function isPointInShape(centreOfMass, vertices, point) {
 export function prepareToMoveShape(i) {
   const { getVertexIndex } = reshapeInterface();
   const { getOnResizer } = resizeInterface();
+  const { getOnhandle } = rotateInterface();
 
-  const isShapeMovable = getVertexIndex() === null && !getOnResizer();
+  const isShapeMovable =
+    getVertexIndex() === null && !getOnResizer() && !getOnhandle();
 
   if (ShapesController.getProperty(i, "onShape") && isShapeMovable) {
     let mousePos = Scene.mousePos;

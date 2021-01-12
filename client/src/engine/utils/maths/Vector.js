@@ -163,14 +163,9 @@ export function rotateShapeGeneral(
     console.log("centreShift", centreShift);
     const rotatedCentreShift = rotateVector(theta, centreShift);
 
-    const changeVector = {
-      x: rotatedCentreShift.x - centreShift.x,
-      y: rotatedCentreShift.y - centreShift.y
-    };
-
     const newCentreOfMass = {
-      x: referenceCentreOfMass.x + changeVector.x,
-      y: referenceCentreOfMass.y + changeVector.y
+      x: centre.x + rotatedCentreShift.x,
+      y: centre.y + rotatedCentreShift.y
     };
 
     const rotatedBoundingRect = findBoundingRect(rotatedVertices);
