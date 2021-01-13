@@ -303,9 +303,11 @@ export const mouseDown = element => {
               y: boundingRectCentre.y + centreOfMass.y
             };
             setDraggingState(true);
-            setReferenceVertices(referenceVertices);
-            setReferenceCentreOfMass({ ...centreOfMass });
-            setCentreOfRotation({ ...centreOfRotation });
+            if (getSelectedShapeIndex() === idx) {
+              setReferenceVertices(referenceVertices);
+              setReferenceCentreOfMass({ ...centreOfMass });
+              setCentreOfRotation({ ...centreOfRotation });
+            }
           }
         });
       }
@@ -892,7 +894,8 @@ export const mouseUp = element => {
           setIsDefault,
           setCentreOfRotation,
           getDefaultLength,
-          setReferenceVertices
+          setReferenceVertices,
+          setReferenceCentreOfMass
         } = rotateInterface();
         setDraggingState(false);
 
@@ -919,6 +922,7 @@ export const mouseUp = element => {
           setIsDefault(true);
           setCentreOfRotation({});
           setReferenceVertices([]);
+          setReferenceCentreOfMass({});
         }
       }
     },
