@@ -498,7 +498,14 @@ export const rotateInterface = () => {
   const getDraggingState = () => Scene.rotate.dragging;
 
   const getDefaultLength = () => Scene.rotate.defaultLength;
-
+  const getReferenceBoundingRect = () => Scene.rotate.referenceBoundingRect;
+  const setReferenceBoundingRect = vertices => {
+    Scene.rotate.referenceBoundingRect = vertices;
+  };
+  const getRotateBoundingRect = () => Scene.rotate.rotateBoundingRect;
+  const setRotateBoundingRect = vertices => {
+    Scene.rotate.rotateBoundingRect = vertices;
+  };
   return {
     getIsDefault,
     setIsDefault,
@@ -519,7 +526,11 @@ export const rotateInterface = () => {
     setReferenceVertices,
     getReferenceCentreOfMass,
     getCentreOfRotation,
-    getDefaultLength
+    getDefaultLength,
+    getReferenceBoundingRect,
+    setReferenceBoundingRect,
+    getRotateBoundingRect,
+    setRotateBoundingRect
   };
 };
 

@@ -53,6 +53,8 @@ let Scene = {
     lever: { start: { x: 0, y: 0 }, end: { x: 0, y: -50 } },
     handle: { radius: 10, onHandle: false },
     referenceVertices: [],
+    referenceBoundingRect: [],
+    rotateBoundingRect: [],
     referenceCentreOfMass: {},
     centreOfRotation: {}
   },

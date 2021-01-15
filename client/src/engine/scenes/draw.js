@@ -245,7 +245,9 @@ export const draw = canvas => {
         getLever,
         getCentreOfRotation,
         getReferenceVertices,
-        getReferenceCentreOfMass
+        getReferenceCentreOfMass,
+        getReferenceBoundingRect,
+        getRotateBoundingRect
       } = rotateInterface();
 
       const {
@@ -317,7 +319,22 @@ export const draw = canvas => {
             fillStyle: "grey"
           });
         }
-
+        const referenceBoundingRect = getReferenceBoundingRect();
+        const rotateBoundingRect = getRotateBoundingRect();
+        if (referenceBoundingRect.length) {
+          drawShape(bufferCtx, referenceBoundingRect, centreOfMass, {
+            strokeStyle: "red",
+            lineWidth: 1,
+            fillStyle: "transparent"
+          });
+        }
+        if (rotateBoundingRect.length) {
+          drawShape(bufferCtx, rotateBoundingRect, centreOfMass, {
+            strokeStyle: "green",
+            lineWidth: 1,
+            fillStyle: "transparent"
+          });
+        }
         drawCircle(bufferCtx, handleRadius, handleCentre, {
           lineWidth: 0.5,
           fillStyle: handleColour

@@ -258,7 +258,9 @@ export const mouseDown = element => {
           setReferenceVertices,
           setReferenceCentreOfMass,
           setCentreOfRotation,
-          getDefaultLength
+          getDefaultLength,
+          setReferenceBoundingRect,
+          setRotateBoundingRect
         } = rotateInterface();
 
         const defaultLength = getDefaultLength();
@@ -296,6 +298,18 @@ export const mouseDown = element => {
               // setHandleCentre({ x: leverEnd.x, y: leverEnd.y + handleRadius });
               setIsDefault(false);
             }
+            setReferenceBoundingRect(
+              boundingRect.vertices.map(vertex => ({
+                x: vertex.x,
+                y: vertex.y
+              }))
+            );
+            setRotateBoundingRect(
+              boundingRect.vertices.map(vertex => ({
+                x: vertex.x,
+                y: vertex.y
+              }))
+            );
           }
           if (getOnhandle()) {
             const centreOfRotation = {
@@ -700,7 +714,9 @@ export const mouseMove = element => {
           getReferenceCentreOfMass,
           getCentreOfRotation,
           getDefaultLength,
-          setIsDefault
+          setIsDefault,
+          getReferenceBoundingRect,
+          setRotateBoundingRect
         } = rotateInterface();
 
         setOnhandle(false);
@@ -802,19 +818,17 @@ export const mouseMove = element => {
             console.log("boundingRect", boundingRect);
             // console.log("centreOfRotation", centreOfRotation);
             console.log("getReferenceCentreOfMass", getReferenceCentreOfMass());
-            rotateShapeGeneral(
-              centreOfRotation1,
+
+            setRotateBoundingRect(
+              rotateShapeGeneral(getReferenceBoundingRect(), angle)
+            );
+
+            rotateShape(
+              centreOfMass,
               angle,
               selectedShapeIndex,
-              referenceVertices,
-              referenceCentreOfMass
+              referenceVertices
             );
-            // rotateShape(
-            //   centreOfMass,
-            //   angle,
-            //   selectedShapeIndex,
-            //   referenceVertices
-            // );
           } else {
             if (centreOfRotation.y < radius + defaultLength + handleRadius) {
               setLever({

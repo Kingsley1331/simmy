@@ -4,7 +4,7 @@ const displayConfig = {
     id: false,
     collisionPoint: false,
     collidinSide: false,
-    boundingRect: true,
+    boundingRect: false,
     normal: false,
     collisionPointVA: false,
     collisionPointVB: false,

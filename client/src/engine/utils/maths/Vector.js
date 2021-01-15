@@ -130,54 +130,66 @@ export function rotateShape(centre, theta, index, referenceVertices) {
   }
 }
 
-export function rotateShapeGeneral(
-  centre,
-  theta,
-  index,
-  referenceVertices,
-  referenceCentreOfMass
-) {
-  console.log({ referenceCentreOfMass });
-  console.log({ centre });
-  // debugger;
-  // theta *= -1
-  if (Scene.shapes[0]) {
-    // const centreOfMass = ShapesController.getProperty(index, "centreOfMass");
-
-    const vertices = referenceVertices
-      ? referenceVertices
-      : ShapesController.getProperty(index, "vertices");
-
-    const rotatedVertices = vertices.map(vertex => {
-      const rotatedVertex = rotateVector(theta, {
-        x: vertex.x,
-        y: vertex.y
-      });
-      return rotatedVertex;
+export function rotateShapeGeneral(vertices, theta) {
+  const rotatedVertices = vertices.map(vertex => {
+    const rotatedVertex = rotateVector(theta, {
+      x: vertex.x,
+      y: vertex.y
     });
+    return rotatedVertex;
+  });
 
-    const centreShift = {
-      x: referenceCentreOfMass.x - centre.x,
-      y: referenceCentreOfMass.y - centre.y
-    };
-    console.log("centreShift", centreShift);
-    const rotatedCentreShift = rotateVector(theta, centreShift);
-
-    const newCentreOfMass = {
-      x: centre.x + rotatedCentreShift.x,
-      y: centre.y + rotatedCentreShift.y
-    };
-
-    const rotatedBoundingRect = findBoundingRect(rotatedVertices);
-
-    if (typeof index === "number") {
-      ShapesController.setProperty(index, "centreOfMass", newCentreOfMass);
-      ShapesController.setProperty(index, "vertices", rotatedVertices);
-      ShapesController.setProperty(index, "boundingRect", rotatedBoundingRect);
-    }
-    return rotatedVertices;
-  }
+  return rotatedVertices;
 }
+
+// export function rotateShapeGeneral(
+//   centre,
+//   theta,
+//   index,
+//   referenceVertices,
+//   referenceCentreOfMass
+// ) {
+//   console.log({ referenceCentreOfMass });
+//   console.log({ centre });
+//   // debugger;
+//   // theta *= -1
+//   if (Scene.shapes[0]) {
+//     // const centreOfMass = ShapesController.getProperty(index, "centreOfMass");
+
+//     const vertices = referenceVertices
+//       ? referenceVertices
+//       : ShapesController.getProperty(index, "vertices");
+
+//     const rotatedVertices = vertices.map(vertex => {
+//       const rotatedVertex = rotateVector(theta, {
+//         x: vertex.x,
+//         y: vertex.y
+//       });
+//       return rotatedVertex;
+//     });
+
+//     const centreShift = {
+//       x: referenceCentreOfMass.x - centre.x,
+//       y: referenceCentreOfMass.y - centre.y
+//     };
+//     console.log("centreShift", centreShift);
+//     const rotatedCentreShift = rotateVector(theta, centreShift);
+
+//     const newCentreOfMass = {
+//       x: centre.x + rotatedCentreShift.x,
+//       y: centre.y + rotatedCentreShift.y
+//     };
+
+//     const rotatedBoundingRect = findBoundingRect(rotatedVertices);
+
+//     if (typeof index === "number") {
+//       ShapesController.setProperty(index, "centreOfMass", newCentreOfMass);
+//       ShapesController.setProperty(index, "vertices", rotatedVertices);
+//       ShapesController.setProperty(index, "boundingRect", rotatedBoundingRect);
+//     }
+//     return rotatedVertices;
+//   }
+// }
 
 export function doVectorsOppose(vector1, vector2) {
   let angle = vector1.findAngle(vector2);
