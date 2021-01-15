@@ -506,6 +506,12 @@ export const rotateInterface = () => {
   const setRotateBoundingRect = vertices => {
     Scene.rotate.rotateBoundingRect = vertices;
   };
+
+  const getReferenceLeverVectors = () => Scene.rotate.referenceLeverVectors;
+  const setReferenceLeverVectors = vectors => {
+    Scene.rotate.referenceLeverVectors = vectors;
+  };
+
   return {
     getIsDefault,
     setIsDefault,
@@ -530,7 +536,9 @@ export const rotateInterface = () => {
     getReferenceBoundingRect,
     setReferenceBoundingRect,
     getRotateBoundingRect,
-    setRotateBoundingRect
+    setRotateBoundingRect,
+    setReferenceLeverVectors,
+    getReferenceLeverVectors
   };
 };
 
