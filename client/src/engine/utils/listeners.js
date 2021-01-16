@@ -293,8 +293,8 @@ export const mouseDown = element => {
               // const { radius } = boundingRect;
               if (selectedShapeIndex !== idx) {
                 setLever({
-                  start: { x: 0, y: minY },
-                  end: { x: 0, y: minY - defaultLength }
+                  start: { x: boundingRectCentre.x, y: minY },
+                  end: { x: boundingRectCentre.x, y: minY - defaultLength }
                 });
                 // setLever({
                 //   start: { x: 0, y: -radius },

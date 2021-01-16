@@ -46,7 +46,7 @@ let Scene = {
       state: true,
       lever: { start: { x: 0, y: 0 }, end: { x: 0, y: -50 } }
     },
-    defaultLength: 75,
+    defaultLength: 50,
     selectedShapeIndex: null,
     dragging: false,
     handleColour: "white",

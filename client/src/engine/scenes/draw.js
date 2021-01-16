@@ -70,6 +70,24 @@ export const draw = canvas => {
       lineWidth: lineWidth
     };
 
+    if (Scene.selected === "rotate") {
+      const {
+        getReferenceVertices,
+        getReferenceCentreOfMass
+      } = rotateInterface();
+      const initialVertices = getReferenceVertices();
+      const referenceCentreOfMass = getReferenceCentreOfMass();
+
+      if (initialVertices.length) {
+        drawShape(bufferCtx, initialVertices, referenceCentreOfMass, {
+          strokeStyle: "black",
+          lineWidth: 0.1,
+          globalAlpha: 0.03,
+          fillStyle: "grey"
+        });
+      }
+    }
+
     drawShape(bufferCtx, vertices, centreOfMass, config, points => {
       if (Scene.selected === "reshape") {
         const { getVertexIndex, getSelectedShapeId } = reshapeInterface();
@@ -93,21 +111,6 @@ export const draw = canvas => {
         }
       }
     });
-
-    // centre: {x: 0.5, y: 3}
-    // maxX: 18.5
-    // maxY: 303
-    // minX: -17.5
-    // minY: -297
-    // radius: 300.53951487283666
-    /*
-     vertices:  [
-    {x: -47.54237891737948, y: -49.97079772079772}
-    {x: 47.56327271213587, y: -49.97079772079772}
-    {x: 47.56327271213587, y: 40.48005199794965}
-    {x: -47.54237891737948, y: 40.48005199794965}
-    ]
-*/
 
     if (Scene.selected === "resize") {
       const {
@@ -245,7 +248,6 @@ export const draw = canvas => {
         getLever,
         getReferenceVertices,
         getReferenceCentreOfMass,
-        getReferenceBoundingRect,
         getRotateBoundingRect
       } = rotateInterface();
 
@@ -268,31 +270,26 @@ export const draw = canvas => {
 
         drawLine(bufferCtx, leverStart, leverEnd, { lineWidth: 0.4 });
 
-        const initialVertices = getReferenceVertices();
-        const referenceCentreOfMass = getReferenceCentreOfMass();
+        // const initialVertices = getReferenceVertices();
+        // const referenceCentreOfMass = getReferenceCentreOfMass();
 
-        if (initialVertices.length) {
-          drawShape(bufferCtx, initialVertices, referenceCentreOfMass, {
-            strokeStyle: "black",
-            lineWidth: 0.1,
-            globalAlpha: 0.2,
-            fillStyle: "grey"
-          });
-        }
-        const referenceBoundingRect = getReferenceBoundingRect();
+        // if (initialVertices.length) {
+        //   drawShape(bufferCtx, initialVertices, referenceCentreOfMass, {
+        //     strokeStyle: "black",
+        //     lineWidth: 0.1,
+        //     globalAlpha: 0.2,
+        //     fillStyle: "grey",
+        //   });
+        // }
+
         const rotateBoundingRect = getRotateBoundingRect();
-        if (referenceBoundingRect.length) {
-          drawShape(bufferCtx, referenceBoundingRect, centreOfMass, {
-            strokeStyle: "red",
-            lineWidth: 1,
-            fillStyle: "transparent"
-          });
-        }
         if (rotateBoundingRect.length) {
           drawShape(bufferCtx, rotateBoundingRect, centreOfMass, {
-            strokeStyle: "green",
+            strokeStyle: "black",
             lineWidth: 1,
-            fillStyle: "transparent"
+            fillStyle: "transparent",
+            globalAlpha: 0.5,
+            setLineDash: [5, 5]
           });
         }
         drawCircle(bufferCtx, handleRadius, handleCentre, {
