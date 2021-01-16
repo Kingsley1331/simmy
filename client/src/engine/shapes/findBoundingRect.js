@@ -1,7 +1,6 @@
 import { magnitude } from "../utils/maths/Vector";
 
 export default function findBoundingRect(vertices) {
-  console.log({ vertices });
   let boundingRect = {};
   let maxX = vertices[0].x;
   let minX = vertices[0].x;

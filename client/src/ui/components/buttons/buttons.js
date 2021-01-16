@@ -1,6 +1,10 @@
 import React from "react";
 import Scene from "../../../../src/engine/scenes/scene";
-import { CloneInterface, resizeInterface } from "../../../engine/shapes/shapes";
+import {
+  CloneInterface,
+  resizeInterface,
+  rotateInterface
+} from "../../../engine/shapes/shapes";
 
 export const update = () => {
   const name = prompt("Please enter a name for the scene", Scene.name);
@@ -66,7 +70,7 @@ export const BUTTONS = [
   { name: "clone", onClick: CloneInterface().resetClone },
   { name: "reshape" },
   { name: "resize", onClick: resizeInterface().selectShape },
-  { name: "rotate" },
+  { name: "rotate", onClick: rotateInterface().selectShape },
   { name: "colour" }
 ];
 

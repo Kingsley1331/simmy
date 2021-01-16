@@ -243,70 +243,30 @@ export const draw = canvas => {
         getHandleRadius,
         getOnhandle,
         getLever,
-        getCentreOfRotation,
         getReferenceVertices,
         getReferenceCentreOfMass,
         getReferenceBoundingRect,
         getRotateBoundingRect
       } = rotateInterface();
 
-      const {
-        radius: mainRadius,
-        centre: boundingRectCentre
-      } = ShapesController.getProperty(i, "boundingRect");
-
-      const centreOfRotation = {
-        x: boundingRectCentre.x + centreOfMass.x,
-        y: boundingRectCentre.y + centreOfMass.y
-      };
-
       if (getSelectedShapeIndex() === i) {
         const handleRadius = getHandleRadius();
         const { start, end } = getLever();
-        // const handleCentre = getHandleCentre();
+
         const handleColour = getOnhandle() ? "lightgreen" : "white";
         const leverStart = {
-          x: centreOfRotation.x + start.x,
-          y: centreOfRotation.y + start.y
+          x: centreOfMass.x + start.x,
+          y: centreOfMass.y + start.y
         };
 
         const leverEnd = {
-          x: centreOfRotation.x + end.x,
-          y: centreOfRotation.y + end.y
+          x: centreOfMass.x + end.x,
+          y: centreOfMass.y + end.y
         };
-        // const leverStart = {
-        //   x: centreOfMass.x + start.x,
-        //   y: centreOfMass.y + start.y,
-        // };
-
-        // const leverEnd = {
-        //   x: centreOfMass.x + end.x,
-        //   y: centreOfMass.y + end.y,
-        // };
 
         const handleCentre = { x: leverEnd.x, y: leverEnd.y };
 
-        drawCircle(
-          bufferCtx,
-          mainRadius,
-          centreOfRotation,
-          // centreOfMass,
-          {
-            lineWidth: 0.5,
-            setLineDash: [3, 3]
-          }
-        );
-
-        drawDot(bufferCtx, 3, getCentreOfRotation(), "blue");
-
         drawLine(bufferCtx, leverStart, leverEnd, { lineWidth: 0.4 });
-        // drawLine(
-        //   bufferCtx,
-        //   { x: centreOfMass.x, y: centreOfMass.y - mainRadius },
-        //   { x: centreOfMass.x, y: centreOfMass.y - mainRadius - leverLength },
-        //   { lineWidth: 0.4 }
-        // );
-        // drawDot(bufferCtx, 10, leverStart, "black");
 
         const initialVertices = getReferenceVertices();
         const referenceCentreOfMass = getReferenceCentreOfMass();
