@@ -8,7 +8,7 @@ const displayConfig = {
     normal: false,
     collisionPointVA: false,
     collisionPointVB: false,
-    showCentreOfMass: false,
+    showCentreOfMass: true,
     showCentreOfRotation: false,
     showBoundingRectCentre: false
   }

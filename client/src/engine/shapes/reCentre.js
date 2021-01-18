@@ -1,13 +1,11 @@
 import { findMass } from "../physics/mass/mass";
 import findBoundingRect from "./findBoundingRect";
 
-export function reCentreVertices(vertices, centreOfMass) {
-  var centre = { x: 0, y: 0 };
+export function reCentreVertices(vertices, centreShift) {
   var length = vertices.length;
-  var diff = { x: centreOfMass.x - centre.x, y: centreOfMass.y - centre.y };
   for (var i = 0; i < length; i++) {
-    vertices[i].x -= diff.x;
-    vertices[i].y -= diff.y;
+    vertices[i].x -= centreShift.x;
+    vertices[i].y -= centreShift.y;
   }
   return vertices;
 }
