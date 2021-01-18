@@ -12,7 +12,7 @@ import {
   forEachShape,
   Shape
 } from "../../engine/shapes/shapes";
-import { createWalls } from "../../engine/shapes/walls";
+import { createWall } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
 import getMousePos from "../../engine/utils/position";
 import {
@@ -270,9 +270,13 @@ const Scenes = ({
     rightClick(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(scene).length) {
-      createWalls();
+      createWall(canvas, 10);
     }
     updateScene(scene);
+    console.log(
+      "*****************************centreOfMass",
+      Scene.shapes[0].centreOfMass
+    );
   }, [selectShape, addRules, selectedEvent]);
 
   useEffect(() => {
@@ -291,7 +295,8 @@ const Scenes = ({
     <div className="scenesWrapper">
       <div className="canvasWrapper">
         <Buttons />
-        <canvas id="canvas" width="1000" height="600" />
+        <canvas id="canvas" width="1400" height="800" />
+        {/* <canvas id="canvas" width="1000" height="600" /> */}
       </div>
       {rules.map((rule, index) => (
         <EventForm

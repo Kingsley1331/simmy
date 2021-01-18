@@ -1,9 +1,6 @@
 import Scene from "../scenes/scene";
 
 export function makeThrowArray() {
-  console.log(
-    "*****************************************************THROWING!!!!!!"
-  );
   let mousePos = Scene.mousePos;
   var length = Scene.throwArray.length;
   var arraySize = 5;

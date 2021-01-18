@@ -247,6 +247,7 @@ export function Shape(centre, vertices) {
 }
 
 export function createShape(centreOfMass, vertices) {
+  console.log({ centreOfMass });
   // let id = 1000000 * Math.ceil(Math.random());
   let id = Scene.shapes.length;
   var shape = new Shape(centreOfMass, vertices);
