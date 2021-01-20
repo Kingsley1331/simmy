@@ -59,6 +59,10 @@ let Scene = {
     referenceCentreOfMass: {},
     centreOfRotation: {}
   },
+  colour: {
+    currentColour: null,
+    selectedShapeIndex: null
+  },
   isDrawing: false,
   timeStep: 16,
   time: 0,

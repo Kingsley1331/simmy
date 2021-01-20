@@ -10,16 +10,16 @@ export function createWall(canvas, thickness) {
   // width = width / 2;
   // console.log({ width, height });
   const vertices = [
-    { x: -width / 2, y: -height / 2 },
-    { x: width / 2, y: -height / 2 },
-    { x: width / 2, y: height / 2 },
-    { x: -(width / 2) - thickness, y: height / 2 },
+    { x: -(width / 2) - 1, y: -height / 2 },
+    { x: width / 2 + 1, y: -height / 2 },
+    { x: width / 2 + 1, y: height / 2 + 1 },
+    { x: -(width / 2) - thickness, y: height / 2 + 1 },
     { x: -(width / 2) - thickness, y: height / 2 + thickness },
     { x: width / 2 + thickness, y: height / 2 + thickness },
     { x: width / 2 + thickness, y: -height / 2 - thickness },
     { x: -width / 2 - thickness, y: -height / 2 - thickness },
     { x: -(width / 2) - thickness, y: height / 2 },
-    { x: -(width / 2), y: height / 2 }
+    { x: -(width / 2) - 1, y: height / 2 }
   ];
 
   const Wall = createShape({ x: 0, y: 0 }, vertices);

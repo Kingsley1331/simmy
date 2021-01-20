@@ -22,7 +22,8 @@ import {
   CloneInterface,
   reshapeInterface,
   resizeInterface,
-  rotateInterface
+  rotateInterface,
+  ColourInterface
 } from "../../engine/shapes/shapes";
 import Vector, {
   magnitude,
@@ -332,6 +333,19 @@ export const mouseDown = element => {
             }
           }
         });
+      }
+      if (Scene.selected === "colour") {
+        const { selectShape, getCurrentColour } = ColourInterface();
+        const currentColour = getCurrentColour();
+        forEachShape(function(idx) {
+          const onShape = ShapesController.getProperty(idx, "onShape");
+          if (onShape) {
+            selectShape(idx);
+            if (currentColour) {
+              ShapesController.setProperty(idx, "fillColour", currentColour);
+            }
+          }
+        }, false);
       }
     },
     false

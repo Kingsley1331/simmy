@@ -543,6 +543,27 @@ export const rotateInterface = () => {
   };
 };
 
+export const ColourInterface = () => {
+  const setCurrentColour = colour => {
+    Scene.colour.currentColour = colour;
+  };
+
+  const getCurrentColour = () => Scene.colour.currentColour;
+
+  const selectShape = (idx = null) => {
+    Scene.colour.selectedShapeIndex = idx;
+  };
+
+  const getSelectedShapeIndex = () => Scene.colour.selectedShapeIndex;
+
+  return {
+    getCurrentColour,
+    setCurrentColour,
+    selectShape,
+    getSelectedShapeIndex
+  };
+};
+
 export function createShapeFromPolyline(fromDblclick) {
   const { selected } = Scene;
   const { vertices, resetVertices } = PolylineInterface();

@@ -14,6 +14,7 @@ import {
 } from "../../engine/shapes/shapes";
 import { createWall } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
+import { ColourInterface } from "../../engine/shapes/shapes";
 import getMousePos from "../../engine/utils/position";
 import {
   mouseDown,
@@ -26,6 +27,9 @@ import {
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
 import { Condition } from "./events/EventFormComponents";
+import DatGuiDemo from "./data_control/DatGuiDemo";
+import SceneManager from "./data_control/SceneManager";
+import ColourPalette from "./data_control/ColourPalette";
 
 const data = [];
 /*const data = [
@@ -169,6 +173,11 @@ const Scenes = ({
   getScene
 }) => {
   const [rules, setRules] = useState([]);
+  const [selected, setSelected] = useState();
+
+  useEffect(() => {
+    setSelected(Scene.selected);
+  });
 
   useEffect(() => {
     if (!rules.length) {
@@ -295,9 +304,13 @@ const Scenes = ({
     <div className="scenesWrapper">
       <div className="canvasWrapper">
         <Buttons />
-        <canvas id="canvas" width="1400" height="800" />
+        <canvas id="canvas" width="1200" height="700" />
+        {/* <canvas id="canvas" width="1400" height="800" /> */}
+        {/* <SceneManager /> */}
+
         {/* <canvas id="canvas" width="1000" height="600" /> */}
       </div>
+      {selected === "colour" && <ColourPalette />}
       {rules.map((rule, index) => (
         <EventForm
           key={rule.id}
