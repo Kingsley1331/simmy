@@ -57,38 +57,34 @@ const ColourPalette = () => {
   const [colour, setColour] = useState({});
 
   useEffect(() => {
-    if (colour) {
-      setColour(colour);
-      setCurrentColour(colour.colour);
-      const selectedShapeIndex = getSelectedShapeIndex();
-      if (selectedShapeIndex) {
-        ShapesController.setProperty(
-          selectedShapeIndex,
-          "fillColour",
-          colour.colour
-        );
-      }
+    // updateColour(colour.colour);
+    setColour(colour);
+    setCurrentColour(colour.colour);
+    const selectedShapeIndex = getSelectedShapeIndex();
+    if (selectedShapeIndex) {
+      ShapesController.setProperty(
+        selectedShapeIndex,
+        "fillColour",
+        colour.colour
+      );
     }
   }, [setColour, colour]);
 
-  console.log("colour2", colour);
+  const updateColour = colour => {
+    const selectedShapeIndex = getSelectedShapeIndex();
+    setColour({ colour });
+    setCurrentColour(colour);
+    if (selectedShapeIndex) {
+      ShapesController.setProperty(selectedShapeIndex, "fillColour", colour);
+    }
+  };
+
   const handleUpdate = useCallback(
     data => {
-      const selectedShapeIndex = getSelectedShapeIndex();
-      const { colour: currentColour } = data;
-      setColour({ colour: currentColour });
-      setCurrentColour(currentColour);
-      // console.log("data", data);
-      if (selectedShapeIndex) {
-        console.log("currentColour", currentColour);
-        ShapesController.setProperty(
-          selectedShapeIndex,
-          "fillColour",
-          currentColour
-        );
-      }
+      const { colour } = data;
+      updateColour(colour);
     },
-    [colour, setColour, setCurrentColour]
+    [colour, updateColour]
   );
 
   return (
