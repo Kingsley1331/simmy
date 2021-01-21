@@ -1,17 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Scene from "../../../engine/scenes/scene";
 import { ColourInterface } from "../../../engine/shapes/shapes";
 import ShapesController from "../../../engine/shapes/ShapesController";
-import DatGui, {
-  DatBoolean,
-  DatButton,
-  DatColor,
-  DatFolder,
-  DatNumber,
-  DatPresets,
-  DatSelect,
-  DatString
-} from "react-dat-gui";
+import DatGui, { DatButton, DatColor, DatString } from "react-dat-gui";
 import "./ColourPalette.css";
 
 const COLOURS = [
@@ -28,13 +18,7 @@ const COLOURS = [
 ];
 
 const Palette = ({ colours, setColour }) => {
-  const {
-    getCurrentColour,
-    setCurrentColour,
-    getSelectedShapeIndex
-  } = ColourInterface();
   const colourOptions = colours.map(colour => {
-    // setCurrentColour(colour);
     return (
       <div
         onClick={() => setColour(colour)}
@@ -48,52 +32,43 @@ const Palette = ({ colours, setColour }) => {
 };
 
 const ColourPalette = () => {
-  const {
-    getCurrentColour,
-    setCurrentColour,
-    getSelectedShapeIndex
-  } = ColourInterface();
+  const { setCurrentColour, getSelectedShapeIndex } = ColourInterface();
 
-  const [colour, setColour] = useState({});
+  const [colour, setColour] = useState("");
+
+  const updateColour = useCallback(
+    colour => {
+      const selectedShapeIndex = getSelectedShapeIndex();
+      setColour(colour);
+      setCurrentColour(colour);
+      if (selectedShapeIndex) {
+        ShapesController.setProperty(selectedShapeIndex, "fillColour", colour);
+      }
+    },
+    [
+      setColour,
+      setCurrentColour,
+      getSelectedShapeIndex,
+      ShapesController.setProperty
+    ]
+  );
 
   useEffect(() => {
-    // updateColour(colour.colour);
-    setColour(colour);
-    setCurrentColour(colour.colour);
-    const selectedShapeIndex = getSelectedShapeIndex();
-    if (selectedShapeIndex) {
-      ShapesController.setProperty(
-        selectedShapeIndex,
-        "fillColour",
-        colour.colour
-      );
-    }
+    updateColour(colour);
   }, [setColour, colour]);
-
-  const updateColour = colour => {
-    const selectedShapeIndex = getSelectedShapeIndex();
-    setColour({ colour });
-    setCurrentColour(colour);
-    if (selectedShapeIndex) {
-      ShapesController.setProperty(selectedShapeIndex, "fillColour", colour);
-    }
-  };
 
   const handleUpdate = useCallback(
     data => {
       const { colour } = data;
       updateColour(colour);
     },
-    [colour, updateColour]
+    [updateColour]
   );
 
   return (
-    <DatGui data={colour} onUpdate={handleUpdate}>
+    <DatGui data={{ colour }} onUpdate={handleUpdate}>
       <DatString path="colour" label="Colour" />
-      <Palette
-        colours={COLOURS}
-        setColour={colour => setColour({ colour })}
-      ></Palette>
+      <Palette colours={COLOURS} setColour={colour => setColour(colour)} />
       <DatColor path="colour" label="Colour" />
     </DatGui>
   );
