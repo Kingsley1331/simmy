@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ColourInterface } from "../../../engine/shapes/shapes";
 import ShapesController from "../../../engine/shapes/ShapesController";
-import DatGui, { DatButton, DatColor, DatString } from "react-dat-gui";
+import DatGui, { DatColor, DatString } from "react-dat-gui";
+import { isColour } from "../../../engine/utils/dom";
 import "./ColourPalette.css";
 
 const COLOURS = [
@@ -17,24 +18,45 @@ const COLOURS = [
   "transparent"
 ];
 
-const Palette = ({ colours, setColour }) => {
+const Palette = ({ colours, setColour, selectedColour }) => {
   const colourOptions = colours.map(colour => {
     return (
       <div
+        key={colour}
         onClick={() => setColour(colour)}
         className={`${colour} colour_option`}
-        data-colour={colour}
         style={{ backgroundColor: colour }}
       ></div>
     );
   });
-  return <div className={"colour_options"}>{colourOptions}</div>;
+  return (
+    <div className="palette_wrapper">
+      <div className="colour_options">{colourOptions}</div>
+      <div
+        className="selected_colour"
+        style={{ backgroundColor: selectedColour }}
+      ></div>
+    </div>
+  );
 };
 
 const ColourPalette = () => {
   const { setCurrentColour, getSelectedShapeIndex } = ColourInterface();
 
-  const [colour, setColour] = useState("");
+  const [colour, setColour] = useState("#6495ED");
+  const [colourInput, setColourInput] = useState("");
+
+  useEffect(() => {
+    const Swatch = document.querySelector(".swatch");
+    if (Swatch) {
+      Swatch.addEventListener("click", event => {
+        setColourInput("");
+      });
+    }
+    return () => {
+      Swatch.removeEventListener("click", setColourInput);
+    };
+  }, [setColourInput]);
 
   const updateColour = useCallback(
     colour => {
@@ -59,16 +81,29 @@ const ColourPalette = () => {
 
   const handleUpdate = useCallback(
     data => {
-      const { colour } = data;
-      updateColour(colour);
+      const { colour, colourInput: colourFromInput } = data;
+
+      if (isColour(colourFromInput)) {
+        updateColour(colourFromInput);
+      } else {
+        updateColour(colour);
+      }
+      setColourInput(colourFromInput);
     },
     [updateColour]
   );
 
   return (
-    <DatGui data={{ colour }} onUpdate={handleUpdate}>
-      <DatString path="colour" label="Colour" />
-      <Palette colours={COLOURS} setColour={colour => setColour(colour)} />
+    <DatGui data={{ colour, colourInput }} onUpdate={handleUpdate}>
+      <DatString path="colourInput" label="Colour" />
+      <Palette
+        colours={COLOURS}
+        setColour={colour => {
+          setColour(colour);
+          setColourInput("");
+        }}
+        selectedColour={colour}
+      />
       <DatColor path="colour" label="Colour" />
     </DatGui>
   );

@@ -3,7 +3,8 @@ import Scene from "../../../../src/engine/scenes/scene";
 import {
   CloneInterface,
   resizeInterface,
-  rotateInterface
+  rotateInterface,
+  ColourInterface
 } from "../../../engine/shapes/shapes";
 
 export const update = () => {
@@ -71,7 +72,7 @@ export const BUTTONS = [
   { name: "reshape" },
   { name: "resize", onClick: resizeInterface().selectShape },
   { name: "rotate", onClick: rotateInterface().selectShape },
-  { name: "colour" }
+  { name: "colour", onClick: ColourInterface().selectShape }
 ];
 
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
