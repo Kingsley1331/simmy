@@ -147,3 +147,10 @@ export function drawArrow(context, head, shaft, config, length) {
 
   drawLine(context, start, end, config, context);
 }
+
+export const shadow = {
+  shadowColor: "rgba( 9, 9, 9, 0.3)",
+  shadowOffsetX: 10,
+  shadowOffsetY: 10,
+  shadowBlur: 10
+};

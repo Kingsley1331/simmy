@@ -79,6 +79,11 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
         }
       }, false);
       createShapeFromPolyline(true);
+      if (Scene.selected === "colour") {
+        const { selectShape, setCurrentColour } = ColourInterface();
+        // selectShape(null);
+        // setCurrentColour(null);
+      }
     },
     false
   );

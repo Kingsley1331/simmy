@@ -4,7 +4,8 @@ import {
   CloneInterface,
   reshapeInterface,
   resizeInterface,
-  rotateInterface
+  rotateInterface,
+  ColourInterface
 } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
@@ -15,7 +16,8 @@ import {
   drawDot,
   drawCircle,
   drawLine,
-  screenWriter
+  screenWriter,
+  shadow
 } from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
 
@@ -47,12 +49,6 @@ export const draw = canvas => {
   forEachShape(i => {
     var onShape = ShapesController.getProperty(i, "onShape");
     var shapeId = ShapesController.getProperty(i, "id");
-    if (onShape) {
-      var shadowColor = (shadowColor = "rgba( 9, 9, 9, 0.3)");
-      var shadowOffsetX = (shadowOffsetX = 10);
-      var shadowOffsetY = (shadowOffsetY = 10);
-      var shadowBlur = (shadowBlur = 10);
-    }
 
     var fillColour = ShapesController.getProperty(i, "fillColour");
     var strokeStyle = ShapesController.getProperty(i, "strokeStyle");
@@ -60,15 +56,15 @@ export const draw = canvas => {
     var centreOfMass = ShapesController.getCentreOfMass(i);
     var vertices = ShapesController.getProperty(i, "vertices");
 
-    var config = {
-      shadowColor: shadowColor,
-      shadowOffsetX: shadowOffsetX,
-      shadowOffsetY: shadowOffsetY,
-      shadowBlur: shadowBlur,
+    let config = {
       fillStyle: fillColour,
       strokeStyle: strokeStyle,
       lineWidth: lineWidth
     };
+
+    if (onShape) {
+      config = { ...config, ...shadow };
+    }
 
     if (Scene.selected === "rotate") {
       const {
@@ -85,6 +81,14 @@ export const draw = canvas => {
           globalAlpha: 0.03,
           fillStyle: "grey"
         });
+      }
+    }
+
+    if (Scene.selected === "colour") {
+      const { getSelectedShapeIndex } = ColourInterface();
+      const selectedShapeIndex = getSelectedShapeIndex();
+      if (selectedShapeIndex === i) {
+        config = { ...config, ...shadow };
       }
     }
 

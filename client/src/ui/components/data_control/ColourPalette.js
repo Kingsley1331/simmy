@@ -19,6 +19,7 @@ const COLOURS = [
 ];
 
 const Palette = ({ colours, setColour, selectedColour }) => {
+  console.log({ selectedColour });
   const colourOptions = colours.map(colour => {
     return (
       <div
@@ -34,7 +35,10 @@ const Palette = ({ colours, setColour, selectedColour }) => {
       <div className="colour_options">{colourOptions}</div>
       <div
         className="selected_colour"
-        style={{ backgroundColor: selectedColour }}
+        style={{
+          backgroundColor: selectedColour || "grey",
+          opacity: selectedColour ? 1 : 0.2
+        }}
       ></div>
     </div>
   );
@@ -43,7 +47,7 @@ const Palette = ({ colours, setColour, selectedColour }) => {
 const ColourPalette = () => {
   const { setCurrentColour, getSelectedShapeIndex } = ColourInterface();
 
-  const [colour, setColour] = useState("#6495ED");
+  const [colour, setColour] = useState("");
   const [colourInput, setColourInput] = useState("");
 
   useEffect(() => {
@@ -77,7 +81,7 @@ const ColourPalette = () => {
 
   useEffect(() => {
     updateColour(colour);
-  }, [setColour, colour]);
+  }, [colour]);
 
   const handleUpdate = useCallback(
     data => {
