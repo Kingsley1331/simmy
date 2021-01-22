@@ -244,6 +244,12 @@ export function Shape(centre, vertices) {
   };
   this.tags = [];
   this.checkEvents = checkEvents;
+  this.isFixed = false;
+  // if (this.isFixed) {
+  //   this.physics.mass = Infinity;
+  //   this.physics.momentOfInertia = Infinity;
+  //   this.physics.momentOfInertiaCOM = Infinity;
+  // }
 }
 
 export function createShape(centreOfMass, vertices) {
@@ -251,6 +257,23 @@ export function createShape(centreOfMass, vertices) {
   let id = Scene.shapes.length;
   var shape = new Shape(centreOfMass, vertices);
   shape.id = id;
+
+  Object.defineProperty(shape, "isFixed", {
+    set: function(value) {
+      if (value === true) {
+        this.physics.mass = Infinity;
+        this.physics.momentOfInertia = Infinity;
+        this.physics.momentOfInertiaCOM = Infinity;
+      }
+    }
+  });
+
+  // Object.defineProperty(shape, "isFixed", {
+  //   set: function(value) {
+  //     console.log("centreOfMass", this.centreOfMass);
+  //   },
+  // });
+
   Scene.shapes.push(shape);
   return shape;
 }
@@ -560,6 +583,25 @@ export const ColourInterface = () => {
     setCurrentColour,
     selectShape,
     getSelectedShapeIndex
+  };
+};
+
+export const ShapeManagerInterface = () => {
+  const selectShape = (idx = null) => {
+    Scene.manageShape.selectedShapeIndex = idx;
+  };
+  const setSelectedShapeId = (idx = null) => {
+    Scene.manageShape.selectedShapeIndex = idx;
+  };
+
+  const getSelectedShapeIndex = () => Scene.manageShape.selectedShapeIndex;
+  const getSelectedShapeId = () => Scene.manageShape.selectedShapeId;
+
+  return {
+    selectShape,
+    getSelectedShapeIndex,
+    getSelectedShapeId,
+    setSelectedShapeId
   };
 };
 

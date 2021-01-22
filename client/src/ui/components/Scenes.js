@@ -14,7 +14,7 @@ import {
 } from "../../engine/shapes/shapes";
 import { createWall } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
-import { ColourInterface } from "../../engine/shapes/shapes";
+import { ShapeManagerInterface } from "../../engine/shapes/shapes";
 import getMousePos from "../../engine/utils/position";
 import {
   mouseDown,
@@ -29,6 +29,7 @@ import animate from "../../engine/utils/animation";
 import { Condition } from "./events/EventFormComponents";
 import DatGuiDemo from "./data_control/DatGuiDemo";
 import SceneManager from "./data_control/SceneManager";
+import ShapeManager from "./data_control/ShapeManager";
 import ColourPalette from "./data_control/ColourPalette";
 
 const data = [];
@@ -174,10 +175,15 @@ const Scenes = ({
 }) => {
   const [rules, setRules] = useState([]);
   const [selected, setSelected] = useState();
+  const [managedShapeIndex, setManagedShapeIndex] = useState(null);
 
+  console.log(
+    "******************************managedShapeIndex",
+    managedShapeIndex
+  );
   useEffect(() => {
     setSelected(Scene.selected);
-  });
+  }, [Scene.selected]);
 
   useEffect(() => {
     if (!rules.length) {
@@ -271,7 +277,7 @@ const Scenes = ({
 
     canvas = document.getElementById("canvas");
     animate();
-    mouseDown(canvas);
+    mouseDown(canvas, setManagedShapeIndex);
     mouseMove(canvas);
     mouseUp(canvas);
     doubleClick(canvas, selectShape, addRules, selectedEvent);
@@ -324,6 +330,9 @@ const Scenes = ({
       <button className="add_rule" onClick={addRule}>
         Add rule
       </button>
+      {Scene.selected === "manageShape" && managedShapeIndex && (
+        <ShapeManager shapeIndex={managedShapeIndex} />
+      )}
     </div>
   );
 };

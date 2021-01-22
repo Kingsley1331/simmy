@@ -23,7 +23,8 @@ import {
   reshapeInterface,
   resizeInterface,
   rotateInterface,
-  ColourInterface
+  ColourInterface,
+  ShapeManagerInterface
 } from "../../engine/shapes/shapes";
 import Vector, {
   magnitude,
@@ -89,7 +90,7 @@ export const doubleClick = (element, selectShape, addRules, selectedEvent) => {
   );
 };
 
-export const mouseDown = element => {
+export const mouseDown = (element, setManagedShapeIndex) => {
   element.addEventListener(
     "mousedown",
     evt => {
@@ -300,7 +301,10 @@ export const mouseDown = element => {
               if (selectedShapeIndex !== idx) {
                 setLever({
                   start: { x: boundingRectCentre.x, y: minY },
-                  end: { x: boundingRectCentre.x, y: minY - defaultLength }
+                  end: {
+                    x: boundingRectCentre.x,
+                    y: minY - defaultLength
+                  }
                 });
                 // setLever({
                 //   start: { x: 0, y: -radius },
@@ -349,6 +353,19 @@ export const mouseDown = element => {
             if (currentColour) {
               ShapesController.setProperty(idx, "fillColour", currentColour);
             }
+          }
+        }, false);
+      }
+      if (Scene.selected === "manageShape") {
+        const { selectShape, setSelectedShapeId } = ShapeManagerInterface();
+
+        forEachShape(function(idx) {
+          const onShape = ShapesController.getProperty(idx, "onShape");
+          if (onShape) {
+            // console.log("******************************onShape", onShape);
+            selectShape(idx);
+            // setSelectedShapeId(idx);
+            setManagedShapeIndex(idx);
           }
         }, false);
       }

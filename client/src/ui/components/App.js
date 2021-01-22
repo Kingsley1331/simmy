@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import Home from "./Home";
 import Demos from "./Demos";
 import About from "./About";
@@ -10,31 +10,26 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 
-class App extends Component {
-  // constructor(){
-  //   super()
-  // }
-  componentDidMount() {
-    this.props.fetchCurrentUser();
-  }
+const App = ({ fetchCurrentUser }) => {
+  useEffect(() => {
+    fetchCurrentUser();
+  });
 
-  render() {
-    return (
-      <div>
-        <BrowserRouter>
-          <div>
-            <Navigation />
-            <Route exact path="/" component={Home} />
-            <Route path="/users" component={Users} />
-            <Route path="/demos" component={Demos} />
-            <Route path="/about" component={About} />
-            <Route path="/_scenes" component={Scenes} />
-            <Route path="/Profile" component={Profile} />
-          </div>
-        </BrowserRouter>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <BrowserRouter>
+        <div>
+          <Navigation />
+          <Route exact path="/" component={Home} />
+          <Route path="/users" component={Users} />
+          <Route path="/demos" component={Demos} />
+          <Route path="/about" component={About} />
+          <Route path="/_scenes" component={Scenes} />
+          <Route path="/Profile" component={Profile} />
+        </div>
+      </BrowserRouter>
+    </div>
+  );
+};
 
 export default connect(null, actions)(App);

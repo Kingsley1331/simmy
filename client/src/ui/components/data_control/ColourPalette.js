@@ -19,7 +19,6 @@ const COLOURS = [
 ];
 
 const Palette = ({ colours, setColour, selectedColour }) => {
-  console.log({ selectedColour });
   const colourOptions = colours.map(colour => {
     return (
       <div

@@ -63,6 +63,10 @@ let Scene = {
     currentColour: null,
     selectedShapeIndex: null
   },
+  manageShape: {
+    selectedShapeIndex: null,
+    selectedShapeId: null
+  },
   isDrawing: false,
   timeStep: 16,
   time: 0,

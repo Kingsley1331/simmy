@@ -34,6 +34,14 @@ export function createWall(canvas, thickness) {
   Wall.type = "fixed";
   Wall.events.subscribed = false;
   Wall.events.subscribed = false;
+
+  // const square = createShape({ x: 200, y: 252 }, [
+  //   { x: -18, y: -18 },
+  //   { x: 18, y: -18 },
+  //   { x: 18, y: 18 },
+  //   { x: -18, y: 18 },
+  // ]);
+  // square.fixed;
 }
 
 // export function createWalls() {

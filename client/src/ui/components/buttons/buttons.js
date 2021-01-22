@@ -72,7 +72,8 @@ export const BUTTONS = [
   { name: "reshape" },
   { name: "resize", onClick: resizeInterface().selectShape },
   { name: "rotate", onClick: rotateInterface().selectShape },
-  { name: "colour", onClick: ColourInterface().selectShape }
+  { name: "colour", onClick: ColourInterface().selectShape },
+  { name: "manageShape" }
 ];
 
 export const ImgButton = ({ alt, id, src, width, selected, selectShape }) => {
