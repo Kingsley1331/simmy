@@ -15,14 +15,12 @@ import DatGui, {
 
 const ShapeManager = ({ shapeIndex }) => {
   const id = ShapesController.getProperty(shapeIndex, "id");
-  const type = ShapesController.getProperty(shapeIndex, "type");
   const isFixed = ShapesController.getProperty(shapeIndex, "isFixed");
   const isShapeFixed = ShapesController.getProperty(shapeIndex, "isShapeFixed");
   const fillColour = ShapesController.getProperty(shapeIndex, "fillColour");
   const physics = ShapesController.getProperty(shapeIndex, "physics");
   const [shapeData, setShapeData] = useState({
     id,
-    type,
     fillColour,
     physics,
     isShapeFixed,
@@ -30,10 +28,10 @@ const ShapeManager = ({ shapeIndex }) => {
   });
 
   useEffect(() => {
-    const data = { id, type, isFixed, physics, isShapeFixed, fillColour };
+    const data = { id, isFixed, physics, isShapeFixed, fillColour };
 
     setShapeData({ ...data });
-  }, [id, type, isFixed]);
+  }, [id, isFixed, physics, isShapeFixed, fillColour]);
 
   const handleUpdate = data => {
     const { isShapeFixed, fillColour, physics: physicsData } = data;
@@ -47,7 +45,6 @@ const ShapeManager = ({ shapeIndex }) => {
   return (
     <DatGui data={shapeData} onUpdate={handleUpdate}>
       <DatString path="id" label="shape id" />
-      <DatString path="type" label="type" />
       <DatString path="fillColour" label="Colour" />
       <DatFolder title="Physics">
         <DatNumber
