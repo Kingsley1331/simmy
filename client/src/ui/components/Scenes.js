@@ -288,7 +288,7 @@ const Scenes = ({
     rightClick(canvas);
     reCentre(shapeSelection);
     if (!Object.keys(scene).length) {
-      createWall(canvas, 10);
+      createWall(canvas, 250);
     }
     updateScene(scene);
   }, [selectShape, addRules, selectedEvent]);
