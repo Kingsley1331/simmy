@@ -180,11 +180,6 @@ const Scenes = ({
   const [selected, setSelected] = useState();
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
 
-  console.log(
-    "******************************managedShapeIndex",
-    managedShapeIndex
-  );
-
   useEffect(() => {
     for (let button in buttons) {
       if (buttons[button]) {
@@ -296,10 +291,6 @@ const Scenes = ({
       createWall(canvas, 10);
     }
     updateScene(scene);
-    console.log(
-      "*****************************centreOfMass",
-      Scene.shapes[0].centreOfMass
-    );
   }, [selectShape, addRules, selectedEvent]);
 
   useEffect(() => {

@@ -245,25 +245,32 @@ export function Shape(centre, vertices) {
   this.tags = [];
   this.checkEvents = checkEvents;
   this.isFixed = false;
-  // if (this.isFixed) {
-  //   this.physics.mass = Infinity;
-  //   this.physics.momentOfInertia = Infinity;
-  //   this.physics.momentOfInertiaCOM = Infinity;
-  // }
+  this.isShapeFixed = false;
 }
 
 export function createShape(centreOfMass, vertices) {
-  // let id = 1000000 * Math.ceil(Math.random());
   let id = Scene.shapes.length;
-  var shape = new Shape(centreOfMass, vertices);
+  let shape = new Shape(centreOfMass, vertices);
   shape.id = id;
 
   Object.defineProperty(shape, "isFixed", {
     set: function(value) {
       if (value === true) {
         this.physics.mass = Infinity;
-        this.physics.momentOfInertia = Infinity;
         this.physics.momentOfInertiaCOM = Infinity;
+        this.isShapeFixed = true;
+      } else {
+        const boundingRect = findBoundingRect(vertices);
+        const { mass } = findMass(centreOfMass, vertices, boundingRect);
+        const momentOfInertiaCOM = findMomentOfInertiaCOM(
+          centreOfMass,
+          vertices,
+          boundingRect
+        );
+
+        this.physics.mass = mass;
+        this.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+        this.isShapeFixed = false;
       }
     }
   });

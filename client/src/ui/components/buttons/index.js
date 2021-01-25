@@ -17,7 +17,11 @@ const Buttons = ({ buttons, selectShape }) => {
           width={width}
           selected={buttons[name]}
           selectShape={() => {
-            selectShape(name);
+            if (Scene.selected === name) {
+              selectShape("");
+            } else {
+              selectShape(name);
+            }
             onClick();
           }}
         />

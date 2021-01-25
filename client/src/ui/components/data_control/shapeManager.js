@@ -16,32 +16,32 @@ import DatGui, {
 const ShapeManager = ({ shapeIndex }) => {
   const id = ShapesController.getProperty(shapeIndex, "id");
   const type = ShapesController.getProperty(shapeIndex, "type");
+  const isFixed = ShapesController.getProperty(shapeIndex, "isFixed");
+  const isShapeFixed = ShapesController.getProperty(shapeIndex, "isShapeFixed");
   const fillColour = ShapesController.getProperty(shapeIndex, "fillColour");
   const physics = ShapesController.getProperty(shapeIndex, "physics");
-
   const [shapeData, setShapeData] = useState({
     id,
     type,
     fillColour,
-    physics
+    physics,
+    isShapeFixed,
+    isFixed
   });
 
   useEffect(() => {
-    const data = { id, type };
-    setShapeData({ ...shapeData, ...data });
-  }, [id, type]);
+    const data = { id, type, isFixed, physics, isShapeFixed, fillColour };
+
+    setShapeData({ ...data });
+  }, [id, type, isFixed]);
 
   const handleUpdate = data => {
-    console.log({ data });
-    const { isFixed, fillColour, physics: physicsData } = data;
-    setShapeData(shapeData => ({
-      ...shapeData,
-      ...data
-    }));
+    const { isShapeFixed, fillColour, physics: physicsData } = data;
 
+    setShapeData({ ...data });
     ShapesController.setProperty(shapeIndex, "fillColour", fillColour);
     ShapesController.setProperty(shapeIndex, "physics", physicsData);
-    ShapesController.setProperty(shapeIndex, "isFixed", isFixed);
+    ShapesController.setProperty(shapeIndex, "isFixed", isShapeFixed);
   };
 
   return (
@@ -50,10 +50,19 @@ const ShapeManager = ({ shapeIndex }) => {
       <DatString path="type" label="type" />
       <DatString path="fillColour" label="Colour" />
       <DatFolder title="Physics">
-        <DatNumber path={"physics.velocity.x"} label="velocity.x"></DatNumber>
-        <DatNumber path={"physics.velocity.y"} label="velocity.y"></DatNumber>
+        <DatNumber
+          path={"physics.velocity.x"}
+          label="velocity.x"
+          step={0.01}
+        ></DatNumber>
+        <DatNumber
+          path={"physics.velocity.y"}
+          label="velocity.y"
+          step={0.01}
+        ></DatNumber>
+        <DatNumber path={"physics.mass"} label="Mass"></DatNumber>
       </DatFolder>
-      <DatBoolean path="isFixed" label="isFixed" />
+      <DatBoolean path="isShapeFixed" label="isFixed" labelWidth="90px" />
     </DatGui>
   );
 };
