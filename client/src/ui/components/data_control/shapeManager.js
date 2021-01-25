@@ -32,14 +32,16 @@ const ShapeManager = ({ shapeIndex }) => {
   }, [id, type]);
 
   const handleUpdate = data => {
+    console.log({ data });
     const { isFixed, fillColour, physics: physicsData } = data;
     setShapeData(shapeData => ({
       ...shapeData,
       ...data
     }));
-    ShapesController.setProperty(shapeIndex, "isFixed", isFixed);
+
     ShapesController.setProperty(shapeIndex, "fillColour", fillColour);
     ShapesController.setProperty(shapeIndex, "physics", physicsData);
+    ShapesController.setProperty(shapeIndex, "isFixed", isFixed);
   };
 
   return (

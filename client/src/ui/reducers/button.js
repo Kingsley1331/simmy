@@ -34,7 +34,15 @@ const shapeSelection = {
   tShape: false,
   bar: false,
   box: false,
-  _delete: false
+  _delete: false,
+  polyline: false,
+  draw: false,
+  clone: false,
+  reshape: false,
+  resize: false,
+  rotate: false,
+  manageShape: false,
+  colour: false
 };
 
 export default buttonReducer;

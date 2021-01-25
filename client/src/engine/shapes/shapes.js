@@ -268,12 +268,6 @@ export function createShape(centreOfMass, vertices) {
     }
   });
 
-  // Object.defineProperty(shape, "isFixed", {
-  //   set: function(value) {
-  //     console.log("centreOfMass", this.centreOfMass);
-  //   },
-  // });
-
   Scene.shapes.push(shape);
   return shape;
 }

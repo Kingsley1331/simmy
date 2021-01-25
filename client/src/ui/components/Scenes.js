@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
 // import EventForm from "./events/local";
@@ -31,6 +31,8 @@ import DatGuiDemo from "./data_control/DatGuiDemo";
 import SceneManager from "./data_control/SceneManager";
 import ShapeManager from "./data_control/ShapeManager";
 import ColourPalette from "./data_control/ColourPalette";
+
+// export const SelectedContext = React.createContext({});
 
 const data = [];
 /*const data = [
@@ -171,7 +173,8 @@ const Scenes = ({
   addRules,
   selectedEvent,
   scene,
-  getScene
+  getScene,
+  buttons
 }) => {
   const [rules, setRules] = useState([]);
   const [selected, setSelected] = useState();
@@ -181,9 +184,14 @@ const Scenes = ({
     "******************************managedShapeIndex",
     managedShapeIndex
   );
+
   useEffect(() => {
-    setSelected(Scene.selected);
-  }, [Scene.selected]);
+    for (let button in buttons) {
+      if (buttons[button]) {
+        setSelected(button);
+      }
+    }
+  }, [buttons, setSelected]);
 
   useEffect(() => {
     if (!rules.length) {
@@ -330,7 +338,7 @@ const Scenes = ({
       <button className="add_rule" onClick={addRule}>
         Add rule
       </button>
-      {Scene.selected === "manageShape" && managedShapeIndex && (
+      {selected === "manageShape" && managedShapeIndex && (
         <ShapeManager shapeIndex={managedShapeIndex} />
       )}
     </div>
