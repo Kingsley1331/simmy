@@ -684,17 +684,19 @@ function dragShape(i) {
 }
 
 export function releaseShape(i) {
-  var velocity = throwVelocity();
-  if (
-    Scene.throwArray.length > 0 &&
-    ShapesController.getProperty(i, "dragging")
-  ) {
-    ShapesController.setProperty(
-      i,
-      "velocity",
-      { x: velocity.x, y: velocity.y },
-      true
-    );
+  if (Scene.selected === "play") {
+    var velocity = throwVelocity();
+    if (
+      Scene.throwArray.length > 0 &&
+      ShapesController.getProperty(i, "dragging")
+    ) {
+      ShapesController.setProperty(
+        i,
+        "velocity",
+        { x: velocity.x, y: velocity.y },
+        true
+      );
+    }
   }
   ShapesController.setProperty(i, "dragging", false);
 }
@@ -747,7 +749,7 @@ export function clearShapes() {
 
 export const updatePhysicsProperties = shapeId => {
   const selectedShape = Scene.shapes.filter(shape => shape.id === shapeId)[0];
-  const { vertices, centreOfMass } = selectedShape;
+  const { vertices, centreOfMass, isShapeFixed } = selectedShape;
   let boundingRect = findBoundingRect(vertices);
   const massData = findMass(centreOfMass, vertices, boundingRect);
   const { mass, centreOfMass: newCentreOfMass } = massData;
@@ -772,4 +774,5 @@ export const updatePhysicsProperties = shapeId => {
   selectedShape.centreOfRotation = newCentreOfMass;
   selectedShape.physics.mass = mass;
   selectedShape.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+  selectedShape.freezeShape = isShapeFixed;
 };

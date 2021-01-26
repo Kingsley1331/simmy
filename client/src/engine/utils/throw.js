@@ -31,6 +31,9 @@ export function throwVelocity() {
     velocity.x /= length2 * 10;
     velocity.y /= length2 * 10;
   }
-
+  console.log(
+    "8888888888888888888888888888888888888888888888888888888888888888",
+    velocity
+  );
   return { x: velocity.x, y: velocity.y };
 }

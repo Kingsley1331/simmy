@@ -920,11 +920,8 @@ export const mouseUp = element => {
       if (Scene.selected === "rotate") {
         const {
           setDraggingState,
-          setLever,
           getSelectedShapeIndex,
           setIsDefault,
-          setCentreOfRotation,
-          getDefaultLength,
           setReferenceVertices,
           setReferenceCentreOfMass,
           getLever,
@@ -934,7 +931,6 @@ export const mouseUp = element => {
         } = rotateInterface();
         setDraggingState(false);
 
-        const defaultLength = getDefaultLength();
         const selectedShapeIndex = getSelectedShapeIndex();
         const selectedShapeId = ShapesController.getProperty(
           selectedShapeIndex,
@@ -945,34 +941,6 @@ export const mouseUp = element => {
         }
 
         if (selectedShapeIndex) {
-          const { mousePos } = Scene;
-          // const boundingRect = ShapesController.getProperty(
-          //   selectedShapeIndex,
-          //   "boundingRect"
-          // );
-          // const { radius } = boundingRect;
-          // setLever({
-          //   start: { x: 0, y: -radius },
-          //   end: { x: 0, y: -radius - defaultLength },
-          // });
-          /* const boundingRect = ShapesController.getProperty(
-            selectedShapeIndex,
-            "boundingRect"
-          );
-          const { centre: boundingRectCentre } = boundingRect;
-
-          const centreOfMass = ShapesController.getCentreOfMass(
-            selectedShapeIndex
-          );
-          const centreOfRotation = {
-            x: boundingRectCentre.x + centreOfMass.x,
-            y: boundingRectCentre.y + centreOfMass.y,
-          };
-          const centreToCursorVector = new Vector({
-            x: mousePos.x - centreOfRotation.x,
-            y: mousePos.y - centreOfRotation.y,
-          });*/
-
           const { start, end } = getLever();
 
           const startVector = new Vector({ ...start });
