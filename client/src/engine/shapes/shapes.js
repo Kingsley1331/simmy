@@ -198,83 +198,82 @@ function circleMaker(radius, n) {
 var circle = circleMaker(20, 30);
 shapeSelection.circle = circle;
 
-export function Shape(centre, vertices) {
-  var boundingRect = findBoundingRect(vertices);
-  var massData = findMass(centre, vertices, boundingRect);
-  var centreOfMass = massData.centreOfMass;
-  var momentOfInertiaCOM = findMomentOfInertiaCOM(
-    centreOfMass,
-    vertices,
-    boundingRect
-  );
-  var references = referenceVectors(centre, vertices);
-  this.id;
-  this.type = "";
-  this.fillColour = "#6495ED";
-  this.strokeStyle = "black";
-  this.linewidth = 0.7;
-  this.centreOfMass = centreOfMass;
-  this.centreOfRotation = centreOfMass;
-  this.vertices = vertices;
-  this.physics = {
-    density: 1,
-    mass: massData.mass,
-    momentOfInertiaCOM: momentOfInertiaCOM,
-    velocity: { x: 0, y: 0 },
-    acceleration: { x: 0, y: 0 },
-    angularVelocity: 0,
-    angularAcceleration: 0,
-    forcesCOM: [{ x: 0, y: 0 }],
-    torque: 0
-  };
-  this.touchPoint = [];
-  this.display = [];
-  this.boundingRect = boundingRect;
-  this.collisionData = {};
-  this.referenceVectors = references;
-  this.colliding = false;
-  this.onShape = false;
-  this.dragging = false;
-  this.onClick = false;
-  this.doubleClick = false;
-  // this.onDoubleClick = false;
-  this.selected = false;
-  this.events = {
-    subscribed: true
-  };
-  this.tags = [];
-  this.checkEvents = checkEvents;
-  this.isFixed = false;
-  this.isShapeFixed = false;
+export class Shape {
+  constructor(centre, vertices) {
+    const boundingRect = findBoundingRect(vertices);
+    const massData = findMass(centre, vertices, boundingRect);
+    const centreOfMass = massData.centreOfMass;
+    const momentOfInertiaCOM = findMomentOfInertiaCOM(
+      centreOfMass,
+      vertices,
+      boundingRect
+    );
+    const references = referenceVectors(centre, vertices);
+    this.id;
+    this.type = "";
+    this.fillColour = "#6495ED";
+    this.strokeStyle = "black";
+    this.linewidth = 0.7;
+    this.centreOfMass = centreOfMass;
+    this.centreOfRotation = centreOfMass;
+    this.vertices = vertices;
+    this.physics = {
+      density: 1,
+      mass: massData.mass,
+      momentOfInertiaCOM: momentOfInertiaCOM,
+      velocity: { x: 0, y: 0 },
+      acceleration: { x: 0, y: 0 },
+      angularVelocity: 0,
+      angularAcceleration: 0,
+      forcesCOM: [{ x: 0, y: 0 }],
+      torque: 0
+    };
+    this.touchPoint = [];
+    this.display = [];
+    this.boundingRect = boundingRect;
+    this.collisionData = {};
+    this.referenceVectors = references;
+    this.colliding = false;
+    this.onShape = false;
+    this.dragging = false;
+    this.onClick = false;
+    this.doubleClick = false;
+    // this.onDoubleClick = false;
+    this.selected = false;
+    this.events = {
+      subscribed: true
+    };
+    this.tags = [];
+    this.checkEvents = checkEvents;
+    // this.isFixed = false;
+    this.isShapeFixed = false;
+  }
+
+  set isFixed(value) {
+    if (value === true) {
+      this.physics.mass = Infinity;
+      this.physics.momentOfInertiaCOM = Infinity;
+      this.isShapeFixed = true;
+    } else {
+      const boundingRect = findBoundingRect(this.vertices);
+      const { mass } = findMass(this.centreOfMass, this.vertices, boundingRect);
+      const momentOfInertiaCOM = findMomentOfInertiaCOM(
+        this.centreOfMass,
+        this.vertices,
+        boundingRect
+      );
+
+      this.physics.mass = mass;
+      this.physics.momentOfInertiaCOM = momentOfInertiaCOM;
+      this.isShapeFixed = false;
+    }
+  }
 }
 
 export function createShape(centreOfMass, vertices) {
   let id = Scene.shapes.length;
   let shape = new Shape(centreOfMass, vertices);
   shape.id = id;
-
-  Object.defineProperty(shape, "isFixed", {
-    set: function(value) {
-      if (value === true) {
-        this.physics.mass = Infinity;
-        this.physics.momentOfInertiaCOM = Infinity;
-        this.isShapeFixed = true;
-      } else {
-        const boundingRect = findBoundingRect(vertices);
-        const { mass } = findMass(centreOfMass, vertices, boundingRect);
-        const momentOfInertiaCOM = findMomentOfInertiaCOM(
-          centreOfMass,
-          vertices,
-          boundingRect
-        );
-
-        this.physics.mass = mass;
-        this.physics.momentOfInertiaCOM = momentOfInertiaCOM;
-        this.isShapeFixed = false;
-      }
-    }
-  });
-
   Scene.shapes.push(shape);
   return shape;
 }

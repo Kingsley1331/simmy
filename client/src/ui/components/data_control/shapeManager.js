@@ -16,7 +16,6 @@ import DatGui, {
 
 const ShapeManager = ({ shapeIndex }) => {
   const id = ShapesController.getProperty(shapeIndex, "id");
-  const isFixed = ShapesController.getProperty(shapeIndex, "isFixed");
   const isShapeFixed = ShapesController.getProperty(shapeIndex, "isShapeFixed");
   const fillColour = ShapesController.getProperty(shapeIndex, "fillColour");
   const centreOfMass = ShapesController.getProperty(shapeIndex, "centreOfMass");
@@ -26,21 +25,19 @@ const ShapeManager = ({ shapeIndex }) => {
     fillColour,
     physics,
     isShapeFixed,
-    isFixed,
     centreOfMass
   });
 
   useEffect(() => {
     const data = {
       id,
-      isFixed,
       physics,
       isShapeFixed,
       fillColour,
       centreOfMass
     };
     setShapeData({ ...data });
-  }, [id, isFixed, physics, isShapeFixed, fillColour]);
+  }, [id, physics, isShapeFixed, fillColour]);
 
   const handleUpdate = data => {
     const {
