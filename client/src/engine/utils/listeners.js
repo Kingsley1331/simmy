@@ -344,14 +344,25 @@ export const mouseDown = (element, setManagedShapeIndex) => {
         });
       }
       if (Scene.selected === "colour") {
-        const { selectShape, getCurrentColour } = ColourInterface();
+        const {
+          selectShape,
+          getCurrentColour,
+          getSelectedShapeIndex,
+          setCurrentColour
+        } = ColourInterface();
         const currentColour = getCurrentColour();
+        const selectedShapeIndex = getSelectedShapeIndex();
         forEachShape(function(idx) {
           const onShape = ShapesController.getProperty(idx, "onShape");
           if (onShape) {
-            selectShape(idx);
-            if (currentColour) {
-              ShapesController.setProperty(idx, "fillColour", currentColour);
+            if (selectedShapeIndex !== idx) {
+              selectShape(idx);
+              if (currentColour) {
+                ShapesController.setProperty(idx, "fillColour", currentColour);
+              }
+            } else {
+              selectShape();
+              setCurrentColour();
             }
           }
         }, false);

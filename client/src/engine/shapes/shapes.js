@@ -567,7 +567,7 @@ export const rotateInterface = () => {
 };
 
 export const ColourInterface = () => {
-  const setCurrentColour = colour => {
+  const setCurrentColour = (colour = null) => {
     Scene.colour.currentColour = colour;
   };
 
