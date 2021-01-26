@@ -245,11 +245,10 @@ export class Shape {
     };
     this.tags = [];
     this.checkEvents = checkEvents;
-    // this.isFixed = false;
     this.isShapeFixed = false;
   }
 
-  set isFixed(value) {
+  set freezeShape(value) {
     if (value === true) {
       this.physics.mass = Infinity;
       this.physics.momentOfInertiaCOM = Infinity;

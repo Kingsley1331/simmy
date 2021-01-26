@@ -50,7 +50,7 @@ const ShapeManager = ({ shapeIndex }) => {
     setShapeData({ ...data });
     ShapesController.setProperty(shapeIndex, "fillColour", fillColour);
     ShapesController.setProperty(shapeIndex, "physics", physicsData);
-    ShapesController.setProperty(shapeIndex, "isFixed", isShapeFixed);
+    ShapesController.setProperty(shapeIndex, "freezeShape", isShapeFixed);
     ShapesController.setProperty(shapeIndex, "centreOfMass", centreOfMass);
   };
 
@@ -78,7 +78,7 @@ const ShapeManager = ({ shapeIndex }) => {
         ></DatNumber>
         <DatNumber path={"physics.mass"} label="Mass"></DatNumber>
       </DatFolder>
-      <DatBoolean path="isShapeFixed" label="isFixed" labelWidth="90px" />
+      <DatBoolean path="isShapeFixed" label="Freeze" labelWidth="90px" />
     </DatGui>
   );
 };
