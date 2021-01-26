@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Scene from "../../../engine/scenes/scene";
 import { ShapeManagerInterface } from "../../../engine/shapes/shapes";
 import ShapesController from "../../../engine/shapes/ShapesController";
+import { isColour } from "../../../engine/utils/dom";
 import DatGui, {
   DatBoolean,
   DatButton,

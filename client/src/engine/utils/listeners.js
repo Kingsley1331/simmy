@@ -357,14 +357,9 @@ export const mouseDown = (element, setManagedShapeIndex) => {
         }, false);
       }
       if (Scene.selected === "manageShape") {
-        const { selectShape, setSelectedShapeId } = ShapeManagerInterface();
-
         forEachShape(function(idx) {
           const onShape = ShapesController.getProperty(idx, "onShape");
           if (onShape) {
-            // console.log("******************************onShape", onShape);
-            selectShape(idx);
-            // setSelectedShapeId(idx);
             setManagedShapeIndex(idx);
           }
         }, false);

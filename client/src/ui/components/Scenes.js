@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
 // import EventForm from "./events/local";
 import EventForm from "./events/EventForm";
-import { draw } from "../../engine/scenes/draw";
 import Scene, { updateScene } from "../../engine/scenes/scene";
 import {
   createShape,
@@ -15,7 +14,6 @@ import {
 import { createWall } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
 import { ShapeManagerInterface } from "../../engine/shapes/shapes";
-import getMousePos from "../../engine/utils/position";
 import {
   mouseDown,
   mouseMove,
@@ -194,6 +192,14 @@ const Scenes = ({
     }
   }, []);
 
+  const setManagedShapeIdx = useCallback(
+    (idx = null) => {
+      setManagedShapeIndex(idx);
+      ShapeManagerInterface().selectShape(idx);
+    },
+    [setManagedShapeIndex]
+  );
+
   /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
   const applyRule = ruleData => {
     const logicalOperatorArray = [];
@@ -280,7 +286,8 @@ const Scenes = ({
 
     canvas = document.getElementById("canvas");
     animate();
-    mouseDown(canvas, setManagedShapeIndex);
+    mouseDown(canvas, setManagedShapeIdx);
+    // mouseDown(canvas, setManagedShapeIndex);
     mouseMove(canvas);
     mouseUp(canvas);
     doubleClick(canvas, selectShape, addRules, selectedEvent);
@@ -308,7 +315,7 @@ const Scenes = ({
   return (
     <div className="scenesWrapper">
       <div className="canvasWrapper">
-        <Buttons />
+        <Buttons setManagedShapeIndex={setManagedShapeIdx} />
         <canvas id="canvas" width="1200" height="700" />
         {/* <canvas id="canvas" width="1400" height="800" /> */}
         {/* <SceneManager /> */}

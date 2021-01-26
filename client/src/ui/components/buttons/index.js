@@ -5,7 +5,8 @@ import Scene, { updateSelected } from "../../../engine/scenes/scene";
 
 import { ImgButton, BUTTONS } from "./buttons";
 
-const Buttons = ({ buttons, selectShape }) => {
+/**NOTE: Change confusing variable name selectShape refers to selecting features i.e clone, rotate etc */
+const Buttons = ({ buttons, selectShape, setManagedShapeIndex }) => {
   return (
     <div className="buttons">
       {BUTTONS.map(({ name, width = "25", onClick = () => {} }) => (
@@ -21,6 +22,7 @@ const Buttons = ({ buttons, selectShape }) => {
               selectShape("");
             } else {
               selectShape(name);
+              setManagedShapeIndex(null);
             }
             onClick();
           }}

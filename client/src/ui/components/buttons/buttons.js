@@ -4,7 +4,8 @@ import {
   CloneInterface,
   resizeInterface,
   rotateInterface,
-  ColourInterface
+  ColourInterface,
+  ShapeManagerInterface
 } from "../../../engine/shapes/shapes";
 
 export const update = () => {

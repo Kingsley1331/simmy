@@ -591,9 +591,9 @@ export const ShapeManagerInterface = () => {
   const selectShape = (idx = null) => {
     Scene.manageShape.selectedShapeIndex = idx;
   };
-  const setSelectedShapeId = (idx = null) => {
-    Scene.manageShape.selectedShapeIndex = idx;
-  };
+  // const setSelectedShapeId = (idx = null) => {
+  //   Scene.manageShape.selectedShapeIndex = idx;
+  // };
 
   const getSelectedShapeIndex = () => Scene.manageShape.selectedShapeIndex;
   const getSelectedShapeId = () => Scene.manageShape.selectedShapeId;
@@ -601,8 +601,8 @@ export const ShapeManagerInterface = () => {
   return {
     selectShape,
     getSelectedShapeIndex,
-    getSelectedShapeId,
-    setSelectedShapeId
+    getSelectedShapeId
+    // setSelectedShapeId,
   };
 };
 
