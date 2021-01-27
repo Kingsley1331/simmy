@@ -163,13 +163,15 @@ export const mouseDown = (element, setManagedShapeIndex) => {
               setClonedShapeLinewidth,
               setClonedShapeColour,
               setClonedStrokeStyle,
-              setClonedShapeVertices
+              setClonedShapeVertices,
+              setIsShapeFixed
             } = CloneInterface(idx);
             setClonedShapeId();
             setClonedShapeLinewidth();
             setClonedShapeColour();
             setClonedShapeVertices();
             setClonedStrokeStyle();
+            setIsShapeFixed();
           }
         });
         const {
@@ -177,7 +179,8 @@ export const mouseDown = (element, setManagedShapeIndex) => {
           getClonedShapeVertices,
           getClonedShapeColour,
           getClonedShapeLinewidth,
-          getClonedStrokeStyle
+          getClonedStrokeStyle,
+          getIsShapeFixed
         } = CloneInterface();
         const cloneShapeId = getClonedShapeId();
         if (cloneShapeId) {
@@ -193,12 +196,14 @@ export const mouseDown = (element, setManagedShapeIndex) => {
           const fillColour = getClonedShapeColour();
           const strokeStyle = getClonedStrokeStyle();
           const linewidth = getClonedShapeLinewidth();
+          const isShapeFixed = getIsShapeFixed();
 
           if (!onClonedShape) {
             const clone = createShape(mousePos, vertices);
             clone.fillColour = fillColour;
             clone.strokeStyle = strokeStyle;
             clone.linewidth = linewidth;
+            clone.freezeShape = isShapeFixed;
           }
         }
       }

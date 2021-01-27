@@ -334,6 +334,10 @@ export const CloneInterface = idx => {
     ? ShapesController.getProperty(idx, "fillColour")
     : clone.fillColour;
 
+  const isShapeFixed = idx
+    ? ShapesController.getProperty(idx, "isShapeFixed")
+    : clone.isShapeFixed;
+
   const setClonedShapeId = () => {
     Scene.clone.clonedShapeId = idx;
   };
@@ -341,14 +345,21 @@ export const CloneInterface = idx => {
   const setClonedShapeVertices = () => {
     Scene.clone.vertices = vertices;
   };
+
   const setClonedShapeLinewidth = () => {
     Scene.clone.linewidth = linewidth;
   };
+
   const setClonedShapeColour = () => {
     Scene.clone.fillColour = fillColour;
   };
+
   const setClonedStrokeStyle = () => {
     Scene.clone.strokeStyle = strokeStyle;
+  };
+
+  const setIsShapeFixed = () => {
+    Scene.clone.isShapeFixed = isShapeFixed;
   };
 
   const getClonedShapeId = () => Scene.clone.clonedShapeId;
@@ -356,6 +367,7 @@ export const CloneInterface = idx => {
   const getClonedShapeLinewidth = () => Scene.clone.linewidth;
   const getClonedShapeColour = () => Scene.clone.fillColour;
   const getClonedStrokeStyle = () => Scene.clone.strokeStyle;
+  const getIsShapeFixed = () => Scene.clone.isShapeFixed;
 
   const resetClone = () => {
     Scene.clone = {
@@ -377,11 +389,13 @@ export const CloneInterface = idx => {
     setClonedShapeLinewidth,
     setClonedShapeColour,
     setClonedStrokeStyle,
+    setIsShapeFixed,
     getClonedShapeId,
     getClonedShapeVertices,
     getClonedShapeLinewidth,
     getClonedShapeColour,
     getClonedStrokeStyle,
+    getIsShapeFixed,
     resetClone
   };
 };
