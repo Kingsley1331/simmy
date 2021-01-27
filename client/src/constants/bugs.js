@@ -10,4 +10,4 @@ export const TEMP_physicsBugIds = [
   "5f79a6293774cc21a9aadaae"
 ];
 
-export const TEMP_showbugs = false;
+export const TEMP_showbugs = true;

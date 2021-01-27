@@ -23,7 +23,7 @@ const scenesSchema = Schema({
   rules: Array
 });
 
-module.exports = mongoose.model("Scenes", scenesSchema);
+module.exports = mongoose.model("scenes", scenesSchema);
 
 // const productSchema = mongoose.Schema({
 //   _id: mongoose.Schema.Types.ObjectId,

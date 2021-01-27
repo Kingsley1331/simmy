@@ -8,14 +8,14 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const keys = require("./config/keys");
+const Promise = require("bluebird");
 require("./models/User");
-require("./services/passport");
+// require("./services/passport");
 
 const Scenes = require("./models/Scenes");
 // const Product = require("./models/Scenes");
-
-/** Commented out to bypass mongoose and passport*/
-// mongoose.connect(keys.mongoURI);
+mongoose.Promise = Promise;
+mongoose.connect(keys.mongoURI);
 
 const app = express();
 
@@ -40,39 +40,40 @@ app.use(passport.session());
 
 require("./routes/authRoutes")(app);
 require("./routes/user")(app);
+*/
 
 app.post("/scenes", (req, res) => {
   console.log("BODY", req.body);
   const scene = new Scenes({
     _id: new mongoose.Types.ObjectId(),
-    ...req.body,
+    ...req.body
   });
-
+  // console.log("scene ==>", scene);
   scene
     .save()
-    .then((result) => {
-      console.log("result", result);
+    .then(result => {
+      console.log("result ==>", result);
       res.status(201).json({
         message: "Handling POST request to /scenes",
-        createdScene: result,
+        createdScene: result
       });
     })
-    .catch((err) => {
+    .catch(err => {
       console.log("error ==>", err);
       res.status(500).json({
-        error: err,
+        error: err
       });
     });
 
   // res.send(scene);
-});*/
+});
 
 app.get("/scene/:sceneId", (req, res) => {
   const id = req.params.sceneId;
   Scenes.findById(id)
     .exec()
     .then(doc => {
-      console.log("doc from database", doc);
+      console.log("doc from database ==>", doc);
       res.status(200).json(doc);
     })
     .catch(err => {
@@ -85,11 +86,11 @@ app.get("/allscenes/", (req, res) => {
   Scenes.find()
     .exec()
     .then(docs => {
-      console.log("doc from database", docs);
+      console.log("doc from database ==>", docs);
       res.status(200).json(docs);
     })
     .catch(err => {
-      console.log("error =>", err);
+      console.log("error ==>", err);
       res.status(500).json(err);
     });
 });
@@ -109,7 +110,8 @@ app.delete("/scenes/:sceneId", (req, res) => {
 });
 
 app.patch("/scenes/:sceneId", (req, res) => {
-  console.log("NEW BODY", req.body);
+  // console.log("NEW BODY", req.body);
+  // console.log("request", req.params);
   const id = req.params.sceneId;
   Scenes.update({ _id: id }, { $set: req.body })
     .exec()
@@ -133,7 +135,7 @@ async function listDatabases(client) {
     .admin()
     .listDatabases();
 
-  console.log("Databases:");
+  console.log("List of Databases:");
   databasesList.databases.forEach(db => console.log(` - ${db.name}`));
 }
 async function main() {
