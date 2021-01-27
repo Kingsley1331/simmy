@@ -20,9 +20,13 @@ const ShapeManager = ({ shapeIndex }) => {
   const fillColour = ShapesController.getProperty(shapeIndex, "fillColour");
   const centreOfMass = ShapesController.getProperty(shapeIndex, "centreOfMass");
   const physics = ShapesController.getProperty(shapeIndex, "physics");
+  const strokeStyle = ShapesController.getProperty(shapeIndex, "strokeStyle");
+  const linewidth = ShapesController.getProperty(shapeIndex, "linewidth");
   const [shapeData, setShapeData] = useState({
     id,
     fillColour,
+    strokeStyle,
+    linewidth,
     physics,
     isShapeFixed,
     centreOfMass
@@ -31,24 +35,38 @@ const ShapeManager = ({ shapeIndex }) => {
   useEffect(() => {
     const data = {
       id,
+      fillColour,
+      strokeStyle,
+      linewidth,
       physics,
       isShapeFixed,
-      fillColour,
       centreOfMass
     };
     setShapeData({ ...data });
-  }, [id, physics, isShapeFixed, fillColour]);
+  }, [
+    id,
+    fillColour,
+    strokeStyle,
+    linewidth,
+    physics,
+    isShapeFixed,
+    centreOfMass
+  ]);
 
   const handleUpdate = data => {
     const {
-      isShapeFixed,
       fillColour,
+      strokeStyle,
+      linewidth,
       physics: physicsData,
+      isShapeFixed,
       centreOfMass
     } = data;
 
     setShapeData({ ...data });
     ShapesController.setProperty(shapeIndex, "fillColour", fillColour);
+    ShapesController.setProperty(shapeIndex, "strokeStyle", strokeStyle);
+    ShapesController.setProperty(shapeIndex, "linewidth", linewidth);
     ShapesController.setProperty(shapeIndex, "physics", physicsData);
     ShapesController.setProperty(shapeIndex, "freezeShape", isShapeFixed);
     ShapesController.setProperty(shapeIndex, "centreOfMass", centreOfMass);
@@ -58,6 +76,8 @@ const ShapeManager = ({ shapeIndex }) => {
     <DatGui data={shapeData} onUpdate={handleUpdate}>
       <DatString path="id" label="shape id" />
       <DatString path="fillColour" label="Colour" />
+      <DatString path="strokeStyle" label="Line colour" />
+      <DatNumber path={"linewidth"} label="linewidth"></DatNumber>
       <DatNumber path={"centreOfMass.x"} label="x" step={1}></DatNumber>
       <DatNumber path={"centreOfMass.y"} label="y" step={1}></DatNumber>
       <DatFolder title="Physics">

@@ -162,15 +162,23 @@ export const mouseDown = (element, setManagedShapeIndex) => {
               setClonedShapeId,
               setClonedShapeLinewidth,
               setClonedShapeColour,
+              setClonedStrokeStyle,
               setClonedShapeVertices
             } = CloneInterface(idx);
             setClonedShapeId();
             setClonedShapeLinewidth();
             setClonedShapeColour();
             setClonedShapeVertices();
+            setClonedStrokeStyle();
           }
         });
-        const { getClonedShapeId, getClonedShapeVertices } = CloneInterface();
+        const {
+          getClonedShapeId,
+          getClonedShapeVertices,
+          getClonedShapeColour,
+          getClonedShapeLinewidth,
+          getClonedStrokeStyle
+        } = CloneInterface();
         const cloneShapeId = getClonedShapeId();
         if (cloneShapeId) {
           const onClonedShape = ShapesController.getProperty(
@@ -182,8 +190,15 @@ export const mouseDown = (element, setManagedShapeIndex) => {
             y: vertex.y
           }));
 
+          const fillColour = getClonedShapeColour();
+          const strokeStyle = getClonedStrokeStyle();
+          const linewidth = getClonedShapeLinewidth();
+
           if (!onClonedShape) {
-            createShape(mousePos, vertices);
+            const clone = createShape(mousePos, vertices);
+            clone.fillColour = fillColour;
+            clone.strokeStyle = strokeStyle;
+            clone.linewidth = linewidth;
           }
         }
       }
