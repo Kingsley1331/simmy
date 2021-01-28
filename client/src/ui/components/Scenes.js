@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
-// import EventForm from "./events/local";
 import EventForm from "./events/EventForm";
 import Scene from "../../engine/scenes/scene";
 import updateScene from "../../engine/scenes/updateScene";
@@ -16,7 +15,7 @@ import {
   doubleClick,
   click,
   rightClick
-} from "../../engine/utils/listeners";
+} from "../../engine/canvasEvents/listeners";
 import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
 import { Condition } from "./events/EventFormComponents";

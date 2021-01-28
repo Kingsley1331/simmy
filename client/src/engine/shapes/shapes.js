@@ -514,16 +514,13 @@ export const rotateInterface = () => {
   const getReferenceCentreOfMass = () => Scene.rotate.referenceCentreOfMass;
 
   const setReferenceCentreOfMass = centre => {
-    // console.log({ centre });
     Scene.rotate.referenceCentreOfMass = centre;
   };
 
   const setReferenceVertices = vertices => {
     Scene.rotate.referenceVertices = vertices;
   };
-  const setCentreOfRotation = centre => {
-    Scene.rotate.centreOfRotation = centre;
-  };
+
   const getCentreOfRotation = () => Scene.rotate.centreOfRotation;
 
   const setDraggingState = state => {
@@ -574,7 +571,6 @@ export const rotateInterface = () => {
     setLever,
     setReferenceCentreOfMass,
     setOnhandle,
-    setCentreOfRotation,
     getSelectedShapeIndex,
     getDraggingState,
     getHandleRadius,
@@ -620,9 +616,6 @@ export const ShapeManagerInterface = () => {
   const selectShape = (idx = null) => {
     Scene.manageShape.selectedShapeIndex = idx;
   };
-  // const setSelectedShapeId = (idx = null) => {
-  //   Scene.manageShape.selectedShapeIndex = idx;
-  // };
 
   const getSelectedShapeIndex = () => Scene.manageShape.selectedShapeIndex;
   const getSelectedShapeId = () => Scene.manageShape.selectedShapeId;
@@ -631,7 +624,6 @@ export const ShapeManagerInterface = () => {
     selectShape,
     getSelectedShapeIndex,
     getSelectedShapeId
-    // setSelectedShapeId,
   };
 };
 

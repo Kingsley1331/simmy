@@ -6,7 +6,6 @@ const cookieSession = require("cookie-session");
 const passport = require("passport");
 const path = require("path");
 const bodyParser = require("body-parser");
-const MongoClient = require("mongodb").MongoClient;
 const keys = require("./config/keys");
 const Promise = require("bluebird");
 require("./models/User");
@@ -43,16 +42,14 @@ require("./routes/user")(app);
 */
 
 app.post("/scenes", (req, res) => {
-  console.log("BODY", req.body);
   const scene = new Scenes({
     _id: new mongoose.Types.ObjectId(),
     ...req.body
   });
-  // console.log("scene ==>", scene);
+
   scene
     .save()
     .then(result => {
-      console.log("result ==>", result);
       res.status(201).json({
         message: "Handling POST request to /scenes",
         createdScene: result
@@ -73,7 +70,6 @@ app.get("/scene/:sceneId", (req, res) => {
   Scenes.findById(id)
     .exec()
     .then(doc => {
-      console.log("doc from database ==>", doc);
       res.status(200).json(doc);
     })
     .catch(err => {
@@ -86,7 +82,6 @@ app.get("/allscenes/", (req, res) => {
   Scenes.find()
     .exec()
     .then(docs => {
-      console.log("doc from database ==>", docs);
       res.status(200).json(docs);
     })
     .catch(err => {
@@ -100,7 +95,6 @@ app.delete("/scenes/:sceneId", (req, res) => {
   Scenes.remove({ _id: id })
     .exec()
     .then(result => {
-      console.log("doc from database", result);
       res.status(200).json(result);
     })
     .catch(err => {
@@ -110,13 +104,10 @@ app.delete("/scenes/:sceneId", (req, res) => {
 });
 
 app.patch("/scenes/:sceneId", (req, res) => {
-  // console.log("NEW BODY", req.body);
-  // console.log("request", req.params);
   const id = req.params.sceneId;
   Scenes.update({ _id: id }, { $set: req.body })
     .exec()
     .then(result => {
-      console.log("updated scene from database", result);
       res.status(200).json(result);
     })
     .catch(err => {
@@ -128,39 +119,6 @@ app.patch("/scenes/:sceneId", (req, res) => {
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
-
-async function listDatabases(client) {
-  const databasesList = await client
-    .db()
-    .admin()
-    .listDatabases();
-
-  console.log("List of Databases:");
-  databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-}
-async function main() {
-  /**
-   * Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
-   * See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
-   */
-  const uri = keys.mongoURI;
-
-  const client = new MongoClient(uri);
-
-  try {
-    // Connect to the MongoDB cluster
-    await client.connect();
-
-    // Make the appropriate DB calls
-    await listDatabases(client);
-  } catch (e) {
-    console.error(e);
-  } finally {
-    await client.close();
-  }
-}
-
-main().catch(console.error);
 
 const PORT = process.env.PORT || 5000;
 

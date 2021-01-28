@@ -1,16 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import Scene from "../../../engine/scenes/scene";
-import { ShapeManagerInterface } from "../../../engine/shapes/shapes";
+import React, { useState, useEffect } from "react";
 import ShapesController from "../../../engine/shapes/ShapesController";
-import { isColour } from "../../../engine/utils/dom";
+
 import DatGui, {
   DatBoolean,
-  DatButton,
-  DatColor,
   DatFolder,
   DatNumber,
-  DatPresets,
-  DatSelect,
   DatString
 } from "react-dat-gui";
 
@@ -23,7 +17,6 @@ const ShapeManager = ({ shapeIndex }) => {
   const strokeStyle = ShapesController.getProperty(shapeIndex, "strokeStyle");
   const linewidth = ShapesController.getProperty(shapeIndex, "linewidth");
 
-  console.log("=====> isShapeFixed1", isShapeFixed);
   const [shapeData, setShapeData] = useState({
     id,
     fillColour,
@@ -33,8 +26,6 @@ const ShapeManager = ({ shapeIndex }) => {
     isShapeFixed,
     centreOfMass
   });
-
-  console.log("=====> isShapeFixed2", shapeData.isShapeFixed);
 
   useEffect(() => {
     const data = {
@@ -56,7 +47,6 @@ const ShapeManager = ({ shapeIndex }) => {
     isShapeFixed,
     centreOfMass
   ]);
-  console.log("=====> isShapeFixed3", shapeData.isShapeFixed);
 
   const handleUpdate = data => {
     const {
@@ -67,8 +57,7 @@ const ShapeManager = ({ shapeIndex }) => {
       isShapeFixed,
       centreOfMass
     } = data;
-    console.log({ isShapeFixed });
-    console.log({ shapeIndex });
+
     setShapeData({ ...data });
     ShapesController.setProperty(shapeIndex, "fillColour", fillColour);
     ShapesController.setProperty(shapeIndex, "strokeStyle", strokeStyle);
