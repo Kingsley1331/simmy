@@ -55,14 +55,11 @@ export default class Shape {
   }
 
   set freezeShape(value) {
-    console.log("Freeze value1", value);
     if (value === true) {
-      console.log("Freeze value2", value);
       this.physics.mass = Infinity;
       this.physics.momentOfInertiaCOM = Infinity;
       this.isShapeFixed = true;
     } else {
-      console.log("Freeze value3", value);
       const boundingRect = findBoundingRect(this.vertices);
       const { mass } = findMass(this.centreOfMass, this.vertices, boundingRect);
       const momentOfInertiaCOM = findMomentOfInertiaCOM(

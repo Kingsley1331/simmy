@@ -49,9 +49,7 @@ export default function updateScene(scene) {
             scene.shapes[i].type === "fixed" ||
             Scene.shapes[i].isShapeFixed
           ) {
-            Scene.shapes[i].physics.mass = Infinity;
-            Scene.shapes[i].physics.momentOfInertia = Infinity;
-            Scene.shapes[i].physics.momentOfInertiaCOM = Infinity;
+            Scene.shapes[i].freezeShape = true;
           }
         }
       }

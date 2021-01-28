@@ -331,7 +331,7 @@ const Scenes = ({
       <button className="add_rule" onClick={addRule}>
         Add rule
       </button>
-      {selected === "manageShape" && managedShapeIndex && (
+      {selected === "manageShape" && managedShapeIndex !== null && (
         <ShapeManager shapeIndex={managedShapeIndex} />
       )}
     </div>

@@ -2,7 +2,7 @@ const displayConfig = {
   scene: { mousePos: true, time: true, steps: true },
   shape: {
     id: false,
-    index: true,
+    index: false,
     collisionPoint: false,
     collidinSide: false,
     boundingRect: false,
