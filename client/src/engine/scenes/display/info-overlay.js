@@ -23,6 +23,7 @@ export const displayShapeInfo = (
 ) => {
   const {
     id,
+    index,
     collidinSide,
     collisionPoint: collidingPoint,
     boundingRect: rect,
@@ -130,6 +131,14 @@ export const displayShapeInfo = (
       }
     );
   }
+
+  if (index) {
+    screenWriter(bufferCtx, Number(shapeIndex), {
+      x: centreOfMass.x + 4,
+      y: centreOfMass.y + 5
+    });
+  }
+
   if (showCentreOfMass) {
     drawDot(bufferCtx, 3, centreOfMass, "black");
   }
