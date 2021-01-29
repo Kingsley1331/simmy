@@ -1,5 +1,8 @@
-import { reshapeInterface } from "../../shapes/shapes";
-import { forEachShape, updatePhysicsProperties } from "../../shapes/shapes";
+import {
+  reshapeInterface,
+  forEachShape,
+  updatePhysicsProperties
+} from "../../shapes/shapes";
 import ShapesController from "../../shapes/ShapesController";
 import { calculateDistanceFromCursor } from "../../utils/position";
 

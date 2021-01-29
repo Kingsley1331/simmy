@@ -39,7 +39,7 @@ let Scene = {
     dragging: false,
     draggable: false,
     onResizer: false,
-    sideLength: 7,
+    sideLength: 10,
     resizeBoundingRect: [],
     referenceVertices: []
   },
