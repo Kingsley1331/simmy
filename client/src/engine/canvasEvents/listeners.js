@@ -7,8 +7,7 @@ import {
   forEachShape,
   prepareToMoveShape,
   releaseShape,
-  createShapeFromPolyline,
-  updatePhysicsProperties
+  createShapeFromPolyline
 } from "../shapes/shapes";
 import ShapesController from "../shapes/ShapesController";
 import Scene from "../scenes/scene";
@@ -16,17 +15,6 @@ import { applyMotion } from "../physics/motion";
 import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import { retrieveLocalRules } from "../utils/eventRules";
-import {
-  resizeInterface,
-  rotateInterface,
-  ColourInterface
-} from "../shapes/shapes";
-import Vector, {
-  magnitude,
-  rotateVector,
-  rotateShape,
-  rotateShapeGeneral
-} from "../utils/maths/Vector";
 
 import {
   polylineMousedown,
@@ -44,6 +32,13 @@ import {
   resizeMousemove,
   resizeMouseMouseup
 } from "../canvasEvents/handlers/resize";
+import {
+  rotateMousedown,
+  rotateMousemove,
+  rotateMouseup
+} from "../canvasEvents/handlers/rotate";
+import { colourMousedown } from "../canvasEvents/handlers/colour";
+import { manageShapeMousedown } from "../canvasEvents/handlers/manageShape";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -137,117 +132,18 @@ export const mouseDown = (element, setManagedShapeIndex) => {
       cloneMousedown(Scene, evt);
       reshapeMousedown(Scene);
       resizeMousedown(Scene);
+      rotateMousedown(Scene);
+      colourMousedown(Scene);
+      // manageShapeMousedown(Scene);
 
-      // mouse down
-      if (Scene.selected === "rotate") {
-        const {
-          selectShape,
-          getSelectedShapeIndex,
-          getOnhandle,
-          setDraggingState,
-          setLever,
-          getIsDefault,
-          setIsDefault,
-          setReferenceVertices,
-          setReferenceCentreOfMass,
-          getDefaultLength,
-          setReferenceBoundingRect,
-          setRotateBoundingRect
-        } = rotateInterface();
-        const selectedShapeIndex = getSelectedShapeIndex();
-        const defaultLength = getDefaultLength();
-        const referenceVertices = selectedShapeIndex
-          ? ShapesController.getProperty(selectedShapeIndex, "vertices").map(
-              vertex => ({
-                x: vertex.x,
-                y: vertex.y
-              })
-            )
-          : [];
-
-        forEachShape(function(idx) {
-          const onShape = ShapesController.getProperty(idx, "onShape");
-          const centreOfMass = ShapesController.getCentreOfMass(idx);
-          const boundingRect = ShapesController.getProperty(
-            idx,
-            "boundingRect"
-          );
-
-          const boundingRectCentre = boundingRect.centre;
-
-          const minY = boundingRect.minY;
-
-          if (onShape) {
-            selectShape(idx);
-            if (getIsDefault()) {
-              if (selectedShapeIndex !== idx) {
-                setLever({
-                  start: { x: boundingRectCentre.x, y: minY },
-                  end: {
-                    x: boundingRectCentre.x,
-                    y: minY - defaultLength
-                  }
-                });
-              }
-
-              setIsDefault(false);
-            }
-            if (selectedShapeIndex !== idx) {
-              setReferenceBoundingRect(
-                boundingRect.vertices.map(vertex => ({
-                  x: vertex.x,
-                  y: vertex.y
-                }))
-              );
-              setRotateBoundingRect(
-                boundingRect.vertices.map(vertex => ({
-                  x: vertex.x,
-                  y: vertex.y
-                }))
-              );
-            }
-          }
-          if (getOnhandle()) {
-            setDraggingState(true);
-            if (getSelectedShapeIndex() === idx) {
-              setReferenceVertices(referenceVertices);
-              setReferenceCentreOfMass({ ...centreOfMass });
-            }
-          }
-        });
-      }
-      if (Scene.selected === "colour") {
-        const {
-          selectShape,
-          getCurrentColour,
-          getSelectedShapeIndex,
-          setCurrentColour
-        } = ColourInterface();
-        const currentColour = getCurrentColour();
-        const selectedShapeIndex = getSelectedShapeIndex();
-        forEachShape(function(idx) {
-          const onShape = ShapesController.getProperty(idx, "onShape");
-          if (onShape) {
-            if (selectedShapeIndex !== idx) {
-              selectShape(idx);
-              if (currentColour) {
-                ShapesController.setProperty(idx, "fillColour", currentColour);
-              }
-            } else {
-              selectShape();
-              setCurrentColour();
-            }
-          }
-        }, false);
-      }
-      if (Scene.selected === "manageShape") {
-        forEachShape(function(idx) {
-          const onShape = ShapesController.getProperty(idx, "onShape");
-          if (onShape) {
-            setManagedShapeIndex(idx);
-          }
-        }, false);
-      }
+      // if (Scene.selected === "manageShape") {
+      //   forEachShape(function(idx) {
+      //     const onShape = ShapesController.getProperty(idx, "onShape");
+      //     if (onShape) {
+      //       setManagedShapeIndex(idx);
+      //     }
+      //   }, false);
+      // }
     },
     false
   );
@@ -272,109 +168,7 @@ export const mouseMove = element => {
       polylineMousemove(Scene, cursorOnshape);
       reshapeMousemove(Scene);
       resizeMousemove(Scene);
-
-      // mouse move
-      if (Scene.selected === "rotate") {
-        const {
-          getSelectedShapeIndex,
-          getLever,
-          setLever,
-          getHandleRadius,
-          setOnhandle,
-          getDraggingState,
-          getReferenceVertices,
-          getDefaultLength,
-          setIsDefault,
-          getReferenceBoundingRect,
-          setRotateBoundingRect,
-          getReferenceLeverVectors
-        } = rotateInterface();
-
-        setOnhandle(false);
-
-        const selectedShapeIndex = getSelectedShapeIndex();
-        if (selectedShapeIndex) {
-          const centreOfMass = ShapesController.getCentreOfMass(
-            selectedShapeIndex
-          );
-
-          const boundingRect = ShapesController.getProperty(
-            selectedShapeIndex,
-            "boundingRect"
-          );
-          const { radius } = boundingRect;
-
-          const referenceVertices = getReferenceVertices();
-
-          const defaultLength = getDefaultLength();
-
-          const { end } = getLever();
-          const handleRadius = getHandleRadius();
-
-          const leverEnd = {
-            x: centreOfMass.x + end.x,
-            y: centreOfMass.y + end.y
-          };
-
-          const handleCentre = { x: leverEnd.x, y: leverEnd.y };
-
-          const distanceVector = {
-            x: handleCentre.x - mousePos.x,
-            y: handleCentre.y - mousePos.y
-          };
-          const cursorDistanceFromHandle = magnitude(distanceVector);
-
-          if (getDraggingState()) {
-            const {
-              start: leverStartReferenceVector,
-              end: leverEndReferenceVector
-            } = getReferenceLeverVectors();
-
-            const centreToCursorVector = new Vector({
-              x: mousePos.x - centreOfMass.x,
-              y: mousePos.y - centreOfMass.y
-            });
-
-            const angle = leverEndReferenceVector.findAngle(
-              centreToCursorVector
-            );
-            const rotatedLeverStartVector = rotateVector(
-              angle,
-              leverStartReferenceVector
-            );
-            const rotatedLeverEndVector = rotateVector(
-              angle,
-              leverEndReferenceVector
-            );
-
-            setLever({
-              start: rotatedLeverStartVector,
-              end: rotatedLeverEndVector
-            });
-
-            setRotateBoundingRect(
-              rotateShapeGeneral(getReferenceBoundingRect(), angle)
-            );
-
-            rotateShape(
-              centreOfMass,
-              angle,
-              selectedShapeIndex,
-              referenceVertices
-            );
-          } else {
-            if (centreOfMass.y < radius + defaultLength + handleRadius) {
-              setIsDefault(false);
-            } else {
-              setIsDefault(true);
-            }
-          }
-
-          if (cursorDistanceFromHandle <= handleRadius) {
-            setOnhandle(true);
-          }
-        }
-      }
+      rotateMousemove(Scene);
     },
     false
   );
@@ -394,46 +188,7 @@ export const mouseUp = element => {
       }
       reshapeMousUp(Scene);
       resizeMouseMouseup(Scene);
-
-      if (Scene.selected === "rotate") {
-        const {
-          setDraggingState,
-          getSelectedShapeIndex,
-          setIsDefault,
-          setReferenceVertices,
-          setReferenceCentreOfMass,
-          getLever,
-          setReferenceLeverVectors,
-          getRotateBoundingRect,
-          setReferenceBoundingRect
-        } = rotateInterface();
-        setDraggingState(false);
-
-        const selectedShapeIndex = getSelectedShapeIndex();
-        const selectedShapeId = ShapesController.getProperty(
-          selectedShapeIndex,
-          "id"
-        );
-        if (selectedShapeId) {
-          updatePhysicsProperties(selectedShapeId);
-        }
-
-        if (selectedShapeIndex) {
-          const { start, end } = getLever();
-
-          const startVector = new Vector({ ...start });
-          const endVector = new Vector({ ...end });
-
-          setReferenceLeverVectors({ start: startVector, end: endVector });
-
-          const boundingRect = getRotateBoundingRect();
-          setReferenceBoundingRect([...boundingRect]);
-
-          setIsDefault(true);
-          setReferenceVertices([]);
-          setReferenceCentreOfMass({});
-        }
-      }
+      rotateMouseup(Scene);
     },
     false
   );
