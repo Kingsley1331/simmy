@@ -17,7 +17,6 @@ import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import { retrieveLocalRules } from "../utils/eventRules";
 import {
-  reshapeInterface,
   resizeInterface,
   rotateInterface,
   ColourInterface
@@ -35,6 +34,11 @@ import {
   polylineRightClick
 } from "../canvasEvents/handlers/polyline";
 import { cloneMousedown } from "../canvasEvents/handlers/clone";
+import {
+  reshapeMousedown,
+  reshapeMousemove,
+  reshapeMousUp
+} from "../canvasEvents/handlers/reshape";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -126,24 +130,8 @@ export const mouseDown = (element, setManagedShapeIndex) => {
 
       polylineMousedown(Scene);
       cloneMousedown(Scene, evt);
+      reshapeMousedown(Scene);
 
-      if (Scene.selected === "reshape") {
-        const {
-          selectShape,
-          setIsVertexBeingDragged,
-          getVertexIndex
-        } = reshapeInterface();
-        forEachShape(function(idx) {
-          const onShape = ShapesController.getProperty(idx, "onShape");
-          if (onShape) {
-            const shapeId = ShapesController.getProperty(idx, "id");
-            selectShape(shapeId);
-          }
-        });
-        if (getVertexIndex() !== null) {
-          setIsVertexBeingDragged(true);
-        }
-      }
       if (Scene.selected === "resize") {
         const {
           selectShape,
@@ -320,58 +308,7 @@ export const mouseMove = element => {
       const cursorOnshape = shapes.some(shape => shape.onShape);
       Scene.cursorOnshape = cursorOnshape;
       polylineMousemove(Scene, cursorOnshape);
-
-      if (selected === "reshape") {
-        const {
-          getVertexIndex,
-          setVertex,
-          getSelectedShapeId,
-          getIsVertexBeingDragged
-        } = reshapeInterface();
-
-        const selectedShapeId = getSelectedShapeId();
-        const selectedShape = Scene.shapes.filter(
-          shape => shape.id === selectedShapeId
-        )[0];
-        if (!getIsVertexBeingDragged()) {
-          setVertex(null);
-        }
-        forEachShape(function(idx) {
-          if (idx === selectedShapeId) {
-            const centreOfMass = selectedShape.centreOfMass;
-            const vertices = selectedShape.vertices.map(vertex => ({
-              x: vertex.x,
-              y: vertex.y
-            }));
-
-            const numOfVertices = vertices.length;
-            for (let v = 0; v < numOfVertices; v++) {
-              const vertex = vertices[v];
-              const { x, y } = vertex;
-              const distanceFromCursor = calculateDistanceFromCursor(
-                {
-                  x: x + centreOfMass.x,
-                  y: y + centreOfMass.y
-                },
-                mousePos
-              );
-
-              if (distanceFromCursor < 10) {
-                setVertex(v);
-              }
-            }
-            if (getIsVertexBeingDragged()) {
-              const vertexIndex = getVertexIndex();
-              if (selectedShape.vertices[vertexIndex]) {
-                selectedShape.vertices[vertexIndex].x =
-                  mousePos.x - centreOfMass.x;
-                selectedShape.vertices[vertexIndex].y =
-                  mousePos.y - centreOfMass.y;
-              }
-            }
-          }
-        }, false);
-      }
+      reshapeMousemove(Scene);
 
       if (Scene.selected === "resize") {
         const {
@@ -753,18 +690,8 @@ export const mouseUp = element => {
         Scene.isDrawing = false;
         createShapeFromPolyline();
       }
+      reshapeMousUp(Scene);
 
-      if (Scene.selected === "reshape") {
-        const {
-          setIsVertexBeingDragged,
-          getSelectedShapeId
-        } = reshapeInterface();
-        setIsVertexBeingDragged(false);
-        const selectedShapeId = getSelectedShapeId();
-        if (selectedShapeId) {
-          updatePhysicsProperties(selectedShapeId);
-        }
-      }
       if (Scene.selected === "resize") {
         const {
           setResizerDraggingState,
