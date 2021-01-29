@@ -17,7 +17,6 @@ import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import { retrieveLocalRules } from "../utils/eventRules";
 import {
-  PolylineInterface,
   CloneInterface,
   reshapeInterface,
   resizeInterface,
@@ -31,7 +30,11 @@ import Vector, {
   rotateShapeGeneral
 } from "../utils/maths/Vector";
 
-import { polylineMousedown } from "../canvasEvents/handlers/polyline";
+import {
+  polylineMousedown,
+  polylineMousemove,
+  polylineRightClick
+} from "../canvasEvents/handlers/polyline";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -120,33 +123,8 @@ export const mouseDown = (element, setManagedShapeIndex) => {
       if (Scene.selected === "draw" && !Scene.cursorOnshape) {
         Scene.isDrawing = true;
       }
-      polylineMousedown();
-      // if (Scene.selected === "polyline") {
-      //   const {
-      //     isCursorOnFirstPoint,
-      //     isCursorOnLastPoint,
-      //     setLastPoint,
-      //     removeLastVertex,
-      //     addVertex,
-      //   } = PolylineInterface();
 
-      //   if (isCursorOnFirstPoint) {
-      //     createShapeFromPolyline();
-      //   }
-
-      //   if (isCursorOnLastPoint) {
-      //     removeLastVertex();
-      //     setLastPoint(false);
-      //   }
-
-      //   if (
-      //     !Scene.cursorOnshape &&
-      //     !isCursorOnFirstPoint &&
-      //     !isCursorOnLastPoint
-      //   ) {
-      //     addVertex(Scene.mousePos);
-      //   }
-      // }
+      polylineMousedown(Scene);
 
       if (Scene.selected === "clone" && evt.which === 1) {
         forEachShape(function(idx) {
@@ -381,15 +359,7 @@ export const mouseMove = element => {
   element.addEventListener(
     "mousemove",
     function(evt) {
-      const { selected, isDrawing, shapes, mousePos } = Scene;
-
-      const {
-        vertices,
-        firstPointRadius,
-        lastPointRadius,
-        setFirstPoint,
-        setLastPoint
-      } = PolylineInterface();
+      const { selected, shapes, mousePos } = Scene;
 
       getMousePos(evt, element);
       if (selected === "play") {
@@ -398,36 +368,10 @@ export const mouseMove = element => {
       forEachShape(function(i) {
         detectShape(i);
       }, false);
-      /**** TODO: consider using ShapesController to get shape properties ****/
+
       const cursorOnshape = shapes.some(shape => shape.onShape);
       Scene.cursorOnshape = cursorOnshape;
-      if (selected === "draw" && isDrawing && !cursorOnshape) {
-        vertices.push(mousePos);
-      } /** detect hovering over first polyline vertex */
-      const numOfVertices = vertices.length;
-      const firstPoint = vertices[0] || [];
-      const distanceVector = {
-        x: firstPoint.x - mousePos.x,
-        y: firstPoint.y - mousePos.y
-      };
-      const cursorDotDistance = magnitude(distanceVector);
-      if (cursorDotDistance <= firstPointRadius && numOfVertices > 2) {
-        setFirstPoint(true);
-      } else {
-        setFirstPoint(false);
-      }
-      /** detect hovering over last polyline vertex */
-      const lastPoint = vertices[numOfVertices - 1] || [];
-      const distanceVector2 = {
-        x: lastPoint.x - mousePos.x,
-        y: lastPoint.y - mousePos.y
-      };
-      const cursorDotDistance2 = magnitude(distanceVector2);
-      if (cursorDotDistance2 <= lastPointRadius) {
-        setLastPoint(true);
-      } else {
-        setLastPoint(false);
-      }
+      polylineMousemove(Scene, cursorOnshape);
 
       if (selected === "reshape") {
         const {
@@ -942,16 +886,7 @@ export const rightClick = element => {
   element.addEventListener(
     "contextmenu",
     function(evt) {
-      if (Scene.selected === "polyline") {
-        const { resetVertices } = PolylineInterface();
-        evt.preventDefault();
-        resetVertices();
-      }
-      if (Scene.selected === "clone") {
-        const { resetClone } = CloneInterface();
-        evt.preventDefault();
-        resetClone();
-      }
+      polylineRightClick(Scene, evt);
     },
     false
   );
