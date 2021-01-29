@@ -1,4 +1,4 @@
-import getMousePos, { calculateDistanceFromCursor } from "../utils/position";
+import getMousePos from "../utils/position";
 import { makeThrowArray } from "../utils/throw";
 import {
   detectShape,
@@ -134,16 +134,7 @@ export const mouseDown = (element, setManagedShapeIndex) => {
       resizeMousedown(Scene);
       rotateMousedown(Scene);
       colourMousedown(Scene);
-      // manageShapeMousedown(Scene);
-
-      // if (Scene.selected === "manageShape") {
-      //   forEachShape(function(idx) {
-      //     const onShape = ShapesController.getProperty(idx, "onShape");
-      //     if (onShape) {
-      //       setManagedShapeIndex(idx);
-      //     }
-      //   }, false);
-      // }
+      manageShapeMousedown(Scene, setManagedShapeIndex);
     },
     false
   );
@@ -153,7 +144,7 @@ export const mouseMove = element => {
   element.addEventListener(
     "mousemove",
     function(evt) {
-      const { selected, shapes, mousePos } = Scene;
+      const { selected, shapes } = Scene;
 
       getMousePos(evt, element);
       if (selected === "play") {
