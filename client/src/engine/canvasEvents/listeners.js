@@ -17,7 +17,6 @@ import applyForces from "../physics/forces/applyForces";
 import collisionDetector from "../physics/collisions/collisionDetector";
 import { retrieveLocalRules } from "../utils/eventRules";
 import {
-  CloneInterface,
   reshapeInterface,
   resizeInterface,
   rotateInterface,
@@ -35,6 +34,7 @@ import {
   polylineMousemove,
   polylineRightClick
 } from "../canvasEvents/handlers/polyline";
+import { cloneMousedown } from "../canvasEvents/handlers/clone";
 
 const timeStep = Scene.timeStep;
 export const click = element => {
@@ -125,60 +125,8 @@ export const mouseDown = (element, setManagedShapeIndex) => {
       }
 
       polylineMousedown(Scene);
+      cloneMousedown(Scene, evt);
 
-      if (Scene.selected === "clone" && evt.which === 1) {
-        forEachShape(function(idx) {
-          const onShape = ShapesController.getProperty(idx, "onShape");
-          if (onShape) {
-            const {
-              setClonedShapeId,
-              setClonedShapeLinewidth,
-              setClonedShapeColour,
-              setClonedStrokeStyle,
-              setClonedShapeVertices,
-              setIsShapeFixed
-            } = CloneInterface(idx);
-            setClonedShapeId();
-            setClonedShapeLinewidth();
-            setClonedShapeColour();
-            setClonedShapeVertices();
-            setClonedStrokeStyle();
-            setIsShapeFixed();
-          }
-        });
-        const {
-          getClonedShapeId,
-          getClonedShapeVertices,
-          getClonedShapeColour,
-          getClonedShapeLinewidth,
-          getClonedStrokeStyle,
-          getIsShapeFixed
-        } = CloneInterface();
-        const cloneShapeId = getClonedShapeId();
-        if (cloneShapeId) {
-          const onClonedShape = ShapesController.getProperty(
-            cloneShapeId,
-            "onShape"
-          );
-          const vertices = getClonedShapeVertices().map(vertex => ({
-            x: vertex.x,
-            y: vertex.y
-          }));
-
-          const fillColour = getClonedShapeColour();
-          const strokeStyle = getClonedStrokeStyle();
-          const linewidth = getClonedShapeLinewidth();
-          const isShapeFixed = getIsShapeFixed();
-
-          if (!onClonedShape) {
-            const clone = createShape(mousePos, vertices);
-            clone.fillColour = fillColour;
-            clone.strokeStyle = strokeStyle;
-            clone.linewidth = linewidth;
-            clone.freezeShape = isShapeFixed;
-          }
-        }
-      }
       if (Scene.selected === "reshape") {
         const {
           selectShape,
