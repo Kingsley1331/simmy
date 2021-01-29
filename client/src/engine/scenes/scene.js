@@ -18,7 +18,8 @@ let Scene = {
   polyline: {
     vertices: [],
     firstPoint: { radius: 5, isCursorOnPoint: false },
-    lastPoint: { radius: 5, isCursorOnPoint: false }
+    lastPoint: { radius: 5, isCursorOnPoint: false },
+    detectOnLastPoint: false
   },
   clone: {
     clonedShapeId: "",

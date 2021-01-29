@@ -283,27 +283,35 @@ export function createShape(centreOfMass, vertices) {
 }
 
 export const PolylineInterface = () => {
-  const { vertices, firstPoint, lastPoint } = Scene.polyline;
+  const { vertices, firstPoint, lastPoint, detectOnLastPoint } = Scene.polyline;
 
   const numOfVertices = vertices.length;
   const isCursorOnFirstPoint = firstPoint.isCursorOnPoint;
   const isCursorOnLastPoint = lastPoint.isCursorOnPoint;
   const firstPointRadius = firstPoint.radius;
   const lastPointRadius = lastPoint.radius;
+
   const resetVertices = () => {
     Scene.polyline.vertices = [];
+    Scene.polyline.firstPoint.isCursorOnPoint = false;
+    Scene.polyline.lastPoint.isCursorOnPoint = false;
+    Scene.polyline.detectOnLastPoint = false;
   };
+
   const addVertex = vertex => {
     vertices.push(vertex);
   };
   const removeLastVertex = () => {
     vertices.splice(numOfVertices - 1, 1);
   };
-  const setFirstPoint = bool => {
+  const setOnFirstPoint = bool => {
     firstPoint.isCursorOnPoint = bool;
   };
-  const setLastPoint = bool => {
+  const setOnLastPoint = bool => {
     lastPoint.isCursorOnPoint = bool;
+  };
+  const setDetectOnLastPoint = bool => {
+    Scene.polyline.detectOnLastPoint = bool;
   };
 
   return {
@@ -315,10 +323,34 @@ export const PolylineInterface = () => {
     resetVertices,
     addVertex,
     removeLastVertex,
-    setFirstPoint,
-    setLastPoint
+    setOnFirstPoint,
+    setOnLastPoint,
+    setDetectOnLastPoint,
+    detectOnLastPoint
   };
 };
+
+export function createShapeFromPolyline(fromDblclick) {
+  const { selected } = Scene;
+  const { vertices, resetVertices } = PolylineInterface();
+  const numOfVertices = vertices.length;
+
+  if (fromDblclick) {
+    vertices.splice(numOfVertices - 1, 1);
+  }
+
+  const usingPolylines = selected === "polyline" || selected === "draw";
+
+  if (numOfVertices > 2 && usingPolylines) {
+    const boundingRect = findBoundingRect(vertices);
+    const mass = findMass({ x: 0, y: 0 }, vertices, boundingRect);
+    const centreOfMass = mass.centreOfMass;
+
+    reCentreVertices(vertices, centreOfMass);
+    createShape(centreOfMass, vertices);
+    resetVertices();
+  }
+}
 
 export const CloneInterface = idx => {
   const { clone } = Scene;
@@ -626,28 +658,6 @@ export const ShapeManagerInterface = () => {
     getSelectedShapeId
   };
 };
-
-export function createShapeFromPolyline(fromDblclick) {
-  const { selected } = Scene;
-  const { vertices, resetVertices } = PolylineInterface();
-  const numOfVertices = vertices.length;
-
-  if (fromDblclick) {
-    vertices.splice(numOfVertices - 1, 1);
-  }
-
-  const usingPolylines = selected === "polyline" || selected === "draw";
-
-  if (numOfVertices > 2 && usingPolylines) {
-    const boundingRect = findBoundingRect(vertices);
-    const mass = findMass({ x: 0, y: 0 }, vertices, boundingRect);
-    const centreOfMass = mass.centreOfMass;
-
-    reCentreVertices(vertices, centreOfMass);
-    createShape(centreOfMass, vertices);
-    resetVertices();
-  }
-}
 
 // order=true => FORWARD, order=false => REVERSE
 export function forEachShape(callback, order) {

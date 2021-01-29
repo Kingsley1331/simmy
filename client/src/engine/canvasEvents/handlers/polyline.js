@@ -9,9 +9,10 @@ export const polylineMousedown = Scene => {
     const {
       isCursorOnFirstPoint,
       isCursorOnLastPoint,
-      setLastPoint,
+      setOnLastPoint,
       removeLastVertex,
-      addVertex
+      addVertex,
+      setDetectOnLastPoint
     } = PolylineInterface();
 
     if (isCursorOnFirstPoint) {
@@ -20,11 +21,13 @@ export const polylineMousedown = Scene => {
 
     if (isCursorOnLastPoint) {
       removeLastVertex();
-      setLastPoint(false);
+      setOnLastPoint(false);
+      setDetectOnLastPoint(false);
     }
 
     if (!Scene.cursorOnshape && !isCursorOnFirstPoint && !isCursorOnLastPoint) {
       addVertex(Scene.mousePos);
+      setDetectOnLastPoint(false);
     }
   }
 };
@@ -36,8 +39,10 @@ export const polylineMousemove = (Scene, cursorOnshape) => {
       vertices,
       firstPointRadius,
       lastPointRadius,
-      setFirstPoint,
-      setLastPoint
+      setOnFirstPoint,
+      setOnLastPoint,
+      setDetectOnLastPoint,
+      detectOnLastPoint
     } = PolylineInterface();
     /**** TODO: consider using ShapesController to get shape properties ****/
 
@@ -52,9 +57,9 @@ export const polylineMousemove = (Scene, cursorOnshape) => {
     };
     const cursorDotDistance = magnitude(distanceVector);
     if (cursorDotDistance <= firstPointRadius && numOfVertices > 2) {
-      setFirstPoint(true);
+      setOnFirstPoint(true);
     } else {
-      setFirstPoint(false);
+      setOnFirstPoint(false);
     }
     /** detect hovering over last polyline vertex */
     const lastPoint = vertices[numOfVertices - 1] || [];
@@ -64,9 +69,12 @@ export const polylineMousemove = (Scene, cursorOnshape) => {
     };
     const cursorDotDistance2 = magnitude(distanceVector2);
     if (cursorDotDistance2 <= lastPointRadius) {
-      setLastPoint(true);
+      if (detectOnLastPoint) {
+        setOnLastPoint(true);
+      }
     } else {
-      setLastPoint(false);
+      setOnLastPoint(false);
+      setDetectOnLastPoint(true);
     }
   }
 };

@@ -34,7 +34,10 @@ export const draw = canvas => {
   const {
     vertices: polyLineVertices,
     isCursorOnFirstPoint,
-    isCursorOnLastPoint
+    isCursorOnLastPoint,
+    firstPointRadius,
+    lastPointRadius,
+    detectOnLastPoint
   } = PolylineInterface();
 
   var context = canvas.getContext("2d");
@@ -332,8 +335,8 @@ export const draw = canvas => {
       ? "black"
       : "blue";
 
-    const firstPointDotSize = isCursorOnFirstPoint ? 5 : 4;
-    const lastPointDotSize = isCursorOnLastPoint ? 5 : 2;
+    const firstPointDotSize = isCursorOnFirstPoint ? firstPointRadius : 4;
+    const lastPointDotSize = isCursorOnLastPoint ? lastPointRadius : 2;
 
     for (let v = 0; v < numOfPolyLineVertices; v++) {
       const point = polyLineVertices[v];
