@@ -1,25 +1,11 @@
 import {
   forEachShape,
-  PolylineInterface,
-  CloneInterface,
-  reshapeInterface,
-  resizeInterface,
-  rotateInterface,
   ColourInterface,
   ShapeManagerInterface
 } from "../shapes/shapes";
 import Scene from "./scene";
 import ShapesController from "../shapes/ShapesController";
-import {
-  drawShape,
-  drawSquare,
-  drawPolyline,
-  drawDot,
-  drawCircle,
-  drawLine,
-  screenWriter,
-  shadow
-} from "./display/drawing/drawings";
+import { drawShape, shadow } from "./display/drawing/drawings";
 import { displayShapeInfo, displaySceneInfo } from "./display/info-overlay";
 import polylineAndDraw from "../scenes/display/uiControllers/polylineAndDraw";
 import clone from "../scenes/display/uiControllers/clone";
@@ -30,8 +16,6 @@ import rotate from "../scenes/display/uiControllers/rotate";
 export const draw = canvas => {
   const {
     backgroundColour,
-    mousePos,
-    selected,
     settings: { display }
   } = Scene;
 
