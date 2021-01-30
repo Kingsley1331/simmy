@@ -200,7 +200,9 @@ export const resizeMousemove = Scene => {
         );
         setResizeBoundingRect(newResizeBoundingRect);
       };
+
       setOnResizer(false);
+
       if (topLeft) {
         if (!getResizerDraggingState()) {
           setCurrentResizer("topLeft");

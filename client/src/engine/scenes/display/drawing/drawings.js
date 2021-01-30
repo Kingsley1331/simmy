@@ -37,7 +37,7 @@ export function drawShape(
   context.stroke();
   context.fill();
   context.restore();
-  callback(vertices);
+  callback();
 }
 
 export const drawSquare = (context, centre, sideLength, config) => {
