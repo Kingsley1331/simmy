@@ -54,5 +54,7 @@ export default function updateScene(scene) {
         }
       }
     }
+
+    console.log("updated scene", Scene);
   }
 }

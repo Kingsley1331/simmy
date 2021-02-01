@@ -26,7 +26,7 @@ export function createWall(canvas, thickness) {
   Wall.centreOfMass = { x: width / 2, y: height / 2 };
   // const Wall = createShape({ x: width, y: height }, vertices);
 
-  Wall.fillColour = "red";
+  Wall.fillColour = "transparent";
   Wall.physics.mass = Infinity;
   Wall.physics.momentOfInertia = Infinity;
   Wall.physics.momentOfInertiaCOM = Infinity;

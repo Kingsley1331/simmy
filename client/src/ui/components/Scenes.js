@@ -16,113 +16,13 @@ import {
   click,
   rightClick
 } from "../../engine/canvasEvents/listeners";
-import { applyMotion } from "../../engine/physics/motion";
 import animate from "../../engine/utils/animation";
-import { Condition } from "./events/EventFormComponents";
-import DatGuiDemo from "./data_control/DatGuiDemo";
-import SceneManager from "./data_control/SceneManager";
 import ShapeManager from "./data_control/ShapeManager";
 import ColourPalette from "./data_control/ColourPalette";
-
-// export const SelectedContext = React.createContext({});
-
-const data = [];
-/*const data = [
-  {
-    id: 4548569872,
-    eventType: "hover",
-    ruleType: "oneToOne",
-    conditions: [
-      {
-        propertyName: "lineColour",
-        operator: "===",
-        comparisonValue: "aqua blue"
-      },
-      {
-        propertyName: "linewidth",
-        operator: "<",
-        comparisonValue: "red",
-        logicalOperator: "AND"
-      }
-    ],
-    actions: [
-      { actionPropertyName: "velocity.y", newValue: "24" },
-      { actionPropertyName: "velocity.x", newValue: "256" }
-    ]
-  },
-  {
-    id: 4548567128,
-    eventType: "hover",
-    ruleType: "oneToPartner",
-    emitterConditions: [
-      {
-        propertyName: "lineColour",
-        operator: "===",
-        comparisonValue: "yellow"
-      },
-      {
-        propertyName: "linewidth",
-        operator: "<",
-        comparisonValue: "red",
-        logicalOperator: "AND"
-      }
-    ],
-    receiverConditions: [
-      {
-        propertyName: "lineColour",
-        operator: "===",
-        comparisonValue: "blue",
-        logicalOperator: "OR"
-      }
-    ],
-    actions: [{ actionPropertyName: "velocity.y", newValue: "24" }]
-  },
-  {
-    id: 4548567895,
-    eventType: "click",
-    ruleType: "manyToPartner",
-    emitterConditions: [
-      {
-        propertyName: "fillColour",
-        operator: "<",
-        comparisonValue: "blue"
-      }
-    ],
-    receiverConditions: [
-      {
-        propertyName: "linewidth",
-        operator: "===",
-        comparisonValue: "4"
-      }
-    ],
-    actions: [{ actionPropertyName: "velocity.x", newValue: "25" }]
-  },
-  {
-    id: 4544586785,
-    eventType: "drag",
-    ruleType: "oneToPartner",
-    emitterConditions: [
-      {
-        propertyName: "fillColour",
-        operator: "<",
-        comparisonValue: "pink"
-      }
-    ],
-    receiverConditions: [
-      {
-        propertyName: "linewidth",
-        operator: "===",
-        comparisonValue: "82"
-      }
-    ],
-    actions: [{ actionPropertyName: "velocity.x", newValue: "256" }]
-  }
-];*/
 
 let canvas;
 /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
 const convertSceneRulesToFormRules = rules => {
-  console.log("convertSceneRulesToFormRules", rules);
   const convertedRules = [];
   const numOfRules = rules.length;
   for (let i = 0; i < numOfRules; i++) {
@@ -181,10 +81,10 @@ const Scenes = ({
   }, [buttons, setSelected]);
 
   useEffect(() => {
-    if (!rules.length) {
-      setRules(convertSceneRulesToFormRules(Scene.rules));
+    if (scene.rules) {
+      setRules(convertSceneRulesToFormRules(scene.rules));
     }
-  }, []);
+  }, [scene.rules]);
 
   const setManagedShapeIdx = useCallback(
     (idx = null) => {
