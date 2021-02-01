@@ -3,26 +3,74 @@ import { connect } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
 import Scene from "../../../engine/scenes/scene";
 import { Condition, Action } from "./EventFormComponents";
-// import { propertyMap, operatorsArray } from "../../../constants/events";
-import {
-  // addRulesAction,
-  // addGlobalRulesAction,
-  selectEventAction,
-  updateRulesAction
-  // selectGlobalEventAction,
-} from "../../actions/events";
+import { selectEventAction, updateRulesAction } from "../../actions/events";
 
 const EventForm = ({
   rule,
   selectedShapeId,
   eventType,
   selectEvent,
-  onUpdateRules,
-  updateRule
+  onUpdateRules
 }) => {
+  /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
+  const applyRule = ruleData => {
+    const logicalOperatorArray = [];
+    const emitterLogicalOperatorArray = [];
+    const receiverLogicalOperatorArray = [];
+    const areConditionsSimple =
+      ruleData.ruleType === "oneToOne" || ruleData.ruleType === "manyToOne";
+    const triggeredFromOneShape =
+      ruleData.ruleType === "oneToOne" || ruleData.ruleType === "oneToMany";
+    let rule = { ...ruleData };
+    for (let prop in ruleData) {
+      if (
+        prop === "conditions" ||
+        prop === "emitterConditions" ||
+        prop === "receiverConditions"
+      ) {
+        const conditions = ruleData[prop];
+        const numOfCondtions = conditions.length;
+        /**NOTE: can be refactored using technique in convertSceneRulesToFormRules*/
+        for (let i = 0; i < numOfCondtions; i++) {
+          const { logicalOperator } = conditions[i];
+          if (prop === "conditions" && logicalOperator) {
+            logicalOperatorArray.push(logicalOperator);
+          }
+          if (prop === "emitterConditions" && logicalOperator) {
+            emitterLogicalOperatorArray.push(logicalOperator);
+          }
+          if (prop === "receiverConditions" && logicalOperator) {
+            receiverLogicalOperatorArray.push(logicalOperator);
+          }
+        }
+      }
+    }
+    if (areConditionsSimple) {
+      rule.logicalOperators = logicalOperatorArray;
+      rule.conditions = rule.conditions || [];
+    } else {
+      rule.emitterLogicalOperators = emitterLogicalOperatorArray;
+      rule.receiverLogicalOperators = receiverLogicalOperatorArray;
+      rule.emitterConditions = rule.emitterConditions || [];
+      rule.receiverConditions = rule.receiverConditions || [];
+    }
+    if (triggeredFromOneShape) {
+      rule.shapeId = selectedShapeId;
+    }
+    console.log("New Rule", rule);
+
+    const rules = [...Scene.rules];
+    const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
+    if (ruleIndex === -1) {
+      Scene.rules.push(rule);
+    } else {
+      Scene.rules.splice(ruleIndex, 1, rule);
+    }
+  };
+
   const onSubmit = ruleData => {
-    console.log({ ruleData });
-    updateRule({ ...ruleData, id: rule.id });
+    /**Add id because form data doesn't have an id */
+    applyRule({ ...ruleData, id: rule.id });
   };
 
   const { register, handleSubmit, watch, errors, control } = useForm({
@@ -158,25 +206,13 @@ const EventForm = ({
 };
 
 const mapDispatchToProps = {
-  // addRules: addRulesAction,
-  // addGlobalRules: addGlobalRulesAction,
   selectEvent: selectEventAction,
   onUpdateRules: updateRulesAction
-  // selectGlobalEvent: selectGlobalEventAction,
 };
 
-const mapStateToProps = ({
-  event,
-  // rules,
-  selectedShape
-  // globalEvent,
-  // globalRules,
-}) => {
+const mapStateToProps = ({ event, selectedShape }) => {
   return {
     eventType: event,
-    // globalEventType: globalEvent,
-    // globalRules,
-    // rules,
     selectedShapeId: selectedShape
   };
 };

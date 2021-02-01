@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
 import Buttons from "./buttons/";
 import EventForm from "./events/EventForm";
-import Scene from "../../engine/scenes/scene";
 import updateScene from "../../engine/scenes/updateScene";
 import { clearShapes, shapeSelection } from "../../engine/shapes/shapes";
 import { createWall } from "../../engine/shapes/walls";
@@ -94,87 +93,17 @@ const Scenes = ({
     [setManagedShapeIndex]
   );
 
-  /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
-  const applyRule = ruleData => {
-    const logicalOperatorArray = [];
-    const emitterLogicalOperatorArray = [];
-    const receiverLogicalOperatorArray = [];
-    const areConditionsSimple =
-      ruleData.ruleType === "oneToOne" || ruleData.ruleType === "manyToOne";
-    const triggeredFromOneShape =
-      ruleData.ruleType === "oneToOne" || ruleData.ruleType === "oneToMany";
-    let rule = { ...ruleData };
-    for (let prop in ruleData) {
-      if (
-        prop === "conditions" ||
-        prop === "emitterConditions" ||
-        prop === "receiverConditions"
-      ) {
-        const conditions = ruleData[prop];
-        const numOfCondtions = conditions.length;
-        /**NOTE: can be refactored using technique in convertSceneRulesToFormRules*/
-        for (let i = 0; i < numOfCondtions; i++) {
-          const { logicalOperator } = conditions[i];
-          if (prop === "conditions" && logicalOperator) {
-            logicalOperatorArray.push(logicalOperator);
-          }
-          if (prop === "emitterConditions" && logicalOperator) {
-            emitterLogicalOperatorArray.push(logicalOperator);
-          }
-          if (prop === "receiverConditions" && logicalOperator) {
-            receiverLogicalOperatorArray.push(logicalOperator);
-          }
-        }
-      }
-    }
-    if (areConditionsSimple) {
-      rule.logicalOperators = logicalOperatorArray;
-      rule.conditions = rule.conditions || [];
-    } else {
-      rule.emitterLogicalOperators = emitterLogicalOperatorArray;
-      rule.receiverLogicalOperators = receiverLogicalOperatorArray;
-      rule.emitterConditions = rule.emitterConditions || [];
-      rule.receiverConditions = rule.receiverConditions || [];
-    }
-    if (triggeredFromOneShape) {
-      rule.shapeId = selectedShapeId;
-    }
-    console.log("New Rule", rule);
-
-    const rules = [...Scene.rules];
-    const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
-    if (ruleIndex === -1) {
-      Scene.rules.push(rule);
-    } else {
-      Scene.rules.splice(ruleIndex, 1, rule);
-    }
-  };
-
   const addRule = () => {
     const id = new Date().getTime();
     setFormRules(rulesArray => [...rulesArray, { id }]);
   };
 
-  const updateRule = rule => {
-    console.log("updateRule", rule);
-
-    setFormRules(rulesArray => {
-      const rules = [...rulesArray];
-      const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
-      rules.splice(ruleIndex, 1, rule);
-      return rules;
-    });
-    applyRule(rule);
-  };
-
   useEffect(() => {
-    // Scene.shapes = this.props.scene.shapes;
     /** TODO: move functions into single index file and import **/
 
     canvas = document.getElementById("canvas");
     animate();
     mouseDown(canvas, setManagedShapeIdx);
-    // mouseDown(canvas, setManagedShapeIndex);
     mouseMove(canvas);
     mouseUp(canvas);
     doubleClick(canvas, selectShape, addRules, selectedEvent);
@@ -211,14 +140,7 @@ const Scenes = ({
       </div>
       {selected === "colour" && <ColourPalette />}
       {formRules.map((rule, index) => (
-        <EventForm
-          key={rule.id}
-          rule={rule}
-          setFormRules={setFormRules}
-          // deleteRule={deleteRule}
-          updateRule={updateRule}
-          applyRule={applyRule}
-        />
+        <EventForm key={rule.id} rule={rule} setFormRules={setFormRules} />
       ))}
       <button className="add_rule" onClick={addRule}>
         Add rule
