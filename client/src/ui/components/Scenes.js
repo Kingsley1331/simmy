@@ -65,10 +65,10 @@ const Scenes = ({
   addRules,
   selectedEvent,
   scene,
-  getScene,
+  clearScene,
   buttons
 }) => {
-  const [rules, setRules] = useState([]);
+  const [formRules, setFormRules] = useState([]);
   const [selected, setSelected] = useState();
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
 
@@ -82,7 +82,7 @@ const Scenes = ({
 
   useEffect(() => {
     if (scene.rules) {
-      setRules(convertSceneRulesToFormRules(scene.rules));
+      setFormRules(convertSceneRulesToFormRules(scene.rules));
     }
   }, [scene.rules]);
 
@@ -112,7 +112,7 @@ const Scenes = ({
       ) {
         const conditions = ruleData[prop];
         const numOfCondtions = conditions.length;
-
+        /**NOTE: can be refactored using technique in convertSceneRulesToFormRules*/
         for (let i = 0; i < numOfCondtions; i++) {
           const { logicalOperator } = conditions[i];
           if (prop === "conditions" && logicalOperator) {
@@ -152,20 +152,13 @@ const Scenes = ({
 
   const addRule = () => {
     const id = new Date().getTime();
-    setRules(rulesArray => [...rulesArray, { id }]);
-  };
-
-  const deleteRule = ruleId => {
-    setRules(rulesArray => {
-      const filteredArray = rulesArray.filter(({ id }) => !(id === ruleId));
-      return filteredArray;
-    });
+    setFormRules(rulesArray => [...rulesArray, { id }]);
   };
 
   const updateRule = rule => {
     console.log("updateRule", rule);
 
-    setRules(rulesArray => {
+    setFormRules(rulesArray => {
       const rules = [...rulesArray];
       const ruleIndex = rules.findIndex(({ id }) => id === rule.id);
       rules.splice(ruleIndex, 1, rule);
@@ -201,10 +194,10 @@ const Scenes = ({
   useEffect(() => {
     return () => {
       clearShapes();
-      getScene();
+      clearScene();
     };
-  }, [clearShapes, getScene]);
-  console.log({ rules });
+  }, [clearShapes, clearScene]);
+  console.log({ formRules });
 
   return (
     <div className="scenesWrapper">
@@ -217,12 +210,12 @@ const Scenes = ({
         {/* <canvas id="canvas" width="1000" height="600" /> */}
       </div>
       {selected === "colour" && <ColourPalette />}
-      {rules.map((rule, index) => (
+      {formRules.map((rule, index) => (
         <EventForm
           key={rule.id}
           rule={rule}
-          setRules={setRules}
-          deleteRule={deleteRule}
+          setFormRules={setFormRules}
+          // deleteRule={deleteRule}
           updateRule={updateRule}
           applyRule={applyRule}
         />
@@ -252,7 +245,7 @@ const mapDispatchToProps = dispatch => {
       // dispatch({ type: "SELECTED_SHAPE", shapeId });
       dispatch({ type: "SELECT_SHAPE", payload: shapeId });
     },
-    getScene: () => {
+    clearScene: () => {
       dispatch({ type: "GET_SCENE", payload: {} });
     },
     addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })

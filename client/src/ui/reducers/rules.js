@@ -9,13 +9,16 @@ export const ruleReducer = (state = {}, action) => {
   return state;
 };
 
-export const rulesReducer = (state = {}, action) => {
-  const { type, payload } = action;
+export const rulesReducer = (state = [], action) => {
+  const { type, payload = [] } = action;
   switch (type) {
     case "ADD_RULES":
-      state = { ...state, ...payload };
+      state = [...state, ...payload];
       break;
     default:
+    case "UPDATE_RULES":
+      state = [...payload];
+      break;
   }
   return state;
 };

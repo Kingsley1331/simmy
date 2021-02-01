@@ -1,6 +1,12 @@
-export function addRulesAction(rules) {
+// export function addRulesAction(rules) {
+//   return {
+//     type: "ADD_RULES",
+//     payload: rules,
+//   };
+// }
+export function updateRulesAction(rules) {
   return {
-    type: "ADD_RULES",
+    type: "UPDATE_RULES",
     payload: rules
   };
 }

@@ -7,19 +7,18 @@ import { Condition, Action } from "./EventFormComponents";
 import {
   // addRulesAction,
   // addGlobalRulesAction,
-  selectEventAction
+  selectEventAction,
+  updateRulesAction
   // selectGlobalEventAction,
 } from "../../actions/events";
 
 const EventForm = ({
   rule,
-  setRules,
   selectedShapeId,
   eventType,
   selectEvent,
-  deleteRule,
-  updateRule,
-  applyRule
+  onUpdateRules,
+  updateRule
 }) => {
   const onSubmit = ruleData => {
     console.log({ ruleData });
@@ -68,6 +67,22 @@ const EventForm = ({
   const showSimpleConditions =
     watchAllFields.ruleType === "oneToOne" ||
     watchAllFields.ruleType === "manyToOne";
+
+  const deleteRule = ruleId => {
+    const deleteThisRule = window.confirm(
+      "Are you sure you want to delete this rule"
+    );
+    if (deleteThisRule) {
+      const sceneRules = [...Scene.rules];
+
+      const filteredArray = sceneRules.filter(({ id }) => !(id === ruleId));
+      Scene.rules = filteredArray;
+      console.log({ filteredArray });
+      onUpdateRules(filteredArray);
+      return filteredArray;
+    }
+  };
+
   return (
     <div className="event-form_wrapper">
       <form className="event-form" onSubmit={handleSubmit(onSubmit)}>
@@ -145,7 +160,8 @@ const EventForm = ({
 const mapDispatchToProps = {
   // addRules: addRulesAction,
   // addGlobalRules: addGlobalRulesAction,
-  selectEvent: selectEventAction
+  selectEvent: selectEventAction,
+  onUpdateRules: updateRulesAction
   // selectGlobalEvent: selectGlobalEventAction,
 };
 
