@@ -21,42 +21,44 @@ import ColourPalette from "./data_control/ColourPalette";
 
 let canvas;
 /**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
-const convertSceneRulesToFormRules = rules => {
-  const convertedRules = [];
-  const numOfRules = rules.length;
-  for (let i = 0; i < numOfRules; i++) {
-    const rule = rules[i];
-    const convertedRule = { ...rule };
-    const conditionTypeList = [
-      ["conditions", "logicalOperators"],
-      ["emitterConditions", "emitterLogicalOperators"],
-      ["receiverConditions", "receiverLogicalOperators"]
-    ];
-    const numOfConditionTypes = conditionTypeList.length;
-    for (let j = 0; j < numOfConditionTypes; j++) {
-      const conditionType = conditionTypeList[j][0];
-      const operatorType = conditionTypeList[j][1];
+// const convertSceneRulesToFormRules = (rules) => {
+//   console.log("scene.rules", rules);
+//   const convertedRules = [];
+//   const numOfRules = rules.length;
+//   for (let i = 0; i < numOfRules; i++) {
+//     const rule = rules[i];
+//     const convertedRule = { ...rule };
+//     const conditionTypeList = [
+//       ["conditions", "logicalOperators"],
+//       ["emitterConditions", "emitterLogicalOperators"],
+//       ["receiverConditions", "receiverLogicalOperators"],
+//     ];
+//     const numOfConditionTypes = conditionTypeList.length;
+//     for (let j = 0; j < numOfConditionTypes; j++) {
+//       const conditionType = conditionTypeList[j][0];
+//       const operatorType = conditionTypeList[j][1];
 
-      if (convertedRule[conditionType]) {
-        const operators = convertedRule[operatorType];
-        const conditions = convertedRule[conditionType];
-        const convertedConditions = conditions.map((condition, idx) => {
-          const newCondition = {
-            ...condition
-          };
-          if (idx > 0) {
-            newCondition.logicalOperator = operators[idx - 1];
-          }
-          return newCondition;
-        });
-        convertedRule[conditionType] = convertedConditions;
-        delete convertedRule[operatorType];
-      }
-    }
-    convertedRules.push(convertedRule);
-  }
-  return convertedRules;
-};
+//       if (convertedRule[conditionType]) {
+//         const operators = convertedRule[operatorType];
+//         const conditions = convertedRule[conditionType];
+//         const convertedConditions = conditions.map((condition, idx) => {
+//           const newCondition = {
+//             ...condition,
+//           };
+//           if (idx > 0) {
+//             newCondition.logicalOperator = operators[idx - 1];
+//           }
+//           return newCondition;
+//         });
+//         convertedRule[conditionType] = convertedConditions;
+//         delete convertedRule[operatorType];
+//       }
+//     }
+//     convertedRules.push(convertedRule);
+//   }
+//   console.log("convertedRules", convertedRules);
+//   return convertedRules;
+// };
 
 const Scenes = ({
   selectShape,
@@ -81,7 +83,9 @@ const Scenes = ({
 
   useEffect(() => {
     if (scene.rules) {
-      setFormRules(convertSceneRulesToFormRules(scene.rules));
+      setFormRules(scene.rules);
+      console.log("scene.rules", scene.rules);
+      // setFormRules(convertSceneRulesToFormRules(scene.rules));
     }
   }, [scene.rules]);
 
