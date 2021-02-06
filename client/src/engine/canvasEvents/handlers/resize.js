@@ -308,11 +308,13 @@ export const resizeMouseMouseup = Scene => {
     } = resizeInterface();
 
     const selectedShapeIndex = getSelectedShapeIndex();
-    const selectedShapeId = ShapesController.getProperty(
-      selectedShapeIndex,
-      "id"
-    );
-    if (selectedShapeId) {
+
+    if (selectedShapeIndex !== null) {
+      const selectedShapeId = ShapesController.getProperty(
+        selectedShapeIndex,
+        "id"
+      );
+
       updatePhysicsProperties(selectedShapeId);
     }
 

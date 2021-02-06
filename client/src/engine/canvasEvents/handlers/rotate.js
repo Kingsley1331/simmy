@@ -183,15 +183,19 @@ export const rotateMouseup = Scene => {
       setReferenceBoundingRect
     } = rotateInterface();
     setDraggingState(false);
+
     const selectedShapeIndex = getSelectedShapeIndex();
-    const selectedShapeId = ShapesController.getProperty(
-      selectedShapeIndex,
-      "id"
-    );
-    if (selectedShapeId) {
-      updatePhysicsProperties(selectedShapeId);
-    }
-    if (selectedShapeIndex) {
+
+    if (selectedShapeIndex !== null) {
+      const selectedShapeId = ShapesController.getProperty(
+        selectedShapeIndex,
+        "id"
+      );
+
+      if (selectedShapeId) {
+        updatePhysicsProperties(selectedShapeId);
+      }
+
       const { start, end } = getLever();
       const startVector = new Vector({ ...start });
       const endVector = new Vector({ ...end });
