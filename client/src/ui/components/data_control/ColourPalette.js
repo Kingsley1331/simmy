@@ -3,6 +3,7 @@ import { ColourInterface } from "../../../engine/shapes/shapes";
 import ShapesController from "../../../engine/shapes/ShapesController";
 import DatGui, { DatColor, DatString } from "react-dat-gui";
 import { isColour } from "../../../engine/utils/dom";
+import "../../../../../client/src/style/dat_gui.css";
 import "./ColourPalette.css";
 
 const COLOURS = [

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ShapesController from "../../../engine/shapes/ShapesController";
-
 import DatGui, {
   DatBoolean,
   DatFolder,
   DatNumber,
   DatString
 } from "react-dat-gui";
+import "../../../../../client/src/style/dat_gui.css";
 
 const ShapeManager = ({ shapeIndex }) => {
   const id = ShapesController.getProperty(shapeIndex, "id");
