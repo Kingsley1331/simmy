@@ -80,8 +80,8 @@ let Scene = {
     hover: { state: false, ids: [] },
     drag: { state: false, ids: [] }
   },
-
-  rules: []
+  rules: [],
+  matches: {}
 };
 
 export function updateSelected(state, Scene) {

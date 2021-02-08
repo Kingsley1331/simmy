@@ -2,341 +2,152 @@ import Scene from "../scenes/scene";
 import { calculateBoolean } from "./maths/operators";
 import { getObjectValueFromString, setObjectValueFromString } from "./objects";
 
-/** Evaluate a set of conditions for multiple shapes and only return true if at least one shape passes the test  */
-const evaluteMultipleShapes = (
-  shapes,
-  conditions,
-  logicalOperators,
-  ruleType,
-  eventBeingChecked,
-  rule,
-  isCheckingReiverShape
-) => {
-  let triggerShapesBool = false;
-  const numofShapes = shapes.length;
-  for (let s = 0; s < numofShapes; s++) {
-    const shape = shapes[s];
-    triggerShapesBool =
-      evaluateCondtions(
-        shape,
+const evaluteCondition = (shape, condition) => {
+  const { propertyName, comparisonValue, operator } = condition;
+
+  const propertyValue = getObjectValueFromString(shape, propertyName);
+
+  return calculateBoolean(propertyValue, operator, comparisonValue);
+};
+
+const evaluteConditions = (shape, conditions, logicalOperators) => {
+  if (conditions.length === 0) {
+    return true;
+  }
+
+  if (conditions.length === 1) {
+    const { propertyName, comparisonValue, operator } = conditions[0];
+
+    const propertyValue = getObjectValueFromString(shape, propertyName);
+
+    return calculateBoolean(propertyValue, operator, comparisonValue);
+  }
+
+  const conditionTestResults = conditions.map(condition =>
+    evaluteCondition(shape, condition)
+  );
+
+  const passesTest = conditionTestResults.reduce(
+    (cumulativeResult, result, index) => {
+      const logicalOperator = logicalOperators[index - 1];
+      return calculateBoolean(cumulativeResult, logicalOperator, result);
+    }
+  );
+
+  return passesTest;
+};
+
+/** checkMultipleShapes: returns an array of shape ids for shapes that satisfy the conditions */
+const checkMultipleShapes = (shapes, conditions, logicalOperators) =>
+  shapes
+    .filter(shape => evaluteConditions(shape, conditions, logicalOperators))
+    .map(({ id }) => id);
+
+const getShapesFromIds = ids =>
+  ids.map(id => Scene.shapes.filter(shape => shape.id === id)[0]);
+
+const evaluateRules = (rules, events, self) => {
+  const numOfRules = rules.length;
+  const numOfCurrentEvents = events.length;
+  for (let n = 0; n < numOfCurrentEvents; n++) {
+    let eventBeingChecked = events[n];
+    const interactingPairs = Scene.currentEvents[eventBeingChecked].pairs || [];
+
+    for (let i = 0; i < numOfRules; i++) {
+      let partnerShapes = [];
+      let shapesArray = [];
+      let conditionsList = [];
+      let logicalOperatorsList = [];
+      let matchingShapeIds = [];
+
+      const isComplexRule =
+        ruleType === "oneToMany" ||
+        ruleType === "manyToMany" ||
+        ruleType === "oneToPartner" ||
+        ruleType === "manyToPartner";
+
+      const {
         conditions,
         logicalOperators,
+        emitterConditions,
+        emitterLogicalOperators,
+        receiverConditions,
+        receiverLogicalOperators,
         ruleType,
-        eventBeingChecked,
-        rule,
-        isCheckingReiverShape
-      ) || triggerShapesBool;
+        id: ruleId
+      } = rules[i];
+
+      if (ruleType === "oneToOne" || ruleType === "manyToOne") {
+        shapesArray = [self];
+        conditionsList = conditions;
+        logicalOperatorsList = logicalOperators;
+      }
+
+      if (ruleType === "oneToMany" || ruleType === "manyToMany") {
+        shapesArray = Scene.shapes;
+      }
+
+      if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
+        const partnerIds = interactingPairs
+          .filter(pair => pair.some(shapeId => shapeId === self.id))
+          .map(pair => (pair[0] !== self.id ? pair[0] : pair[1]));
+        partnerShapes = getShapesFromIds(partnerIds);
+        console.log({
+          self: self.id,
+          partnerShapes: partnerShapes.map(({ id }) => id)
+        });
+        shapesArray = partnerShapes;
+      }
+
+      if (isComplexRule) {
+        conditionsList = receiverConditions;
+        logicalOperatorsList = receiverLogicalOperators;
+      }
+
+      if (
+        !(
+          isComplexRule === true &&
+          !evaluteConditions(self, emitterConditions, emitterLogicalOperators)
+        )
+      ) {
+        matchingShapeIds = checkMultipleShapes(
+          shapesArray,
+          conditionsList,
+          logicalOperatorsList
+        );
+        Scene.matches[ruleId] = matchingShapeIds;
+      }
+      console.log({ matchingShapeIds });
+    }
+    /** SPACE */
   }
-  // if (shapes.length) {
-  //   console.log("**************************************shapes", shapes);
-  //   console.log(
-  //     "**************************************triggerShapesBool",
-  //     triggerShapesBool
-  //   );
-  // }
-  return triggerShapesBool;
 };
 
-/**TODO: from evaluateCondtions remove the following 3 parameters: conditions, logicalOperators, ruleType as they already exist in the rule parameter */
-const evaluateCondtions = (
-  shape,
-  conditions,
-  logicalOperators,
-  ruleType,
-  eventBeingChecked,
-  rule,
-  isCheckingReiverShape
-) => {
-  let bool = false;
-
-  const numOfConditions = conditions.length;
-
-  for (let j = 0; j < numOfConditions; j++) {
-    const condition = conditions[j];
-    let logicalOperator = numOfConditions > 1 ? logicalOperators[j - 1] : "";
-    const propertyName = condition.propertyName;
-    const comparisonValue = condition.comparisonValue;
-    const operator = condition.operator;
-
-    if (!Scene.propertyValueCache[shape.id]) {
-      Scene.propertyValueCache[shape.id] = {};
-    }
-    const propertyValue =
-      propertyName in Scene.propertyValueCache[shape.id]
-        ? Scene.propertyValueCache[shape.id][propertyName]
-        : getObjectValueFromString(shape, propertyName);
-
-    const newBool = calculateBoolean(propertyValue, operator, comparisonValue);
-    if (j === 0) {
-      bool = newBool;
-    } else {
-      bool = calculateBoolean(bool, logicalOperator, newBool);
-    }
-
-    /** TODO: bool is true by default, this leads to bugs */
-    /** CODE:001 */
-    if (ruleType === "manyToOne" || ruleType === "oneToOne") {
-      bool = eventBeingChecked === "collision" ? shape.colliding && bool : bool;
-      bool = eventBeingChecked === "hover" ? shape.onShape && bool : bool;
-      bool = eventBeingChecked === "drag" ? shape.dragging && bool : bool;
-      bool = eventBeingChecked === "click" ? shape.onClick && bool : bool;
-      bool =
-        eventBeingChecked === "doubleClick" ? shape.doubleClick && bool : bool;
-    }
-  }
-
-  if (!numOfConditions) {
-    /**TODO: Simplify */
-    if (eventBeingChecked === "collision" && shape.colliding) {
-      bool = true;
-    }
-    if (eventBeingChecked === "hover" && shape.onShape) {
-      bool = true;
-    }
-    if (eventBeingChecked === "drag" && shape.dragging) {
-      bool = true;
-    }
-    if (eventBeingChecked === "click" && shape.onShape) {
-      bool = true;
-    }
-    if (eventBeingChecked === "doubleClick" && shape.doubleClick) {
-      bool = true;
-    }
-    if (
-      isCheckingReiverShape &&
-      !(ruleType === "oneToPartner" || ruleType === "manyToPartner")
-    ) {
-      bool = true;
-    }
-  }
-
-  if (rule.ruleType === "oneToOne") {
-    bool =
-      shape.id === rule.shapeId &&
-      bool; /** NOTE: check if its doing the same thing as CODE:123 */
-  }
-
-  if (!isCheckingReiverShape && rule.ruleType === "oneToPartner") {
-    bool = shape.id === rule.shapeId && bool;
-  }
-
-  /** NOTE:This looks a repition of CODE:001 */
-  if (rule.ruleType === "oneToOne" || rule.ruleType === "manyToOne") {
-    if (eventBeingChecked === "collision") {
-      bool = shape.colliding && bool;
-    }
-    if (eventBeingChecked === "hover") {
-      bool = shape.onShape && bool;
-    }
-    if (eventBeingChecked === "drag") {
-      bool = shape.dragging && bool;
-    }
-    if (eventBeingChecked === "click") {
-      bool = shape.onShape && bool;
-    }
-    if (eventBeingChecked === "doubleClick") {
-      bool = shape.doubleClick && bool;
-    }
-  }
-
-  return bool;
-};
-
-const checkEvents = function(stop) {
-  const subscribed = this.events.subscribed;
-
-  if (subscribed) {
-    const eventTypes = Scene.currentEvents;
-    const rules = Scene.rules;
-    let currentEvents = [];
-
-    for (let eventType in eventTypes) {
-      if (eventTypes[eventType].state) {
-        currentEvents.push(eventType);
+function checkEvents(stop) {
+  Scene.matches = {};
+  if (this.events.subscribed) {
+    const { rules, currentEvents } = Scene;
+    let events = [];
+    for (let eventType in currentEvents) {
+      if (currentEvents[eventType].state) {
+        events.push(eventType);
       }
     }
-
-    const numOfCurrentEvents = currentEvents.length;
-
-    const numOfRules = rules.length;
-
-    for (let n = 0; n < numOfCurrentEvents; n++) {
-      let eventBeingChecked = currentEvents[n];
-      let partnerId;
-
-      const triggerShapeIds = Scene.currentEvents[eventBeingChecked].ids;
-
-      const interactingPairs =
-        Scene.currentEvents[eventBeingChecked].pairs || [];
-      const numOfInteractingPairs = interactingPairs.length;
-      const hasInteractingPairs = !!numOfInteractingPairs;
-
-      for (let i = 0; i < numOfRules; i++) {
-        let bool = false;
-        const rule = rules[i];
-        const ruleType = rule.ruleType; // use destructuring
-        const currentEventType = rule.eventType; // use destructuring
-        let shapes = [this];
-        let partnerShape = []; /** NOTE: change name to partnerShapes */
-
-        if (
-          hasInteractingPairs &&
-          (ruleType === "oneToPartner" || ruleType === "manyToPartner")
-        ) {
-          // if (hasInteractingPairs && rule.applyToPartner) {
-          for (let i = 0; i < numOfInteractingPairs; i++) {
-            if (interactingPairs[i][0] === this.id) {
-              partnerId = interactingPairs[i][1];
-            }
-            if (interactingPairs[i][1] === this.id) {
-              partnerId = interactingPairs[i][0];
-            }
-          }
-        }
-
-        let {
-          conditions,
-          logicalOperators,
-          emitterConditions,
-          emitterLogicalOperators,
-          receiverConditions,
-          receiverLogicalOperators,
-          actions
-        } = rule;
-        if (ruleType === "oneToMany") {
-          /**Check the self conditions of the trigger shape */
-          shapes = Scene.shapes.filter(
-            currentShape => currentShape.id === rule.shapeId
-          );
-        }
-        if (ruleType === "manyToMany") {
-          /**Check the self conditions of the trigger shape */
-          shapes = Scene.shapes.filter(currentShape =>
-            triggerShapeIds.some(id => currentShape.id === id)
-          );
-        }
-
-        if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
-          /**Check the self conditions of the trigger shape */
-          shapes = Scene.shapes.filter(
-            currentShape => currentShape.id === rule.shapeId
-          );
-        }
-
-        // if (ruleType === "manyToOne" && rule.applyToPartner) {
-        //   /**Check the self conditions of the trigger shape */
-        //   shapes = Scene.shapes.filter((currentShape) =>
-        //     triggerShapeIds.some((id) => currentShape.id === id)
-        //   );
-        // }
-        // if (partnerId && rule.applyToPartner) {
-        //   /**Check the self conditions of the trigger shape */
-        //   partnerShape = Scene.shapes.filter(
-        //     (currentShape) => currentShape.id === partnerId
-        //   );
-        // }
-
-        if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
-          /**Check the self conditions of the trigger shape */
-          shapes = Scene.shapes.filter(currentShape =>
-            triggerShapeIds.some(id => currentShape.id === id)
-          );
-        }
-        if (
-          partnerId &&
-          (ruleType === "oneToPartner" || ruleType === "manyToPartner")
-        ) {
-          /**Check the self conditions of the trigger shape */
-          partnerShape = Scene.shapes.filter(
-            currentShape => currentShape.id === partnerId
-          );
-        }
-
-        if (currentEventType === eventBeingChecked) {
-          /**TODO: Find a better way of identifying complex conditions*/
-          if (emitterConditions && emitterLogicalOperators) {
-            bool = evaluteMultipleShapes(
-              shapes /** Trigger shapes are checked */,
-              emitterConditions,
-              emitterLogicalOperators,
-              ruleType,
-              eventBeingChecked,
-              rule
-            );
-            console.log("************************************bool1", bool);
-            /** Make sure to check the the conditions of the receiver shape */
-
-            if (ruleType === "oneToMany") {
-              /**CODE:123 */
-              /**Only apply rule if the trigger shape contains the rule */
-              bool = triggerShapeIds.some(id => id === rule.shapeId) && bool;
-            }
-
-            if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
-              // if (rule.applyToPartner) {
-              shapes = partnerShape;
-              console.log(
-                "************************************partnerShape",
-                shapes.map(shape => shape.id)
-              );
-            }
-
-            /** Set bool = true if at least one of the trigger shapes satifisfies the rule conditions */
-            bool =
-              evaluteMultipleShapes(
-                [this],
-                receiverConditions,
-                receiverLogicalOperators,
-                ruleType,
-                eventBeingChecked,
-                rule,
-                true
-              ) &&
-              bool; /**NOTE: If no conditions don't call evaluteMultipleShapes */
-            console.log("************************************bool2", bool);
-          } else {
-            bool = evaluteMultipleShapes(
-              shapes,
-              conditions,
-              logicalOperators,
-              ruleType,
-              eventBeingChecked,
-              rule
-            );
-          }
-        }
-
-        const numOfActions = actions.length;
-        if (bool) {
-          for (let k = 0; k < numOfActions; k++) {
-            let actionPropertyName = actions[k].actionPropertyName;
-            let action = actions[k];
-
-            if (!Scene.propertyValueCache[this.id]) {
-              Scene.propertyValueCache[this.id] = {};
-            }
-            Scene.propertyValueCache[this.id][
-              actionPropertyName
-            ] = getObjectValueFromString(this, actionPropertyName);
-
-            setObjectValueFromString(this, actionPropertyName, action.newValue);
-          }
-        }
-      }
+    evaluateRules(rules, events, this);
+    console.log("Scene.matches", Scene.matches);
+    if (stop) {
+      Scene.currentEvents = {
+        click: { state: false, ids: [] },
+        doubleClick: { state: false, ids: [] },
+        collision: { state: false, ids: [], pairs: [] },
+        hover: { state: false, ids: [] },
+        drag: { state: false, ids: [] }
+      };
+      Scene.propertyValueCache = {};
     }
+    this.onClick = false;
+    this.doubleClick = false;
   }
-  if (stop) {
-    Scene.currentEvents = {
-      click: { state: false, ids: [] },
-      doubleClick: { state: false, ids: [] },
-      collision: { state: false, ids: [], pairs: [] },
-      hover: { state: false, ids: [] },
-      drag: { state: false, ids: [] }
-    };
-    Scene.propertyValueCache = {};
-  }
-  this.onClick = false;
-  this.doubleClick = false;
-};
+}
 
 export default checkEvents;
