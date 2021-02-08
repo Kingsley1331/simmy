@@ -74,51 +74,54 @@ const evaluateRules = (rules, events, self) => {
         receiverConditions,
         receiverLogicalOperators,
         ruleType,
+        eventType,
         id: ruleId
       } = rules[i];
+      if (eventType === eventBeingChecked) {
+        if (ruleType === "oneToOne" || ruleType === "manyToOne") {
+          shapesArray = [self];
+          conditionsList = conditions;
+          logicalOperatorsList = logicalOperators;
+        }
 
-      if (ruleType === "oneToOne" || ruleType === "manyToOne") {
-        shapesArray = [self];
-        conditionsList = conditions;
-        logicalOperatorsList = logicalOperators;
-      }
+        if (ruleType === "oneToMany" || ruleType === "manyToMany") {
+          shapesArray = Scene.shapes;
+        }
 
-      if (ruleType === "oneToMany" || ruleType === "manyToMany") {
-        shapesArray = Scene.shapes;
-      }
+        if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
+          const partnerIds = interactingPairs
+            .filter(pair => pair.some(shapeId => shapeId === self.id))
+            .map(pair => (pair[0] !== self.id ? pair[0] : pair[1]));
+          partnerShapes = getShapesFromIds(partnerIds);
+          console.log({
+            self: self.id,
+            partnerShapes: partnerShapes.map(({ id }) => id)
+          });
+          shapesArray = partnerShapes;
+        }
 
-      if (ruleType === "oneToPartner" || ruleType === "manyToPartner") {
-        const partnerIds = interactingPairs
-          .filter(pair => pair.some(shapeId => shapeId === self.id))
-          .map(pair => (pair[0] !== self.id ? pair[0] : pair[1]));
-        partnerShapes = getShapesFromIds(partnerIds);
-        console.log({
-          self: self.id,
-          partnerShapes: partnerShapes.map(({ id }) => id)
-        });
-        shapesArray = partnerShapes;
-      }
+        if (isComplexRule) {
+          conditionsList = receiverConditions;
+          logicalOperatorsList = receiverLogicalOperators;
+        }
 
-      if (isComplexRule) {
-        conditionsList = receiverConditions;
-        logicalOperatorsList = receiverLogicalOperators;
+        if (
+          !(
+            isComplexRule === true &&
+            !evaluteConditions(self, emitterConditions, emitterLogicalOperators)
+          )
+        ) {
+          matchingShapeIds = checkMultipleShapes(
+            shapesArray,
+            conditionsList,
+            logicalOperatorsList
+          );
+          Scene.matches[ruleId] = matchingShapeIds;
+        }
+        console.log({ matchingShapeIds });
       }
-
-      if (
-        !(
-          isComplexRule === true &&
-          !evaluteConditions(self, emitterConditions, emitterLogicalOperators)
-        )
-      ) {
-        matchingShapeIds = checkMultipleShapes(
-          shapesArray,
-          conditionsList,
-          logicalOperatorsList
-        );
-        Scene.matches[ruleId] = matchingShapeIds;
-      }
-      console.log({ matchingShapeIds });
     }
+
     /** SPACE */
   }
 };
