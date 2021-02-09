@@ -1,6 +1,23 @@
 import Scene from "../scenes/scene";
+import ShapesController from "../shapes/ShapesController";
 import { calculateBoolean } from "./maths/operators";
 import { getObjectValueFromString, setObjectValueFromString } from "./objects";
+
+const convertShapeIdsToIndices = ids => {
+  const shapesIndices = [];
+  const shapes = Scene.shapes;
+  ids.forEach(id => {
+    shapes.forEach((shape, index) => {
+      if (shape.id === id) {
+        shapesIndices.push(index);
+      }
+    });
+  });
+  return shapesIndices;
+};
+
+const getShapesFromIds = ids =>
+  ids.map(id => Scene.shapes.filter(shape => shape.id === id)[0]);
 
 const evaluteCondition = (shape, condition) => {
   const { propertyName, comparisonValue, operator } = condition;
@@ -43,9 +60,6 @@ const checkMultipleShapes = (shapes, conditions, logicalOperators) =>
     .filter(shape => evaluteConditions(shape, conditions, logicalOperators))
     .map(({ id }) => id);
 
-const getShapesFromIds = ids =>
-  ids.map(id => Scene.shapes.filter(shape => shape.id === id)[0]);
-
 const evaluateRules = (rules, events, self) => {
   const numOfRules = rules.length;
   const numOfCurrentEvents = events.length;
@@ -60,12 +74,6 @@ const evaluateRules = (rules, events, self) => {
       let logicalOperatorsList = [];
       let matchingShapeIds = [];
 
-      const isComplexRule =
-        ruleType === "oneToMany" ||
-        ruleType === "manyToMany" ||
-        ruleType === "oneToPartner" ||
-        ruleType === "manyToPartner";
-
       const {
         conditions,
         logicalOperators,
@@ -77,6 +85,13 @@ const evaluateRules = (rules, events, self) => {
         eventType,
         id: ruleId
       } = rules[i];
+
+      const isComplexRule =
+        ruleType === "oneToMany" ||
+        ruleType === "manyToMany" ||
+        ruleType === "oneToPartner" ||
+        ruleType === "manyToPartner";
+
       if (eventType === eventBeingChecked) {
         if (ruleType === "oneToOne" || ruleType === "manyToOne") {
           shapesArray = [self];
@@ -93,10 +108,10 @@ const evaluateRules = (rules, events, self) => {
             .filter(pair => pair.some(shapeId => shapeId === self.id))
             .map(pair => (pair[0] !== self.id ? pair[0] : pair[1]));
           partnerShapes = getShapesFromIds(partnerIds);
-          console.log({
-            self: self.id,
-            partnerShapes: partnerShapes.map(({ id }) => id)
-          });
+          // console.log({
+          //   self: self.id,
+          //   partnerShapes: partnerShapes.map(({ id }) => id)
+          // });
           shapesArray = partnerShapes;
         }
 
@@ -116,13 +131,36 @@ const evaluateRules = (rules, events, self) => {
             conditionsList,
             logicalOperatorsList
           );
-          Scene.matches[ruleId] = matchingShapeIds;
+          if (matchingShapeIds.length) {
+            Scene.matches[ruleId] = matchingShapeIds;
+          }
         }
-        console.log({ matchingShapeIds });
+        // console.log({ matchingShapeIds });
       }
     }
 
     /** SPACE */
+  }
+};
+
+const applyRules = scene => {
+  const { matches, rules } = scene;
+  if (Object.keys(matches).length) {
+    console.log("****************rules", rules);
+    console.log("****************matches", matches);
+  }
+
+  for (let ruleId in matches) {
+    const shapeIds = matches[ruleId];
+    const actions = rules.filter(rule => ruleId === rule.id.toString())[0]
+      .actions;
+    const shapes = getShapesFromIds(shapeIds);
+    shapes.forEach(shape => {
+      actions.forEach(action => {
+        const { actionPropertyName, newValue } = action;
+        setObjectValueFromString(shape, actionPropertyName, newValue);
+      });
+    });
   }
 };
 
@@ -137,7 +175,12 @@ function checkEvents(stop) {
       }
     }
     evaluateRules(rules, events, this);
-    console.log("Scene.matches", Scene.matches);
+
+    applyRules(Scene);
+    if (Object.keys(Scene.matches).length) {
+      console.log("Scene.matches", Scene.matches);
+    }
+
     if (stop) {
       Scene.currentEvents = {
         click: { state: false, ids: [] },
