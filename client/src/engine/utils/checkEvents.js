@@ -27,7 +27,74 @@ const evaluteCondition = (shape, condition) => {
   return calculateBoolean(propertyValue, operator, comparisonValue);
 };
 
-const evaluteConditions = (shape, conditions, logicalOperators) => {
+const appendConditionsBasedOnEventype = (
+  eventType,
+  conditions,
+  logicalOperators
+) => {
+  let defaultCondition = {};
+
+  switch (eventType) {
+    case "collision":
+      defaultCondition = {
+        comparisonValue: true,
+        operator: "===",
+        propertyName: "colliding"
+      };
+      break;
+    case "hover":
+      defaultCondition = {
+        comparisonValue: true,
+        operator: "===",
+        propertyName: "onShape"
+      };
+      break;
+    case "drag":
+      defaultCondition = {
+        comparisonValue: true,
+        operator: "===",
+        propertyName: "dragging"
+      };
+      break;
+    case "click":
+      defaultCondition = {
+        comparisonValue: true,
+        operator: "===",
+        propertyName: "onClick"
+      };
+      break;
+    case "doubleClick":
+      defaultCondition = {
+        comparisonValue: true,
+        operator: "===",
+        propertyName: "doubleClick"
+      };
+      break;
+    default:
+      break;
+  }
+
+  const appendedLogicalOperators = ["AND", ...logicalOperators];
+  const appendedCondition = [defaultCondition, ...conditions];
+
+  return [appendedCondition, appendedLogicalOperators];
+};
+
+const evaluteConditions = (
+  shape,
+  eventType,
+  conditionsData,
+  logicalOperatorsData
+) => {
+  const [conditions, logicalOperators] = appendConditionsBasedOnEventype(
+    eventType,
+    conditionsData,
+    logicalOperatorsData
+  );
+
+  console.log({ conditions });
+  console.log({ logicalOperators });
+
   if (conditions.length === 0) {
     return true;
   }
@@ -55,9 +122,11 @@ const evaluteConditions = (shape, conditions, logicalOperators) => {
 };
 
 /** checkMultipleShapes: returns an array of shape ids for shapes that satisfy the conditions */
-const checkMultipleShapes = (shapes, conditions, logicalOperators) =>
+const checkMultipleShapes = (shapes, eventType, conditions, logicalOperators) =>
   shapes
-    .filter(shape => evaluteConditions(shape, conditions, logicalOperators))
+    .filter(shape =>
+      evaluteConditions(shape, eventType, conditions, logicalOperators)
+    )
     .map(({ id }) => id);
 
 const evaluateRules = (rules, events, self) => {
@@ -123,11 +192,17 @@ const evaluateRules = (rules, events, self) => {
         if (
           !(
             isComplexRule === true &&
-            !evaluteConditions(self, emitterConditions, emitterLogicalOperators)
+            !evaluteConditions(
+              self,
+              eventType,
+              emitterConditions,
+              emitterLogicalOperators
+            )
           )
         ) {
           matchingShapeIds = checkMultipleShapes(
             shapesArray,
+            eventType,
             conditionsList,
             logicalOperatorsList
           );
