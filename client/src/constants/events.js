@@ -5,7 +5,8 @@ export const propertyMap = {
   "centreOfMass.x": "centreOfMass.x",
   "centreOfMass.y": "centreOfMass.y",
   "velocity.x": "physics.velocity.x",
-  "velocity.y": "physics.velocity.y"
+  "velocity.y": "physics.velocity.y",
+  id: "id"
 };
 
 export const eventMap = {
@@ -23,8 +24,8 @@ export const propertiesArray = [
   "lineColour"
 ];
 export const operatorsArray = [
-  [">", "greater than"],
-  ["<", "less than"],
   ["===", "equal"],
-  ["!==", "not equal"]
+  ["!==", "not equal"],
+  [">", "greater than"],
+  ["<", "less than"]
 ];

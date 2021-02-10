@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { propertyMap, operatorsArray } from "../../../constants/events";
 
 export const Condition = ({
@@ -7,8 +7,20 @@ export const Condition = ({
   append,
   title,
   remove,
-  register
+  register,
+  selectedShapeId,
+  setValue
 }) => {
+  /**TODO: get the setValue to work for all conditons instead of the just first and also only when the propertyName = 'id' */
+  useEffect(() => {
+    if (selectedShapeId) {
+      setValue(`${conditionType}[0].comparisonValue`, selectedShapeId, {
+        shouldValidate: true,
+        shouldDirty: true
+      });
+    }
+  }, [selectedShapeId, setValue]);
+
   return (
     <div>
       <div className="form-condition-group">
@@ -54,7 +66,7 @@ export const Condition = ({
                     </option>
                   ))}
                 </select>
-                <label>Comparison:</label>{" "}
+                <label>Comparison:</label>
                 <input
                   ref={register()}
                   name={`${conditionType}[${index}].comparisonValue`}
@@ -87,11 +99,13 @@ export const Action = ({ fields, actionName, append, remove, register }) => {
               name={`${actionName}[${index}].actionPropertyName`}
               defaultValue={field.actionPropertyName}
             >
-              {Object.entries(propertyMap).map(prop => (
-                <option key={prop[0]} value={prop[1]}>
-                  {prop[0]}
-                </option>
-              ))}
+              {Object.entries(propertyMap)
+                .filter(prop => prop[0] !== "id")
+                .map(prop => (
+                  <option key={prop[0]} value={prop[1]}>
+                    {prop[0]}
+                  </option>
+                ))}
             </select>
             <label>New Value:</label>
             <input

@@ -69,11 +69,21 @@ const EventForm = ({
   };
 
   const onSubmit = ruleData => {
+    const { conditions } = ruleData;
+    /** TODO: Find a better fix to the following problem: the form keeps converting the comparison value into a string */
+    if (conditions && conditions.length) {
+      const updatedCondtion = conditions.map(condition =>
+        condition.propertyName === "id" && condition.comparisonValue
+          ? { ...condition, comparisonValue: Number(condition.comparisonValue) }
+          : condition
+      );
+      ruleData.conditions = updatedCondtion;
+    }
     /**Add id because form data doesn't have an id */
     applyRule({ ...ruleData, id: rule.id });
   };
 
-  const { register, handleSubmit, watch, errors, control } = useForm({
+  const { register, handleSubmit, watch, errors, control, setValue } = useForm({
     defaultValues: rule
   });
 
@@ -169,6 +179,8 @@ const EventForm = ({
             append={append}
             remove={remove}
             register={register}
+            selectedShapeId={selectedShapeId}
+            setValue={setValue}
           />
         )}
         {!showSimpleConditions && (
@@ -180,6 +192,8 @@ const EventForm = ({
               append={emitterAppend}
               remove={emitterRemove}
               register={register}
+              selectedShapeId={selectedShapeId}
+              setValue={setValue}
             />
             <Condition
               title="Receiver"
@@ -188,6 +202,8 @@ const EventForm = ({
               append={receiverAppend}
               remove={receiverRemove}
               register={register}
+              selectedShapeId={selectedShapeId}
+              setValue={setValue}
             />
           </div>
         )}
