@@ -92,9 +92,6 @@ const evaluteConditions = (
     logicalOperatorsData
   );
 
-  console.log({ conditions });
-  console.log({ logicalOperators });
-
   if (conditions.length === 0) {
     return true;
   }

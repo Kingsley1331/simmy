@@ -73,7 +73,9 @@ const EventForm = ({
     /** TODO: Find a better fix to the following problem: the form keeps converting the comparison value into a string */
     if (conditions && conditions.length) {
       const updatedCondtion = conditions.map(condition =>
-        condition.propertyName === "id" && condition.comparisonValue
+        (condition.propertyName === "id" ||
+          condition.propertyName === "linewidth") &&
+        condition.comparisonValue
           ? { ...condition, comparisonValue: Number(condition.comparisonValue) }
           : condition
       );
