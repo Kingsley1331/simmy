@@ -20,9 +20,21 @@ const getShapesFromIds = ids =>
   ids.map(id => Scene.shapes.filter(shape => shape.id === id)[0]);
 
 const evaluteCondition = (shape, condition) => {
-  const { propertyName, comparisonValue, operator } = condition;
+  let { propertyName, comparisonValue, operator } = condition;
 
   const propertyValue = getObjectValueFromString(shape, propertyName);
+
+  if (propertyName === "id") {
+    comparisonValue = Number(comparisonValue);
+  }
+
+  // if (shape.id === 1) {
+  //   console.log("conditions", condition);
+  //   console.log(
+  //     "boolean",
+  //     calculateBoolean(propertyValue, operator, comparisonValue)
+  //   );
+  // }
 
   return calculateBoolean(propertyValue, operator, comparisonValue);
 };
@@ -84,29 +96,37 @@ const evaluteConditions = (
   shape,
   eventType,
   conditionsData,
-  logicalOperatorsData
+  logicalOperatorsData,
+  isEmitter
 ) => {
-  const [conditions, logicalOperators] = appendConditionsBasedOnEventype(
-    eventType,
-    conditionsData,
-    logicalOperatorsData
-  );
+  let [conditions, logicalOperators] = [conditionsData, logicalOperatorsData];
 
-  if (conditions.length === 0) {
+  // const [conditions, logicalOperators] = appendConditionsBasedOnEventype(
+  //   eventType,
+  //   conditionsData,
+  //   logicalOperatorsData
+  // );
+
+  /** TODO: need to find a better condition */
+
+  if (
+    (isEmitter && conditions.length === 1) ||
+    (!isEmitter && conditions.length === 0)
+  ) {
+    // if (conditions.length === 1) {
+    // if (conditionsData.length === 0) {
+    // if (conditions.length === 0) {
     return true;
-  }
-
-  if (conditions.length === 1) {
-    const { propertyName, comparisonValue, operator } = conditions[0];
-
-    const propertyValue = getObjectValueFromString(shape, propertyName);
-
-    return calculateBoolean(propertyValue, operator, comparisonValue);
   }
 
   const conditionTestResults = conditions.map(condition =>
     evaluteCondition(shape, condition)
   );
+
+  if (shape.id === 6) {
+    console.log("conditions", conditions);
+    console.log("conditionTestResults", conditionTestResults);
+  }
 
   const passesTest = conditionTestResults.reduce(
     (cumulativeResult, result, index) => {
@@ -119,12 +139,36 @@ const evaluteConditions = (
 };
 
 /** checkMultipleShapes: returns an array of shape ids for shapes that satisfy the conditions */
-const checkMultipleShapes = (shapes, eventType, conditions, logicalOperators) =>
-  shapes
-    .filter(shape =>
-      evaluteConditions(shape, eventType, conditions, logicalOperators)
-    )
-    .map(({ id }) => id);
+const checkMultipleShapes = (
+  shapes,
+  eventType,
+  conditions,
+  logicalOperators
+) => {
+  console.log({ shapes, eventType, conditions, logicalOperators });
+
+  const filteredShapes = shapes.filter(shape =>
+    evaluteConditions(shape, eventType, conditions, logicalOperators)
+  );
+
+  console.log("filteredShapes", filteredShapes);
+  if (filteredShapes.length) {
+    console.log(
+      "88888888888888888888888888888888888888888888888888888888888888888888888888888888888"
+    );
+  }
+
+  const matchingShapes = filteredShapes.map(({ id }) => id);
+  // console.log("matchingShapes", matchingShapes);
+  return matchingShapes;
+};
+
+// const checkMultipleShapes = (shapes, eventType, conditions, logicalOperators) =>
+//   shapes
+//     .filter(shape =>
+//       evaluteConditions(shape, eventType, conditions, logicalOperators)
+//     )
+//     .map(({ id }) => id);
 
 const evaluateRules = (rules, events, self) => {
   const numOfRules = rules.length;
@@ -140,7 +184,7 @@ const evaluateRules = (rules, events, self) => {
       let logicalOperatorsList = [];
       let matchingShapeIds = [];
 
-      const {
+      let {
         conditions,
         logicalOperators,
         emitterConditions,
@@ -152,14 +196,36 @@ const evaluateRules = (rules, events, self) => {
         id: ruleId
       } = rules[i];
 
+      if (conditions) {
+        [conditions, logicalOperators] = appendConditionsBasedOnEventype(
+          eventType,
+          conditions,
+          logicalOperators
+        );
+      }
+
+      if (emitterConditions) {
+        [
+          emitterConditions,
+          emitterLogicalOperators
+        ] = appendConditionsBasedOnEventype(
+          eventType,
+          emitterConditions,
+          emitterLogicalOperators
+        );
+      }
+
       const isComplexRule =
         ruleType === "oneToMany" ||
         ruleType === "manyToMany" ||
         ruleType === "oneToPartner" ||
         ruleType === "manyToPartner";
 
+      /** Set shapesArray: the list of shapes that will receive the action (if they match) */
+
       if (eventType === eventBeingChecked) {
-        if (ruleType === "oneToOne" || ruleType === "manyToOne") {
+        // if (ruleType === "oneToOne" || ruleType === "manyToOne") {
+        if (!isComplexRule) {
           shapesArray = [self];
           conditionsList = conditions;
           logicalOperatorsList = logicalOperators;
@@ -185,7 +251,9 @@ const evaluateRules = (rules, events, self) => {
           conditionsList = receiverConditions;
           logicalOperatorsList = receiverLogicalOperators;
         }
-
+        /** Check if the emitting shape (self) passes the emitter conditions
+         *  and then check multiple shapes i.e all other shapes against the reiverConditions
+         *  place the ids of all matching shapes into the Scene.matches array */
         if (
           !(
             isComplexRule === true &&
@@ -193,7 +261,8 @@ const evaluateRules = (rules, events, self) => {
               self,
               eventType,
               emitterConditions,
-              emitterLogicalOperators
+              emitterLogicalOperators,
+              true
             )
           )
         ) {
@@ -203,6 +272,13 @@ const evaluateRules = (rules, events, self) => {
             conditionsList,
             logicalOperatorsList
           );
+
+          // console.log(
+          //   "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+          //   shapesArray,
+          //   matchingShapeIds
+          // );
+
           if (matchingShapeIds.length) {
             Scene.matches[ruleId] = matchingShapeIds;
           }
@@ -269,3 +345,10 @@ function checkEvents(stop) {
 }
 
 export default checkEvents;
+
+/**
+ * Next steps
+ * Understand how emitter conditions are being checked
+ * Debug oneToMany | Hover | conditions
+ *
+ */
