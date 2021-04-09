@@ -110,12 +110,6 @@ const evaluteConditions = (
     evaluteCondition(shape, condition)
   );
 
-  if (shape.id === 1) {
-    console.log({ shape });
-    console.log({ conditions, logicalOperators });
-    console.log({ conditionTestResults });
-  }
-
   const passesTest = conditionTestResults.reduce(
     (cumulativeResult, result, index) => {
       const logicalOperator = logicalOperators[index - 1];
