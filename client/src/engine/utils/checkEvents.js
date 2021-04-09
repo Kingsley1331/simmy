@@ -28,14 +28,6 @@ const evaluteCondition = (shape, condition) => {
     comparisonValue = Number(comparisonValue);
   }
 
-  // if (shape.id === 1) {
-  //   console.log("conditions", condition);
-  //   console.log(
-  //     "boolean",
-  //     calculateBoolean(propertyValue, operator, comparisonValue)
-  //   );
-  // }
-
   return calculateBoolean(propertyValue, operator, comparisonValue);
 };
 
@@ -94,18 +86,11 @@ const appendConditionsBasedOnEventype = (
 
 const evaluteConditions = (
   shape,
-  eventType,
   conditionsData,
   logicalOperatorsData,
   isEmitter
 ) => {
   let [conditions, logicalOperators] = [conditionsData, logicalOperatorsData];
-
-  // const [conditions, logicalOperators] = appendConditionsBasedOnEventype(
-  //   eventType,
-  //   conditionsData,
-  //   logicalOperatorsData
-  // );
 
   /** TODO: need to find a better condition */
 
@@ -113,20 +98,12 @@ const evaluteConditions = (
     (isEmitter && conditions.length === 1) ||
     (!isEmitter && conditions.length === 0)
   ) {
-    // if (conditions.length === 1) {
-    // if (conditionsData.length === 0) {
-    // if (conditions.length === 0) {
     return true;
   }
 
   const conditionTestResults = conditions.map(condition =>
     evaluteCondition(shape, condition)
   );
-
-  if (shape.id === 6) {
-    console.log("conditions", conditions);
-    console.log("conditionTestResults", conditionTestResults);
-  }
 
   const passesTest = conditionTestResults.reduce(
     (cumulativeResult, result, index) => {
@@ -139,36 +116,15 @@ const evaluteConditions = (
 };
 
 /** checkMultipleShapes: returns an array of shape ids for shapes that satisfy the conditions */
-const checkMultipleShapes = (
-  shapes,
-  eventType,
-  conditions,
-  logicalOperators
-) => {
-  console.log({ shapes, eventType, conditions, logicalOperators });
-
+const checkMultipleShapes = (shapes, conditions, logicalOperators) => {
   const filteredShapes = shapes.filter(shape =>
-    evaluteConditions(shape, eventType, conditions, logicalOperators)
+    evaluteConditions(shape, conditions, logicalOperators)
   );
-
-  console.log("filteredShapes", filteredShapes);
-  if (filteredShapes.length) {
-    console.log(
-      "88888888888888888888888888888888888888888888888888888888888888888888888888888888888"
-    );
-  }
 
   const matchingShapes = filteredShapes.map(({ id }) => id);
   // console.log("matchingShapes", matchingShapes);
   return matchingShapes;
 };
-
-// const checkMultipleShapes = (shapes, eventType, conditions, logicalOperators) =>
-//   shapes
-//     .filter(shape =>
-//       evaluteConditions(shape, eventType, conditions, logicalOperators)
-//     )
-//     .map(({ id }) => id);
 
 const evaluateRules = (rules, events, self) => {
   const numOfRules = rules.length;
@@ -259,7 +215,6 @@ const evaluateRules = (rules, events, self) => {
             isComplexRule === true &&
             !evaluteConditions(
               self,
-              eventType,
               emitterConditions,
               emitterLogicalOperators,
               true
@@ -268,26 +223,16 @@ const evaluateRules = (rules, events, self) => {
         ) {
           matchingShapeIds = checkMultipleShapes(
             shapesArray,
-            eventType,
             conditionsList,
             logicalOperatorsList
           );
-
-          // console.log(
-          //   "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-          //   shapesArray,
-          //   matchingShapeIds
-          // );
 
           if (matchingShapeIds.length) {
             Scene.matches[ruleId] = matchingShapeIds;
           }
         }
-        // console.log({ matchingShapeIds });
       }
     }
-
-    /** SPACE */
   }
 };
 
@@ -345,10 +290,3 @@ function checkEvents(stop) {
 }
 
 export default checkEvents;
-
-/**
- * Next steps
- * Understand how emitter conditions are being checked
- * Debug oneToMany | Hover | conditions
- *
- */
