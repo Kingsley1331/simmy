@@ -22,11 +22,16 @@ const getShapesFromIds = ids =>
 const evaluteCondition = (shape, condition) => {
   let { propertyName, comparisonValue, operator } = condition;
 
-  const propertyValue = getObjectValueFromString(shape, propertyName);
+  /**TODO: Fix the bugs that make the 2 propertyName conditions below necessary */
+  if (propertyName === "lineColour") {
+    propertyName = "strokeStyle";
+  }
 
-  if (propertyName === "id") {
+  if (propertyName === "id" || propertyName === "linewidth") {
     comparisonValue = Number(comparisonValue);
   }
+
+  const propertyValue = getObjectValueFromString(shape, propertyName);
 
   return calculateBoolean(propertyValue, operator, comparisonValue);
 };
@@ -104,6 +109,12 @@ const evaluteConditions = (
   const conditionTestResults = conditions.map(condition =>
     evaluteCondition(shape, condition)
   );
+
+  if (shape.id === 1) {
+    console.log({ shape });
+    console.log({ conditions, logicalOperators });
+    console.log({ conditionTestResults });
+  }
 
   const passesTest = conditionTestResults.reduce(
     (cumulativeResult, result, index) => {
