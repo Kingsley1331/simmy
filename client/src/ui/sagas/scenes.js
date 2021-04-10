@@ -1,6 +1,6 @@
 import { takeEvery, put, call } from "redux-saga/effects";
 import axios from "axios";
-import { TEMP_physicsBugIds, TEMP_showbugs } from "../../constants/bugs";
+import { TEMP_physicsBugIds, TEMP_EventTestIds } from "../../constants/bugs";
 
 export const getScene = path => axios.get(path);
 
@@ -37,16 +37,15 @@ export function* getSceneId({ type, sceneId }) {
 export function* getAllscenes() {
   const scenes = yield axios.get("/allscenes/");
   const { data } = scenes;
-  const TEMP_filteredScenes = data.filter(
-    scene => !TEMP_physicsBugIds.includes(scene._id)
-  );
-  const scenesData = TEMP_showbugs ? data : TEMP_filteredScenes;
+
+  const filteredData = data
+    .filter(scene => !TEMP_physicsBugIds.includes(scene._id))
+    .filter(scene => !TEMP_EventTestIds.includes(scene._id));
 
   try {
     yield put({
       type: "GET_SCENES",
-      payload: scenesData
-      // payload: scenes.data,
+      payload: filteredData
     });
   } catch (error) {
     yield put({ type: "ERROR", payload: error });
