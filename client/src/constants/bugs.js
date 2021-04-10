@@ -1,5 +1,5 @@
-const TEMP_showbugs = false;
-const TEMP_showEventsTests = true;
+const TEMP_showbugs = true;
+const TEMP_showEventsTests = false;
 
 export const TEMP_physicsBugIds = TEMP_showbugs
   ? []
