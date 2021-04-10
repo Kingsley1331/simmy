@@ -216,6 +216,7 @@ const evaluateRules = (rules, events, self) => {
          *  and then check multiple shapes i.e all other shapes against the reiverConditions
          *  place the ids of all matching shapes into the Scene.matches array */
         if (
+          /**TODO: Rewrite this condition */
           !(
             isComplexRule === true &&
             !evaluteConditions(
