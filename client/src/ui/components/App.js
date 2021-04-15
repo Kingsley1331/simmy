@@ -24,8 +24,7 @@ const App = ({ fetchCurrentUser }) => {
           <Route path="/users" component={Users} />
           <Route path="/demos" component={Demos} />
           <Route path="/about" component={About} />
-          <Route exact path="/_scenes" component={Scenes} />
-          <Route path="/_scenes/:sceneId" component={Scenes} />
+          <Route path="/_scenes/:sceneId?" component={Scenes} />
           <Route path="/Profile" component={Profile} />
         </div>
       </BrowserRouter>
