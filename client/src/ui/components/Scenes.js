@@ -18,6 +18,7 @@ import {
 import animate from "../../engine/utils/animation";
 import ShapeManager from "./data_control/ShapeManager";
 import ColourPalette from "./data_control/ColourPalette";
+import { fetchSceneData } from "../actions/";
 
 let canvas;
 
@@ -28,13 +29,29 @@ const Scenes = ({
   selectedEvent,
   scene,
   clearScene,
-  buttons
-  /*fetchScene*/
+  buttons,
+  match,
+  fetchScene,
+  onfetchSceneData,
+  history
 }) => {
   const [formRules, setFormRules] = useState([]);
   const [selected, setSelected] = useState();
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
-  console.log({ scene });
+  const {
+    params: { sceneId }
+  } = match;
+  // console.log({ sceneId });
+  console.log({ onfetchSceneData });
+
+  useEffect(() => {
+    // setTimeout(() => fetchScene(sceneId), 2000);
+    // fetchScene(sceneId);
+    onfetchSceneData(sceneId);
+    console.log(
+      "============================================================sceneId"
+    );
+  }, [onfetchSceneData, sceneId]);
 
   useEffect(() => {
     for (let button in buttons) {
@@ -85,7 +102,7 @@ const Scenes = ({
       createWall(canvas, 250);
     }
     updateScene(scene);
-  }, [selectShape, addRules, selectedEvent]);
+  }, [selectShape, addRules, selectedEvent, scene]);
 
   useEffect(() => {
     doubleClick(canvas, selectShape, addRules, selectedEvent);
@@ -159,10 +176,10 @@ const mapDispatchToProps = dispatch => {
     clearScene: () => {
       dispatch({ type: "GET_SCENE", payload: {} });
     },
-    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
-    /*fetchScene: sceneId => dispatch({ type: "GET_SCENE_ID", sceneId })*/
+    addRules: rules => dispatch({ type: "ADD_RULES", payload: rules }),
+    onfetchSceneData: sceneId => dispatch(fetchSceneData(sceneId))
+    /* fetchScene: sceneId => dispatch({ type: "GET_SCENE_ID", sceneId })*/
   };
 };
 
-// export default connect(mapStateToProps)(Scenes);
 export default connect(mapStateToProps, mapDispatchToProps)(Scenes);

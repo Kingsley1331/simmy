@@ -16,19 +16,19 @@ export function* deleteScene(sceneId) {
     yield put({ type: "ERROR", payload: error });
   }
 }
-
+/*
 export function* sceneSaga(sceneId) {
   const scene = yield getScene(`/scene/${sceneId}`);
   yield put({
     type: "GET_SCENE",
     payload: scene.data
   });
-}
+}*/
 
 export function* getSceneId({ type, sceneId }) {
-  if (type === "GET_SCENE_ID") {
+  /*if (type === "GET_SCENE_ID") {
     yield sceneSaga(sceneId);
-  }
+  }*/
   if (type === "DELETE_SCENE") {
     yield deleteScene(sceneId);
   }
@@ -54,6 +54,6 @@ export function* getAllscenes() {
 
 export function* scenesSaga() {
   yield call(getAllscenes);
-  yield takeEvery("GET_SCENE_ID", getSceneId);
+  /*yield takeEvery("GET_SCENE_ID", getSceneId);*/
   yield takeEvery("DELETE_SCENE", getSceneId);
 }

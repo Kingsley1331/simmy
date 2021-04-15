@@ -14,7 +14,7 @@ const Buttons = ({ buttons, selectShape, setManagedShapeIndex }) => {
           key={name}
           alt={`${name} button`}
           id={name}
-          src={`images/${name}.png`}
+          src={`../images/${name}.png`}
           width={width}
           selected={buttons[name]}
           selectShape={() => {

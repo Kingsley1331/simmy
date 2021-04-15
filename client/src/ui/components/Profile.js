@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 // import { fetchScenes, fetchScene, deleteScene } from "../actions/scenes";
 
 class Profile extends Component {
@@ -11,12 +12,6 @@ class Profile extends Component {
     console.log("prevProps", prevProps.scene.shapes);
     console.log("props =>", this.props.scene.shapes);
   }
-
-  fetchScene = sceneId => {
-    const { fetchScene, history } = this.props;
-    fetchScene(sceneId);
-    setTimeout(() => history.replace("/_scenes"), 1500);
-  };
 
   deleteScene = sceneId => {
     const { deleteScene } = this.props;
@@ -35,12 +30,9 @@ class Profile extends Component {
           <tr key={scene._id}>
             <td>{scene.name || scene._id}</td>
             <td>
-              <img
-                onClick={() => this.fetchScene(scene._id)}
-                src={scene.imageURL}
-                alt="thumbnail"
-                width="200"
-              />
+              <Link to={`/_scenes/${scene._id}`}>
+                <img src={scene.imageURL} alt="thumbnail" width="200" />
+              </Link>
             </td>
             <td>
               <button

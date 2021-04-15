@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { FETCH_CURRENT_USER } from './types';
+import axios from "axios";
+import { FETCH_CURRENT_USER } from "./types";
 
 // export const fetchCurrentUser = () => {
 //   return function(dispatch) {
@@ -10,6 +10,11 @@ import { FETCH_CURRENT_USER } from './types';
 // };
 
 export const fetchCurrentUser = () => async dispatch => {
-  const res = await axios.get('/api/current_user');
+  const res = await axios.get("/api/current_user");
   dispatch({ type: FETCH_CURRENT_USER, payload: res.data });
+};
+
+export const fetchSceneData = sceneId => async dispatch => {
+  const scene = await axios.get(`/scene/${sceneId}`);
+  dispatch({ type: "GET_SCENE", payload: scene.data });
 };
