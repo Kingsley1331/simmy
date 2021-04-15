@@ -3,10 +3,10 @@ const displayConfig = {
   shape: {
     id: true,
     index: false,
-    collisionPoint: false,
-    collidinSide: false,
+    collisionPoint: true,
+    collidinSide: true,
     boundingRect: false,
-    normal: false,
+    normal: true,
     collisionPointVA: false,
     collisionPointVB: false,
     showCentreOfMass: false,

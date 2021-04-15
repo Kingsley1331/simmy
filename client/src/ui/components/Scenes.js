@@ -20,45 +20,6 @@ import ShapeManager from "./data_control/ShapeManager";
 import ColourPalette from "./data_control/ColourPalette";
 
 let canvas;
-/**TODO: place in new utility file e.g rulesAndFormIntegration.js  */
-// const convertSceneRulesToFormRules = (rules) => {
-//   console.log("scene.rules", rules);
-//   const convertedRules = [];
-//   const numOfRules = rules.length;
-//   for (let i = 0; i < numOfRules; i++) {
-//     const rule = rules[i];
-//     const convertedRule = { ...rule };
-//     const conditionTypeList = [
-//       ["conditions", "logicalOperators"],
-//       ["emitterConditions", "emitterLogicalOperators"],
-//       ["receiverConditions", "receiverLogicalOperators"],
-//     ];
-//     const numOfConditionTypes = conditionTypeList.length;
-//     for (let j = 0; j < numOfConditionTypes; j++) {
-//       const conditionType = conditionTypeList[j][0];
-//       const operatorType = conditionTypeList[j][1];
-
-//       if (convertedRule[conditionType]) {
-//         const operators = convertedRule[operatorType];
-//         const conditions = convertedRule[conditionType];
-//         const convertedConditions = conditions.map((condition, idx) => {
-//           const newCondition = {
-//             ...condition,
-//           };
-//           if (idx > 0) {
-//             newCondition.logicalOperator = operators[idx - 1];
-//           }
-//           return newCondition;
-//         });
-//         convertedRule[conditionType] = convertedConditions;
-//         delete convertedRule[operatorType];
-//       }
-//     }
-//     convertedRules.push(convertedRule);
-//   }
-//   console.log("convertedRules", convertedRules);
-//   return convertedRules;
-// };
 
 const Scenes = ({
   selectShape,
@@ -68,10 +29,12 @@ const Scenes = ({
   scene,
   clearScene,
   buttons
+  /*fetchScene*/
 }) => {
   const [formRules, setFormRules] = useState([]);
   const [selected, setSelected] = useState();
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
+  console.log({ scene });
 
   useEffect(() => {
     for (let button in buttons) {
@@ -100,6 +63,10 @@ const Scenes = ({
   const addRule = () => {
     const id = new Date().getTime();
     setFormRules(rulesArray => [...rulesArray, { id }]);
+  };
+
+  const resetScene = () => {
+    updateScene(scene);
   };
 
   useEffect(() => {
@@ -134,6 +101,18 @@ const Scenes = ({
 
   return (
     <div className="scenesWrapper">
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "center"
+        }}
+      >
+        <h3 style={{ color: "blue", margin: "5px auto" }}>
+          {scene.name || "Untitled"}
+        </h3>
+      </div>
+
       <div className="canvasWrapper">
         <Buttons setManagedShapeIndex={setManagedShapeIdx} />
         <canvas id="canvas" width="1200" height="700" />
@@ -142,6 +121,7 @@ const Scenes = ({
 
         {/* <canvas id="canvas" width="1000" height="600" /> */}
       </div>
+
       {selected === "colour" && <ColourPalette />}
       {formRules.map((rule, index) => (
         <EventForm key={rule.id} rule={rule} setFormRules={setFormRules} />
@@ -149,6 +129,11 @@ const Scenes = ({
       <button className="add_rule" onClick={addRule}>
         Add rule
       </button>
+
+      <button className="reset" onClick={resetScene}>
+        Reset scene
+      </button>
+      <br></br>
       {selected === "manageShape" && managedShapeIndex !== null && (
         <ShapeManager shapeIndex={managedShapeIndex} />
       )}
@@ -175,6 +160,7 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: "GET_SCENE", payload: {} });
     },
     addRules: rules => dispatch({ type: "ADD_RULES", payload: rules })
+    /*fetchScene: sceneId => dispatch({ type: "GET_SCENE_ID", sceneId })*/
   };
 };
 

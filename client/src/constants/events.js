@@ -16,6 +16,7 @@ export const eventMap = {
   click: "click",
   "double click": "doubleClick"
 };
+
 export const propertiesArray = [
   "velocity.x",
   "velocity.y",
@@ -23,6 +24,7 @@ export const propertiesArray = [
   "linewidth",
   "lineColour"
 ];
+
 export const operatorsArray = [
   ["===", "equal"],
   ["!==", "not equal"],
