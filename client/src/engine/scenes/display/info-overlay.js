@@ -231,7 +231,7 @@ export const displaySceneInfo = bufferCtx => {
   }
 
   if (steps) {
-    screenWriter(bufferCtx, Scene.time / Scene.timeStep, {
+    screenWriter(bufferCtx, Scene.time / Math.abs(Scene.timeStep), {
       x: 900,
       y: 20
     });

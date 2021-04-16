@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Scene from "../../engine/scenes/scene";
 import Buttons from "./buttons/";
 import EventForm from "./events/EventForm";
-import updateScene from "../../engine/scenes/updateScene";
+import updateScene, { reverseScene } from "../../engine/scenes/updateScene";
 import { clearShapes, shapeSelection } from "../../engine/shapes/shapes";
 import { createWall } from "../../engine/shapes/walls";
 import reCentre from "../../engine/shapes/reCentre";
@@ -43,8 +43,6 @@ const Scenes = ({
   const {
     params: { sceneId }
   } = match;
-  // console.log({ sceneId });
-  console.log({ onfetchSceneData });
 
   useEffect(() => {
     onfetchSceneData(sceneId);
@@ -82,6 +80,9 @@ const Scenes = ({
   const resetScene = () => {
     Scene.shapes = [];
     updateScene(scene);
+  };
+  const reverse = () => {
+    reverseScene(Scene.shapes);
   };
 
   useEffect(() => {
@@ -141,6 +142,13 @@ const Scenes = ({
           onClick={resetScene}
         >
           Reset scene
+        </button>
+        <button
+          style={{ position: "absolute", top: "5px", left: "100px" }}
+          className="reset"
+          onClick={reverse}
+        >
+          Reverse scene
         </button>
       </div>
 

@@ -1,15 +1,15 @@
 const displayConfig = {
   scene: { mousePos: true, time: true, steps: true },
   shape: {
-    id: true,
+    id: false,
     index: false,
-    collisionPoint: true,
-    collidinSide: true,
+    collisionPoint: false,
+    collidinSide: false,
     boundingRect: false,
     normal: true,
     collisionPointVA: false,
     collisionPointVB: false,
-    showCentreOfMass: true,
+    showCentreOfMass: false,
     showCentreOfRotation: false,
     showBoundingRectCentre: false
   }

@@ -40,7 +40,6 @@ import {
 import { colourMousedown } from "../canvasEvents/handlers/colour";
 import { manageShapeMousedown } from "../canvasEvents/handlers/manageShape";
 
-const timeStep = Scene.timeStep;
 export const click = element => {
   element.addEventListener(
     "click",
@@ -91,13 +90,21 @@ export const mouseDown = (element, setManagedShapeIndex) => {
     "mousedown",
     evt => {
       // Scene.currentEvents.click.state = true;
+      const timeStep = Scene.timeStep;
+
       if (Scene.selected === "step") {
-        Scene.time += timeStep;
-        forEachShape(function(i) {
-          applyMotion(i, timeStep);
-          applyForces(i);
-        });
-        collisionDetector();
+        if (Scene.time > 0) {
+          forEachShape(function(i) {
+            applyMotion(i, timeStep);
+            applyForces(i);
+          });
+          collisionDetector();
+        }
+        if (Scene.time + timeStep > 0) {
+          Scene.time += timeStep;
+        } else {
+          Scene.time = 0;
+        }
       }
 
       let mousePos = getMousePos(evt, element);

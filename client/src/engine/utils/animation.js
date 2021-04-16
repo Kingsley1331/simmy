@@ -29,13 +29,19 @@ export default function animate() {
   let shapes = Scene.shapes;
   let numShapes = shapes.length;
   if (Scene.selected === "play") {
-    forEachShape(function(i) {
-      applyMotion(i, timeStep);
-      applyForces(i);
-    });
-    /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
-    collisionDetector();
-
+    if (Scene.time > 0) {
+      forEachShape(function(i) {
+        applyMotion(i, timeStep);
+        applyForces(i);
+      });
+      /** TODO check if collisionDetector can be moved inside the forEachShape callback **/
+      collisionDetector();
+    }
+    if (Scene.time + timeStep > 0) {
+      Scene.time += timeStep;
+    } else {
+      Scene.time = 0;
+    }
     forEachShape(function(i) {
       const shapeId = ShapesController.getProperty(i, "id");
       if (ShapesController.getProperty(i, "colliding")) {
@@ -57,7 +63,6 @@ export default function animate() {
     forEachShape(function(i) {
       ShapesController.checkEvents(i, i === numShapes - 1);
     });
-    Scene.time += timeStep;
   }
   if (canvas) {
     draw(canvas, Scene);

@@ -58,3 +58,12 @@ export default function updateScene(scene) {
     console.log("updated scene", Scene);
   }
 }
+
+export function reverseScene(shapes) {
+  Scene.timeStep *= -1;
+  for (let i = 0; i < shapes.length; i++) {
+    Scene.shapes[i].physics.velocity.x *= -1;
+    Scene.shapes[i].physics.velocity.y *= -1;
+    Scene.shapes[i].physics.angularVelocity *= -1;
+  }
+}

@@ -3,6 +3,7 @@ import ShapesController from "../../shapes/ShapesController";
 import { rotateShape } from "../../utils/maths/Vector";
 
 export function applyMotion(i, tDelta) {
+  tDelta = Math.abs(tDelta);
   const velFactor = 0.1;
   // if(selectedShape === 'play'){
   if (Scene.selected === "play" || Scene.selected === "step") {
