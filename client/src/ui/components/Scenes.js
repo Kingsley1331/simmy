@@ -117,14 +117,21 @@ const Scenes = ({
     <div className="scenesWrapper">
       <div
         style={{
+          position: "relative",
           display: "flex",
-          width: "100%",
-          justifyContent: "center"
+          width: "100%"
         }}
       >
         <h3 style={{ color: "blue", margin: "5px auto" }}>
           {scene.name || "Untitled"}
         </h3>
+        <button
+          style={{ position: "absolute", top: "5px" }}
+          className="reset"
+          onClick={resetScene}
+        >
+          Reset scene
+        </button>
       </div>
 
       <div className="canvasWrapper">
@@ -142,10 +149,6 @@ const Scenes = ({
       ))}
       <button className="add_rule" onClick={addRule}>
         Add rule
-      </button>
-
-      <button className="reset" onClick={resetScene}>
-        Reset scene
       </button>
       <br></br>
       {selected === "manageShape" && managedShapeIndex !== null && (
