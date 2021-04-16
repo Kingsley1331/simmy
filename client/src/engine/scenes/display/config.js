@@ -9,7 +9,7 @@ const displayConfig = {
     normal: true,
     collisionPointVA: false,
     collisionPointVB: false,
-    showCentreOfMass: false,
+    showCentreOfMass: true,
     showCentreOfRotation: false,
     showBoundingRectCentre: false
   }

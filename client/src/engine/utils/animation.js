@@ -26,15 +26,10 @@ export default function animate() {
   /** TODO: store canvas globally in Scene to make it less expensive **/
   /** TODO: destrucure Scene object **/
   canvas = document.getElementById("canvas");
-  var date = new Date();
-  var currentTime = date.getTime();
-  let time = Scene.time;
-  var tDelta = currentTime - time;
   let shapes = Scene.shapes;
   let numShapes = shapes.length;
   if (Scene.selected === "play") {
     forEachShape(function(i) {
-      // applyMotion(i, tDelta);
       applyMotion(i, timeStep);
       applyForces(i);
     });
@@ -57,17 +52,15 @@ export default function animate() {
       }
     });
     /** Note: Its important that checkEvents runs after collisionDetector and the Scene.currentEvents
-      settings, because it needs all of those setting to be complete before it runs
+      settings, because it needs all of those settings to be complete before it runs
      */
     forEachShape(function(i) {
       ShapesController.checkEvents(i, i === numShapes - 1);
     });
-
     Scene.time += timeStep;
   }
   if (canvas) {
     draw(canvas, Scene);
   }
   window.requestAnimFrame(animate);
-  // Scene.time += currentTime;
 }

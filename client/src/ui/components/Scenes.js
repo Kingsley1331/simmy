@@ -39,6 +39,7 @@ const Scenes = ({
   const [formRules, setFormRules] = useState([]);
   const [selected, setSelected] = useState();
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
+  const [areListenersOn, setAreListenersOn] = useState(false);
   const {
     params: { sceneId }
   } = match;
@@ -85,21 +86,30 @@ const Scenes = ({
 
   useEffect(() => {
     /** TODO: move functions into single index file and import **/
-
     canvas = document.getElementById("canvas");
-    animate();
-    mouseDown(canvas, setManagedShapeIdx);
-    mouseMove(canvas);
-    mouseUp(canvas);
-    doubleClick(canvas, selectShape, addRules, selectedEvent);
-    click(canvas);
-    rightClick(canvas);
-    reCentre(shapeSelection);
-    if (!Object.keys(scene).length) {
-      createWall(canvas, 250);
+    if (!areListenersOn) {
+      animate();
+      mouseDown(canvas, setManagedShapeIdx);
+      mouseMove(canvas);
+      mouseUp(canvas);
+      doubleClick(canvas, selectShape, addRules, selectedEvent);
+      click(canvas);
+      rightClick(canvas);
+      reCentre(shapeSelection);
+      if (!Object.keys(scene).length) {
+        createWall(canvas, 250);
+      }
+      setAreListenersOn(true);
     }
     updateScene(scene);
-  }, [selectShape, addRules, selectedEvent, scene]);
+  }, [
+    selectShape,
+    addRules,
+    selectedEvent,
+    scene,
+    areListenersOn,
+    setAreListenersOn
+  ]);
 
   useEffect(() => {
     doubleClick(canvas, selectShape, addRules, selectedEvent);
