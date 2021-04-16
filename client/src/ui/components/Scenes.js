@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { connect } from "react-redux";
+import Scene from "../../engine/scenes/scene";
 import Buttons from "./buttons/";
 import EventForm from "./events/EventForm";
 import updateScene from "../../engine/scenes/updateScene";
@@ -45,12 +46,7 @@ const Scenes = ({
   console.log({ onfetchSceneData });
 
   useEffect(() => {
-    // setTimeout(() => fetchScene(sceneId), 2000);
-    // fetchScene(sceneId);
     onfetchSceneData(sceneId);
-    console.log(
-      "============================================================sceneId"
-    );
   }, [onfetchSceneData, sceneId]);
 
   useEffect(() => {
@@ -83,6 +79,7 @@ const Scenes = ({
   };
 
   const resetScene = () => {
+    Scene.shapes = [];
     updateScene(scene);
   };
 
