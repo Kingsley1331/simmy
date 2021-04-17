@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Scene from "../../../engine/scenes/scene";
 import DatGui, {
   DatBoolean,
@@ -11,23 +11,50 @@ import DatGui, {
   DatString
 } from "react-dat-gui";
 
-const SceneManager = () => {
-  const [backgroundColour, setBackgroundColour] = useState({
-    backgroundColour: Scene.backgroundColour
-  });
+const SceneManager = ({ localScene, setLocalScene }) => {
+  useEffect(() => {
+    setLocalScene({
+      backgroundColour: Scene.backgroundColour,
+      timeStep: Scene.timeStep,
+      time: Scene.time,
+      settings: Scene.settings
+    });
+  }, [
+    setLocalScene,
+    Scene.backgroundColour,
+    Scene.timeStep,
+    Scene.time,
+    Scene.settings
+  ]);
 
   const handleUpdate = data => {
-    const { backgroundColour } = data;
-    setBackgroundColour({ backgroundColour });
+    const { backgroundColour, timeStep, time, settings } = data;
+    setLocalScene({ ...data });
     Scene.backgroundColour = backgroundColour;
-    console.log("backgroundColour", backgroundColour);
-    console.log("data", data);
+    Scene.timeStep = timeStep;
+    Scene.time = time;
+    Scene.settings = { ...settings };
   };
 
   return (
-    <DatGui data={backgroundColour} onUpdate={handleUpdate}>
+    <DatGui data={localScene} onUpdate={handleUpdate}>
+      <DatNumber path="time" label="Time" />
+      <DatNumber path="timeStep" label="TimeStep" />
       <DatString path="backgroundColour" label="BackgroundColour" />
-      <DatColor label="Color" path="backgroundColour" />
+      <DatColor path="backgroundColour" label="Color" />
+      <DatFolder
+        title="Settings"
+        style={{
+          width: "200px"
+        }}
+      >
+        <DatBoolean path={"settings.display"} label="display"></DatBoolean>
+        <DatNumber
+          path={"settings.restitution"}
+          label="Restitution"
+          step={0.1}
+        />
+      </DatFolder>
     </DatGui>
   );
 };

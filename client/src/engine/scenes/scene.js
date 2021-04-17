@@ -70,7 +70,6 @@ let Scene = {
   settings: {
     display: true,
     restitution: 1
-    // restitution: 0.8
   },
   propertyValueCache: {},
   currentEvents: {

@@ -18,6 +18,7 @@ import {
 } from "../../engine/canvasEvents/listeners";
 import animate from "../../engine/utils/animation";
 import ShapeManager from "./data_control/ShapeManager";
+import SceneManager from "./data_control/SceneManager";
 import ColourPalette from "./data_control/ColourPalette";
 import { fetchSceneData } from "../actions/";
 
@@ -40,6 +41,8 @@ const Scenes = ({
   const [selected, setSelected] = useState();
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
   const [areListenersOn, setAreListenersOn] = useState(false);
+  const [localScene, setLocalScene] = useState(scene);
+
   const {
     params: { sceneId }
   } = match;
@@ -47,6 +50,10 @@ const Scenes = ({
   useEffect(() => {
     onfetchSceneData(sceneId);
   }, [onfetchSceneData, sceneId]);
+
+  useEffect(() => {
+    setLocalScene(scene);
+  }, [scene, setLocalScene]);
 
   useEffect(() => {
     for (let button in buttons) {
@@ -77,10 +84,12 @@ const Scenes = ({
     setFormRules(rulesArray => [...rulesArray, { id }]);
   };
 
-  const resetScene = () => {
+  const resetScene = useCallback(() => {
     Scene.shapes = [];
+    setLocalScene(scene);
     updateScene(scene);
-  };
+  }, [setLocalScene, updateScene, scene]);
+
   const reverse = () => {
     reverseScene(Scene.shapes);
   };
@@ -145,20 +154,23 @@ const Scenes = ({
         </button>
         <button
           style={{ position: "absolute", top: "5px", left: "100px" }}
-          className="reset"
+          className="reverse"
           onClick={reverse}
         >
           Reverse scene
+        </button>
+        <button
+          style={{ position: "absolute", top: "5px", left: "215px" }}
+          className="scenesettings"
+        >
+          Show scene settings
         </button>
       </div>
 
       <div className="canvasWrapper">
         <Buttons setManagedShapeIndex={setManagedShapeIdx} />
         <canvas id="canvas" width="1200" height="700" />
-        {/* <canvas id="canvas" width="1400" height="800" /> */}
-        {/* <SceneManager /> */}
-
-        {/* <canvas id="canvas" width="1000" height="600" /> */}
+        <SceneManager localScene={localScene} setLocalScene={setLocalScene} />
       </div>
 
       {selected === "colour" && <ColourPalette />}

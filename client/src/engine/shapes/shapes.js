@@ -179,12 +179,6 @@ export const shapes = {
   ]
 };
 
-//TODO: add settings to Scene object
-// export const settings = {
-//   display: true,
-//   restitution: 0
-// };
-
 function circleMaker(radius, n) {
   var circle = [];
   var angle = (2 * Math.PI) / n;

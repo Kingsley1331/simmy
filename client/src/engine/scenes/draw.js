@@ -75,8 +75,9 @@ export const draw = canvas => {
 
   polylineAndDraw(bufferCtx, Scene);
   clone(bufferCtx, Scene);
-
-  displaySceneInfo(bufferCtx);
+  if (display) {
+    displaySceneInfo(bufferCtx);
+  }
   Scene.context.buffer = bufferCtx;
   context.drawImage(bufferCanvas, 0, 0, width, height);
 };
