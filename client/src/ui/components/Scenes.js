@@ -42,6 +42,7 @@ const Scenes = ({
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
   const [areListenersOn, setAreListenersOn] = useState(false);
   const [localScene, setLocalScene] = useState(scene);
+  const [showSceneSettings, setShowSceneSettings] = useState(false);
 
   const {
     params: { sceneId }
@@ -52,7 +53,16 @@ const Scenes = ({
   }, [onfetchSceneData, sceneId]);
 
   useEffect(() => {
-    setLocalScene(scene);
+    if (JSON.stringify(scene) === "{}") {
+      setLocalScene({
+        backgroundColour: Scene.backgroundColour,
+        timeStep: Scene.timeStep,
+        time: Scene.time,
+        settings: Scene.settings
+      });
+    } else {
+      setLocalScene(scene);
+    }
   }, [scene, setLocalScene]);
 
   useEffect(() => {
@@ -92,6 +102,10 @@ const Scenes = ({
 
   const reverse = () => {
     reverseScene(Scene.shapes);
+  };
+
+  const toggleSceneSettings = () => {
+    setShowSceneSettings(show => !show);
   };
 
   useEffect(() => {
@@ -162,15 +176,18 @@ const Scenes = ({
         <button
           style={{ position: "absolute", top: "5px", left: "215px" }}
           className="scenesettings"
+          onClick={toggleSceneSettings}
         >
-          Show scene settings
+          {`${showSceneSettings ? "Hide" : "Show"} scene settings`}
         </button>
       </div>
 
       <div className="canvasWrapper">
         <Buttons setManagedShapeIndex={setManagedShapeIdx} />
         <canvas id="canvas" width="1200" height="700" />
-        <SceneManager localScene={localScene} setLocalScene={setLocalScene} />
+        {showSceneSettings && (
+          <SceneManager localScene={localScene} setLocalScene={setLocalScene} />
+        )}
       </div>
 
       {selected === "colour" && <ColourPalette />}

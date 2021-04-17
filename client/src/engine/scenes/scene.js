@@ -73,7 +73,7 @@ let Scene = {
     displayData: {
       scene: { mousePos: true, time: true, steps: true },
       shape: {
-        id: true,
+        id: false,
         index: false,
         collisionPoint: false,
         collidinSide: false,
@@ -81,7 +81,7 @@ let Scene = {
         normal: false,
         collisionPointVA: false,
         collisionPointVB: false,
-        showCentreOfMass: true,
+        showCentreOfMass: false,
         showCentreOfRotation: false,
         showBoundingRectCentre: false
       }

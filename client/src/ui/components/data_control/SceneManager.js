@@ -28,7 +28,7 @@ const SceneManager = ({ localScene, setLocalScene }) => {
   ]);
 
   const handleUpdate = data => {
-    const { backgroundColour = "white", timeStep, time, settings } = data;
+    const { backgroundColour, timeStep, time, settings } = data;
     setLocalScene({ ...data });
     Scene.backgroundColour = backgroundColour;
     Scene.timeStep = timeStep;
