@@ -11,16 +11,13 @@ import {
   drawArrow
 } from "./drawing/drawings";
 
-import displayConfig from "../../scenes/display/config";
-
-const { scene, shape } = displayConfig;
-
 export const displayShapeInfo = (
   shapeIndex,
   bufferCtx,
   centreOfMass,
   vertices
 ) => {
+  const { shape } = Scene.settings.displayData || {};
   const {
     id,
     index,
@@ -33,7 +30,7 @@ export const displayShapeInfo = (
     showCentreOfMass,
     showCentreOfRotation,
     showBoundingRectCentre
-  } = shape;
+  } = shape || {};
   const boundingRect = ShapesController.getProperty(shapeIndex, "boundingRect");
   const centreOfRotation = ShapesController.getProperty(
     shapeIndex,
@@ -204,8 +201,9 @@ export const displayShapeInfo = (
 };
 
 export const displaySceneInfo = bufferCtx => {
+  const { scene } = Scene.settings.displayData || {};
   let mousePos = Scene.mousePos;
-  const { time, steps, mousePos: cursorPos } = scene;
+  const { time, steps, mousePos: cursorPos } = scene || {};
   if (shapeSelection[Scene.selected] && !Scene.cursorOnshape) {
     // (hoveringOnShape <= 0) means not hovering on shape
     drawShape(bufferCtx, shapeSelection[Scene.selected], mousePos, {
@@ -215,6 +213,7 @@ export const displaySceneInfo = bufferCtx => {
     });
   }
   //TODO: do this only once rather than in every frame
+
   if (cursorPos) {
     screenWriter(
       bufferCtx,

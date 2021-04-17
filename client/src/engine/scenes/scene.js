@@ -69,7 +69,23 @@ let Scene = {
   time: 0,
   settings: {
     display: true,
-    restitution: 1
+    restitution: 1,
+    displayData: {
+      scene: { mousePos: true, time: true, steps: true },
+      shape: {
+        id: true,
+        index: false,
+        collisionPoint: false,
+        collidinSide: false,
+        boundingRect: false,
+        normal: false,
+        collisionPointVA: false,
+        collisionPointVB: false,
+        showCentreOfMass: true,
+        showCentreOfRotation: false,
+        showBoundingRectCentre: false
+      }
+    }
   },
   propertyValueCache: {},
   currentEvents: {
