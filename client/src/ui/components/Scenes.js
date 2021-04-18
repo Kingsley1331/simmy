@@ -21,21 +21,20 @@ import ShapeManager from "./data_control/ShapeManager";
 import SceneManager from "./data_control/SceneManager";
 import ColourPalette from "./data_control/ColourPalette";
 import { fetchSceneData } from "../actions/";
+import selectShape from "../actions/buttons";
 
 let canvas;
 
 const Scenes = ({
   selectShape,
-  selectedShapeId,
   addRules,
   selectedEvent,
   scene,
   clearScene,
   buttons,
   match,
-  fetchScene,
   onfetchSceneData,
-  history
+  onSelectShape
 }) => {
   const [formRules, setFormRules] = useState([]);
   const [selected, setSelected] = useState();
@@ -98,6 +97,7 @@ const Scenes = ({
     Scene.shapes = [];
     setLocalScene(scene);
     updateScene(scene);
+    onSelectShape("");
   }, [setLocalScene, updateScene, scene]);
 
   const reverse = () => {
@@ -224,8 +224,8 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: "GET_SCENE", payload: {} });
     },
     addRules: rules => dispatch({ type: "ADD_RULES", payload: rules }),
-    onfetchSceneData: sceneId => dispatch(fetchSceneData(sceneId))
-    /* fetchScene: sceneId => dispatch({ type: "GET_SCENE_ID", sceneId })*/
+    onfetchSceneData: sceneId => dispatch(fetchSceneData(sceneId)),
+    onSelectShape: shape => dispatch(selectShape(shape))
   };
 };
 
