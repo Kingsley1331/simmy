@@ -20,6 +20,7 @@ const scenesSchema = Schema({
   timeStep: Number,
   currentEvents: Object,
   events: Object,
+  gravity: Object,
   rules: Array
 });
 

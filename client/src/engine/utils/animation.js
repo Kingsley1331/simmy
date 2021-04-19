@@ -3,6 +3,7 @@ import { forEachShape } from "../shapes/shapes";
 import { applyMotion } from "../physics/motion";
 import { draw } from "../scenes/draw";
 import collisionDetector from "../physics/collisions/collisionDetector";
+import applyGravity from "../physics/forces/gravity";
 import ShapesController from "../shapes/ShapesController";
 import applyForces from "../physics/forces/applyForces";
 
@@ -32,6 +33,7 @@ export default function animate() {
     if (Scene.time > 0) {
       forEachShape(function(i) {
         applyMotion(i, timeStep);
+        applyGravity(i);
         applyForces(i);
       });
       /** TODO check if collisionDetector can be moved inside the forEachShape callback **/

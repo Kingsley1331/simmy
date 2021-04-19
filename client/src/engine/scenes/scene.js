@@ -6,6 +6,7 @@ let Scene = {
   lastModified: "",
   shapes: [],
   mousePos: {},
+  gravity: { x: 0, y: 0 },
   context: { buffer: {} },
   cursorOnshape: false,
   selected: "none",

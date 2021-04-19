@@ -17,23 +17,26 @@ const SceneManager = ({ localScene, setLocalScene }) => {
       backgroundColour: Scene.backgroundColour,
       timeStep: Scene.timeStep,
       time: Scene.time,
-      settings: Scene.settings
+      settings: Scene.settings,
+      gravity: Scene.gravity
     });
   }, [
     setLocalScene,
     Scene.backgroundColour,
     Scene.timeStep,
     Scene.time,
-    Scene.settings
+    Scene.settings,
+    Scene.gravity
   ]);
 
   const handleUpdate = data => {
-    const { backgroundColour, timeStep, time, settings } = data;
+    const { backgroundColour, timeStep, time, settings, gravity } = data;
     setLocalScene({ ...data });
     Scene.backgroundColour = backgroundColour;
     Scene.timeStep = timeStep;
     Scene.time = time;
     Scene.settings = settings;
+    Scene.gravity = gravity;
   };
 
   return (
@@ -42,6 +45,10 @@ const SceneManager = ({ localScene, setLocalScene }) => {
       <DatNumber path="timeStep" label="TimeStep" />
       <DatString path="backgroundColour" label="BackgroundColour" />
       <DatColor path="backgroundColour" label="Color" />
+      <DatFolder title="Gravity">
+        <DatNumber path={"gravity.x"} label="x" step={1} />
+        <DatNumber path={"gravity.y"} label="y" step={1} />
+      </DatFolder>
       <DatFolder
         title="Settings"
         style={{

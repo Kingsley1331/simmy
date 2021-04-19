@@ -41,7 +41,7 @@ const Scenes = ({
   const [managedShapeIndex, setManagedShapeIndex] = useState(null);
   const [areListenersOn, setAreListenersOn] = useState(false);
   const [localScene, setLocalScene] = useState(scene);
-  const [showSceneSettings, setShowSceneSettings] = useState(false);
+  const [showSceneSettings, setShowSceneSettings] = useState(true);
 
   const {
     params: { sceneId }
