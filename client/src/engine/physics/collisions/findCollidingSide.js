@@ -118,7 +118,8 @@ export default function findCollidingSide(
     ) {
       intersectionY = collisionPoint.y;
       intersectionX = (intersectionY - sideIntercept) / sideGradient;
-      sideOrientation = "vertical"; /**This line wrong */
+      /** The line below is wrong and is responsible for bug http://localhost:3000/_scenes/5f75c84379580a06d55efc56 **/
+      sideOrientation = "vertical";
     }
 
     // if velocity gradient is horizontal and the side gradient is vertical
