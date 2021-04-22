@@ -33,10 +33,10 @@ export default function findCollidingSide(
   const referenceNormalVector = referenceVectors.unitNormal;
   const referenceSideVector = referenceVectors.sideVector;
   let intersections = [];
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     let sideOrientation = "";
     let sideVector;
-    var side = [];
+    let side = [];
     if (i !== length - 1) {
       // if the ith vector is not the last vector
       side = [
@@ -118,7 +118,7 @@ export default function findCollidingSide(
     ) {
       intersectionY = collisionPoint.y;
       intersectionX = (intersectionY - sideIntercept) / sideGradient;
-      sideOrientation = "vertical";
+      sideOrientation = "vertical"; /**This line wrong */
     }
 
     // if velocity gradient is horizontal and the side gradient is vertical
@@ -154,8 +154,14 @@ export default function findCollidingSide(
         side,
         unitNormal
       });
-      // console.log('side', side);
-    } else {
+
+      console.log("intersection", {
+        x: intersectionX,
+        y: intersectionY,
+        side,
+        unitNormal
+      });
+
       if (
         sideOrientation === "horizontal" &&
         intersectionX >= sideMinX &&
@@ -173,6 +179,11 @@ export default function findCollidingSide(
         intersectionY >= sideMinY &&
         intersectionY <= sideMaxY
       ) {
+        console.log(
+          "================================collisionPoint,side",
+          collisionPoint,
+          side
+        );
         intersections.push({
           x: collisionPoint.x,
           y: collisionPoint.y,
@@ -188,10 +199,6 @@ export default function findCollidingSide(
   // if (filteredIntersections.length > 0){
   //   intersections = filteredIntersections
   // }
-  console.log(
-    "************************************intersections",
-    intersections
-  );
 
   if (intersections.length > 0) {
     var closestPoint = intersections.reduce(
@@ -214,9 +221,18 @@ export default function findCollidingSide(
     );
   }
 
+  console.log(
+    "************************************intersections",
+    intersections,
+    collisionPoint,
+    closestPoint
+  );
+
   var intersectionPoint =
     intersections.length > 0 ? intersections[closestPoint.index] : {};
-  // console.log('collisionPoint', collisionPoint);
-  // console.log('intersectionPoint', intersectionPoint);
+  console.log(
+    "************************************intersectionPoint",
+    intersectionPoint
+  );
   return intersectionPoint;
 }

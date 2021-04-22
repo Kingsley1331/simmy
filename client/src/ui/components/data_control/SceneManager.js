@@ -122,6 +122,10 @@ const SceneManager = ({ localScene, setLocalScene }) => {
               path={"settings.displayData.shape.showBoundingRectCentre"}
               label="showBoundingRectCentre"
             ></DatBoolean>
+            <DatBoolean
+              path={"settings.displayData.shape.vertexIndices"}
+              label="vertexIndices"
+            ></DatBoolean>
           </DatFolder>
         </DatFolder>
       </DatFolder>

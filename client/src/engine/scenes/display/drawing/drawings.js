@@ -1,8 +1,14 @@
 import Vector, { rotateShape } from "../../../utils/maths/Vector";
-export function screenWriter(context, text, position) {
+export function screenWriter(
+  context,
+  text,
+  position,
+  config = { fillStyle: "black", font: "15px Arial" }
+) {
   context.save();
-  context.fillStyle = "black";
-  context.font = "15px Arial";
+  for (let prop in config) {
+    context[prop] = config[prop];
+  }
   context.fillText(text, position.x, position.y);
   context.restore();
 }

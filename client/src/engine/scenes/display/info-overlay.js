@@ -29,7 +29,8 @@ export const displayShapeInfo = (
     collisionPointVB,
     showCentreOfMass,
     showCentreOfRotation,
-    showBoundingRectCentre
+    showBoundingRectCentre,
+    vertexIndices
   } = shape || {};
   const boundingRect = ShapesController.getProperty(shapeIndex, "boundingRect");
   const centreOfRotation = ShapesController.getProperty(
@@ -76,6 +77,22 @@ export const displayShapeInfo = (
           y: centreOfMass.y + vertices[n].y
         },
         "blue"
+      );
+    }
+  }
+
+  if (vertexIndices) {
+    for (let n = 0; n < vertices.length; n++) {
+      const x = vertices[n].x + centreOfMass.x;
+      const y = vertices[n].y + centreOfMass.y;
+      screenWriter(
+        bufferCtx,
+        n,
+        {
+          x: x + 4,
+          y: y - 4
+        },
+        { fillStyle: "black", font: "10px Arial" }
       );
     }
   }

@@ -84,7 +84,8 @@ let Scene = {
         collisionPointVB: false,
         showCentreOfMass: false,
         showCentreOfRotation: false,
-        showBoundingRectCentre: false
+        showBoundingRectCentre: false,
+        vertexIndices: false
       }
     }
   },
