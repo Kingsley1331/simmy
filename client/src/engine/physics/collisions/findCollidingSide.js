@@ -88,7 +88,7 @@ export default function findCollidingSide(
     ) {
       intersectionX = side[0].x;
       intersectionY = velocityGradient * intersectionX + velocityIntercept;
-      sideOrientation = "vertical";
+      // sideOrientation = "vertical";
     }
 
     // if the velocity gradient is vertical and side gradient is not horizontal
@@ -98,7 +98,7 @@ export default function findCollidingSide(
     ) {
       intersectionX = collisionPoint.x;
       intersectionY = sideGradient * intersectionX + velocityIntercept;
-      sideOrientation = "horizontal";
+      // sideOrientation = "horizontal";
     }
 
     // if the side gradient is horizontal and velocity gradient is not vertical
@@ -108,7 +108,7 @@ export default function findCollidingSide(
     ) {
       intersectionY = side[0].y;
       intersectionX = (intersectionY - velocityIntercept) / velocityGradient;
-      sideOrientation = "horizontal";
+      // sideOrientation = "horizontal";
     }
 
     // if the velocity gradient is horizontal and side gradient is not vertical
@@ -118,22 +118,21 @@ export default function findCollidingSide(
     ) {
       intersectionY = collisionPoint.y;
       intersectionX = (intersectionY - sideIntercept) / sideGradient;
-      /** The line below is wrong and is responsible for bug http://localhost:3000/_scenes/5f75c84379580a06d55efc56 **/
-      sideOrientation = "vertical";
+      // sideOrientation = "vertical";
     }
 
     // if velocity gradient is horizontal and the side gradient is vertical
     if (Math.abs(velocityGradient) < 0.0001 && Math.abs(sideGradient) > 10000) {
       intersectionX = side[0].x;
       intersectionY = collisionPoint.y;
-      sideOrientation = "vertical";
+      // sideOrientation = "vertical";
     }
 
     // if velocity gradient is vertical and the side gradient is horizontal
     if (Math.abs(velocityGradient) > 10000 && Math.abs(sideGradient) < 0.0001) {
       intersectionX = collisionPoint.x;
       intersectionY = side[0].y;
-      sideOrientation = "horizontal";
+      // sideOrientation = "horizontal";
     }
 
     // check if intersection point lies on the side being checked
@@ -163,7 +162,7 @@ export default function findCollidingSide(
         unitNormal
       });
 
-      if (
+      /* if (
         sideOrientation === "horizontal" &&
         intersectionX >= sideMinX &&
         intersectionX <= sideMaxX
@@ -190,7 +189,7 @@ export default function findCollidingSide(
           y: collisionPoint.y,
           side: side
         });
-      }
+      }*/
     }
   }
 
